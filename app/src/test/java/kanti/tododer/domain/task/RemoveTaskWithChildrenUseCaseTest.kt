@@ -66,8 +66,8 @@ class RemoveTaskWithChildrenUseCaseTest {
 	}
 
 	@AfterEach
-	fun tearDown() {
-		taskRepository.clear()
+	fun tearDown() = runTest {
+		taskRepository.deleteAll()
 	}
 
 	@Test

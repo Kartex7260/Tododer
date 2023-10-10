@@ -46,7 +46,9 @@ class FakeTaskRepository : ITaskRepository {
 		return _tasks.removeIf { it.id == task.id }
 	}
 
-	fun clear() = _tasks.clear()
+	override suspend fun deleteAll() {
+		_tasks.clear()
+	}
 
 	val isEmpty: Boolean
 		get() = _tasks.isEmpty()

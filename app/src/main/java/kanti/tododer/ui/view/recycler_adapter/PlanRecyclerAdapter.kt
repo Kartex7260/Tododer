@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import kanti.tododer.R
 import kanti.tododer.data.model.plan.Plan
@@ -16,8 +15,8 @@ class PlanRecyclerAdapter(
 
 	inner class PlanViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-		private val textViewTitle = view.findViewById<TextView>(R.id.textViewPlanRemark)
-		private val textViewRemark = view.findViewById<TextView>(R.id.textViewPlanRemark)
+		private val textViewTitle = view.findViewById<TextView>(R.id.textViewListItemPlanTitle)
+		private val textViewRemark = view.findViewById<TextView>(R.id.textViewListItemPlanRemark)
 
 		fun showPlan(plan: Plan) {
 			itemView.setOnClickListener { onItemClick(plan) }

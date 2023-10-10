@@ -8,8 +8,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.whenResumed
-import androidx.lifecycle.whenStarted
 import androidx.lifecycle.withResumed
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
@@ -20,9 +18,7 @@ import kanti.tododer.ui.screens.screen.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.screens.screen.todo_detail.viewmodel.uistate.TodoElement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class TodoDetailListFragment : Fragment() {
@@ -86,10 +82,10 @@ class TodoDetailListFragment : Fragment() {
 
 	private suspend fun showPlan(plan: Plan) {
 		val cardView = layoutInflater.inflate(R.layout.view_plan_list_item, null)
-		cardView.findViewById<TextView>(R.id.textViewPlanTitle).apply {
+		cardView.findViewById<TextView>(R.id.textViewListItemPlanTitle).apply {
 			text = plan.title
 		}
-		cardView.findViewById<TextView>(R.id.textViewPlanRemark).apply {
+		cardView.findViewById<TextView>(R.id.textViewListItemPlanRemark).apply {
 			if (plan.remark.isBlank()) {
 				visibility = View.GONE
 				return@apply
@@ -103,7 +99,7 @@ class TodoDetailListFragment : Fragment() {
 
 	private suspend fun showTask(task: Task) {
 		val cardView = layoutInflater.inflate(R.layout.view_task_list_item, null)
-		cardView.findViewById<TextView>(R.id.textViewTaskTitle).apply {
+		cardView.findViewById<TextView>(R.id.textViewListItemTaskTitle).apply {
 			text = task.title
 		}
 		withResumed {

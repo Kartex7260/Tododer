@@ -59,6 +59,10 @@ class FakeTaskDao : TaskDao() {
 		return if (tasks.removeIf { it.id == task.id }) 1 else 0
 	}
 
+	override suspend fun deleteAll() {
+		tasks.clear()
+	}
+
 	private fun taskWithId(task: TaskEntity): TaskEntity {
 		return if (task.id != 0) {
 			task

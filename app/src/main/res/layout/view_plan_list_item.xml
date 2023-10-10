@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayoutRootPlan"
+        android:id="@+id/constraintLayoutListItemPlan"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textViewPlanTitle"
+            android:id="@+id/textViewListItemPlanTitle"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,17 +22,19 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.19999999" />
+            app:layout_constraintVertical_bias="0.2"
+            android:text="@string/title" />
 
         <TextView
-            android:id="@+id/textViewPlanRemark"
+            android:id="@+id/textViewListItemPlanRemark"
             style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textViewPlanTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewPlanTitle" />
+            app:layout_constraintStart_toStartOf="@+id/textViewListItemPlanTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewListItemPlanTitle"
+            android:text="@string/remark" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
