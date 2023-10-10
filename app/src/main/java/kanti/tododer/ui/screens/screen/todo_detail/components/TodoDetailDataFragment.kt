@@ -12,7 +12,7 @@ import kanti.tododer.databinding.FragmentTodoDetailDataBinding
 import kanti.tododer.domain.plan.planwithchildren.PlanWithChildren
 import kanti.tododer.domain.task.taskwithchildren.TaskWithChildren
 import kanti.tododer.ui.screens.screen.todo_detail.viewmodel.TodoDetailViewModel
-import kanti.tododer.ui.screens.screen.todo_detail.viewmodel.uistate.TodoElement
+import kanti.tododer.ui.state.TodoElement
 
 @AndroidEntryPoint
 class TodoDetailDataFragment : Fragment() {

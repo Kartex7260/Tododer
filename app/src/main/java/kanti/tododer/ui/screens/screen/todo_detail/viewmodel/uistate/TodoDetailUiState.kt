@@ -3,6 +3,7 @@ package kanti.tododer.ui.screens.screen.todo_detail.viewmodel.uistate
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.domain.plan.planwithchildren.PlanWithChildren
 import kanti.tododer.domain.task.taskwithchildren.TaskWithChildren
+import kanti.tododer.ui.state.TodoElement
 
 data class TodoDetailUiState(
 	val todo: TodoElement? = null,
