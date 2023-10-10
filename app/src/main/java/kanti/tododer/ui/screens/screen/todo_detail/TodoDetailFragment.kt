@@ -14,20 +14,22 @@ import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
 import kanti.tododer.common.Const
 import kanti.tododer.databinding.FragmentTodoDetailBinding
+import kanti.tododer.ui.fragments.components.todo_list.TodoListViewModel
 import kanti.tododer.ui.screens.screen.todo_detail.viewmodel.TodoDetailViewModel
-import kanti.tododer.ui.screens.screen.todo_detail.viewmodel.uistate.TodoDetailUiState
+import kanti.tododer.ui.screens.screen.todo_detail.viewmodel.TodoDetailUiState
 
 @AndroidEntryPoint
 class TodoDetailFragment : Fragment() {
 
 	private lateinit var view: FragmentTodoDetailBinding
-	private val viewModel: TodoDetailViewModel by activityViewModels()
+	private val viewModel: TodoDetailViewModel by viewModels()
+	private val todoListViewModel: TodoListViewModel by activityViewModels()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		requireArguments().apply {
 			val planFullId = getString(Const.NAVIGATION_ARGUMENT_FULL_ID) as String
-			viewModel.pushTodo(planFullId)
+//			viewModel.pushTodo(planFullId)
 		}
 	}
 
@@ -42,17 +44,7 @@ class TodoDetailFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		viewModel.todoDetailLiveDataLiveData.observe(viewLifecycleOwner) { uiState ->
-			showProcess(uiState.process)
 
-			when (uiState.type) {
-				is TodoDetailUiState.Type.Success -> {}
-				is TodoDetailUiState.Type.EmptyStack -> back()
-				is TodoDetailUiState.Type.InvalidFullId -> toastAndBack(R.string.invalid_data, uiState)
-				is TodoDetailUiState.Type.NotFound -> toastAndBack(R.string.not_found, uiState)
-				else -> toastAndBack(R.string.unexpected_error, uiState)
-			}
-		}
 	}
 
 	private fun showProcess(process: Boolean) {

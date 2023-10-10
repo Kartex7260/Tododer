@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TodoListViewModel @Inject constructor(
+class TodoRootListViewModel @Inject constructor(
 	private val planRepository: IPlanRepository
 ) : ViewModel() {
 

@@ -1,4 +1,4 @@
-package kanti.tododer.ui.screens.screen.todo_detail.viewmodel.uistate
+package kanti.tododer.ui.screens.screen.todo_detail.viewmodel
 
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.domain.plan.planwithchildren.PlanWithChildren
@@ -34,34 +34,15 @@ data class TodoDetailUiState(
 
 }
 
-val RepositoryResult<TaskWithChildren>.toTaskTodoDetailUiState: TodoDetailUiState
-	get() {
-		val todoElement: TodoElement? = if (value != null) {
-			TodoElement(value)
-		} else null
-		return TodoDetailUiState(
-			todo = todoElement,
-			type = type.toTodoDetailType
-		)
-	}
-
-val RepositoryResult<PlanWithChildren>.toPlanTodoDetailUiState: TodoDetailUiState
-	get() {
-		val todoElement: TodoElement? = if (value != null) {
-			TodoElement(value)
-		} else null
-		return TodoDetailUiState(
-			todo = todoElement,
-			type = type.toTodoDetailType
-		)
-	}
-
 private val RepositoryResult.Type.toTodoDetailType: TodoDetailUiState.Type
 	get() {
 		return when (this) {
 			is RepositoryResult.Type.Success -> TodoDetailUiState.Type.Success
 			is RepositoryResult.Type.NotFound -> TodoDetailUiState.Type.NotFound(message)
-			is RepositoryResult.Type.AlreadyExists -> TodoDetailUiState.Type.AlreadyExists(fullId, message)
+			is RepositoryResult.Type.AlreadyExists -> TodoDetailUiState.Type.AlreadyExists(
+				fullId,
+				message
+			)
 			else -> TodoDetailUiState.Type.Fail(message)
 		}
 	}

@@ -6,34 +6,38 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.withResumed
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
-import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.common.UiState
-import kanti.tododer.data.common.isFail
 import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.fullId
-import kanti.tododer.databinding.FragmentTodoListBinding
-import kanti.tododer.ui.view.recycler_adapter.PlanRecyclerAdapter
+import kanti.tododer.databinding.FragmentTodoRootBinding
+import kanti.tododer.ui.fragments.components.todo_list.TodoListViewModel
+import kanti.tododer.ui.state.TodoElement
+import kanti.tododer.ui.state.fullId
+import kanti.tododer.ui.state.toTodoElement
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TodoListFragment : Fragment() {
+class TodoRootListFragment : Fragment() {
 
-	private lateinit var view: FragmentTodoListBinding
-	private val viewModel: TodoListViewModel by viewModels()
+	private lateinit var view: FragmentTodoRootBinding
+	private val viewModel: TodoRootListViewModel by viewModels()
+	private val todoListViewModel: TodoListViewModel by activityViewModels()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
-		view = FragmentTodoListBinding.inflate(inflater, container, false)
-
-		view.recyclerViewRootPlans.layoutManager = LinearLayoutManager(requireContext())
+		view = FragmentTodoRootBinding.inflate(inflater, container, false)
 
 		return view.root
 	}
@@ -65,18 +69,27 @@ class TodoListFragment : Fragment() {
 
 	private fun showData(plans: List<Plan>) {
 		if (plans.isEmpty()) {
-			view.recyclerViewRootPlans.adapter = null
+			todoListViewModel.setTodoList(
+				onElementClick = ::onElementClick
+			)
 			return
 		}
 
-		view.recyclerViewRootPlans.adapter = PlanRecyclerAdapter(
-			plans = plans,
-			onItemClick = ::onItemClick
-		)
+		lifecycleScope.launch(Dispatchers.Default) {
+			val todoElements = plans.map { plan ->
+				plan.toTodoElement
+			}
+			withResumed {
+				todoListViewModel.setTodoList(
+					todoElements,
+					::onElementClick
+				)
+			}
+		}
 	}
 
-	private fun onItemClick(plan: Plan) {
-		val navDirections = TodoListFragmentDirections.actionListToDetail(plan.fullId)
+	private fun onElementClick(todoElement: TodoElement) {
+		val navDirections = TodoRootListFragmentDirections.actionListToDetail(todoElement.fullId)
 		view.root.findNavController().navigate(navDirections)
 	}
 

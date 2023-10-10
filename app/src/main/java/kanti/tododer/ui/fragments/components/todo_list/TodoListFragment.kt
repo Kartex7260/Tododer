@@ -1,4 +1,4 @@
-package kanti.tododer.ui.fragments.components
+package kanti.tododer.ui.fragments.components.todo_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +13,8 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.databinding.FragmentTodoListBinding
 import kanti.tododer.ui.state.TodoElement
+
+typealias OnTodoElementClick = (TodoElement) -> Unit
 
 @AndroidEntryPoint
 class TodoListFragment : Fragment() {
@@ -33,33 +35,60 @@ class TodoListFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 
 		viewModel.todoListLiveData.observe(viewLifecycleOwner) { uiState ->
-			showTodoElements(uiState)
+			showTodoElements(
+				uiState.todoElements,
+				uiState.onItemClick
+			)
 		}
 	}
 
-	private fun showTodoElements(todoElements: List<TodoElement>) {
+	private fun showTodoElements(
+		todoElements: List<TodoElement>,
+		onElementClick: OnTodoElementClick
+	) {
 		for (todoElement in todoElements) {
-			showTodoElement(todoElement)
+			showTodoElement(
+				todoElement,
+				onElementClick
+			)
 		}
 	}
 
-	private fun showTodoElement(todoElement: TodoElement) {
+	private fun showTodoElement(
+		todoElement: TodoElement,
+		onElementClick: OnTodoElementClick
+	) {
 		when (todoElement.type) {
 			TodoElement.Type.TASK -> {
-				showTask(todoElement.toTask)
+				showTask(
+					todoElement,
+					onElementClick
+				)
 			}
 			TodoElement.Type.PLAN -> {
-				showPlan(todoElement.toPlan)
+				showPlan(
+					todoElement,
+					onElementClick
+				)
 			}
 		}
 	}
 
-	private fun showPlan(plan: Plan) {
+	private fun showPlan(
+		todoElement: TodoElement,
+		onElementClick: OnTodoElementClick
+	) {
 		val cardView = layoutInflater.inflate(
 			R.layout.view_plan_list_item,
 			view.root,
 			false
-		)
+		).apply {
+			setOnClickListener {
+				onElementClick(todoElement)
+			}
+		}
+
+		val plan = todoElement.toPlan
 
 		cardView.findViewById<TextView>(R.id.textViewListItemPlanTitle).apply {
 			text = plan.title
@@ -74,12 +103,21 @@ class TodoListFragment : Fragment() {
 		view.linearLayoutChildren.addView(cardView)
 	}
 
-	private fun showTask(task: Task) {
+	private fun showTask(
+		todoElement: TodoElement,
+		onElementClick: OnTodoElementClick
+	) {
 		val cardView = layoutInflater.inflate(
 			R.layout.view_task_list_item,
 			view.root,
 			false
-		)
+		).apply {
+			setOnClickListener {
+				onElementClick(todoElement)
+			}
+		}
+
+		val task = todoElement.toTask
 
 		cardView.findViewById<TextView>(R.id.textViewListItemTaskTitle).apply {
 			text = task.title

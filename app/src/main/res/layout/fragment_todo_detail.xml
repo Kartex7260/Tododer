@@ -11,7 +11,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_todo_detail_fragment"
-            android:name="kanti.tododer.ui.screens.screen.todo_detail.components.TodoDetailDataFragment"
+            android:name="kanti.tododer.ui.fragments.components.todo_detail.TodoDataFragment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:defaultNavHost="true"
@@ -21,7 +21,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_todo_list_fragment"
-            android:name="kanti.tododer.ui.fragments.components.TodoListFragment"
+            android:name="kanti.tododer.ui.fragments.components.todo_list.TodoListFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:defaultNavHost="true"
