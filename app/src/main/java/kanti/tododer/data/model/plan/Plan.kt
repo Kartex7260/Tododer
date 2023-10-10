@@ -1,5 +1,6 @@
 package kanti.tododer.data.model.plan
 
+import kanti.tododer.data.model.FullIds
 import kanti.tododer.data.model.plan.datasource.local.PlanEntity
 
 data class Plan(
@@ -10,18 +11,7 @@ data class Plan(
 )
 
 val Plan.fullId: String
-	get() {
-		return "plan-$id"
-	}
-
-val Plan.asNewPlanEntity: PlanEntity
-	get() {
-		return PlanEntity(
-			parentId = parentId,
-			title = title,
-			remark = remark
-		)
-	}
+	get() = FullIds.from(this)
 
 val Plan.asPlanEntity: PlanEntity
 	get() {

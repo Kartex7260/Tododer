@@ -4,9 +4,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kanti.tododer.data.model.plan.datasource.local.PlanLocalDataSource
+import kanti.tododer.data.model.plan.datasource.local.IPlanLocalDataSource
 import kanti.tododer.data.model.plan.datasource.local.PlanRoomDataSource
-import kanti.tododer.data.model.task.datasource.local.TaskLocalDataSource
+import kanti.tododer.data.model.task.datasource.local.ITaskLocalDataSource
 import kanti.tododer.data.model.task.datasource.local.TaskRoomDataSource
 import javax.inject.Singleton
 
@@ -16,10 +16,10 @@ interface RoomBindsModule {
 
 	@Binds
 	@Singleton
-	fun bindPlanRoomDataSource(dataSource: PlanRoomDataSource): PlanLocalDataSource
+	fun bindPlanRoomDataSource(dataSource: PlanRoomDataSource): IPlanLocalDataSource
 
 	@Binds
 	@Singleton
-	fun bindTaskRoomDataSource(dataSource: TaskRoomDataSource): TaskLocalDataSource
+	fun bindTaskRoomDataSource(dataSource: TaskRoomDataSource): ITaskLocalDataSource
 
 }

@@ -6,34 +6,25 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.plan.asNewPlanEntity
 import kanti.tododer.data.model.plan.asPlanEntity
 
 @Dao
-abstract class PlanDao {
+abstract class IPlanDao {
 
 	@Query("SELECT * FROM `plan` WHERE parent_id = :parentId")
 	abstract suspend fun getChildren(parentId: String): List<PlanEntity>
 
-	@Query("SELECT 1 FROM `plan` WHERE rowid = :rowId")
+	@Query("SELECT * FROM `plan` WHERE rowid = :rowId")
 	abstract suspend fun getByRowId(rowId: Long): PlanEntity
 
 	@Query("SELECT * FROM `plan` WHERE id = :id")
-	abstract suspend fun getById(id: Int): List<PlanEntity>
-
-	suspend fun get(id: Int): PlanEntity? {
-		val plans = getById(id)
-		if (plans.isEmpty())
-			return null
-		return plans[0]
-	}
+	abstract suspend fun getPlan(id: Int): PlanEntity?
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	abstract suspend fun replace(plan: PlanEntity): Long
 
-	suspend fun replace(plan: Plan): Long = replace(plan.asPlanEntity)
-
-	suspend fun insert(plan: Plan): Long = replace(plan.asNewPlanEntity)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	abstract suspend fun insert(plan: PlanEntity): Long
 
 
 	@Delete
@@ -41,4 +32,11 @@ abstract class PlanDao {
 
 	suspend fun delete(plan: Plan): Int = delete(plan.asPlanEntity)
 
+	@Query("DELETE FROM `plan`")
+	abstract suspend fun deleteAll()
+
 }
+
+suspend fun IPlanDao.insert(plan: Plan): Long = insert(plan.asPlanEntity)
+
+suspend fun IPlanDao.replace(plan: Plan): Long = replace(plan.asPlanEntity)

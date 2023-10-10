@@ -1,5 +1,6 @@
 package kanti.tododer.data.model.task
 
+import kanti.tododer.data.model.FullIds
 import kanti.tododer.data.model.task.datasource.local.TaskEntity
 
 data class Task(
@@ -11,19 +12,7 @@ data class Task(
 )
 
 val Task.fullId: String
-	get() {
-		return "task-$id"
-	}
-
-val Task.asNewTaskEntity: TaskEntity
-	get() {
-		return TaskEntity(
-			parentId = parentId,
-			title = title,
-			remark = remark,
-			done = done
-		)
-	}
+	get() = FullIds.from(this)
 
 val Task.asTaskEntity: TaskEntity
 	get() {

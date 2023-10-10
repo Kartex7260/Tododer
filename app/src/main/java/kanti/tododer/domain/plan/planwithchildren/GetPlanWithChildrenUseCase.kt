@@ -1,16 +1,16 @@
 package kanti.tododer.domain.plan.planwithchildren
 
 import kanti.tododer.data.common.RepositoryResult
+import kanti.tododer.data.model.plan.IPlanRepository
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.fullId
+import kanti.tododer.data.model.task.ITaskRepository
 import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.task.TaskRepository
 import javax.inject.Inject
 
 class GetPlanWithChildrenUseCase @Inject constructor(
-	private val planRepository: PlanRepository,
-	private val taskRepository: TaskRepository
+	private val planRepository: IPlanRepository,
+	private val taskRepository: ITaskRepository
 ) {
 
 	suspend operator fun invoke(id: Int): RepositoryResult<PlanWithChildren> {

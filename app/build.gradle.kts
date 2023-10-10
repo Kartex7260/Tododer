@@ -8,6 +8,8 @@ plugins {
 	id("com.google.devtools.ksp")
 
 	id("com.google.dagger.hilt.android")
+
+	id("androidx.navigation.safeargs.kotlin")
 }
 
 tasks.withType<KaptGenerateStubsTask>().configureEach {
@@ -18,7 +20,7 @@ tasks.withType<KaptGenerateStubsTask>().configureEach {
 
 android {
 	namespace = "kanti.tododer"
-	compileSdk = 33
+	compileSdk = 34
 
 	defaultConfig {
 		applicationId = "kanti.tododer"
@@ -53,14 +55,18 @@ android {
 
 dependencies {
 
+	implementation("androidx.legacy:legacy-support-v4:1.0.0")
 	val hiltVersion = "2.48"
 	val roomVersion = "2.5.2"
 	val lifecycleVersion = "2.6.2"
 	val navigationVersion = "2.7.4"
+	val coroutinesVersion = "1.7.3"
 
 	// common
 	testImplementation("junit:junit:4.13.2")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+	testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 
 	// ui
 	implementation("androidx.core:core-ktx:1.12.0")
@@ -86,4 +92,8 @@ dependencies {
 	implementation("androidx.room:room-runtime:$roomVersion")
 	implementation("androidx.room:room-ktx:$roomVersion")
 	ksp("androidx.room:room-compiler:$roomVersion")
+}
+
+tasks.withType<Test> {
+	useJUnitPlatform()
 }
