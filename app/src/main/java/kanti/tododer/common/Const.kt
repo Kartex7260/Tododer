@@ -17,4 +17,10 @@ object Const {
 		_NAVIGATION_ARGUMENT_FULL_ID = getString(R.string.navigation_argument_full_id)
 	}
 
+	object LogTag {
+		const val METHOD = "method"
+		const val BUSINESS_LOGIC = "business_logic"
+		const val UI_STATE = "ui_state"
+	}
+
 }

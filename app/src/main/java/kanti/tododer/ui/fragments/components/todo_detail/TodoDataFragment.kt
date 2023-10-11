@@ -41,7 +41,11 @@ class TodoDataFragment : Fragment() {
 		}
 	}
 
-	private fun showData(todoElement: TodoElement) {
+	private fun showData(todoElement: TodoElement?) {
+		if (todoElement == null) {
+			clearEditText()
+			return
+		}
 
 		when (todoElement.type) {
 			TodoElement.Type.TASK -> showTask(todoElement.toTask)
@@ -61,6 +65,13 @@ class TodoDataFragment : Fragment() {
 		view.apply {
 			editTextTodoDetailTitle.text = editableFactory.newEditable(title)
 			editTextTodoDetailRemark.text = editableFactory.newEditable(remark)
+		}
+	}
+
+	private fun clearEditText() {
+		view.apply {
+			editTextTodoDetailTitle.text.clear()
+			editTextTodoDetailRemark.text.clear()
 		}
 	}
 

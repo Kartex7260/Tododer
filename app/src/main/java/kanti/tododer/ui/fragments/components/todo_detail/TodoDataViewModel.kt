@@ -10,7 +10,7 @@ class TodoDataViewModel : ViewModel() {
 	private val _todoElementLiveData = MutableLiveData<TodoDataUiState>()
 	val todoElementLiveData: LiveData<TodoDataUiState> = _todoElementLiveData
 
-	fun setTodoElement(todoElement: TodoElement) {
+	fun setTodoElement(todoElement: TodoElement? = null) {
 		_todoElementLiveData.value = TodoDataUiState(
 			todoElement
 		)

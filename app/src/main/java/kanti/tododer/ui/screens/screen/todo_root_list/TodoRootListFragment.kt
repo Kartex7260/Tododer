@@ -1,4 +1,4 @@
-package kanti.tododer.ui.screens.screen.todo_list
+package kanti.tododer.ui.screens.screen.todo_root_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,12 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withResumed
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
 import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.plan.fullId
 import kanti.tododer.databinding.FragmentTodoRootBinding
 import kanti.tododer.ui.fragments.components.todo_list.TodoListViewModel
 import kanti.tododer.ui.state.TodoElement

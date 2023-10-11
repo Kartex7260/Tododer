@@ -1,12 +1,15 @@
 package kanti.tododer.ui.screens.screen.todo_detail.viewmodel
 
 import kanti.tododer.data.common.RepositoryResult
+import kanti.tododer.data.common.UiState
 import kanti.tododer.domain.plan.planwithchildren.PlanWithChildren
 import kanti.tododer.domain.task.taskwithchildren.TaskWithChildren
 import kanti.tododer.ui.state.TodoElement
+import kanti.tododer.ui.state.toTodoElement
 
 data class TodoDetailUiState(
 	val todo: TodoElement? = null,
+	val todoChildren: List<TodoElement> = listOf(),
 	val process: Boolean = false,
 	val type: Type = Type.Success
 ) {
@@ -33,6 +36,29 @@ data class TodoDetailUiState(
 	}
 
 }
+
+val RepositoryResult<TaskWithChildren>.toTaskTodoDetailUiState: TodoDetailUiState
+	get() {
+		val todo = value?.task?.toTodoElement
+		val children = value?.childTasks?.map { it.toTodoElement } ?: listOf()
+		return TodoDetailUiState(
+			todo = todo,
+			todoChildren = children,
+			type = type.toTodoDetailType
+		)
+	}
+
+val RepositoryResult<PlanWithChildren>.toPlanTodoDetailUiState: TodoDetailUiState
+	get() {
+		val todo = value?.plan?.toTodoElement
+		val childrenPlans = value?.childPlans?.map { it.toTodoElement } ?: listOf()
+		val childrenTasks = value?.childTasks?.map { it.toTodoElement } ?: listOf()
+		return TodoDetailUiState(
+			todo = todo,
+			todoChildren = childrenPlans + childrenTasks,
+			type = type.toTodoDetailType
+		)
+	}
 
 private val RepositoryResult.Type.toTodoDetailType: TodoDetailUiState.Type
 	get() {
