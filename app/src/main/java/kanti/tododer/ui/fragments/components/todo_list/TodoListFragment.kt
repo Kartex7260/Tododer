@@ -46,6 +46,7 @@ class TodoListFragment : Fragment() {
 		todoElements: List<TodoElement>,
 		onElementClick: OnTodoElementClick
 	) {
+		view.linearLayoutChildren.removeAllViews()
 		for (todoElement in todoElements) {
 			showTodoElement(
 				todoElement,
