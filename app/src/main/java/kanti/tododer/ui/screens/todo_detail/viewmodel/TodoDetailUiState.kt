@@ -1,7 +1,6 @@
-package kanti.tododer.ui.screens.screen.todo_detail.viewmodel
+package kanti.tododer.ui.screens.todo_detail.viewmodel
 
 import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.common.UiState
 import kanti.tododer.domain.plan.planwithchildren.PlanWithChildren
 import kanti.tododer.domain.task.taskwithchildren.TaskWithChildren
 import kanti.tododer.ui.state.TodoElement

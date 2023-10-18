@@ -1,4 +1,4 @@
-package kanti.tododer.ui.screens.screen.todo_detail
+package kanti.tododer.ui.screens.todo_detail
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
@@ -16,8 +15,8 @@ import kanti.tododer.common.Const
 import kanti.tododer.databinding.FragmentTodoDetailBinding
 import kanti.tododer.ui.fragments.components.todo_detail.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.TodoListViewModel
-import kanti.tododer.ui.screens.screen.todo_detail.viewmodel.TodoDetailViewModel
-import kanti.tododer.ui.screens.screen.todo_detail.viewmodel.TodoDetailUiState
+import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailViewModel
+import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailUiState
 import kanti.tododer.ui.state.fullId
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,7 +25,7 @@ import kotlinx.coroutines.launch
 class TodoDetailFragment : Fragment() {
 
 	private lateinit var view: FragmentTodoDetailBinding
-	private val viewModel: TodoDetailViewModel by viewModels()
+	private val viewModel: TodoDetailViewModel by activityViewModels()
 	private val todoListViewModel: TodoListViewModel by activityViewModels()
 	private val todoDataViewModel: TodoDataViewModel by activityViewModels()
 

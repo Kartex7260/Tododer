@@ -11,9 +11,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.databinding.FragmentTodoDataBinding
-import kanti.tododer.domain.plan.planwithchildren.PlanWithChildren
-import kanti.tododer.domain.task.taskwithchildren.TaskWithChildren
-import kanti.tododer.ui.screens.screen.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.state.TodoElement
 
 @AndroidEntryPoint

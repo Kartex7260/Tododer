@@ -1,4 +1,4 @@
-package kanti.tododer.ui.screens.screen.todo_detail.viewmodel
+package kanti.tododer.ui.screens.todo_detail.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -37,9 +37,11 @@ class TodoDetailViewModel @Inject constructor(
 				currentFullId = stack.pop()
 				showTodo(currentFullId!!)
 			} catch (th: EmptyStackException) {
-				_todoDetailLiveData.postValue(TodoDetailUiState(
+				_todoDetailLiveData.postValue(
+					TodoDetailUiState(
 					type = TodoDetailUiState.Type.EmptyStack
-				))
+				)
+				)
 			} catch (th: Throwable) {
 				_todoDetailLiveData.postValue(
 					TodoDetailUiState(
@@ -58,9 +60,11 @@ class TodoDetailViewModel @Inject constructor(
 			val parsedFullId = FullIds.parseFullId(fullId)
 			Log.d(Tag.BUSINESS_LOGIC, "showTodo(String = \"$fullId\"): parsedFullId = $parsedFullId")
 			if (parsedFullId == null) {
-				_todoDetailLiveData.postValue(TodoDetailUiState(
-					type = TodoDetailUiState.Type.InvalidFullId(fullId)
-				))
+				_todoDetailLiveData.postValue(
+					TodoDetailUiState(
+						type = TodoDetailUiState.Type.InvalidFullId(fullId)
+					)
+				)
 				return@launch
 			}
 

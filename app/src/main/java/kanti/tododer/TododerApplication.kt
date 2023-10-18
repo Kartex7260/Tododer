@@ -35,7 +35,8 @@ class TododerApplication : Application() {
 				remark = "Купить"
 			).addR().value?.apply {
 				Plan(
-					title = "Пятёрочка"
+					title = "Пятёрочка",
+					remark = "А где она?"
 				).add(this).value?.apply {
 					Task(
 						title = "Хлеб"
@@ -44,6 +45,9 @@ class TododerApplication : Application() {
 						title = "Молоко"
 					).add(this)
 				}
+				Task(
+					title = "Детский мир"
+				).add(this)
 				Plan(
 					title = "Лента"
 				).add(this).value?.apply {
