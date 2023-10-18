@@ -15,8 +15,8 @@ class PlanRecyclerAdapter(
 
 	inner class PlanViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-		private val textViewTitle = view.findViewById<TextView>(R.id.textViewListItemPlanTitle)
-		private val textViewRemark = view.findViewById<TextView>(R.id.textViewListItemPlanRemark)
+		private val textViewTitle = view.findViewById<TextView>(R.id.textViewTodoItemPlanTitle)
+		private val textViewRemark = view.findViewById<TextView>(R.id.textViewTodoItemPlanRemark)
 
 		fun showPlan(plan: Plan) {
 			itemView.setOnClickListener { onItemClick(plan) }

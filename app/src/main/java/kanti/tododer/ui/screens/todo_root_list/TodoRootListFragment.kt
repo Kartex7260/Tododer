@@ -16,7 +16,7 @@ import kanti.tododer.R
 import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.databinding.FragmentTodoRootBinding
-import kanti.tododer.ui.fragments.components.todo_list.TodoListViewModel
+import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.state.TodoElement
 import kanti.tododer.ui.state.fullId
 import kanti.tododer.ui.state.toTodoElement
@@ -50,6 +50,10 @@ class TodoRootListFragment : Fragment() {
 				Toast.makeText(requireContext(), R.string.unexpected_error, Toast.LENGTH_SHORT).show()
 			}
 		}
+
+		todoListViewModel.onElementClickLiveData.observe(viewLifecycleOwner) { todoElement ->
+			onElementClick(todoElement)
+		}
 	}
 
 	override fun onResume() {
@@ -67,9 +71,7 @@ class TodoRootListFragment : Fragment() {
 
 	private fun showData(plans: List<Plan>) {
 		if (plans.isEmpty()) {
-			todoListViewModel.setTodoList(
-				onElementClick = ::onElementClick
-			)
+			todoListViewModel.setTodoList()
 			return
 		}
 
@@ -78,10 +80,7 @@ class TodoRootListFragment : Fragment() {
 				plan.toTodoElement
 			}
 			withResumed {
-				todoListViewModel.setTodoList(
-					todoElements,
-					::onElementClick
-				)
+				todoListViewModel.setTodoList(todoElements)
 			}
 		}
 	}

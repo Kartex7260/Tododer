@@ -14,7 +14,7 @@ import kanti.tododer.R
 import kanti.tododer.common.Const
 import kanti.tododer.databinding.FragmentTodoDetailBinding
 import kanti.tododer.ui.fragments.components.todo_detail.TodoDataViewModel
-import kanti.tododer.ui.fragments.components.todo_list.TodoListViewModel
+import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailUiState
 import kanti.tododer.ui.state.fullId
@@ -51,9 +51,7 @@ class TodoDetailFragment : Fragment() {
 		viewModel.todoDetailLiveData.observe(viewLifecycleOwner) { uiState ->
 			showProcess(uiState.process)
 			todoDataViewModel.setTodoElement(uiState.todo)
-			todoListViewModel.setTodoList(uiState.todoChildren) {
-				viewModel.showTodo(it.fullId)
-			}
+			todoListViewModel.setTodoList(uiState.todoChildren)
 
 			when (uiState.type) {
 				is TodoDetailUiState.Type.Success -> {}

@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textViewListItemPlanTitle"
+            android:id="@+id/textViewTodoItemPlanTitle"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,15 +26,15 @@
             android:text="@string/title" />
 
         <TextView
-            android:id="@+id/textViewListItemPlanRemark"
+            android:id="@+id/textViewTodoItemPlanRemark"
             style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textViewListItemPlanTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewListItemPlanTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewTodoItemPlanTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewTodoItemPlanTitle"
             android:text="@string/remark" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
