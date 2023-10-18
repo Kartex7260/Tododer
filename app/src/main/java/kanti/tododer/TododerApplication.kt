@@ -48,6 +48,10 @@ class TododerApplication : Application() {
 				Task(
 					title = "Детский мир"
 				).add(this)
+				Task(
+					title = "Авокадо",
+					done = true
+				).add(this)
 				Plan(
 					title = "Лента"
 				).add(this).value?.apply {

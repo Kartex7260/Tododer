@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -122,6 +123,9 @@ class TodoListFragment : Fragment() {
 
 		cardView.findViewById<TextView>(R.id.textViewListItemTaskTitle).apply {
 			text = task.title
+		}
+		cardView.findViewById<CheckBox>(R.id.checkBoxTaskListItem).apply {
+			isChecked = task.done
 		}
 		view.linearLayoutChildren.addView(cardView)
 	}
