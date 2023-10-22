@@ -6,18 +6,19 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import kanti.tododer.R
-import kanti.tododer.ui.state.TodoElement
+import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.toTask
 
 class TaskViewHolder(
-	todo: TodoElement,
+	todo: Todo,
 	layoutInflater: LayoutInflater,
 	root: ViewGroup? = null,
 	attachToRoot: Boolean = false
 ) : TodoViewHolder(todo, layoutInflater, R.layout.view_task_list_item, root, attachToRoot) {
 
-	override val type: TodoElement.Type = TodoElement.Type.TASK
+	override val type: Todo.Type = Todo.Type.TASK
 
-	override fun bindData(view: View, todo: TodoElement) {
+	override fun bindData(view: View, todo: Todo) {
 		val task = todo.toTask
 
 		view.findViewById<TextView>(R.id.textViewTodoItemTaskTitle).apply {
@@ -26,14 +27,14 @@ class TaskViewHolder(
 		view.findViewById<CheckBox>(R.id.checkBoxTodoItemTaskDone).apply {
 			isChecked = task.done
 			setOnCheckedChangeListener { _, isChecked ->
-				onEvent(EVENT_DONE, todo, isChecked)
+				onEvent(EVENT_IS_DONE, task, isChecked)
 			}
 		}
 	}
 
 	companion object {
 
-		const val EVENT_DONE = 0
+		const val EVENT_IS_DONE = 0
 
 	}
 

@@ -1,9 +1,9 @@
 package kanti.tododer.domain.task.taskwithchildren
 
 import kanti.tododer.data.common.RepositoryResult
+import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.task.ITaskRepository
 import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.task.fullId
 import javax.inject.Inject
 
 class GetTaskWithChildrenUseCase @Inject constructor(

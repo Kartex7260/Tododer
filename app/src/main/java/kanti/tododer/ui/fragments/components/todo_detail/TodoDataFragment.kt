@@ -11,7 +11,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.databinding.FragmentTodoDataBinding
-import kanti.tododer.ui.state.TodoElement
+import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.toPlan
+import kanti.tododer.data.model.common.toTask
 
 @AndroidEntryPoint
 class TodoDataFragment : Fragment() {
@@ -38,15 +40,15 @@ class TodoDataFragment : Fragment() {
 		}
 	}
 
-	private fun showData(todoElement: TodoElement?) {
+	private fun showData(todoElement: Todo?) {
 		if (todoElement == null) {
 			clearEditText()
 			return
 		}
 
 		when (todoElement.type) {
-			TodoElement.Type.TASK -> showTask(todoElement.toTask)
-			TodoElement.Type.PLAN -> showPlan(todoElement.toPlan)
+			Todo.Type.TASK -> showTask(todoElement.toTask)
+			Todo.Type.PLAN -> showPlan(todoElement.toPlan)
 		}
 	}
 

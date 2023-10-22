@@ -1,9 +1,9 @@
 package kanti.tododer.domain.plan.planwithchildren
 
 import kanti.tododer.data.common.RepositoryResult
+import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.plan.IPlanRepository
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.plan.fullId
 import kanti.tododer.data.model.task.ITaskRepository
 import kanti.tododer.data.model.task.Task
 import javax.inject.Inject

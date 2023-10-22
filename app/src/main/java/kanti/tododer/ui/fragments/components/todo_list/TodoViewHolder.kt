@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import kanti.tododer.ui.state.TodoElement
-import kanti.tododer.ui.state.fullId
+import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.fullId
 import kotlin.IllegalArgumentException
 
 abstract class TodoViewHolder(
-	todo: TodoElement,
+	todo: Todo,
 	private val layoutInflater: LayoutInflater,
 	@LayoutRes private val resource: Int,
 	private val root: ViewGroup? = null,
@@ -20,7 +20,7 @@ abstract class TodoViewHolder(
 	var eventListener: TodoEventListener? = null
 		private set
 
-	var todoElement: TodoElement = todo
+	var todo: Todo = todo
 		set(value) {
 			checkType(value.type)
 			field = value
@@ -28,11 +28,11 @@ abstract class TodoViewHolder(
 		}
 
 	val fullId: String
-		get() = todoElement.fullId
+		get() = todo.fullId
 
-	abstract val type: TodoElement.Type
+	abstract val type: Todo.Type
 
-	abstract fun bindData(view: View, todo: TodoElement)
+	abstract fun bindData(view: View, todo: Todo)
 
 	fun setEventListener(eventListener: TodoEventListener? = null) {
 		this.eventListener = eventListener
@@ -42,12 +42,12 @@ abstract class TodoViewHolder(
 		get() {
 			if (_view == null) {
 				_view = createView()
-				bindData(_view!!, todoElement)
+				bindData(_view!!, todo)
 			}
 			return _view!!
 		}
 
-	protected fun onEvent(type: Int, todo: TodoElement, value: Any? = null) {
+	protected fun onEvent(type: Int, todo: Todo, value: Any? = null) {
 		eventListener?.onEvent(type, todo, value)
 	}
 
@@ -57,18 +57,18 @@ abstract class TodoViewHolder(
 		attachToRoot
 	).apply {
 		setOnClickListener {
-			onEvent(EVENT_ON_CLICK, todoElement)
+			onEvent(EVENT_ON_CLICK, todo)
 		}
 	}
 
 	private fun updateView() {
 		_view?.let { view ->
-			checkType(todoElement.type)
-			bindData(view, todoElement)
+			checkType(todo.type)
+			bindData(view, todo)
 		}
 	}
 
-	private fun checkType(type: TodoElement.Type) {
+	private fun checkType(type: Todo.Type) {
 		if (type != this.type)
 			throw IllegalArgumentException("Todo element type error. " +
 					"Expected: ${this.type}, actual: $type")
@@ -80,16 +80,16 @@ abstract class TodoViewHolder(
 		const val EVENT_ON_CLICK = -1
 
 		fun newInstance(
-			todo: TodoElement,
+			todo: Todo,
 			layoutInflater: LayoutInflater,
 			root: ViewGroup? = null,
 			attachToRoot: Boolean = false
 		): TodoViewHolder {
 			return when (todo.type) {
-				TodoElement.Type.TASK -> {
+				Todo.Type.TASK -> {
 					TaskViewHolder(todo, layoutInflater, root, attachToRoot)
 				}
-				TodoElement.Type.PLAN -> {
+				Todo.Type.PLAN -> {
 					PlanViewHolder(todo, layoutInflater, root, attachToRoot)
 				}
 			}

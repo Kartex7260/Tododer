@@ -17,7 +17,6 @@ import kanti.tododer.ui.fragments.components.todo_detail.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailUiState
-import kanti.tododer.ui.state.fullId
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -60,6 +59,10 @@ class TodoDetailFragment : Fragment() {
 				is TodoDetailUiState.Type.NotFound -> { toastAndBack(R.string.not_found, uiState) }
 				else -> { toastAndBack(R.string.unexpected_error, uiState) }
 			}
+		}
+
+		todoListViewModel.taskIsDoneLiveData.observe(viewLifecycleOwner) { taskDone ->
+			viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
 		}
 	}
 

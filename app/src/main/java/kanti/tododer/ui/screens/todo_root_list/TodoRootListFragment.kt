@@ -1,26 +1,29 @@
 package kanti.tododer.ui.screens.todo_root_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.withResumed
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
+import kanti.tododer.common.Const
 import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.databinding.FragmentTodoRootBinding
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
-import kanti.tododer.ui.state.TodoElement
-import kanti.tododer.ui.state.fullId
-import kanti.tododer.ui.state.toTodoElement
+import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.fullId
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -28,7 +31,7 @@ class TodoRootListFragment : Fragment() {
 
 	private lateinit var view: FragmentTodoRootBinding
 	private val viewModel: TodoRootListViewModel by viewModels()
-	private val todoListViewModel: TodoListViewModel by activityViewModels()
+	private val todoListViewModel: TodoListViewModel by viewModels()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -51,8 +54,14 @@ class TodoRootListFragment : Fragment() {
 			}
 		}
 
-		todoListViewModel.onElementClickLiveData.observe(viewLifecycleOwner) { todoElement ->
-			onElementClick(todoElement)
+		lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				todoListViewModel.onElementClickSharedFlow.collectLatest { todoElement ->
+					Log.d(Const.LogTag.ON_CLICK, "onElementClickSharedFlow" +
+							".collectLatest { $todoElement }")
+					navigateToDetailScreen(todoElement)
+				}
+			}
 		}
 	}
 
@@ -76,16 +85,13 @@ class TodoRootListFragment : Fragment() {
 		}
 
 		lifecycleScope.launch(Dispatchers.Default) {
-			val todoElements = plans.map { plan ->
-				plan.toTodoElement
-			}
 			withResumed {
-				todoListViewModel.setTodoList(todoElements)
+				todoListViewModel.setTodoList(plans)
 			}
 		}
 	}
 
-	private fun onElementClick(todoElement: TodoElement) {
+	private fun navigateToDetailScreen(todoElement: Todo) {
 		val navDirections = TodoRootListFragmentDirections.actionListToDetail(todoElement.fullId)
 		view.root.findNavController().navigate(navDirections)
 	}

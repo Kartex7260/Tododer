@@ -1,10 +1,9 @@
 package kanti.tododer.domain.plan
 
 import kanti.tododer.data.common.RepositoryResult
+import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.plan.IPlanRepository
-import kanti.tododer.data.model.plan.fullId
 import kanti.tododer.data.model.task.ITaskRepository
-import kanti.tododer.data.model.task.fullId
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject

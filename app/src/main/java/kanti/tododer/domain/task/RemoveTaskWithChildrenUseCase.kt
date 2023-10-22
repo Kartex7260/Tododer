@@ -1,8 +1,8 @@
 package kanti.tododer.domain.task
 
 import kanti.tododer.data.common.RepositoryResult
+import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.task.ITaskRepository
-import kanti.tododer.data.model.task.fullId
 import javax.inject.Inject
 
 class RemoveTaskWithChildrenUseCase @Inject constructor(

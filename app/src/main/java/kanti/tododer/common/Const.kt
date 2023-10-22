@@ -21,6 +21,8 @@ object Const {
 		const val METHOD = "method"
 		const val BUSINESS_LOGIC = "business_logic"
 		const val UI_STATE = "ui_state"
+
+		const val ON_CLICK = "on_click"
 	}
 
 }

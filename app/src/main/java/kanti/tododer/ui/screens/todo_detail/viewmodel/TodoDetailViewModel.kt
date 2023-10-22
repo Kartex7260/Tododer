@@ -7,8 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.common.Const
-import kanti.tododer.data.model.FullId
-import kanti.tododer.data.model.FullIds
+import kanti.tododer.data.common.UiState
+import kanti.tododer.data.common.toUiState
+import kanti.tododer.data.model.common.FullId
+import kanti.tododer.data.model.common.FullIds
+import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.domain.plan.planwithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.task.taskwithchildren.GetTaskWithChildrenUseCase
 import kotlinx.coroutines.launch
@@ -21,7 +26,8 @@ private typealias Tag = Const.LogTag
 @HiltViewModel
 class TodoDetailViewModel @Inject constructor(
 	private val getTaskWithChildren: GetTaskWithChildrenUseCase,
-	private val getPlanWithChildren: GetPlanWithChildrenUseCase
+	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
+	private val taskRepository: TaskRepository
 ) : ViewModel() {
 
 	private val stack = Stack<FullId>()
@@ -29,6 +35,17 @@ class TodoDetailViewModel @Inject constructor(
 
 	private val _todoDetailLiveData = MutableLiveData<TodoDetailUiState>()
 	val todoDetailLiveData: LiveData<TodoDetailUiState> = _todoDetailLiveData
+
+	fun taskIsDone(task: Task, isDone: Boolean, callback: MutableLiveData<UiState<Task>>) {
+		viewModelScope.launch {
+			val taskRepositoryResult = taskRepository.replace(task) {
+				copy(
+					done = isDone
+				)
+			}
+			callback.postValue(taskRepositoryResult.toUiState(Task()))
+		}
+	}
 
 	fun pop() {
 		_todoDetailLiveData.value = TodoDetailUiState(process = true)
@@ -83,8 +100,8 @@ class TodoDetailViewModel @Inject constructor(
 	private suspend fun showTodo(fullId: FullId): Boolean {
 		Log.d(Tag.METHOD, "showTodo(FullId = \"$fullId\")")
 		val uiState = when (fullId.type) {
-			is FullIds.Type.Plan -> getPlan(fullId.id)
-			is FullIds.Type.Task -> getTask(fullId.id)
+			Todo.Type.PLAN -> getPlan(fullId.id)
+			Todo.Type.TASK -> getTask(fullId.id)
 		}
 		Log.d(Tag.UI_STATE, "showTodo(FullId = \"$fullId\"): get ui state ($uiState)")
 		_todoDetailLiveData.postValue(uiState)

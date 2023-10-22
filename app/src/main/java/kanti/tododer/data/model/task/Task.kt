@@ -1,18 +1,17 @@
 package kanti.tododer.data.model.task
 
-import kanti.tododer.data.model.FullIds
+import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.task.datasource.local.TaskEntity
 
 data class Task(
-	val id: Int = 0,
+	override val id: Int = 0,
 	val parentId: String = "",
 	val title: String = "",
 	val remark: String = "",
 	val done: Boolean = false
-)
-
-val Task.fullId: String
-	get() = FullIds.from(this)
+) : Todo() {
+	override val type: Todo.Type = Todo.Type.TASK
+}
 
 val Task.asTaskEntity: TaskEntity
 	get() {

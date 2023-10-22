@@ -5,17 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.databinding.FragmentTodoListBinding
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
-import kanti.tododer.ui.state.TodoElement
+import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.toTask
 
 @AndroidEntryPoint
 class TodoListFragment : Fragment() {
 
 	private lateinit var view: FragmentTodoListBinding
-	private val viewModel: TodoListViewModel by activityViewModels()
+	private val viewModel: TodoListViewModel by viewModels(ownerProducer = {
+		requireParentFragment()
+	})
 
 	private lateinit var viewHolderManager: TodoViewHolderManager
 
@@ -46,14 +50,26 @@ class TodoListFragment : Fragment() {
 		}
 	}
 
-	private fun getViewHolder(todoElement: TodoElement): TodoViewHolder {
-		return viewHolderManager.getViewHolder(todoElement).apply {
-			setEventListenerIfNull { type, todo, value ->
-				when (type) {
-					TodoViewHolder.EVENT_ON_CLICK -> viewModel.elementClick(todo)
-					TaskViewHolder.EVENT_DONE -> viewModel.taskIsDone(todo.toTask, value as Boolean)
-				}
+	private fun getViewHolder(todoElement: Todo): TodoViewHolder {
+		val viewHolder = viewHolderManager.getViewHolder(todoElement)
+		viewHolder.setEventListenerIfNull { type, todo, value ->
+			when (type) {
+				TodoViewHolder.EVENT_ON_CLICK -> viewModel.elementClick(todo)
+				TaskViewHolder.EVENT_IS_DONE -> eventTaskIsDone(viewHolder, todo, value as Boolean)
 			}
+		}
+		return viewHolder
+	}
+
+	private fun eventTaskIsDone(viewHolder: TodoViewHolder, todo: Todo, isDone: Boolean) {
+		val callbackLiveData = viewModel.taskIsDone(todo.toTask, isDone)
+		callbackLiveData.observe(viewLifecycleOwner) { uiState ->
+			if (uiState.type != RepositoryResult.Type.Success) {
+				viewHolderManager.remove(todo)
+				return@observe
+			}
+			viewHolder.todo = uiState.value
+			callbackLiveData.removeObservers(viewLifecycleOwner)
 		}
 	}
 
