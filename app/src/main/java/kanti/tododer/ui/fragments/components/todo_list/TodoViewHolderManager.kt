@@ -6,8 +6,8 @@ import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
 
 class TodoViewHolderManager(
-	private val layoutInflater: LayoutInflater,
-	private val root: ViewGroup? = null,
+	var layoutInflater: LayoutInflater,
+	var root: ViewGroup? = null,
 ) {
 
 	private val todoViewHolderHashMap: HashMap<String, TodoViewHolder> = HashMap()

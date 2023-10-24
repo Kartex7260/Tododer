@@ -16,6 +16,8 @@ import kotlinx.coroutines.launch
 
 class TodoListViewModel : ViewModel() {
 
+	private val logTag = javaClass.simpleName
+
 	private val _todoListLiveData = MutableLiveData<List<Todo>>()
 	val todoListLiveData: LiveData<List<Todo>> = _todoListLiveData
 
@@ -31,7 +33,7 @@ class TodoListViewModel : ViewModel() {
 
 	fun elementClick(todo: Todo) {
 		viewModelScope.launch {
-			Log.d(Const.LogTag.ON_CLICK, "elementClick(Todo = $todo)")
+			Log.d(logTag, "elementClick(Todo = $todo)")
 			_onElementClickSharedFlow.emit(todo)
 		}
 	}

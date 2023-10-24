@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Tododer"
 include(":app")
+include(":LifecycleLogger")

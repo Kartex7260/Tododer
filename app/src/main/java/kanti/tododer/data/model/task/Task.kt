@@ -11,10 +11,16 @@ data class Task(
 	val done: Boolean = false
 ) : Todo() {
 	override val type: Todo.Type = Todo.Type.TASK
+
+	companion object {
+
+		val EMPTY = Task()
+
+	}
+
 }
 
-val Task.asTaskEntity: TaskEntity
-	get() {
+val Task.asTaskEntity: TaskEntity get() {
 		return TaskEntity(
 			id = id,
 			parentId = parentId,

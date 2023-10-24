@@ -14,24 +14,33 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.withResumed
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.R
 import kanti.tododer.common.Const
+import kanti.tododer.common.hashLogTag
+import kanti.tododer.common.logTag
 import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.databinding.FragmentTodoRootBinding
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TodoRootListFragment : Fragment() {
+class TodoRootListScreenFragment : Fragment() {
 
 	private lateinit var view: FragmentTodoRootBinding
 	private val viewModel: TodoRootListViewModel by viewModels()
 	private val todoListViewModel: TodoListViewModel by viewModels()
+
+	private lateinit var lifecycleLogger: LifecycleLogger
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		lifecycleLogger = LifecycleLogger(this)
+	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -54,11 +63,13 @@ class TodoRootListFragment : Fragment() {
 			}
 		}
 
-		lifecycleScope.launch {
+		viewLifecycleOwner.lifecycleScope.launch {
 			repeatOnLifecycle(Lifecycle.State.STARTED) {
 				todoListViewModel.onElementClickSharedFlow.collectLatest { todoElement ->
-					Log.d(Const.LogTag.ON_CLICK, "onElementClickSharedFlow" +
-							".collectLatest { $todoElement }")
+					Log.d(
+						this@TodoRootListScreenFragment.hashLogTag,
+						"onElementClickSharedFlow.collectLatest { $todoElement }"
+					)
 					navigateToDetailScreen(todoElement)
 				}
 			}
@@ -79,20 +90,11 @@ class TodoRootListFragment : Fragment() {
 	}
 
 	private fun showData(plans: List<Plan>) {
-		if (plans.isEmpty()) {
-			todoListViewModel.setTodoList()
-			return
-		}
-
-		lifecycleScope.launch(Dispatchers.Default) {
-			withResumed {
-				todoListViewModel.setTodoList(plans)
-			}
-		}
+		todoListViewModel.setTodoList(plans)
 	}
 
 	private fun navigateToDetailScreen(todoElement: Todo) {
-		val navDirections = TodoRootListFragmentDirections.actionListToDetail(todoElement.fullId)
+		val navDirections = TodoRootListScreenFragmentDirections.actionListToDetail(todoElement.fullId)
 		view.root.findNavController().navigate(navDirections)
 	}
 

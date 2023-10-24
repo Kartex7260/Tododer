@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.common.Const
+import kanti.tododer.common.logTag
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.common.toUiState
 import kanti.tododer.data.model.common.FullId
@@ -20,8 +21,6 @@ import kotlinx.coroutines.launch
 import java.util.EmptyStackException
 import java.util.Stack
 import javax.inject.Inject
-
-private typealias Tag = Const.LogTag
 
 @HiltViewModel
 class TodoDetailViewModel @Inject constructor(
@@ -43,7 +42,7 @@ class TodoDetailViewModel @Inject constructor(
 					done = isDone
 				)
 			}
-			callback.postValue(taskRepositoryResult.toUiState(Task()))
+			callback.postValue(taskRepositoryResult.toUiState(Task.EMPTY))
 		}
 	}
 
@@ -70,12 +69,13 @@ class TodoDetailViewModel @Inject constructor(
 	}
 
 	fun showTodo(fullId: String) {
-		Log.d(Tag.METHOD, "showTodo(String = \"$fullId\")")
+		fun log(mes: String = "") = Log.d(logTag, "showTodo(String = \"$fullId\"): $mes")
+
 		_todoDetailLiveData.value = TodoDetailUiState(process = true)
 		viewModelScope.launch {
-			Log.d(Tag.BUSINESS_LOGIC, "showTodo(String = \"$fullId\"): coroutine start")
+			log(": coroutine start")
 			val parsedFullId = FullIds.parseFullId(fullId)
-			Log.d(Tag.BUSINESS_LOGIC, "showTodo(String = \"$fullId\"): parsedFullId = $parsedFullId")
+			log("parsedFullId = $parsedFullId")
 			if (parsedFullId == null) {
 				_todoDetailLiveData.postValue(
 					TodoDetailUiState(
@@ -87,9 +87,9 @@ class TodoDetailViewModel @Inject constructor(
 
 			val success = showTodo(parsedFullId)
 			if (success) {
-				Log.d(Tag.BUSINESS_LOGIC, "showTodo(String = \"$fullId\"): showTodo(FullId) return success response")
+				log("showTodo(FullId) return success response")
 				currentFullId?.apply {
-					Log.d(Tag.BUSINESS_LOGIC, "showTodo(String = \"$fullId\"): add currentFullId($currentFullId) to stack")
+					log("add currentFullId=$currentFullId to stack")
 					stack.push(this)
 				}
 				currentFullId = parsedFullId
@@ -98,27 +98,24 @@ class TodoDetailViewModel @Inject constructor(
 	}
 
 	private suspend fun showTodo(fullId: FullId): Boolean {
-		Log.d(Tag.METHOD, "showTodo(FullId = \"$fullId\")")
 		val uiState = when (fullId.type) {
 			Todo.Type.PLAN -> getPlan(fullId.id)
 			Todo.Type.TASK -> getTask(fullId.id)
 		}
-		Log.d(Tag.UI_STATE, "showTodo(FullId = \"$fullId\"): get ui state ($uiState)")
+		Log.d(logTag, "showTodo(FullId = \"$fullId\"): get uiState=$uiState")
 		_todoDetailLiveData.postValue(uiState)
 		return uiState.isSuccess
 	}
 
 	private suspend fun getTask(id: Int): TodoDetailUiState {
-		Log.d(Tag.METHOD, "getTask(Int = \"$id\")")
 		val repositoryResult = getTaskWithChildren(id)
-		Log.d(Tag.BUSINESS_LOGIC, "getTask(Int = \"$id\"): gotten task with children (${repositoryResult.value})")
+		Log.d(logTag, "getTask(Int = \"$id\"): gotten task with children (${repositoryResult.value})")
 		return repositoryResult.toTaskTodoDetailUiState
 	}
 
 	private suspend fun getPlan(id: Int): TodoDetailUiState {
-		Log.d(Tag.METHOD, "getPlan(Int = \"$id\")")
 		val repositoryResult = getPlanWithChildren(id)
-		Log.d(Tag.BUSINESS_LOGIC, "getPlan(Int = \"$id\"): gotten plan with children (${repositoryResult.value})")
+		Log.d(logTag, "getPlan(Int = \"$id\"): gotten plan with children (${repositoryResult.value})")
 		return repositoryResult.toPlanTodoDetailUiState
 	}
 

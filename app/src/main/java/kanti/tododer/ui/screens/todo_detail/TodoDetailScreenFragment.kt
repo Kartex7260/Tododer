@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
 import kanti.tododer.common.Const
@@ -21,7 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TodoDetailFragment : Fragment() {
+class TodoDetailScreenFragment : Fragment() {
 
 	private lateinit var view: FragmentTodoDetailBinding
 	private val viewModel: TodoDetailViewModel by activityViewModels()
@@ -76,11 +77,11 @@ class TodoDetailFragment : Fragment() {
 
 	private fun back(millis: Long? = null) {
 		if (millis == null) {
-			parentFragmentManager.popBackStack()
+			findNavController().popBackStack()
 		} else {
 			lifecycleScope.launch {
 				delay(millis)
-				parentFragmentManager.popBackStack()
+				findNavController().popBackStack()
 			}
 		}
 	}
