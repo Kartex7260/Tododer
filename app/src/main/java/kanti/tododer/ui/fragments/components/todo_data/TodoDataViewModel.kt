@@ -1,4 +1,4 @@
-package kanti.tododer.ui.fragments.components.todo_detail
+package kanti.tododer.ui.fragments.components.todo_data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +10,7 @@ class TodoDataViewModel : ViewModel() {
 	private val _todoElementLiveData = MutableLiveData<TodoDataUiState>()
 	val todoElementLiveData: LiveData<TodoDataUiState> = _todoElementLiveData
 
-	fun setTodoElement(todoElement: Todo? = null) {
+	fun sendTodo(todoElement: Todo? = null) {
 		_todoElementLiveData.value = TodoDataUiState(
 			todoElement
 		)

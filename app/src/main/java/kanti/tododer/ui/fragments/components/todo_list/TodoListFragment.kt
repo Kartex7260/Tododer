@@ -53,9 +53,10 @@ class TodoListFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		Log.d(hashLogTag, "onViewCreated(): subscribe to viewModel.todoListLiveData")
+		Log.d(hashLogTag, "onViewCreated(View, Bundle?): subscribe to viewModel.todoListLiveData\n" +
+				"viewModel=${viewModel.hashLogTag}")
 		viewModel.todoListLiveData.observe(viewLifecycleOwner) { elements ->
-			Log.d(hashLogTag, "onViewCreated(): get observe notification=$elements")
+			Log.d(hashLogTag, "onViewCreated(View, Bundle?): get observe notification=$elements")
 			this.view.linearLayoutChildren.apply {
 				removeAllViews()
 				for (todoElement in elements) {

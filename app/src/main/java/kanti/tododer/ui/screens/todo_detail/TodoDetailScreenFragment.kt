@@ -1,6 +1,7 @@
 package kanti.tododer.ui.screens.todo_detail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,13 +9,15 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
 import kanti.tododer.common.Const
+import kanti.tododer.common.hashLogTag
 import kanti.tododer.databinding.FragmentTodoDetailBinding
-import kanti.tododer.ui.fragments.components.todo_detail.TodoDataViewModel
+import kanti.tododer.ui.fragments.components.todo_data.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailUiState
@@ -25,9 +28,9 @@ import kotlinx.coroutines.launch
 class TodoDetailScreenFragment : Fragment() {
 
 	private lateinit var view: FragmentTodoDetailBinding
-	private val viewModel: TodoDetailViewModel by activityViewModels()
-	private val todoListViewModel: TodoListViewModel by activityViewModels()
-	private val todoDataViewModel: TodoDataViewModel by activityViewModels()
+	private val viewModel: TodoDetailViewModel by viewModels()
+	private val todoListViewModel: TodoListViewModel by viewModels()
+	private val todoDataViewModel: TodoDataViewModel by viewModels()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -50,8 +53,18 @@ class TodoDetailScreenFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		viewModel.todoDetailLiveData.observe(viewLifecycleOwner) { uiState ->
 			showProcess(uiState.process)
-			todoDataViewModel.setTodoElement(uiState.todo)
-			todoListViewModel.setTodoList(uiState.todoChildren)
+			Log.d(
+				hashLogTag,
+				"onViewCreated(View, Bundle?): todoDataViewModel.sendTodo(Todo=${uiState.todo})\n" +
+						"todoDataViewModel=${todoDataViewModel.hashLogTag}"
+			)
+			todoDataViewModel.sendTodo(uiState.todo)
+			Log.d(
+				hashLogTag,
+				"onViewCreated(View, Bundle?): todoListViewModel.sendTodoList(List<Todo> = ${uiState.todoChildren}\n" +
+						"todoListViewModel=${todoListViewModel.hashLogTag}"
+			)
+			todoListViewModel.sendTodoList(uiState.todoChildren)
 
 			when (uiState.type) {
 				is TodoDetailUiState.Type.Success -> {}

@@ -1,4 +1,4 @@
-package kanti.tododer.ui.fragments.components.todo_detail
+package kanti.tododer.ui.fragments.components.todo_data
 
 import android.os.Bundle
 import android.text.Editable

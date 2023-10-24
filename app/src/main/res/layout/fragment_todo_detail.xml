@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:fillViewport="true" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/nav_host_todo_detail_fragment"
-            android:name="kanti.tododer.ui.fragments.components.todo_detail.TodoDataFragment"
+            android:id="@+id/fragmentContainerDetailTodoDataFragment"
+            android:name="kanti.tododer.ui.fragments.components.todo_data.TodoDataFragment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:defaultNavHost="true"
@@ -20,15 +21,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/nav_host_todo_list_fragment"
+            android:id="@+id/fragmentContainerDetailTodoListFragment"
             android:name="kanti.tododer.ui.fragments.components.todo_list.TodoListFragment"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             app:defaultNavHost="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nav_host_todo_detail_fragment" />
+            app:layout_constraintTop_toBottomOf="@+id/fragmentContainerDetailTodoDataFragment" />
 
         <ProgressBar
             android:id="@+id/progressBarTodoDetail"
@@ -41,4 +42,4 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</ScrollView>

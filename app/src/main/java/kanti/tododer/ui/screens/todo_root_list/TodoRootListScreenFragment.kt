@@ -11,14 +11,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.withResumed
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.R
-import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
-import kanti.tododer.common.logTag
 import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.databinding.FragmentTodoRootBinding
@@ -90,7 +87,7 @@ class TodoRootListScreenFragment : Fragment() {
 	}
 
 	private fun showData(plans: List<Plan>) {
-		todoListViewModel.setTodoList(plans)
+		todoListViewModel.sendTodoList(plans)
 	}
 
 	private fun navigateToDetailScreen(todoElement: Todo) {

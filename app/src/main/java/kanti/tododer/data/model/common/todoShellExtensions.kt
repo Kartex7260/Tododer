@@ -7,12 +7,12 @@ val Todo.fullId: String
 	get() = FullIds.from(this)
 
 val Todo.toPlan: Plan get() {
-	check("plan", type)
+	check(Todo.Type.PLAN)
 	return this as Plan
 }
 
 val Todo.toTask: Task get() {
-	check("task", type)
+	check(Todo.Type.TASK)
 	return this as Task
 }
 
@@ -20,8 +20,8 @@ val Todo.toFullId: FullId get() {
 	return FullId(type, id)
 }
 
-private fun check(typeString: String, type: Todo.Type) {
-	check(type == Todo.Type.PLAN) {
-		"Try get $typeString, but todo is $type"
+private fun Todo.check(typeExpected: Todo.Type) {
+	check(typeExpected == type) {
+		"Try get $typeExpected, but todo is $type"
 	}
 }
