@@ -13,6 +13,7 @@ data class TodoDetailUiState(
 ) {
 
 	sealed class Type(val type: String = "", val message: String? = null) {
+		data object Empty : Type("Empty")
 		data object Success : Type("Success")
 //		class NoConnection(message: String? = null) : Type("NoConnection", message)
 //		class NoAuthorization(message: String? = null) : Type("NoAuthorization", message)
@@ -31,6 +32,12 @@ data class TodoDetailUiState(
 		override fun toString(): String {
 			return "TodoDetailUiState.Type.$type"
 		}
+	}
+
+	companion object {
+
+		val Empty = TodoDetailUiState(type = Type.Empty)
+
 	}
 
 }

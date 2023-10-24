@@ -8,20 +8,23 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
 import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
+import kanti.tododer.data.model.common.fullId
 import kanti.tododer.databinding.FragmentTodoDetailBinding
 import kanti.tododer.ui.fragments.components.todo_data.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailUiState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -51,32 +54,50 @@ class TodoDetailScreenFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		viewModel.todoDetailLiveData.observe(viewLifecycleOwner) { uiState ->
-			showProcess(uiState.process)
-			Log.d(
-				hashLogTag,
-				"onViewCreated(View, Bundle?): todoDataViewModel.sendTodo(Todo=${uiState.todo})\n" +
-						"todoDataViewModel=${todoDataViewModel.hashLogTag}"
-			)
-			todoDataViewModel.sendTodo(uiState.todo)
-			Log.d(
-				hashLogTag,
-				"onViewCreated(View, Bundle?): todoListViewModel.sendTodoList(List<Todo> = ${uiState.todoChildren}\n" +
-						"todoListViewModel=${todoListViewModel.hashLogTag}"
-			)
-			todoListViewModel.sendTodoList(uiState.todoChildren)
 
-			when (uiState.type) {
-				is TodoDetailUiState.Type.Success -> {}
-				is TodoDetailUiState.Type.EmptyStack -> { back() }
-				is TodoDetailUiState.Type.InvalidFullId -> { toastAndBack(R.string.invalid_data, uiState) }
-				is TodoDetailUiState.Type.NotFound -> { toastAndBack(R.string.not_found, uiState) }
-				else -> { toastAndBack(R.string.unexpected_error, uiState) }
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				viewModel.todoDetail.collectLatest { uiState ->
+					showProcess(uiState.process)
+					Log.d(
+						hashLogTag,
+						"onViewCreated(View, Bundle?): todoDataViewModel.sendTodo(Todo=${uiState.todo})\n" +
+								"todoDataViewModel=${todoDataViewModel.hashLogTag}"
+					)
+					todoDataViewModel.sendTodo(uiState.todo)
+					Log.d(
+						hashLogTag,
+						"onViewCreated(View, Bundle?): todoListViewModel.sendTodoList(List<Todo> = ${uiState.todoChildren}\n" +
+								"todoListViewModel=${todoListViewModel.hashLogTag}"
+					)
+					todoListViewModel.sendTodoList(uiState.todoChildren)
+
+					when (uiState.type) {
+						is TodoDetailUiState.Type.Empty -> {}
+						is TodoDetailUiState.Type.Success -> {}
+						is TodoDetailUiState.Type.EmptyStack -> { back() }
+						is TodoDetailUiState.Type.InvalidFullId -> { toastAndBack(R.string.invalid_data, uiState) }
+						is TodoDetailUiState.Type.NotFound -> { toastAndBack(R.string.not_found, uiState) }
+						else -> { toastAndBack(R.string.unexpected_error, uiState) }
+					}
+				}
 			}
 		}
 
-		todoListViewModel.taskIsDoneLiveData.observe(viewLifecycleOwner) { taskDone ->
-			viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				todoListViewModel.onTaskIsDone.collectLatest { taskDone ->
+					viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
+				}
+			}
+		}
+
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				todoListViewModel.onElementClick.collectLatest {
+					viewModel.showTodo(it.fullId)
+				}
+			}
 		}
 	}
 

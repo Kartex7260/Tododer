@@ -1,30 +1,30 @@
 package kanti.tododer.ui.fragments.components.todo_list.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.common.Todo
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class TodoListViewModel : ViewModel() {
 
 	private val logTag = javaClass.simpleName
 
-	private val _todoListLiveData = MutableLiveData<List<Todo>>()
-	val todoListLiveData: LiveData<List<Todo>> = _todoListLiveData
+	private val _todoListLiveData = MutableStateFlow<List<Todo>>(listOf())
+	val todoList = _todoListLiveData.asStateFlow()
 
-	private val _onElementClickSharedFlow = MutableSharedFlow<Todo>()
-	val onElementClickSharedFlow = _onElementClickSharedFlow.asSharedFlow()
+	private val _onElementClick = MutableSharedFlow<Todo>()
+	val onElementClick = _onElementClick.asSharedFlow()
 
-	private val _taskIsDoneLiveData = MutableLiveData<TaskIsDoneResponse>()
-	val taskIsDoneLiveData: LiveData<TaskIsDoneResponse> = _taskIsDoneLiveData
+	private val _onTaskIsDone = MutableSharedFlow<TaskIsDoneResponse>()
+	val onTaskIsDone = _onTaskIsDone.asSharedFlow()
 
 	fun sendTodoList(list: List<Todo> = listOf()) {
 		_todoListLiveData.value = list
@@ -32,13 +32,17 @@ class TodoListViewModel : ViewModel() {
 
 	fun elementClick(todo: Todo) {
 		viewModelScope.launch {
-			_onElementClickSharedFlow.emit(todo)
+			_onElementClick.emit(todo)
 		}
 	}
 
 	fun taskIsDone(task: Task, done: Boolean): LiveData<UiState<Task>> {
 		val callbackLiveData = MutableLiveData<UiState<Task>>()
-		_taskIsDoneLiveData.value = TaskIsDoneResponse(task, done, callbackLiveData)
+		viewModelScope.launch {
+			_onTaskIsDone.emit(
+				TaskIsDoneResponse(task, done, callbackLiveData)
+			)
+		}
 		return callbackLiveData
 	}
 

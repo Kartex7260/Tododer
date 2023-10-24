@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.common.hashLogTag
@@ -15,6 +19,8 @@ import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewMod
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toTask
 import kanti.tododer.databinding.FragmentTodoListBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TodoListFragment : Fragment() {
@@ -53,15 +59,22 @@ class TodoListFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		Log.d(hashLogTag, "onViewCreated(View, Bundle?): subscribe to viewModel.todoListLiveData\n" +
+		Log.d(hashLogTag, "onViewCreated(View, Bundle?): subscribe to viewModel.todoList\n" +
 				"viewModel=${viewModel.hashLogTag}")
-		viewModel.todoListLiveData.observe(viewLifecycleOwner) { elements ->
-			Log.d(hashLogTag, "onViewCreated(View, Bundle?): get observe notification=$elements")
-			this.view.linearLayoutChildren.apply {
-				removeAllViews()
-				for (todoElement in elements) {
-					val viewHolder = getViewHolder(todoElement)
-					addView(viewHolder.view)
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				viewModel.todoList.collectLatest { elements ->
+					Log.d(
+						hashLogTag,
+						"onViewCreated(View, Bundle?): get observe notification=$elements"
+					)
+					this@TodoListFragment.view.linearLayoutChildren.apply {
+						removeAllViews()
+						for (todoElement in elements) {
+							val viewHolder = getViewHolder(todoElement)
+							addView(viewHolder.view)
+						}
+					}
 				}
 			}
 		}
@@ -70,7 +83,6 @@ class TodoListFragment : Fragment() {
 	override fun onDestroyView() {
 		super.onDestroyView()
 		Log.d(hashLogTag, "onDestroyView(): unsubscribe from viewModel.todoListLiveData")
-		viewModel.todoListLiveData.removeObservers(viewLifecycleOwner)
 	}
 
 	private fun getViewHolder(todo: Todo): TodoViewHolder {

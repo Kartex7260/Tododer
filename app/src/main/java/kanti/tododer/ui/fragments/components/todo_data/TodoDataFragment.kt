@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
@@ -14,12 +18,16 @@ import kanti.tododer.databinding.FragmentTodoDataBinding
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toPlan
 import kanti.tododer.data.model.common.toTask
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TodoDataFragment : Fragment() {
 
 	private lateinit var view: FragmentTodoDataBinding
-	private val viewModel: TodoDataViewModel by activityViewModels()
+	private val viewModel: TodoDataViewModel by viewModels(ownerProducer = {
+		requireParentFragment()
+	})
 
 	private val editableFactory = Editable.Factory.getInstance()
 
@@ -35,8 +43,12 @@ class TodoDataFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		viewModel.todoElementLiveData.observe(viewLifecycleOwner) { uiState ->
-			showData(uiState.todoElement)
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				viewModel.todoElement.collectLatest { uiState ->
+					showData(uiState.todoElement)
+				}
+			}
 		}
 	}
 

@@ -1,12 +1,10 @@
 package kanti.tododer.ui.screens.todo_detail.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kanti.tododer.common.Const
 import kanti.tododer.common.logTag
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.common.toUiState
@@ -17,6 +15,8 @@ import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.domain.plan.planwithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.task.taskwithchildren.GetTaskWithChildrenUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.EmptyStackException
 import java.util.Stack
@@ -32,8 +32,8 @@ class TodoDetailViewModel @Inject constructor(
 	private val stack = Stack<FullId>()
 	private var currentFullId: FullId? = null
 
-	private val _todoDetailLiveData = MutableLiveData<TodoDetailUiState>()
-	val todoDetailLiveData: LiveData<TodoDetailUiState> = _todoDetailLiveData
+	private val _todoDetail = MutableStateFlow<TodoDetailUiState>(TodoDetailUiState.Empty)
+	val todoDetail = _todoDetail.asStateFlow()
 
 	fun taskIsDone(task: Task, isDone: Boolean, callback: MutableLiveData<UiState<Task>>) {
 		viewModelScope.launch {
@@ -47,22 +47,18 @@ class TodoDetailViewModel @Inject constructor(
 	}
 
 	fun pop() {
-		_todoDetailLiveData.value = TodoDetailUiState(process = true)
+		_todoDetail.value = TodoDetailUiState(process = true)
 		viewModelScope.launch {
 			try {
 				currentFullId = stack.pop()
 				showTodo(currentFullId!!)
 			} catch (th: EmptyStackException) {
-				_todoDetailLiveData.postValue(
-					TodoDetailUiState(
+				_todoDetail.value = TodoDetailUiState(
 					type = TodoDetailUiState.Type.EmptyStack
 				)
-				)
 			} catch (th: Throwable) {
-				_todoDetailLiveData.postValue(
-					TodoDetailUiState(
-						type = TodoDetailUiState.Type.Fail(th.message)
-					)
+				_todoDetail.value = TodoDetailUiState(
+					type = TodoDetailUiState.Type.Fail(th.message)
 				)
 			}
 		}
@@ -71,16 +67,14 @@ class TodoDetailViewModel @Inject constructor(
 	fun showTodo(fullId: String) {
 		fun log(mes: String = "") = Log.d(logTag, "showTodo(String = \"$fullId\"): $mes")
 
-		_todoDetailLiveData.value = TodoDetailUiState(process = true)
+		_todoDetail.value = TodoDetailUiState(process = true)
 		viewModelScope.launch {
 			log(": coroutine start")
 			val parsedFullId = FullIds.parseFullId(fullId)
 			log("parsedFullId = $parsedFullId")
 			if (parsedFullId == null) {
-				_todoDetailLiveData.postValue(
-					TodoDetailUiState(
-						type = TodoDetailUiState.Type.InvalidFullId(fullId)
-					)
+				_todoDetail.value = TodoDetailUiState(
+					type = TodoDetailUiState.Type.InvalidFullId(fullId)
 				)
 				return@launch
 			}
@@ -103,7 +97,7 @@ class TodoDetailViewModel @Inject constructor(
 			Todo.Type.TASK -> getTask(fullId.id)
 		}
 		Log.d(logTag, "showTodo(FullId = \"$fullId\"): get uiState=$uiState")
-		_todoDetailLiveData.postValue(uiState)
+		_todoDetail.value = uiState
 		return uiState.isSuccess
 	}
 

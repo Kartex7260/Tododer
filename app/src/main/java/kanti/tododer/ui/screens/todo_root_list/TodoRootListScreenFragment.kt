@@ -62,7 +62,7 @@ class TodoRootListScreenFragment : Fragment() {
 
 		viewLifecycleOwner.lifecycleScope.launch {
 			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				todoListViewModel.onElementClickSharedFlow.collectLatest { todoElement ->
+				todoListViewModel.onElementClick.collectLatest { todoElement ->
 					Log.d(
 						this@TodoRootListScreenFragment.hashLogTag,
 						"onElementClickSharedFlow.collectLatest { $todoElement }"
