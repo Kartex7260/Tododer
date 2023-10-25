@@ -47,7 +47,7 @@ class TodoDetailViewModel @Inject constructor(
 	}
 
 	fun pop() {
-		_todoDetail.value = TodoDetailUiState(process = true)
+		_todoDetail.value = _todoDetail.value.copy(process = true)
 		viewModelScope.launch {
 			try {
 				currentFullId = stack.pop()
@@ -67,7 +67,7 @@ class TodoDetailViewModel @Inject constructor(
 	fun showTodo(fullId: String) {
 		fun log(mes: String = "") = Log.d(logTag, "showTodo(String = \"$fullId\"): $mes")
 
-		_todoDetail.value = TodoDetailUiState(process = true)
+		_todoDetail.value = _todoDetail.value.copy(process = true)
 		viewModelScope.launch {
 			log(": coroutine start")
 			val parsedFullId = FullIds.parseFullId(fullId)
