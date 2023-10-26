@@ -1,4 +1,4 @@
-package kanti.tododer.ui.fragments.components.common.viewholder
+package kanti.tododer.ui.common.viewholder
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -48,7 +48,7 @@ abstract class TodoViewHolder(
 			return _view!!
 		}
 
-	protected fun onEvent(type: Int, todo: Todo, value: Any? = null) {
+	protected fun event(type: Int, todo: Todo, value: Any? = null) {
 		eventListener?.onEvent(type, todo, value)
 	}
 
@@ -58,7 +58,7 @@ abstract class TodoViewHolder(
 		attachToRoot
 	).apply {
 		setOnClickListener {
-			onEvent(EVENT_ON_CLICK, todo)
+			event(EVENT_ON_CLICK, todo)
 		}
 	}
 

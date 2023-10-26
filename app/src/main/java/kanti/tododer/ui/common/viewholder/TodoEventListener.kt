@@ -1,4 +1,4 @@
-package kanti.tododer.ui.fragments.components.common.viewholder
+package kanti.tododer.ui.common.viewholder
 
 import kanti.tododer.data.model.common.Todo
 

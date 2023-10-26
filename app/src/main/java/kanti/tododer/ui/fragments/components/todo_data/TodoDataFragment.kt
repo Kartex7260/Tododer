@@ -19,10 +19,10 @@ import kanti.tododer.databinding.FragmentTodoDataBinding
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toPlan
 import kanti.tododer.data.model.common.toTask
-import kanti.tododer.ui.fragments.components.common.viewholder.TaskStateViewHolder
-import kanti.tododer.ui.fragments.components.common.viewholder.TodoStateViewHolderFactory
-import kanti.tododer.ui.fragments.components.common.viewholder.TodoViewHolder
-import kanti.tododer.ui.fragments.components.common.viewholder.TodoViewHolderManager
+import kanti.tododer.ui.common.viewholder.TaskStateViewHolder
+import kanti.tododer.ui.common.viewholder.TodoStateViewHolderFactory
+import kanti.tododer.ui.common.viewholder.TodoViewHolder
+import kanti.tododer.ui.common.viewholder.TodoViewHolderManager
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.setEventListenerIfNull
 import kotlinx.coroutines.flow.collectLatest

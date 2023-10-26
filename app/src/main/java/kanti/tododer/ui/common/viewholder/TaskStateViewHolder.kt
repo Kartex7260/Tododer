@@ -1,4 +1,4 @@
-package kanti.tododer.ui.fragments.components.common.viewholder
+package kanti.tododer.ui.common.viewholder
 
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +19,7 @@ class TaskStateViewHolder(
 	override fun createView(): View {
 		return CheckBox(layoutInflater.context).apply {
 			setOnCheckedChangeListener { _, isChecked ->
-				onEvent(EVENT_IS_DONE, todo, isChecked)
+				event(EVENT_IS_DONE, todo, isChecked)
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package kanti.tododer.ui.fragments.components.common.viewholder
+package kanti.tododer.ui.common.viewholder
 
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +27,7 @@ class TaskViewHolder(
 		view.findViewById<CheckBox>(R.id.checkBoxTodoItemTaskDone).apply {
 			isChecked = task.done
 			setOnCheckedChangeListener { _, isChecked ->
-				onEvent(EVENT_IS_DONE, task, isChecked)
+				event(EVENT_IS_DONE, task, isChecked)
 			}
 		}
 	}
