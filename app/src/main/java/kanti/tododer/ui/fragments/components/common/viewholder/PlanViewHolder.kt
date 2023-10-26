@@ -1,4 +1,4 @@
-package kanti.tododer.ui.fragments.components.todo_list
+package kanti.tododer.ui.fragments.components.common.viewholder
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +10,9 @@ import kanti.tododer.data.model.common.toPlan
 
 class PlanViewHolder(
 	todo: Todo,
-	private val layoutInflater: LayoutInflater,
-	private val root: ViewGroup? = null,
-	private val attachToRoot: Boolean = false
+	layoutInflater: LayoutInflater,
+	root: ViewGroup? = RootDefault,
+	attachToRoot: Boolean = AttachToRootDefault
 ) : TodoViewHolder(todo, layoutInflater, R.layout.view_plan_list_item, root, attachToRoot) {
 
 	override val type: Todo.Type = Todo.Type.PLAN

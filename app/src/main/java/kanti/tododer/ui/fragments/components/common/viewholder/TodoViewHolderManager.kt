@@ -1,4 +1,4 @@
-package kanti.tododer.ui.fragments.components.todo_list
+package kanti.tododer.ui.fragments.components.common.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,8 @@ import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
 
 class TodoViewHolderManager(
-	var layoutInflater: LayoutInflater,
+	private val todoViewHolderFactory: TodoViewHolder.Factory,
+	private var layoutInflater: LayoutInflater,
 	var root: ViewGroup? = null,
 ) {
 
@@ -29,6 +30,7 @@ class TodoViewHolderManager(
 
 	private fun createViewHolder(todoElement: Todo, attachToRoot: Boolean): TodoViewHolder {
 		return TodoViewHolder.newInstance(
+			todoViewHolderFactory,
 			todoElement,
 			layoutInflater,
 			root,

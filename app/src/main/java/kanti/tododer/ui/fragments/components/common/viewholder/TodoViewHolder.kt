@@ -1,5 +1,6 @@
-package kanti.tododer.ui.fragments.components.todo_list
+package kanti.tododer.ui.fragments.components.common.viewholder
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +13,8 @@ abstract class TodoViewHolder(
 	todo: Todo,
 	private val layoutInflater: LayoutInflater,
 	@LayoutRes private val resource: Int,
-	private val root: ViewGroup? = null,
-	private val attachToRoot: Boolean = false
+	private val root: ViewGroup? = RootDefault,
+	private val attachToRoot: Boolean = AttachToRootDefault
 ) {
 
 	private var _view: View? = null
@@ -51,7 +52,7 @@ abstract class TodoViewHolder(
 		eventListener?.onEvent(type, todo, value)
 	}
 
-	private fun createView(): View = layoutInflater.inflate(
+	protected open fun createView(): View = layoutInflater.inflate(
 		resource,
 		root,
 		attachToRoot
@@ -60,6 +61,8 @@ abstract class TodoViewHolder(
 			onEvent(EVENT_ON_CLICK, todo)
 		}
 	}
+
+	protected open fun onViewCreated(view: View) {}
 
 	private fun updateView() {
 		_view?.let { view ->
@@ -74,12 +77,44 @@ abstract class TodoViewHolder(
 					"Expected: ${this.type}, actual: $type")
 	}
 
+	interface Factory {
+
+		fun createTaskViewHolder(
+			todo: Todo,
+			layoutInflater: LayoutInflater,
+			root: ViewGroup? = RootDefault,
+			attachToRoot: Boolean = AttachToRootDefault
+		): TodoViewHolder
+
+		fun createPlanViewHolder(
+			todo: Todo,
+			layoutInflater: LayoutInflater,
+			root: ViewGroup? = RootDefault,
+			attachToRoot: Boolean = AttachToRootDefault
+		): TodoViewHolder
+
+	}
 
 	companion object {
 
 		const val EVENT_ON_CLICK = -1
 
+		@SuppressLint("StaticFieldLeak")
+		val RootDefault: ViewGroup? = null
+		const val AttachToRootDefault = false
+		const val NonResource = 0
+
+		fun empty(todo: Todo, layoutInflater: LayoutInflater): TodoViewHolder = object : TodoViewHolder(
+			todo,
+			layoutInflater,
+			NonResource
+		) {
+			override val type: Todo.Type = todo.type
+			override fun bindData(view: View, todo: Todo) {}
+		}
+
 		fun newInstance(
+			todoViewHolderFactory: Factory,
 			todo: Todo,
 			layoutInflater: LayoutInflater,
 			root: ViewGroup? = null,
@@ -87,15 +122,13 @@ abstract class TodoViewHolder(
 		): TodoViewHolder {
 			return when (todo.type) {
 				Todo.Type.TASK -> {
-					TaskViewHolder(todo, layoutInflater, root, attachToRoot)
+					todoViewHolderFactory.createTaskViewHolder(todo, layoutInflater, root, attachToRoot)
 				}
 				Todo.Type.PLAN -> {
-					PlanViewHolder(todo, layoutInflater, root, attachToRoot)
+					todoViewHolderFactory.createPlanViewHolder(todo, layoutInflater, root, attachToRoot)
 				}
 			}
 		}
-
-
 	}
 
 }

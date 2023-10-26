@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +18,11 @@ import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewMod
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toTask
 import kanti.tododer.databinding.FragmentTodoListBinding
+import kanti.tododer.ui.fragments.components.common.viewholder.ItemListTodoViewHolderFactory
+import kanti.tododer.ui.fragments.components.common.viewholder.TaskViewHolder
+import kanti.tododer.ui.fragments.components.common.viewholder.TodoEventListener
+import kanti.tododer.ui.fragments.components.common.viewholder.TodoViewHolder
+import kanti.tododer.ui.fragments.components.common.viewholder.TodoViewHolderManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -49,6 +53,7 @@ class TodoListFragment : Fragment() {
 		if (_view == null) {
 			_view = FragmentTodoListBinding.inflate(inflater, container, false)
 			viewHolderManager = TodoViewHolderManager(
+				ItemListTodoViewHolderFactory,
 				inflater,
 				view.linearLayoutChildren
 			)

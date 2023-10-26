@@ -1,4 +1,4 @@
-package kanti.tododer.ui.fragments.components.todo_list
+package kanti.tododer.ui.fragments.components.common.viewholder
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +12,8 @@ import kanti.tododer.data.model.common.toTask
 class TaskViewHolder(
 	todo: Todo,
 	layoutInflater: LayoutInflater,
-	root: ViewGroup? = null,
-	attachToRoot: Boolean = false
+	root: ViewGroup? = RootDefault,
+	attachToRoot: Boolean = AttachToRootDefault
 ) : TodoViewHolder(todo, layoutInflater, R.layout.view_task_list_item, root, attachToRoot) {
 
 	override val type: Todo.Type = Todo.Type.TASK

@@ -20,7 +20,7 @@ import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.databinding.FragmentTodoDetailBinding
-import kanti.tododer.ui.fragments.components.todo_data.TodoDataViewModel
+import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailUiState
@@ -101,6 +101,14 @@ class TodoDetailScreenFragment : Fragment() {
 			repeatOnLifecycle(Lifecycle.State.STARTED) {
 				todoListViewModel.onElementClick.collectLatest {
 					viewModel.showTodo(it.fullId)
+				}
+			}
+		}
+
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				todoDataViewModel.onTaskIsDone.collectLatest { taskDone ->
+					viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
 				}
 			}
 		}
