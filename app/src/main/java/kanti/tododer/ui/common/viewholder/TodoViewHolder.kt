@@ -60,6 +60,7 @@ abstract class TodoViewHolder(
 		setOnClickListener {
 			event(EVENT_ON_CLICK, todo)
 		}
+		onViewCreated(view)
 	}
 
 	protected open fun onViewCreated(view: View) {}
