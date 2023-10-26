@@ -33,7 +33,12 @@ abstract class TodoViewHolder(
 
 	abstract val type: Todo.Type
 
-	abstract fun bindData(view: View, todo: Todo)
+	abstract fun onBindData(view: View, todo: Todo)
+
+	private fun bindData(view: View, todo: Todo) {
+		checkType(todo.type)
+		onBindData(view, todo)
+	}
 
 	fun setEventListener(eventListener: TodoEventListener? = null) {
 		this.eventListener = eventListener
@@ -48,8 +53,8 @@ abstract class TodoViewHolder(
 			return _view!!
 		}
 
-	protected fun event(type: Int, todo: Todo, value: Any? = null) {
-		eventListener?.onEvent(type, todo, value)
+	protected fun event(type: Int, todo: Todo, value: Any? = null, callback: ((Todo) -> Unit)? = null) {
+		eventListener?.onEvent(type, todo, value, callback)
 	}
 
 	protected open fun createView(): View = layoutInflater.inflate(
@@ -67,7 +72,6 @@ abstract class TodoViewHolder(
 
 	private fun updateView() {
 		_view?.let { view ->
-			checkType(todo.type)
 			bindData(view, todo)
 		}
 	}
@@ -111,7 +115,7 @@ abstract class TodoViewHolder(
 			NonResource
 		) {
 			override val type: Todo.Type = todo.type
-			override fun bindData(view: View, todo: Todo) {}
+			override fun onBindData(view: View, todo: Todo) {}
 		}
 
 		fun newInstance(

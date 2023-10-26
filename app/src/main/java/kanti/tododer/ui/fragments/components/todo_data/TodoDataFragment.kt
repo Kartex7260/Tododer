@@ -102,16 +102,18 @@ class TodoDataFragment : Fragment() {
 		showBasicData(task.title, task.remark)
 
 		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(task)
-		todoStateViewHolder.setEventListenerIfNull { type, todo, value ->
+		todoStateViewHolder.setEventListenerIfNull { type, todo, value, callback ->
 			if (type != TaskStateViewHolder.EVENT_IS_DONE)
 				return@setEventListenerIfNull
 
-			val callback = viewModel.taskIsDone(todo.toTask, value as Boolean)
-			callback.observe(viewLifecycleOwner) { uiState ->
-				if (!uiState.isSuccess)
+			val callbackLiveData = viewModel.taskIsDone(todo.toTask, value as Boolean)
+			callbackLiveData.observe(viewLifecycleOwner) { uiState ->
+				if (!uiState.isSuccess) {
+					todoStateViewHolderManager.remove(task)
 					return@observe
-				todoStateViewHolder.todo = uiState.value
-				callback.removeObservers(viewLifecycleOwner)
+				}
+				callback?.callback(uiState.value)
+				callbackLiveData.removeObservers(viewLifecycleOwner)
 			}
 		}
 		showTodoDataState(todoStateViewHolder)

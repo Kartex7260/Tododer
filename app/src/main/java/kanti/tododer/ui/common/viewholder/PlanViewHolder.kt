@@ -17,7 +17,7 @@ class PlanViewHolder(
 
 	override val type: Todo.Type = Todo.Type.PLAN
 
-	override fun bindData(view: View, todo: Todo) {
+	override fun onBindData(view: View, todo: Todo) {
 		val plan = todo.toPlan
 		view.findViewById<TextView>(R.id.textViewTodoItemPlanTitle).apply {
 			text = plan.title

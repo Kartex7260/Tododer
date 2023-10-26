@@ -20,6 +20,7 @@ import kanti.tododer.data.model.common.toTask
 import kanti.tododer.databinding.FragmentTodoListBinding
 import kanti.tododer.ui.common.viewholder.ItemListTodoViewHolderFactory
 import kanti.tododer.ui.common.viewholder.TaskViewHolder
+import kanti.tododer.ui.common.viewholder.TodoEventCallback
 import kanti.tododer.ui.common.viewholder.TodoEventListener
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.common.viewholder.TodoViewHolderManager
@@ -95,7 +96,7 @@ class TodoListFragment : Fragment() {
 
 		val viewHolder = viewHolderManager.getViewHolder(todo)
 		val eventListener = object : TodoEventListener {
-			override fun onEvent(type: Int, todo: Todo, value: Any?) {
+			override fun onEvent(type: Int, todo: Todo, value: Any?, callback: TodoEventCallback?) {
 				when (type) {
 					TodoViewHolder.EVENT_ON_CLICK -> {
 						log("viewHolder.setEventListenerIfNull=${hashCode()} {\n" +
@@ -105,7 +106,7 @@ class TodoListFragment : Fragment() {
 					TaskViewHolder.EVENT_IS_DONE -> {
 						log("viewHolder.setEventListenerIfNull=${hashCode()} {\n" +
 								"\tonEvent: EVENT_IS_DONE\n}")
-						eventTaskIsDone(viewHolder, todo, value as Boolean)
+						eventTaskIsDone(todo, value as Boolean, callback)
 					}
 				}
 			}
@@ -115,14 +116,14 @@ class TodoListFragment : Fragment() {
 		return viewHolder
 	}
 
-	private fun eventTaskIsDone(viewHolder: TodoViewHolder, todo: Todo, isDone: Boolean) {
+	private fun eventTaskIsDone(todo: Todo, isDone: Boolean, callback: TodoEventCallback?) {
 		val callbackLiveData = viewModel.taskIsDone(todo.toTask, isDone)
 		callbackLiveData.observe(viewLifecycleOwner) { uiState ->
 			if (uiState.type != RepositoryResult.Type.Success) {
 				viewHolderManager.remove(todo)
 				return@observe
 			}
-			viewHolder.todo = uiState.value
+			callback?.callback(uiState.value)
 			callbackLiveData.removeObservers(viewLifecycleOwner)
 		}
 	}

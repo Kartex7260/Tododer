@@ -18,7 +18,7 @@ class TaskViewHolder(
 
 	override val type: Todo.Type = Todo.Type.TASK
 
-	override fun bindData(view: View, todo: Todo) {
+	override fun onBindData(view: View, todo: Todo) {
 		val task = todo.toTask
 
 		view.findViewById<TextView>(R.id.textViewTodoItemTaskTitle).apply {
@@ -27,7 +27,9 @@ class TaskViewHolder(
 		view.findViewById<CheckBox>(R.id.checkBoxTodoItemTaskDone).apply {
 			isChecked = task.done
 			setOnCheckedChangeListener { _, isChecked ->
-				event(EVENT_IS_DONE, task, isChecked)
+				event(EVENT_IS_DONE, task, isChecked) {
+					this@TaskViewHolder.todo = it
+				}
 			}
 		}
 	}

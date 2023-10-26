@@ -19,12 +19,14 @@ class TaskStateViewHolder(
 	override fun createView(): View {
 		return CheckBox(layoutInflater.context).apply {
 			setOnCheckedChangeListener { _, isChecked ->
-				event(EVENT_IS_DONE, todo, isChecked)
+				event(EVENT_IS_DONE, todo, isChecked) {
+					todo = it
+				}
 			}
 		}
 	}
 
-	override fun bindData(view: View, todo: Todo) {
+	override fun onBindData(view: View, todo: Todo) {
 		val task = todo.toTask
 
 		val checkBox = view as CheckBox
