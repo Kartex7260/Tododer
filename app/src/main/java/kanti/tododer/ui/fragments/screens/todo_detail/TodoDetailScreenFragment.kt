@@ -1,4 +1,4 @@
-package kanti.tododer.ui.screens.todo_detail
+package kanti.tododer.ui.fragments.screens.todo_detail
 
 import android.os.Bundle
 import android.util.Log
@@ -22,8 +22,8 @@ import kanti.tododer.data.model.common.fullId
 import kanti.tododer.databinding.FragmentTodoDetailBinding
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
-import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailViewModel
-import kanti.tododer.ui.screens.todo_detail.viewmodel.TodoDetailUiState
+import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoDetailViewModel
+import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoDetailUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

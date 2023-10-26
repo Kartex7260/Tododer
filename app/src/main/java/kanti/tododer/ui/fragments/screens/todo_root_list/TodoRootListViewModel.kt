@@ -1,4 +1,4 @@
-package kanti.tododer.ui.screens.todo_root_list
+package kanti.tododer.ui.fragments.screens.todo_root_list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

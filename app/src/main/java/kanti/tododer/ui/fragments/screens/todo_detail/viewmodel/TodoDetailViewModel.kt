@@ -1,4 +1,4 @@
-package kanti.tododer.ui.screens.todo_detail.viewmodel
+package kanti.tododer.ui.fragments.screens.todo_detail.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData

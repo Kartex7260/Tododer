@@ -1,4 +1,4 @@
-package kanti.tododer.ui.screens.todo_detail.viewmodel
+package kanti.tododer.ui.fragments.screens.todo_detail.viewmodel
 
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.domain.plan.planwithchildren.PlanWithChildren
