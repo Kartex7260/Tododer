@@ -11,6 +11,7 @@ import kanti.tododer.data.common.toUiState
 import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.FullIds
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.toFullId
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.domain.plan.planwithchildren.GetPlanWithChildrenUseCase
@@ -79,15 +80,29 @@ class TodoDetailViewModel @Inject constructor(
 				return@launch
 			}
 
-			val success = showTodo(parsedFullId)
-			if (success) {
-				log("showTodo(FullId) return success response")
-				currentFullId?.apply {
-					log("add currentFullId=$currentFullId to stack")
-					stack.push(this)
-				}
-				currentFullId = parsedFullId
+			showTodoAndAddToStack(parsedFullId)
+		}
+	}
+
+	fun showTodo(todo: Todo) {
+		_todoDetail.value = _todoDetail.value.copy(process = true)
+		viewModelScope.launch {
+			val fullId = todo.toFullId
+			showTodoAndAddToStack(fullId)
+		}
+	}
+
+	private suspend fun showTodoAndAddToStack(fullId: FullId) {
+		fun log(mes: String = "") = Log.d(logTag, "addToStack(FullId = \"$fullId\"): $mes")
+
+		val success = showTodo(fullId)
+		if (success) {
+			log("showTodo(FullId) return success response")
+			currentFullId?.apply {
+				log("add currentFullId=$currentFullId to stack")
+				stack.push(this)
 			}
+			currentFullId = fullId
 		}
 	}
 

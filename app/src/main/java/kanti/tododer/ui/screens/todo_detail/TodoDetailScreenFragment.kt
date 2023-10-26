@@ -100,7 +100,7 @@ class TodoDetailScreenFragment : Fragment() {
 		viewLifecycleOwner.lifecycleScope.launch {
 			repeatOnLifecycle(Lifecycle.State.STARTED) {
 				todoListViewModel.onElementClick.collectLatest {
-					viewModel.showTodo(it.fullId)
+					viewModel.showTodo(it)
 				}
 			}
 		}
