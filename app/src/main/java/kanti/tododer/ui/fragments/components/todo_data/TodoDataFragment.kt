@@ -21,6 +21,7 @@ import kanti.tododer.data.model.common.toPlan
 import kanti.tododer.data.model.common.toTask
 import kanti.tododer.ui.fragments.components.common.viewholder.TaskStateViewHolder
 import kanti.tododer.ui.fragments.components.common.viewholder.TodoStateViewHolderFactory
+import kanti.tododer.ui.fragments.components.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.fragments.components.common.viewholder.TodoViewHolderManager
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.setEventListenerIfNull
@@ -67,6 +68,10 @@ class TodoDataFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
+		this.view.apply {
+			linearLayoutTodoDataStateView.layoutParams.height = editTextTodoDetailTitle.height
+		}
+
 		viewLifecycleOwner.lifecycleScope.launch {
 			repeatOnLifecycle(Lifecycle.State.STARTED) {
 				viewModel.todoElement.collectLatest { uiState ->
@@ -90,13 +95,13 @@ class TodoDataFragment : Fragment() {
 
 	private fun showPlan(plan: Plan) {
 		showBasicData(plan.title, plan.remark)
-		hideTitleStartMargin()
+		hideTodoDataState()
 	}
 
 	private fun showTask(task: Task) {
 		showBasicData(task.title, task.remark)
 
-		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(task) as TaskStateViewHolder
+		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(task)
 		todoStateViewHolder.setEventListenerIfNull { type, todo, value ->
 			if (type != TaskStateViewHolder.EVENT_IS_DONE)
 				return@setEventListenerIfNull
@@ -109,7 +114,7 @@ class TodoDataFragment : Fragment() {
 				callback.removeObservers(viewLifecycleOwner)
 			}
 		}
-		showTodoDataState(todoStateViewHolder.view)
+		showTodoDataState(todoStateViewHolder)
 	}
 
 	private fun showBasicData(title: String, remark: String) {
@@ -126,25 +131,16 @@ class TodoDataFragment : Fragment() {
 		}
 	}
 
-	private fun showTodoDataState(view: View) {
-		this.view.apply {
-			val editTextTitleHeight = editTextTodoDetailTitle.height
-			linearLayoutTodoDataStateView.apply {
-				addView(view)
-				layoutParams.apply {
-					height = editTextTitleHeight
-					width = view.width
-				}
-			}
+	private fun showTodoDataState(todoStateView: TodoViewHolder) {
+		view.linearLayoutTodoDataStateView.apply {
+			addView(todoStateView.view)
+			layoutParams.width = todoStateView.view.width
 		}
 	}
 
-	private fun hideTitleStartMargin() {
-		this.view.linearLayoutTodoDataStateView.apply {
-			layoutParams.apply {
-				height = 0
-				width = 0
-			}
+	private fun hideTodoDataState() {
+		view.linearLayoutTodoDataStateView.apply {
+			layoutParams.width = 0
 			removeAllViews()
 		}
 	}
