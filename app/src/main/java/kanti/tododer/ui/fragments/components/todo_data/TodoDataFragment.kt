@@ -68,10 +68,6 @@ class TodoDataFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		this.view.apply {
-			linearLayoutTodoDataStateView.layoutParams.height = editTextTodoDetailTitle.height
-		}
-
 		viewLifecycleOwner.lifecycleScope.launch {
 			repeatOnLifecycle(Lifecycle.State.STARTED) {
 				viewModel.todoElement.collectLatest { uiState ->
@@ -108,10 +104,6 @@ class TodoDataFragment : Fragment() {
 
 			val callbackLiveData = viewModel.taskIsDone(todo.toTask, value as Boolean)
 			callbackLiveData.observe(viewLifecycleOwner) { uiState ->
-				if (!uiState.isSuccess) {
-					todoStateViewHolderManager.remove(task)
-					return@observe
-				}
 				callback?.callback(uiState.value)
 				callbackLiveData.removeObservers(viewLifecycleOwner)
 			}
@@ -136,13 +128,11 @@ class TodoDataFragment : Fragment() {
 	private fun showTodoDataState(todoStateView: TodoViewHolder) {
 		view.linearLayoutTodoDataStateView.apply {
 			addView(todoStateView.view)
-			layoutParams.width = todoStateView.view.width
 		}
 	}
 
 	private fun hideTodoDataState() {
 		view.linearLayoutTodoDataStateView.apply {
-			layoutParams.width = 0
 			removeAllViews()
 		}
 	}
