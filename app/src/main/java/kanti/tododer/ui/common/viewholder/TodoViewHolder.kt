@@ -21,10 +21,12 @@ abstract class TodoViewHolder(
 	var eventListener: TodoEventListener? = null
 		private set
 
-	var todo: Todo = todo
+	private var _todo: Todo
+	var todo: Todo
+		get() = _todo
 		set(value) {
 			checkType(value.type)
-			field = value
+			_todo = value
 			updateView()
 		}
 
@@ -32,6 +34,10 @@ abstract class TodoViewHolder(
 		get() = todo.fullId
 
 	abstract val type: Todo.Type
+
+	init {
+		_todo = todo
+	}
 
 	abstract fun onBindData(view: View, todo: Todo)
 
@@ -61,8 +67,8 @@ abstract class TodoViewHolder(
 		resource,
 		root,
 		attachToRoot
-	).apply {
-		setOnClickListener {
+	).also { view ->
+		view.setOnClickListener {
 			event(EVENT_ON_CLICK, todo)
 		}
 		onViewCreated(view)

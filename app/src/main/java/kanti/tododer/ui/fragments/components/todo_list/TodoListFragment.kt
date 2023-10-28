@@ -119,10 +119,6 @@ class TodoListFragment : Fragment() {
 	private fun eventTaskIsDone(todo: Todo, isDone: Boolean, callback: TodoEventCallback?) {
 		val callbackLiveData = viewModel.taskIsDone(todo.toTask, isDone)
 		callbackLiveData.observe(viewLifecycleOwner) { uiState ->
-			if (uiState.type != RepositoryResult.Type.Success) {
-				viewHolderManager.remove(todo)
-				return@observe
-			}
 			callback?.callback(uiState.value)
 			callbackLiveData.removeObservers(viewLifecycleOwner)
 		}
