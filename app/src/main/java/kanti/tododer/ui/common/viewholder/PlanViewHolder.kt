@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kanti.fillingprogressview.FillingProgressView
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toPlan
@@ -31,6 +32,20 @@ class PlanViewHolder(
 			}
 			text = plan.remark
 		}
+		view.findViewById<FillingProgressView>(R.id.fillingProgressViewPlanListItem).apply {
+			event(EVENT_PROGRESS_REQUEST, plan) { todoProgress ->
+				if (todoProgress == null || todoProgress !is Float) {
+					return@event
+				}
+				progress = todoProgress
+			}
+		}
+	}
+
+	companion object {
+
+		const val EVENT_PROGRESS_REQUEST = 0
+
 	}
 
 }

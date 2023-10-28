@@ -59,7 +59,7 @@ abstract class TodoViewHolder(
 			return _view!!
 		}
 
-	protected fun event(type: Int, todo: Todo, value: Any? = null, callback: ((Todo) -> Unit)? = null) {
+	protected fun event(type: Int, todo: Todo, value: Any? = null, callback: ((Any?) -> Unit)? = null) {
 		eventListener?.onEvent(type, todo, value, callback)
 	}
 

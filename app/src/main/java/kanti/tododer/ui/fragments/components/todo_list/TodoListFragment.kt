@@ -13,12 +13,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.common.hashLogTag
-import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.toPlan
 import kanti.tododer.data.model.common.toTask
+import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.task.Task
 import kanti.tododer.databinding.FragmentTodoListBinding
 import kanti.tododer.ui.common.viewholder.ItemListTodoViewHolderFactory
+import kanti.tododer.ui.common.viewholder.PlanViewHolder
 import kanti.tododer.ui.common.viewholder.TaskViewHolder
 import kanti.tododer.ui.common.viewholder.TodoEventCallback
 import kanti.tododer.ui.common.viewholder.TodoEventListener
@@ -103,10 +106,11 @@ class TodoListFragment : Fragment() {
 								"\tonEvent: EVENT_ON_CLICK\n}")
 						viewModel.elementClick(todo)
 					}
-					TaskViewHolder.EVENT_IS_DONE -> {
-						log("viewHolder.setEventListenerIfNull=${hashCode()} {\n" +
-								"\tonEvent: EVENT_IS_DONE\n}")
-						eventTaskIsDone(todo, value as Boolean, callback)
+					else -> {
+						when (todo.type) {
+							Todo.Type.TASK -> taskEvents(type, todo.toTask, value, callback)
+							Todo.Type.PLAN -> planEvents(type, todo.toPlan, value, callback)
+						}
 					}
 				}
 			}
@@ -116,11 +120,44 @@ class TodoListFragment : Fragment() {
 		return viewHolder
 	}
 
-	private fun eventTaskIsDone(todo: Todo, isDone: Boolean, callback: TodoEventCallback?) {
-		val callbackLiveData = viewModel.taskIsDone(todo.toTask, isDone)
+	private fun taskEvents(type: Int, task: Task, value: Any?, callback: TodoEventCallback?) {
+		fun log(mes: String) = Log.d(hashLogTag, "taskEvents(type = $type, " +
+				"Plan = $task, value = $value, callback = $callback): $mes")
+
+		when (type) {
+			TaskViewHolder.EVENT_IS_DONE -> {
+				log("viewHolder.setEventListenerIfNull=${hashCode()} {\n" +
+						"\tonEvent: EVENT_IS_DONE\n}")
+				eventTaskIsDone(task, value as Boolean, callback)
+			}
+		}
+	}
+
+	private fun planEvents(type: Int, plan: Plan, value: Any?, callback: TodoEventCallback?) {
+		fun log(mes: String) = Log.d(hashLogTag, "planEvents(type = $type, " +
+				"Plan = $plan, value = $value, callback = $callback): $mes")
+
+		when (type) {
+			PlanViewHolder.EVENT_PROGRESS_REQUEST -> {
+				log("viewHolder.setEventListenerIfNull=${hashCode()} {\n" +
+						"\tonEvent: EVENT_PROGRESS_REQUEST\n}")
+				eventPlanProgressRequest(plan, callback)
+			}
+		}
+	}
+
+	private fun eventTaskIsDone(task: Task, isDone: Boolean, callback: TodoEventCallback?) {
+		val callbackLiveData = viewModel.taskIsDone(task, isDone)
 		callbackLiveData.observe(viewLifecycleOwner) { uiState ->
 			callback?.callback(uiState.value)
 			callbackLiveData.removeObservers(viewLifecycleOwner)
+		}
+	}
+
+	private fun eventPlanProgressRequest(plan: Plan, callback: TodoEventCallback?) {
+		val callbackLiveData = viewModel.progressRequest(plan)
+		callbackLiveData.observe(viewLifecycleOwner) { progress ->
+			callback?.callback(progress)
 		}
 	}
 

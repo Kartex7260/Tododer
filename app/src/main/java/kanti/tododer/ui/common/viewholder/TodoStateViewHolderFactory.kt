@@ -18,5 +18,5 @@ object TodoStateViewHolderFactory : TodoViewHolder.Factory {
 		layoutInflater: LayoutInflater,
 		root: ViewGroup?,
 		attachToRoot: Boolean
-	): TodoViewHolder = TodoViewHolder.empty(todo, layoutInflater)
+	): TodoViewHolder = PlanStateViewHolder(todo, layoutInflater, root, attachToRoot)
 }

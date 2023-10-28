@@ -8,6 +8,7 @@ import android.widget.TextView
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toTask
+import kanti.tododer.data.model.task.Task
 
 class TaskViewHolder(
 	todo: Todo,
@@ -27,8 +28,10 @@ class TaskViewHolder(
 		view.findViewById<CheckBox>(R.id.checkBoxTodoItemTaskDone).apply {
 			isChecked = task.done
 			setOnCheckedChangeListener { _, isChecked ->
-				event(EVENT_IS_DONE, task, isChecked) {
-					this@TaskViewHolder.todo = it
+				event(EVENT_IS_DONE, task, isChecked) { todo ->
+					if (todo == null || todo !is Task)
+						return@event
+					this@TaskViewHolder.todo = todo
 				}
 			}
 		}

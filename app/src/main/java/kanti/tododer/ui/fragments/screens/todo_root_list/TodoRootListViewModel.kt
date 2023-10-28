@@ -1,5 +1,6 @@
 package kanti.tododer.ui.fragments.screens.todo_root_list
 
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,6 +35,11 @@ class TodoRootListViewModel @Inject constructor(
 			val uiState = rootPlans.toUiState(listOf())
 			_plansLiveData.postValue(uiState)
 		}
+	}
+
+	fun planProgressRequest(plan: Plan, callback: MutableLiveData<Float>) {
+		// TODO: write repository request
+		callback.value = 0.5f
 	}
 
 }

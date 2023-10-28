@@ -12,6 +12,7 @@ import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.FullIds
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toFullId
+import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.domain.plan.planwithchildren.GetPlanWithChildrenUseCase
@@ -45,6 +46,11 @@ class TodoDetailViewModel @Inject constructor(
 			}
 			callback.postValue(taskRepositoryResult.toUiState(Task.EMPTY))
 		}
+	}
+
+	fun planProgressRequest(plan: Plan, callback: MutableLiveData<Float>) {
+		// TODO: write repository request
+		callback.value = 0.5f
 	}
 
 	fun pop() {

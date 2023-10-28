@@ -112,6 +112,22 @@ class TodoDetailScreenFragment : Fragment() {
 				}
 			}
 		}
+
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				todoDataViewModel.onPlanProgressRequest.collectLatest { progressRequest ->
+					viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
+				}
+			}
+		}
+
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				todoListViewModel.onPlanProgressRequest.collectLatest { progressRequest ->
+					viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
+				}
+			}
+		}
 	}
 
 	private fun showProcess(process: Boolean) {

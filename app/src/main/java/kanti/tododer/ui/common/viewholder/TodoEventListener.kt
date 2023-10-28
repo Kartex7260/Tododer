@@ -10,6 +10,6 @@ fun interface TodoEventListener {
 
 fun interface TodoEventCallback {
 
-	fun callback(todo: Todo)
+	fun callback(value: Any?)
 
 }

@@ -65,9 +65,21 @@ class TodoRootListScreenFragment : Fragment() {
 				todoListViewModel.onElementClick.collectLatest { todoElement ->
 					Log.d(
 						this@TodoRootListScreenFragment.hashLogTag,
-						"onElementClickSharedFlow.collectLatest { $todoElement }"
+						"onElementClick.collectLatest { $todoElement }"
 					)
 					navigateToDetailScreen(todoElement)
+				}
+			}
+		}
+
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				todoListViewModel.onPlanProgressRequest.collectLatest { progressRequest ->
+					Log.d(
+						this@TodoRootListScreenFragment.hashLogTag,
+						"onPlanProgressRequest.collectLatest { $progressRequest }"
+					)
+					viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
 				}
 			}
 		}

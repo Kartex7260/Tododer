@@ -19,6 +19,7 @@ import kanti.tododer.databinding.FragmentTodoDataBinding
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toPlan
 import kanti.tododer.data.model.common.toTask
+import kanti.tododer.ui.common.viewholder.PlanStateViewHolder
 import kanti.tododer.ui.common.viewholder.TaskStateViewHolder
 import kanti.tododer.ui.common.viewholder.TodoStateViewHolderFactory
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
@@ -91,7 +92,20 @@ class TodoDataFragment : Fragment() {
 
 	private fun showPlan(plan: Plan) {
 		showBasicData(plan.title, plan.remark)
+
+		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(plan)
+		todoStateViewHolder.setEventListenerIfNull { type, todo, _, callback ->
+			if (type != PlanStateViewHolder.EVENT_PROGRESS_REQUEST)
+				return@setEventListenerIfNull
+
+			val callbackLiveData = viewModel.planProgressRequest(todo.toPlan)
+			callbackLiveData.observe(viewLifecycleOwner) { progress ->
+				callback?.callback(progress)
+			}
+		}
+
 		hideTodoDataState()
+		showTodoDataState(todoStateViewHolder)
 	}
 
 	private fun showTask(task: Task) {
@@ -108,6 +122,8 @@ class TodoDataFragment : Fragment() {
 				callbackLiveData.removeObservers(viewLifecycleOwner)
 			}
 		}
+
+		hideTodoDataState()
 		showTodoDataState(todoStateViewHolder)
 	}
 

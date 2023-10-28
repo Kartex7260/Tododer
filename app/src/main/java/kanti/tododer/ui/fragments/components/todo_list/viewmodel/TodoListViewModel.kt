@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.ui.fragments.components.common.PlanProgressRequest
+import kanti.tododer.ui.fragments.components.common.TaskIsDoneRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -23,8 +26,11 @@ class TodoListViewModel : ViewModel() {
 	private val _onElementClick = MutableSharedFlow<Todo>()
 	val onElementClick = _onElementClick.asSharedFlow()
 
-	private val _onTaskIsDone = MutableSharedFlow<TaskIsDoneResponse>()
+	private val _onTaskIsDone = MutableSharedFlow<TaskIsDoneRequest>()
 	val onTaskIsDone = _onTaskIsDone.asSharedFlow()
+
+	private val _onPlanProgressRequest = MutableSharedFlow<PlanProgressRequest>()
+	val onPlanProgressRequest = _onPlanProgressRequest.asSharedFlow()
 
 	fun sendTodoList(list: List<Todo> = listOf()) {
 		_todoListLiveData.value = list
@@ -40,10 +46,23 @@ class TodoListViewModel : ViewModel() {
 		val callbackLiveData = MutableLiveData<UiState<Task>>()
 		viewModelScope.launch {
 			_onTaskIsDone.emit(
-				TaskIsDoneResponse(task, done, callbackLiveData)
+				TaskIsDoneRequest(task, done, callbackLiveData)
 			)
 		}
 		return callbackLiveData
+	}
+
+	fun progressRequest(plan: Plan): LiveData<Float> {
+		val callback = MutableLiveData<Float>()
+		viewModelScope.launch {
+			_onPlanProgressRequest.emit(
+				PlanProgressRequest(
+					plan,
+					callback
+				)
+			)
+		}
+		return callback
 	}
 
 }
