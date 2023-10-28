@@ -2,32 +2,29 @@ package kanti.fillingprogressview
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import androidx.annotation.ColorInt
-import androidx.core.view.setPadding
 import kotlin.math.min
+import kotlin.properties.Delegates
 
 class FillingProgressView : View {
 
-	private var mProgress: Float = DEFAULT_PROGRESS_VALUE
+	private var mProgress: Float by Delegates.notNull()
 
-	private var mDiameter: Float = TypedValue.applyDimension(
-		TypedValue.COMPLEX_UNIT_DIP,
-		DEFAULT_DIAMETER_DP,
-		context.resources.displayMetrics
-	)
-	private var mBorderToDiameterRatio: Float = DEFAULT_BORDER_TO_DIAMETER_RATIO
+	private var mDiameter: Float by Delegates.notNull()
+	private var mBorderToDiameterRatio: Float by Delegates.notNull()
 
-	private val defaultColor = android.R.attr.colorPrimary
-	private val mTransparencyModifier = 0.9f
-	@ColorInt private var mColor: Int = 0
-	private lateinit var mPaintBorder: Paint
-	private lateinit var mPaintFill: Paint
-	private lateinit var transparencyModifier: TransparencyColorModifier
-	private lateinit var darkenModifier: DarkenColorModifier
+	private var mMaxValueTransparency: Float by Delegates.notNull()
+	@ColorInt private var mColorAccent: Int = Color.BLACK
+	@ColorInt private var mColorOnSurface: Int = Color.BLACK
+	private lateinit var mPaintBorderEmpty: Paint
+	private lateinit var mPaintBorderFull: Paint
+	private lateinit var mPaintBody: Paint
+	private lateinit var transparencyModifierBorder: TransparencyColorModifier
+	private lateinit var transparencyModifierBody: TransparencyColorModifier
 
 	var progress: Float
 		get() = mProgress
@@ -41,11 +38,19 @@ class FillingProgressView : View {
 			invalidate()
 		}
 
-	var color: Int
-		get() = mColor
+	var colorAccent: Int
+		get() = mColorAccent
 		set(value) {
-			mColor = value
-			setMainColor(mColor)
+			mColorAccent = value
+			computeColorsFromProgress()
+			invalidate()
+		}
+
+	var colorOnSurface: Int
+		get() = mColorOnSurface
+		set(value) {
+			mColorOnSurface = value
+			mPaintBorderEmpty.color = value
 			invalidate()
 		}
 
@@ -80,6 +85,19 @@ class FillingProgressView : View {
 			invalidate()
 		}
 
+	var maxValueTransparency: Float
+		get() = mMaxValueTransparency
+		set(value) {
+			require(value in Progress.MIN_VALUE..Progress.MAX_VALUE) {
+				"The transparency modifier cannot be more than ${Progress.MAX_VALUE} " +
+						"or less than ${Progress.MIN_VALUE}. Actual: $value"
+			}
+			mMaxValueTransparency = value
+			transparencyModifierBorder.modifierMaxColor = mMaxValueTransparency
+			computeColorsFromProgress()
+			invalidate()
+		}
+
 
 	constructor(
 		context: Context,
@@ -104,7 +122,7 @@ class FillingProgressView : View {
 			context,
 			attrs,
 			defStyleAttr,
-			0
+			R.style.kanti_fillingprogressview_FillingProgressView
 		)
 	}
 
@@ -115,8 +133,8 @@ class FillingProgressView : View {
 		init(
 			context,
 			attrs,
-			0,
-			0
+			R.style.kanti_progress,
+			R.style.kanti_fillingprogressview_FillingProgressView
 		)
 	}
 
@@ -124,8 +142,8 @@ class FillingProgressView : View {
 		init(
 			context,
 			null,
-			0,
-			0
+			R.style.kanti_progress,
+			R.style.kanti_fillingprogressview_FillingProgressView
 		)
 	}
 
@@ -135,12 +153,6 @@ class FillingProgressView : View {
 		defStyleAttr: Int,
 		defStyleRes: Int
 	) {
-		setPadding(TypedValue.applyDimension(
-			TypedValue.COMPLEX_UNIT_DIP,
-			16f,
-			context.resources.displayMetrics
-		).toInt())
-
 		context.theme.obtainStyledAttributes(
 			attrs,
 			R.styleable.FillingProgressView,
@@ -148,23 +160,31 @@ class FillingProgressView : View {
 			defStyleRes
 		).apply {
 			try {
-				mProgress = getFloat(R.styleable.FillingProgressView_progress, DEFAULT_PROGRESS_VALUE)
-				mColor = getColor(
-					R.styleable.FillingProgressView_colorBorder,
-					run {
-						val typedValue = TypedValue()
-						context.theme.resolveAttribute(defaultColor, typedValue, false)
-						typedValue.data
-					}
+				mProgress = clippingValue(getFloat(R.styleable.FillingProgressView_progress, 0f))
+				mColorAccent = getColor(
+					R.styleable.FillingProgressView_colorAccent,
+					mColorAccent
+				)
+				mColorOnSurface = getColor(
+					R.styleable.FillingProgressView_colorOnSurface,
+					mColorOnSurface
 				)
 				mDiameter = getDimension(
 					R.styleable.FillingProgressView_diameter,
-					mDiameter
-				)
+					100f
+				).let { diameter ->
+					if (diameter == 0f)
+						return@let 1f
+					clippingValue(diameter, mxv = Float.MAX_VALUE)
+				}
 				mBorderToDiameterRatio = getFloat(
 					R.styleable.FillingProgressView_borderToDiameterRatio,
-					DEFAULT_BORDER_TO_DIAMETER_RATIO
-				)
+					9f
+				).let { ratio ->
+					if (ratio <= 0)
+						return@let 1f
+					ratio
+				}
 				getDimension(
 					R.styleable.FillingProgressView_borderWidth,
 					-1f
@@ -174,58 +194,70 @@ class FillingProgressView : View {
 					}
 					this@FillingProgressView.borderWidth = borderWidth
 				}
-				mPaintBorder = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+				mMaxValueTransparency = getFloat(
+					R.styleable.FillingProgressView_maxValueTransparency,
+					0.9f
+				).let { mvt -> clippingValue(mvt) }
+				mPaintBorderFull = Paint(Paint.ANTI_ALIAS_FLAG).apply {
 					style = Paint.Style.STROKE
 					strokeWidth = borderWidth
 				}
-				darkenModifier = DarkenColorModifier()
-				transparencyModifier = TransparencyColorModifier(darkenModifier, mTransparencyModifier)
-				mPaintFill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+				mPaintBorderEmpty = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+					style = Paint.Style.STROKE
+					strokeWidth = borderWidth
+					color = mColorOnSurface
+				}
+				transparencyModifierBody = TransparencyColorModifier(
+					modifierMaxColor = mMaxValueTransparency
+				)
+				transparencyModifierBorder = TransparencyColorModifier()
+				mPaintBody = Paint(Paint.ANTI_ALIAS_FLAG).apply {
 					style = Paint.Style.FILL
 				}
-				setMainColor(mColor)
+				computeColorsFromProgress()
 			} finally {
 				recycle()
 			}
 		}
 	}
 
-	private fun setMainColor(color: Int) {
-		mColor = color
-		mPaintBorder.color = mColor
-		computeColorsFromProgress()
-	}
-
 	private fun computeColorsFromProgress() {
-		mPaintBorder.color = darkenModifier.modify(mColor, mProgress)
-		mPaintFill.color = transparencyModifier.modify(mColor, mProgress)
+		mPaintBorderFull.color = transparencyModifierBorder.modify(mColorAccent, mProgress)
+		mPaintBody.color = transparencyModifierBody.modify(mColorAccent, mProgress)
 	}
 
 	override fun onDraw(canvas: Canvas) {
 		super.onDraw(canvas)
 		val centerX = width / 2f
 		val centerY = height / 2f
-		val halfStrokeWidth = borderWidth / 2
-		val radius = mDiameter / 2 - halfStrokeWidth
+		val halfOfBorder = borderWidth / 2
+		val radius = mDiameter / 2 - halfOfBorder
 
 		canvas.drawCircle(
 			centerX,
 			centerY,
 			radius,
-			mPaintFill
+			mPaintBody
 		)
 
 		canvas.drawCircle(
 			centerX,
 			centerY,
 			radius,
-			mPaintBorder
+			mPaintBorderEmpty
+		)
+
+		canvas.drawCircle(
+			centerX,
+			centerY,
+			radius,
+			mPaintBorderFull
 		)
 	}
 
 	override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 		val desiredWidth = mDiameter.toInt() + paddingStart + paddingEnd
-		val desiredHeight = mDiameter.toInt() + paddingTop + paddingEnd
+		val desiredHeight = mDiameter.toInt() + paddingTop + paddingBottom
 
 		val widthMode = MeasureSpec.getMode(widthMeasureSpec)
 		val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -247,12 +279,16 @@ class FillingProgressView : View {
 		setMeasuredDimension(width, height)
 	}
 
-	companion object {
-
-		const val DEFAULT_PROGRESS_VALUE = 0.0f
-		const val DEFAULT_DIAMETER_DP = 32f
-		const val DEFAULT_BORDER_TO_DIAMETER_RATIO = 8f
-
+	private fun clippingValue(
+		value: Float,
+		mxv: Float = Progress.MAX_VALUE,
+		mnv: Float = Progress.MIN_VALUE
+	): Float {
+		if (value > mxv)
+			return mxv
+		else if (value < mnv)
+			return mnv
+		return value
 	}
 
 }

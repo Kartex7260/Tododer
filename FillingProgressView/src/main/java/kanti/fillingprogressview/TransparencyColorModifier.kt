@@ -4,7 +4,7 @@ import android.graphics.Color
 
 class TransparencyColorModifier(
 	colorModifier: ColorModifier? = null,
-	private val modifierMaxColor: Float = Progress.MAX_VALUE
+	var modifierMaxColor: Float = Progress.MAX_VALUE
 ) : ColorModifier(colorModifier) {
 
 	override fun onModify(color: Int, modifier: Float): Int {
