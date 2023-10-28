@@ -2,13 +2,12 @@ package kanti.fillingprogressview
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import androidx.annotation.ColorInt
+import androidx.core.view.setPadding
 import kotlin.math.min
 
 class FillingProgressView : View {
@@ -22,11 +21,13 @@ class FillingProgressView : View {
 	)
 	private var mBorderToDiameterRatio: Float = DEFAULT_BORDER_TO_DIAMETER_RATIO
 
+	private val defaultColor = android.R.attr.colorPrimary
 	private val mTransparencyModifier = 0.9f
-	@ColorInt private var mColorPrimary: Int = 0
+	@ColorInt private var mColor: Int = 0
 	private lateinit var mPaintBorder: Paint
 	private lateinit var mPaintFill: Paint
-	private lateinit var colorTransparency: ColorTransparency
+	private lateinit var transparencyModifier: TransparencyColorModifier
+	private lateinit var darkenModifier: DarkenColorModifier
 
 	var progress: Float
 		get() = mProgress
@@ -36,15 +37,15 @@ class FillingProgressView : View {
 						"or less than ${Progress.MIN_VALUE}. Actual: $value"
 			}
 			mProgress = value
-			initPaintColorFill(mProgress)
+			computeColorsFromProgress()
 			invalidate()
 		}
 
 	var color: Int
-		get() = mColorPrimary
+		get() = mColor
 		set(value) {
-			mColorPrimary = value
-			initColor(mColorPrimary)
+			mColor = value
+			setMainColor(mColor)
 			invalidate()
 		}
 
@@ -86,7 +87,7 @@ class FillingProgressView : View {
 		defStyleAttr: Int,
 		defStyleRes: Int
 	): super(context, attrs, defStyleAttr, defStyleRes) {
-		initAttrs(
+		init(
 			context,
 			attrs,
 			defStyleAttr,
@@ -99,7 +100,7 @@ class FillingProgressView : View {
 		attrs: AttributeSet?,
 		defStyleAttr: Int
 	): super(context, attrs, defStyleAttr) {
-		initAttrs(
+		init(
 			context,
 			attrs,
 			defStyleAttr,
@@ -111,7 +112,7 @@ class FillingProgressView : View {
 		context: Context,
 		attrs: AttributeSet?
 	): super(context, attrs) {
-		initAttrs(
+		init(
 			context,
 			attrs,
 			0,
@@ -120,7 +121,7 @@ class FillingProgressView : View {
 	}
 
 	constructor(context: Context): super(context) {
-		initAttrs(
+		init(
 			context,
 			null,
 			0,
@@ -128,12 +129,18 @@ class FillingProgressView : View {
 		)
 	}
 
-	private fun initAttrs(
+	private fun init(
 		context: Context,
 		attrs: AttributeSet?,
 		defStyleAttr: Int,
 		defStyleRes: Int
 	) {
+		setPadding(TypedValue.applyDimension(
+			TypedValue.COMPLEX_UNIT_DIP,
+			16f,
+			context.resources.displayMetrics
+		).toInt())
+
 		context.theme.obtainStyledAttributes(
 			attrs,
 			R.styleable.FillingProgressView,
@@ -142,11 +149,11 @@ class FillingProgressView : View {
 		).apply {
 			try {
 				mProgress = getFloat(R.styleable.FillingProgressView_progress, DEFAULT_PROGRESS_VALUE)
-				mColorPrimary = getColor(
+				mColor = getColor(
 					R.styleable.FillingProgressView_colorBorder,
 					run {
 						val typedValue = TypedValue()
-						context.theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, false)
+						context.theme.resolveAttribute(defaultColor, typedValue, false)
 						typedValue.data
 					}
 				)
@@ -167,28 +174,31 @@ class FillingProgressView : View {
 					}
 					this@FillingProgressView.borderWidth = borderWidth
 				}
-				initColor(mColorPrimary)
+				mPaintBorder = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+					style = Paint.Style.STROKE
+					strokeWidth = borderWidth
+				}
+				darkenModifier = DarkenColorModifier()
+				transparencyModifier = TransparencyColorModifier(darkenModifier, mTransparencyModifier)
+				mPaintFill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+					style = Paint.Style.FILL
+				}
+				setMainColor(mColor)
 			} finally {
 				recycle()
 			}
 		}
 	}
 
-	private fun initPaintColorFill(progress: Float) {
-		mPaintFill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-			color = colorTransparency.transparent(progress)
-			style = Paint.Style.FILL
-		}
+	private fun setMainColor(color: Int) {
+		mColor = color
+		mPaintBorder.color = mColor
+		computeColorsFromProgress()
 	}
 
-	private fun initColor(clr: Int) {
-		mPaintBorder = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-			color = clr
-			style = Paint.Style.STROKE
-			strokeWidth = borderWidth
-		}
-		colorTransparency = ColorTransparency(clr, mTransparencyModifier)
-		initPaintColorFill(progress)
+	private fun computeColorsFromProgress() {
+		mPaintBorder.color = darkenModifier.modify(mColor, mProgress)
+		mPaintFill.color = transparencyModifier.modify(mColor, mProgress)
 	}
 
 	override fun onDraw(canvas: Canvas) {
@@ -214,8 +224,8 @@ class FillingProgressView : View {
 	}
 
 	override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-		val desiredWidth = mDiameter.toInt()
-		val desiredHeight = mDiameter.toInt()
+		val desiredWidth = mDiameter.toInt() + paddingStart + paddingEnd
+		val desiredHeight = mDiameter.toInt() + paddingTop + paddingEnd
 
 		val widthMode = MeasureSpec.getMode(widthMeasureSpec)
 		val widthSize = MeasureSpec.getSize(widthMeasureSpec)
