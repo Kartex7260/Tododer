@@ -93,6 +93,7 @@ class TodoDetailScreenFragment : Fragment() {
 			repeatOnLifecycle(Lifecycle.State.STARTED) {
 				todoListViewModel.onTaskIsDone.collectLatest { taskDone ->
 					viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
+					todoDataViewModel.updateStateView()
 				}
 			}
 		}

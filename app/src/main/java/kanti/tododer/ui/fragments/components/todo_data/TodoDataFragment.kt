@@ -76,6 +76,16 @@ class TodoDataFragment : Fragment() {
 				}
 			}
 		}
+
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				viewModel.updateStateView.collectLatest {
+					todoStateViewHolderManager.current?.also { viewHolder ->
+						viewHolder.todo = viewHolder.todo
+					}
+				}
+			}
+		}
 	}
 
 	private fun showData(todoElement: Todo?) {
@@ -93,7 +103,7 @@ class TodoDataFragment : Fragment() {
 	private fun showPlan(plan: Plan) {
 		showBasicData(plan.title, plan.remark)
 
-		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(plan)
+		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(plan, setCurrent = true)
 		todoStateViewHolder.setEventListenerIfNull { type, todo, _, callback ->
 			if (type != PlanStateViewHolder.EVENT_PROGRESS_REQUEST)
 				return@setEventListenerIfNull
@@ -111,7 +121,7 @@ class TodoDataFragment : Fragment() {
 	private fun showTask(task: Task) {
 		showBasicData(task.title, task.remark)
 
-		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(task)
+		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(task, setCurrent = true)
 		todoStateViewHolder.setEventListenerIfNull { type, todo, value, callback ->
 			if (type != TaskStateViewHolder.EVENT_IS_DONE)
 				return@setEventListenerIfNull

@@ -27,6 +27,7 @@ abstract class TodoViewHolder(
 		set(value) {
 			checkType(value.type)
 			_todo = value
+			bindData(view, _todo)
 			updateView()
 		}
 
@@ -54,7 +55,7 @@ abstract class TodoViewHolder(
 		get() {
 			if (_view == null) {
 				_view = createView()
-				bindData(_view!!, todo)
+				onBindData(_view!!, todo)
 			}
 			return _view!!
 		}

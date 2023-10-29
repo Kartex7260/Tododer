@@ -13,18 +13,23 @@ class TodoViewHolderManager(
 
 	private val todoViewHolderHashMap: HashMap<String, TodoViewHolder> = HashMap()
 
+	var current: TodoViewHolder? = null
+		private set
+
 	fun remove(todoElement: Todo) {
 		todoViewHolderHashMap.remove(todoElement.fullId)
 	}
 
-	fun getViewHolder(todoElement: Todo, attachToRoot: Boolean = false): TodoViewHolder {
-		return getViewHolder(todoElement) ?: createViewHolder(todoElement, attachToRoot)
+	fun getViewHolder(todoElement: Todo, attachToRoot: Boolean = false, setCurrent: Boolean = false): TodoViewHolder {
+		return (getViewHolder(todoElement) ?: createViewHolder(todoElement, attachToRoot)).also {
+			if (setCurrent)
+				current = it
+		}
 	}
 
 	private fun getViewHolder(todoElement: Todo): TodoViewHolder? {
 		return todoViewHolderHashMap[todoElement.fullId]?.also { viewHolder ->
-			if (viewHolder.todo != todoElement)
-				viewHolder.todo = todoElement
+			viewHolder.todo = todoElement
 		}
 	}
 

@@ -21,6 +21,9 @@ class TodoDataViewModel : ViewModel() {
 	private val _todoElement = MutableStateFlow(TodoDataUiState())
 	val todoElement = _todoElement.asStateFlow()
 
+	private val _updateStateView = MutableSharedFlow<Unit>()
+	val updateStateView = _updateStateView.asSharedFlow()
+
 	private val _taskIsDone = MutableSharedFlow<TaskIsDoneRequest>(replay = 1)
 	val onTaskIsDone = _taskIsDone.asSharedFlow()
 
@@ -56,6 +59,12 @@ class TodoDataViewModel : ViewModel() {
 			))
 		}
 		return callback
+	}
+
+	fun updateStateView() {
+		viewModelScope.launch {
+			_updateStateView.emit(Unit)
+		}
 	}
 
 }
