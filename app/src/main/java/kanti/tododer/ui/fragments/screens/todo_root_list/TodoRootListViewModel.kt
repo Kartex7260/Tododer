@@ -1,6 +1,5 @@
 package kanti.tododer.ui.fragments.screens.todo_root_list
 
-import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,12 +11,14 @@ import kanti.tododer.data.common.toUiState
 import kanti.tododer.data.model.plan.IPlanRepository
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.getFromRoot
+import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TodoRootListViewModel @Inject constructor(
-	private val planRepository: IPlanRepository
+	private val planRepository: IPlanRepository,
+	private val computePlanProgressUseCase: ComputePlanProgressUseCase
 ) : ViewModel() {
 
 	private val _plansUiStateProcess = UiStateProcess<List<Plan>>(listOf())
@@ -38,8 +39,9 @@ class TodoRootListViewModel @Inject constructor(
 	}
 
 	fun planProgressRequest(plan: Plan, callback: MutableLiveData<Float>) {
-		// TODO: write repository request
-		callback.value = 0.5f
+		viewModelScope.launch {
+			computePlanProgressUseCase(plan, callback)
+		}
 	}
 
 }

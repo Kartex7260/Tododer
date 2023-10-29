@@ -1,9 +1,8 @@
 package kanti.tododer.ui.fragments.screens.todo_detail.viewmodel
 
 import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.domain.plan.planwithchildren.PlanWithChildren
-import kanti.tododer.domain.task.taskwithchildren.TaskWithChildren
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.domain.common.TodoWithChildren
 
 data class TodoDetailUiState(
 	val todo: Todo? = null,
@@ -42,23 +41,12 @@ data class TodoDetailUiState(
 
 }
 
-val RepositoryResult<TaskWithChildren>.toTaskTodoDetailUiState: TodoDetailUiState
+val RepositoryResult<TodoWithChildren>.toTodoDetailUiState: TodoDetailUiState
 	get() {
 		val children = value?.childTasks ?: listOf()
 		return TodoDetailUiState(
-			todo = value?.task,
+			todo = value?.todo,
 			todoChildren = children,
-			type = type.toTodoDetailType
-		)
-	}
-
-val RepositoryResult<PlanWithChildren>.toPlanTodoDetailUiState: TodoDetailUiState
-	get() {
-		val childrenPlans = value?.childPlans ?: listOf()
-		val childrenTasks = value?.childTasks ?: listOf()
-		return TodoDetailUiState(
-			todo = value?.plan,
-			todoChildren = childrenPlans + childrenTasks,
 			type = type.toTodoDetailType
 		)
 	}

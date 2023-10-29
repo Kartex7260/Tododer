@@ -15,8 +15,9 @@ import kanti.tododer.data.model.common.toFullId
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.TaskRepository
-import kanti.tododer.domain.plan.planwithchildren.GetPlanWithChildrenUseCase
-import kanti.tododer.domain.task.taskwithchildren.GetTaskWithChildrenUseCase
+import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
+import kanti.tododer.domain.progress.ComputePlanProgressUseCase
+import kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class TodoDetailViewModel @Inject constructor(
 	private val getTaskWithChildren: GetTaskWithChildrenUseCase,
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
+	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val taskRepository: TaskRepository
 ) : ViewModel() {
 
@@ -49,8 +51,9 @@ class TodoDetailViewModel @Inject constructor(
 	}
 
 	fun planProgressRequest(plan: Plan, callback: MutableLiveData<Float>) {
-		// TODO: write repository request
-		callback.value = 0.5f
+		viewModelScope.launch {
+			computePlanProgressUseCase(plan, callback)
+		}
 	}
 
 	fun pop() {
@@ -125,13 +128,13 @@ class TodoDetailViewModel @Inject constructor(
 	private suspend fun getTask(id: Int): TodoDetailUiState {
 		val repositoryResult = getTaskWithChildren(id)
 		Log.d(logTag, "getTask(Int = \"$id\"): gotten task with children (${repositoryResult.value})")
-		return repositoryResult.toTaskTodoDetailUiState
+		return repositoryResult.toTodoDetailUiState
 	}
 
 	private suspend fun getPlan(id: Int): TodoDetailUiState {
 		val repositoryResult = getPlanWithChildren(id)
 		Log.d(logTag, "getPlan(Int = \"$id\"): gotten plan with children (${repositoryResult.value})")
-		return repositoryResult.toPlanTodoDetailUiState
+		return repositoryResult.toTodoDetailUiState
 	}
 
 }

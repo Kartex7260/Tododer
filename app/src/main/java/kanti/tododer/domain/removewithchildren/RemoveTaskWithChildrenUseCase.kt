@@ -1,4 +1,4 @@
-package kanti.tododer.domain.task
+package kanti.tododer.domain.removewithchildren
 
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.model.common.fullId
