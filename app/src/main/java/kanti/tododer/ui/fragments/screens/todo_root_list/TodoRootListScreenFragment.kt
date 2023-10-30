@@ -102,6 +102,18 @@ class TodoRootListScreenFragment : Fragment() {
 				}
 			}
 		}
+
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				todoListViewModel.onDeleteTodo.collectLatest { deleteRequest ->
+					Log.d(
+						this@TodoRootListScreenFragment.hashLogTag,
+						"onDeleteTodo.collectLatest { $deleteRequest }"
+					)
+					viewModel.deleteTodo(deleteRequest.todo)
+				}
+			}
+		}
 	}
 
 	override fun onResume() {

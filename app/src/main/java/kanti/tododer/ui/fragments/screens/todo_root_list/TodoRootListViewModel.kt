@@ -8,11 +8,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.common.UiStateProcess
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.common.toUiState
+import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.IPlanRepository
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.getFromRoot
 import kanti.tododer.data.model.plan.insertToRoot
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
+import kanti.tododer.domain.removewithchildren.RemoveTodoWithChildrenUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -21,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoRootListViewModel @Inject constructor(
 	private val planRepository: IPlanRepository,
-	private val computePlanProgressUseCase: ComputePlanProgressUseCase
+	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
+	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase
 ) : ViewModel() {
 
 	private val _plansUiStateProcess = UiStateProcess<List<Plan>>(listOf())
@@ -33,6 +36,12 @@ class TodoRootListViewModel @Inject constructor(
 
 	init {
 		getRootPlans()
+	}
+
+	fun deleteTodo(todo: Todo) {
+		viewModelScope.launch {
+			removeTodoWithChildrenUseCase(todo)
+		}
 	}
 
 	fun getRootPlans() {

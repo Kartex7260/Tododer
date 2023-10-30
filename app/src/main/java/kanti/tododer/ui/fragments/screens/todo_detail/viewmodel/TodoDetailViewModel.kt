@@ -20,6 +20,7 @@ import kanti.tododer.data.model.task.Task
 import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase
+import kanti.tododer.domain.removewithchildren.RemoveTodoWithChildrenUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -34,6 +35,7 @@ class TodoDetailViewModel @Inject constructor(
 	private val getTaskWithChildren: GetTaskWithChildrenUseCase,
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
+	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase,
 	private val taskRepository: ITaskRepository,
 	private val planRepository: IPlanRepository
 ) : ViewModel() {
@@ -49,6 +51,12 @@ class TodoDetailViewModel @Inject constructor(
 
 	val currentTodoType: Todo.Type? get() {
 		return currentFullId?.type
+	}
+
+	fun deletePlan(todo: Todo) {
+		viewModelScope.launch {
+			removeTodoWithChildrenUseCase(todo)
+		}
 	}
 
 	fun createNewPlan() {

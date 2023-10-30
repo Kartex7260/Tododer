@@ -4,12 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.domain.removewithchildren.RemoveTodoWithChildrenUseCase
 import kanti.tododer.ui.fragments.components.common.PlanProgressRequest
 import kanti.tododer.ui.fragments.components.common.TaskIsDoneRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,30 +15,33 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class TodoListViewModel @Inject constructor(
-	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase
-) : ViewModel() {
+class TodoListViewModel : ViewModel() {
 
 	private val logTag = javaClass.simpleName
 
 	private val _todoListLiveData = MutableStateFlow<List<Todo>>(listOf())
 	val todoList = _todoListLiveData.asStateFlow()
 
-	private val _onElementClick = MutableSharedFlow<Todo>()
-	val onElementClick = _onElementClick.asSharedFlow()
+	private val _elementClick = MutableSharedFlow<Todo>()
+	val onElementClick = _elementClick.asSharedFlow()
 
-	private val _onTaskIsDone = MutableSharedFlow<TaskIsDoneRequest>()
-	val onTaskIsDone = _onTaskIsDone.asSharedFlow()
+	private val _taskIsDone = MutableSharedFlow<TaskIsDoneRequest>()
+	val onTaskIsDone = _taskIsDone.asSharedFlow()
 
-	private val _onPlanProgressRequest = MutableSharedFlow<PlanProgressRequest>()
-	val onPlanProgressRequest = _onPlanProgressRequest.asSharedFlow()
+	private val _planProgressRequest = MutableSharedFlow<PlanProgressRequest>()
+	val onPlanProgressRequest = _planProgressRequest.asSharedFlow()
+
+	private val _deleteTodo = MutableSharedFlow<DeleteTodoRequest>()
+	val onDeleteTodo = _deleteTodo.asSharedFlow()
 
 	fun deleteTodo(todo: Todo) {
 		viewModelScope.launch {
-			removeTodoWithChildrenUseCase(todo)
+			_deleteTodo.emit(
+				DeleteTodoRequest(
+					todo = todo
+				)
+			)
 		}
 	}
 
@@ -50,14 +51,14 @@ class TodoListViewModel @Inject constructor(
 
 	fun elementClick(todo: Todo) {
 		viewModelScope.launch {
-			_onElementClick.emit(todo)
+			_elementClick.emit(todo)
 		}
 	}
 
 	fun taskIsDone(task: Task, done: Boolean): LiveData<UiState<Task>> {
 		val callbackLiveData = MutableLiveData<UiState<Task>>()
 		viewModelScope.launch {
-			_onTaskIsDone.emit(
+			_taskIsDone.emit(
 				TaskIsDoneRequest(task, done, callbackLiveData)
 			)
 		}
@@ -67,7 +68,7 @@ class TodoListViewModel @Inject constructor(
 	fun progressRequest(plan: Plan): LiveData<Float> {
 		val callback = MutableLiveData<Float>()
 		viewModelScope.launch {
-			_onPlanProgressRequest.emit(
+			_planProgressRequest.emit(
 				PlanProgressRequest(
 					plan,
 					callback
