@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.TextView
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
@@ -33,6 +34,11 @@ class TaskViewHolder(
 						return@event
 					this@TaskViewHolder.todo = todo
 				}
+			}
+		}
+		view.findViewById<ImageButton>(R.id.imageButtonTaskMore).apply {
+			setOnClickListener { _ ->
+				showContextMenu()
 			}
 		}
 	}

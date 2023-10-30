@@ -33,8 +33,8 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class TodoListFragment : Fragment() {
 
-	private var _view: FragmentTodoListBinding? = null
-	private val view: FragmentTodoListBinding get() { return _view!! }
+	private var _viewBinding: FragmentTodoListBinding? = null
+	private val viewBinding: FragmentTodoListBinding get() { return _viewBinding!! }
 
 	private val viewModel: TodoListViewModel by viewModels(ownerProducer = {
 		requireParentFragment()
@@ -54,15 +54,15 @@ class TodoListFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
-		if (_view == null) {
-			_view = FragmentTodoListBinding.inflate(inflater, container, false)
+		if (_viewBinding == null) {
+			_viewBinding = FragmentTodoListBinding.inflate(inflater, container, false)
 			viewHolderManager = TodoViewHolderManager(
 				ItemListTodoViewHolderFactory,
 				inflater,
-				view.linearLayoutChildren
+				viewBinding.linearLayoutChildren
 			)
 		}
-		return view.root
+		return viewBinding.root
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,7 +77,7 @@ class TodoListFragment : Fragment() {
 						hashLogTag,
 						"onViewCreated(View, Bundle?): get observe notification=$elements"
 					)
-					this@TodoListFragment.view.linearLayoutChildren.apply {
+					viewBinding.linearLayoutChildren.apply {
 						removeAllViews()
 						for (todoElement in elements) {
 							val viewHolder = getViewHolder(todoElement)
@@ -105,6 +105,11 @@ class TodoListFragment : Fragment() {
 						log("viewHolder.setEventListenerIfNull=${hashCode()} {\n" +
 								"\tonEvent: EVENT_ON_CLICK\n}")
 						viewModel.elementClick(todo)
+					}
+					TodoViewHolder.EVENT_CONTEXT_MENU_DELETE -> {
+						viewModel.deleteTodo(todo)
+						viewHolderManager.remove(todo)
+						viewBinding.linearLayoutChildren.removeView(viewHolder.view)
 					}
 					else -> {
 						when (todo.type) {

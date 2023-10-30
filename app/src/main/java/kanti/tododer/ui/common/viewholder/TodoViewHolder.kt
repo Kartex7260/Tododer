@@ -1,10 +1,12 @@
 package kanti.tododer.ui.common.viewholder
 
 import android.annotation.SuppressLint
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
 import kotlin.IllegalArgumentException
@@ -60,7 +62,7 @@ abstract class TodoViewHolder(
 			return _view!!
 		}
 
-	protected fun event(type: Int, todo: Todo, value: Any? = null, callback: ((Any?) -> Unit)? = null) {
+	protected fun event(type: Int, todo: Todo, value: Any? = null, callback: TodoEventCallback? = null) {
 		eventListener?.onEvent(type, todo, value, callback)
 	}
 
@@ -75,7 +77,23 @@ abstract class TodoViewHolder(
 		onViewCreated(view)
 	}
 
-	protected open fun onViewCreated(view: View) {}
+	protected open fun onViewCreated(view: View) {
+		view.apply {
+			setOnCreateContextMenuListener(::createContextMenu)
+		}
+	}
+
+	protected open fun onCreateContextMenu(menu: ContextMenu, view: View, menuInfo: ContextMenu.ContextMenuInfo?) {}
+
+	private fun createContextMenu(menu: ContextMenu, view: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+		menu.add(view.context.getString(R.string.context_menu_delete)).apply {
+			setOnMenuItemClickListener {
+				event(EVENT_CONTEXT_MENU_DELETE, todo, view)
+				true
+			}
+		}
+		onCreateContextMenu(menu, view, menuInfo)
+	}
 
 	private fun updateView() {
 		_view?.let { view ->
@@ -110,6 +128,7 @@ abstract class TodoViewHolder(
 	companion object {
 
 		const val EVENT_ON_CLICK = -1
+		const val EVENT_CONTEXT_MENU_DELETE = -2
 
 		@SuppressLint("StaticFieldLeak")
 		val RootDefault: ViewGroup? = null

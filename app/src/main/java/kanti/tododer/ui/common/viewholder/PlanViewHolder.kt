@@ -3,6 +3,7 @@ package kanti.tododer.ui.common.viewholder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import kanti.fillingprogressview.FillingProgressView
 import kanti.tododer.R
@@ -38,6 +39,11 @@ class PlanViewHolder(
 					return@event
 				}
 				progress = todoProgress
+			}
+		}
+		view.findViewById<ImageButton>(R.id.imageButtonPlanMore).apply {
+			setOnClickListener { _ ->
+				showContextMenu()
 			}
 		}
 	}

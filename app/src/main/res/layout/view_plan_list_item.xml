@@ -46,5 +46,16 @@
             app:layout_constraintStart_toStartOf="@+id/textViewTodoItemPlanTitle"
             app:layout_constraintTop_toBottomOf="@+id/textViewTodoItemPlanTitle"
             android:text="@string/remark" />
+
+        <ImageButton
+            android:id="@+id/imageButtonPlanMore"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/baseline_more_horiz_24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

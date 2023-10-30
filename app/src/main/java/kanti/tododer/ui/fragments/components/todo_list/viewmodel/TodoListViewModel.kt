@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.domain.removewithchildren.RemoveTodoWithChildrenUseCase
 import kanti.tododer.ui.fragments.components.common.PlanProgressRequest
 import kanti.tododer.ui.fragments.components.common.TaskIsDoneRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,8 +17,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TodoListViewModel : ViewModel() {
+@HiltViewModel
+class TodoListViewModel @Inject constructor(
+	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase
+) : ViewModel() {
 
 	private val logTag = javaClass.simpleName
 
@@ -31,6 +37,12 @@ class TodoListViewModel : ViewModel() {
 
 	private val _onPlanProgressRequest = MutableSharedFlow<PlanProgressRequest>()
 	val onPlanProgressRequest = _onPlanProgressRequest.asSharedFlow()
+
+	fun deleteTodo(todo: Todo) {
+		viewModelScope.launch {
+			removeTodoWithChildrenUseCase(todo)
+		}
+	}
 
 	fun sendTodoList(list: List<Todo> = listOf()) {
 		_todoListLiveData.value = list
