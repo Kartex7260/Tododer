@@ -10,18 +10,16 @@ import androidx.activity.addCallback
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
 import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.fullId
 import kanti.tododer.databinding.FragmentTodoDetailBinding
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
+import kanti.tododer.ui.fragments.common.observe
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.fragments.dialog.TodoSelectorDialogFragment
@@ -29,7 +27,6 @@ import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.NewTodoCreatedUi
 import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoDetailUiState
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -84,38 +81,30 @@ class TodoDetailScreenFragment : Fragment() {
 			}
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				viewModel.newTodoCreated.collectLatest { uiState ->
-					val `continue` = showMessageFromTodoCreatedUiStateType(uiState.type)
-					if (!`continue` && uiState.todo != null)
-						return@collectLatest
+		observe(viewModel.newTodoCreated) { uiState ->
+			val `continue` = showMessageFromTodoCreatedUiStateType(uiState.type)
+			if (!`continue` && uiState.todo != null)
+				return@observe
 
-					viewModel.showTodo(uiState.todo!!)
-				}
-			}
+			viewModel.showTodo(uiState.todo!!)
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				viewModel.todoDetail.collectLatest { uiState ->
-					showProcess(uiState.process)
-					Log.d(
-						hashLogTag,
-						"onViewCreated(View, Bundle?): todoDataViewModel.sendTodo(Todo=${uiState.todo})\n" +
-								"todoDataViewModel=${todoDataViewModel.hashLogTag}"
-					)
-					todoDataViewModel.sendTodo(uiState.todo)
-					Log.d(
-						hashLogTag,
-						"onViewCreated(View, Bundle?): todoListViewModel.sendTodoList(List<Todo> = ${uiState.todoChildren}\n" +
-								"todoListViewModel=${todoListViewModel.hashLogTag}"
-					)
-					todoListViewModel.sendTodoList(uiState.todoChildren)
+		observe(viewModel.todoDetail) { uiState ->
+			showProcess(uiState.process)
+			Log.d(
+				hashLogTag,
+				"onViewCreated(View, Bundle?): todoDataViewModel.sendTodo(Todo=${uiState.todo})\n" +
+						"todoDataViewModel=${todoDataViewModel.hashLogTag}"
+			)
+			todoDataViewModel.sendTodo(uiState.todo)
+			Log.d(
+				hashLogTag,
+				"onViewCreated(View, Bundle?): todoListViewModel.sendTodoList(List<Todo> = ${uiState.todoChildren}\n" +
+						"todoListViewModel=${todoListViewModel.hashLogTag}"
+			)
+			todoListViewModel.sendTodoList(uiState.todoChildren)
 
-					showMessageFromTodoDetailUiStateType(uiState.type)
-				}
-			}
+			showMessageFromTodoDetailUiStateType(uiState.type)
 		}
 
 		observeTodoDataFragment()
@@ -195,55 +184,31 @@ class TodoDetailScreenFragment : Fragment() {
 	}
 
 	private fun observeTodoDataFragment() {
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				todoDataViewModel.onTaskIsDone.collectLatest { taskDone ->
-					viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
-				}
-			}
+		observe(todoDataViewModel.onTaskIsDone) { taskDone ->
+			viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				todoDataViewModel.onPlanProgressRequest.collectLatest { progressRequest ->
-					viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
-				}
-			}
+		observe(todoDataViewModel.onPlanProgressRequest) { progressRequest ->
+			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
 		}
 	}
 
 	private fun observeTodoListFragment() {
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				todoListViewModel.onTaskIsDone.collectLatest { taskDone ->
-					viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
-					todoDataViewModel.updateStateView()
-				}
-			}
+		observe(todoListViewModel.onTaskIsDone) { taskDone ->
+			viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
+			todoDataViewModel.updateStateView()
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				todoListViewModel.onElementClick.collectLatest {
-					viewModel.showTodo(it)
-				}
-			}
+		observe(todoListViewModel.onElementClick) {
+			viewModel.showTodo(it)
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				todoListViewModel.onPlanProgressRequest.collectLatest { progressRequest ->
-					viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
-				}
-			}
+		observe(todoListViewModel.onPlanProgressRequest) { progressRequest ->
+			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				todoListViewModel.onDeleteTodo.collectLatest { progressRequest ->
-					viewModel.deletePlan(progressRequest.todo)
-				}
-			}
+		observe(todoListViewModel.onDeleteTodo) { deleteRequest ->
+			viewModel.deletePlan(deleteRequest.todo)
 		}
 	}
 

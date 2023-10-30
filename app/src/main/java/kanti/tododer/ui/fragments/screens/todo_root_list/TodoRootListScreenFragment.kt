@@ -24,8 +24,7 @@ import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewMod
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kanti.tododer.ui.fragments.common.observe
 
 @AndroidEntryPoint
 class TodoRootListScreenFragment : Fragment() {
@@ -58,16 +57,12 @@ class TodoRootListScreenFragment : Fragment() {
 			viewModel.createNewPlan()
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				viewModel.newPlanCreated.collectLatest { uiState ->
-					val `continue` = showMessageFromType(uiState.type)
-					if (!`continue`)
-						return@collectLatest
+		observe(viewModel.newPlanCreated) { uiState ->
+			val `continue` = showMessageFromType(uiState.type)
+			if (!`continue`)
+				return@observe
 
-					navigateToDetailScreen(uiState.value)
-				}
-			}
+			navigateToDetailScreen(uiState.value)
 		}
 
 		viewModel.plansLiveData.observe(viewLifecycleOwner) { uiState ->
@@ -79,40 +74,28 @@ class TodoRootListScreenFragment : Fragment() {
 			}
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				todoListViewModel.onElementClick.collectLatest { todoElement ->
-					Log.d(
-						this@TodoRootListScreenFragment.hashLogTag,
-						"onElementClick.collectLatest { $todoElement }"
-					)
-					navigateToDetailScreen(todoElement)
-				}
-			}
+		observe(todoListViewModel.onElementClick) { todoElement ->
+			Log.d(
+				this@TodoRootListScreenFragment.hashLogTag,
+				"onElementClick.collectLatest { $todoElement }"
+			)
+			navigateToDetailScreen(todoElement)
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				todoListViewModel.onPlanProgressRequest.collectLatest { progressRequest ->
-					Log.d(
-						this@TodoRootListScreenFragment.hashLogTag,
-						"onPlanProgressRequest.collectLatest { $progressRequest }"
-					)
-					viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
-				}
-			}
+		observe(todoListViewModel.onPlanProgressRequest) { progressRequest ->
+			Log.d(
+				this@TodoRootListScreenFragment.hashLogTag,
+				"onPlanProgressRequest.collectLatest { $progressRequest }"
+			)
+			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				todoListViewModel.onDeleteTodo.collectLatest { deleteRequest ->
-					Log.d(
-						this@TodoRootListScreenFragment.hashLogTag,
-						"onDeleteTodo.collectLatest { $deleteRequest }"
-					)
-					viewModel.deleteTodo(deleteRequest.todo)
-				}
-			}
+		observe(todoListViewModel.onDeleteTodo) { deleteRequest ->
+			Log.d(
+				this@TodoRootListScreenFragment.hashLogTag,
+				"onDeleteTodo.collectLatest { $deleteRequest }"
+			)
+			viewModel.deleteTodo(deleteRequest.todo)
 		}
 	}
 
