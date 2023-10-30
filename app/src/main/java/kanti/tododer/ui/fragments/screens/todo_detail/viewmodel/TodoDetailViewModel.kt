@@ -11,14 +11,18 @@ import kanti.tododer.data.common.toUiState
 import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.FullIds
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.common.toFullId
+import kanti.tododer.data.model.plan.IPlanRepository
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.task.ITaskRepository
 import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.EmptyStackException
@@ -30,14 +34,56 @@ class TodoDetailViewModel @Inject constructor(
 	private val getTaskWithChildren: GetTaskWithChildrenUseCase,
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
-	private val taskRepository: TaskRepository
+	private val taskRepository: ITaskRepository,
+	private val planRepository: IPlanRepository
 ) : ViewModel() {
 
 	private val stack = Stack<FullId>()
 	private var currentFullId: FullId? = null
 
-	private val _todoDetail = MutableStateFlow<TodoDetailUiState>(TodoDetailUiState.Empty)
+	private val _todoDetail = MutableStateFlow(TodoDetailUiState.Empty)
 	val todoDetail = _todoDetail.asStateFlow()
+
+	private val _newTodoCreated = MutableSharedFlow<NewTodoCreatedUiState>()
+	val newTodoCreated = _newTodoCreated.asSharedFlow()
+
+	fun createNewPlan() {
+		viewModelScope.launch {
+			if (currentFullId == null) {
+				_newTodoCreated.emit(
+					NewTodoCreatedUiState(
+						type = NewTodoCreatedUiState.Type.NoTodoInstalled
+					)
+				)
+			}
+
+			val planFromDB = planRepository.insert(
+				Plan(
+					parentId = currentFullId!!.fullId
+				)
+			)
+			_newTodoCreated.emit(planFromDB.toNewTodoCreatedUiState)
+		}
+	}
+
+	fun createNewTask() {
+		viewModelScope.launch {
+			if (currentFullId == null) {
+				_newTodoCreated.emit(
+					NewTodoCreatedUiState(
+						type = NewTodoCreatedUiState.Type.NoTodoInstalled
+					)
+				)
+			}
+
+			val taskFromDB = taskRepository.insert(
+				Task(
+					parentId = currentFullId!!.fullId
+				)
+			)
+			_newTodoCreated.emit(taskFromDB.toNewTodoCreatedUiState)
+		}
+	}
 
 	fun taskIsDone(task: Task, isDone: Boolean, callback: MutableLiveData<UiState<Task>>) {
 		viewModelScope.launch {

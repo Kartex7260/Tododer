@@ -16,4 +16,13 @@ abstract class Todo : IdOwner {
 		TASK
 	}
 
+	companion object {
+
+		val Empty: Todo = object : Todo() {
+			override val type: Type = Type.TASK
+			override val id: Int = 0
+		}
+
+	}
+
 }

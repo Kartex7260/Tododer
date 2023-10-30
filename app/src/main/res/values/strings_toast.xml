@@ -4,4 +4,7 @@
 
     <string name="invalid_data">Invalid data</string>
     <string name="not_found">Not found</string>
+    <string name="already_exist">Already exist</string>
+
+    <string name="no_todo_installed">No todo is installed</string>
 </resources>

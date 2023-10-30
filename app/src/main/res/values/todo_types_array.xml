@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="todo_types">
+        <item>@string/plan</item>
+        <item>@string/task</item>
+    </string-array>
+</resources>

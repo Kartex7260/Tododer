@@ -18,10 +18,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
 import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
+import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.databinding.FragmentTodoDetailBinding
+import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
+import kanti.tododer.ui.fragments.dialog.TodoSelectorDialogFragment
+import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.NewTodoCreatedUiState
 import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoDetailUiState
 import kotlinx.coroutines.delay
@@ -60,6 +64,29 @@ class TodoDetailScreenFragment : Fragment() {
 			viewModel.pop()
 		}
 
+		setActivityFabOnClickListener {
+			val todoSelectorDialog = TodoSelectorDialogFragment()
+			todoSelectorDialog.setTodoSelectListener { type ->
+				when (type) {
+					Todo.Type.TASK -> viewModel.createNewTask()
+					Todo.Type.PLAN -> viewModel.createNewPlan()
+				}
+			}
+			todoSelectorDialog.show(childFragmentManager, "todo_select")
+		}
+
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				viewModel.newTodoCreated.collectLatest { uiState ->
+					val `continue` = showMessageFromTodoCreatedUiStateType(uiState.type)
+					if (!`continue` && uiState.todo != null)
+						return@collectLatest
+
+					viewModel.showTodo(uiState.todo!!)
+				}
+			}
+		}
+
 		viewLifecycleOwner.lifecycleScope.launch {
 			repeatOnLifecycle(Lifecycle.State.STARTED) {
 				viewModel.todoDetail.collectLatest { uiState ->
@@ -77,14 +104,7 @@ class TodoDetailScreenFragment : Fragment() {
 					)
 					todoListViewModel.sendTodoList(uiState.todoChildren)
 
-					when (uiState.type) {
-						is TodoDetailUiState.Type.Empty -> {}
-						is TodoDetailUiState.Type.Success -> {}
-						is TodoDetailUiState.Type.EmptyStack -> { back() }
-						is TodoDetailUiState.Type.InvalidFullId -> { toastAndBack(R.string.invalid_data, uiState) }
-						is TodoDetailUiState.Type.NotFound -> { toastAndBack(R.string.not_found, uiState) }
-						else -> { toastAndBack(R.string.unexpected_error, uiState) }
-					}
+					showMessageFromTodoDetailUiStateType(uiState.type)
 				}
 			}
 		}
@@ -139,6 +159,39 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 	}
 
+	private fun showMessageFromTodoDetailUiStateType(type: TodoDetailUiState.Type) {
+		when (type) {
+			is TodoDetailUiState.Type.Empty -> {}
+			is TodoDetailUiState.Type.Success -> {}
+			is TodoDetailUiState.Type.EmptyStack -> { back() }
+			is TodoDetailUiState.Type.InvalidFullId -> { toastAndBack(R.string.invalid_data, type) }
+			is TodoDetailUiState.Type.NotFound -> { toastAndBack(R.string.not_found, type) }
+			else -> { toastAndBack(R.string.unexpected_error, type) }
+		}
+	}
+
+	private fun showMessageFromTodoCreatedUiStateType(type: NewTodoCreatedUiState.Type): Boolean {
+		return when(type) {
+			is NewTodoCreatedUiState.Type.Success -> true
+			is NewTodoCreatedUiState.Type.NoTodoInstalled -> {
+				toastAndBack(R.string.no_todo_installed, type)
+				false
+			}
+			is NewTodoCreatedUiState.Type.AlreadyExists -> {
+				toastAndBack(R.string.already_exist, type)
+				false
+			}
+			is NewTodoCreatedUiState.Type.NotFound -> {
+				toastAndBack(R.string.not_found, type)
+				false
+			}
+			is NewTodoCreatedUiState.Type.Fail -> {
+				toastAndBack(R.string.unexpected_error, type)
+				false
+			}
+		}
+	}
+
 	private fun back(millis: Long? = null) {
 		if (millis == null) {
 			findNavController().popBackStack()
@@ -150,11 +203,21 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 	}
 
-	private fun toastAndBack(@StringRes resId: Int, uiState: TodoDetailUiState) {
+	private fun toastAndBack(@StringRes resId: Int, type: TodoDetailUiState.Type) {
 		val mess = getString(resId)
 		Toast.makeText(
 			requireContext(),
-			"$mess: ${uiState.type.message}",
+			"$mess: ${type.message}",
+			Toast.LENGTH_SHORT
+		).show()
+		back(1000L)
+	}
+
+	private fun toastAndBack(@StringRes resId: Int, type: NewTodoCreatedUiState.Type) {
+		val mess = getString(resId)
+		Toast.makeText(
+			requireContext(),
+			"$mess: ${type.message}",
 			Toast.LENGTH_SHORT
 		).show()
 		back(1000L)
