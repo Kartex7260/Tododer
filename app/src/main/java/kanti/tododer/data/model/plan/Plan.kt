@@ -10,6 +10,13 @@ data class Plan(
 	val remark: String = ""
 ) : Todo() {
 	override val type: Todo.Type = Todo.Type.PLAN
+
+	companion object {
+
+		val Empty = Plan()
+
+	}
+
 }
 
 val Plan.asPlanEntity: PlanEntity

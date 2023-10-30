@@ -15,7 +15,7 @@ abstract class IPlanDao {
 	abstract suspend fun getChildren(parentId: String): List<PlanEntity>
 
 	@Query("SELECT * FROM `plan` WHERE rowid = :rowId")
-	abstract suspend fun getByRowId(rowId: Long): PlanEntity
+	abstract suspend fun getByRowId(rowId: Long): PlanEntity?
 
 	@Query("SELECT * FROM `plan` WHERE id = :id")
 	abstract suspend fun getPlan(id: Int): PlanEntity?

@@ -16,12 +16,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.R
 import kanti.tododer.common.hashLogTag
+import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.databinding.FragmentTodoRootBinding
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
+import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -51,6 +53,23 @@ class TodoRootListScreenFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+
+		setActivityFabOnClickListener {
+			viewModel.createNewPlan()
+		}
+
+		viewLifecycleOwner.lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				viewModel.newPlanCreated.collectLatest { uiState ->
+					val `continue` = showMessageFromType(uiState.type)
+					if (!`continue`)
+						return@collectLatest
+
+					navigateToDetailScreen(uiState.value)
+				}
+			}
+		}
+
 		viewModel.plansLiveData.observe(viewLifecycleOwner) { uiState ->
 			processView(uiState.process)
 			showData(uiState.value)
@@ -105,6 +124,36 @@ class TodoRootListScreenFragment : Fragment() {
 	private fun navigateToDetailScreen(todoElement: Todo) {
 		val navDirections = TodoRootListScreenFragmentDirections.actionListToDetail(todoElement.fullId)
 		view.root.findNavController().navigate(navDirections)
+	}
+
+	private fun showMessageFromType(type: RepositoryResult.Type): Boolean {
+		return when(type) {
+			is RepositoryResult.Type.Success -> { true }
+			is RepositoryResult.Type.AlreadyExists -> {
+				Toast.makeText(
+					requireContext(),
+					"${getString(R.string.not_found)}: ${type.fullId}",
+					Toast.LENGTH_SHORT
+				).show()
+				false
+			}
+			is RepositoryResult.Type.NotFound -> {
+				Toast.makeText(
+					requireContext(),
+					"${getString(R.string.not_found)}: ${type.message}",
+					Toast.LENGTH_SHORT
+				).show()
+				false
+			}
+			else -> {
+				Toast.makeText(
+					requireContext(),
+					"${getString(R.string.unexpected_error)}: ${type.message}",
+					Toast.LENGTH_SHORT
+				).show()
+				false
+			}
+		}
 	}
 
 }

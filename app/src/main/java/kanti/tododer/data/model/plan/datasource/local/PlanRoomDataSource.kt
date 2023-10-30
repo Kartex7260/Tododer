@@ -31,16 +31,30 @@ class PlanRoomDataSource @Inject constructor(
 			if (rowId == -1L) {
 				return@tryCatch LocalResult(type = LocalResult.Type.AlreadyExists(plan.fullId))
 			}
-			val planFromDB = planDao.getByRowId(rowId).toPlan()
-			LocalResult(planFromDB)
+			val planFromDB = planDao.getByRowId(rowId)?.toPlan()
+			LocalResult(
+				value = planFromDB,
+				type = if (planFromDB == null) {
+					LocalResult.Type.NotFound(rowId.toString())
+				} else {
+					LocalResult.Type.Success
+				}
+			)
 		}
 	}
 
 	override suspend fun replace(plan: Plan): LocalResult<Plan> {
 		return tryCatch {
 			val rowId = planDao.replace(plan)
-			val planFromDB = planDao.getByRowId(rowId).toPlan()
-			LocalResult(planFromDB)
+			val planFromDB = planDao.getByRowId(rowId)?.toPlan()
+			LocalResult(
+				value = planFromDB,
+				type = if (planFromDB == null) {
+					LocalResult.Type.NotFound(rowId.toString())
+				} else {
+					LocalResult.Type.Success
+				}
+			)
 		}
 	}
 
