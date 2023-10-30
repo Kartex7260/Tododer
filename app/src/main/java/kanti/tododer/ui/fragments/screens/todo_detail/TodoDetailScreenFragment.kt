@@ -65,14 +65,23 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 
 		setActivityFabOnClickListener {
-			val todoSelectorDialog = TodoSelectorDialogFragment()
-			todoSelectorDialog.setTodoSelectListener { type ->
+			viewModel.currentTodoType?.also { type ->
 				when (type) {
-					Todo.Type.TASK -> viewModel.createNewTask()
-					Todo.Type.PLAN -> viewModel.createNewPlan()
+					Todo.Type.TASK -> {
+						viewModel.createNewTask()
+					}
+					Todo.Type.PLAN -> {
+						val todoSelectorDialog = TodoSelectorDialogFragment()
+						todoSelectorDialog.setTodoSelectListener { type ->
+							when (type) {
+								Todo.Type.TASK -> viewModel.createNewTask()
+								Todo.Type.PLAN -> viewModel.createNewPlan()
+							}
+						}
+						todoSelectorDialog.show(childFragmentManager, "todo_select")
+					}
 				}
 			}
-			todoSelectorDialog.show(childFragmentManager, "todo_select")
 		}
 
 		viewLifecycleOwner.lifecycleScope.launch {

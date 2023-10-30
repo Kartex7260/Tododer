@@ -47,6 +47,10 @@ class TodoDetailViewModel @Inject constructor(
 	private val _newTodoCreated = MutableSharedFlow<NewTodoCreatedUiState>()
 	val newTodoCreated = _newTodoCreated.asSharedFlow()
 
+	val currentTodoType: Todo.Type? get() {
+		return currentFullId?.type
+	}
+
 	fun createNewPlan() {
 		viewModelScope.launch {
 			if (currentFullId == null) {
