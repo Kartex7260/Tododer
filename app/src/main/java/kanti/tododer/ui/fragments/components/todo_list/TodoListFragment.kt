@@ -2,6 +2,7 @@ package kanti.tododer.ui.fragments.components.todo_list
 
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -106,10 +107,15 @@ class TodoListFragment : Fragment() {
 								"\tonEvent: EVENT_ON_CLICK\n}")
 						viewModel.elementClick(todo)
 					}
-					TodoViewHolder.EVENT_CONTEXT_MENU_DELETE -> {
+					TodoViewHolder.EVENT_CONTEXT_MENU_DELETE_ON_CLICK -> {
 						viewModel.deleteTodo(todo)
 						viewHolderManager.remove(todo)
 						viewBinding.linearLayoutChildren.removeView(viewHolder.view)
+					}
+					TodoViewHolder.EVENT_CONTEXT_MENU_ON_CREATE -> {
+						if (value == null || value !is ContextMenu)
+							return
+						viewModel.todoItemCreateContextMenu(todo, value)
 					}
 					else -> {
 						when (todo.type) {

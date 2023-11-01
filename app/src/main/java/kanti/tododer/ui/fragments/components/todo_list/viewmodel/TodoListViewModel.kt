@@ -1,5 +1,6 @@
 package kanti.tododer.ui.fragments.components.todo_list.viewmodel
 
+import android.view.ContextMenu
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,6 +34,9 @@ class TodoListViewModel : ViewModel() {
 
 	private val _deleteTodo = MutableSharedFlow<DeleteTodoRequest>()
 	val onDeleteTodo = _deleteTodo.asSharedFlow()
+
+	private val _todoItemCreateContextMenu = MutableSharedFlow<TodoItemCreateContextMenuRequest>()
+	val onTodoItemCreateContextMenu = _todoItemCreateContextMenu.asSharedFlow()
 
 	fun deleteTodo(todo: Todo) {
 		viewModelScope.launch {
@@ -73,6 +77,17 @@ class TodoListViewModel : ViewModel() {
 			)
 		}
 		return callback
+	}
+
+	fun todoItemCreateContextMenu(todo: Todo, menu: ContextMenu) {
+		viewModelScope.launch {
+			_todoItemCreateContextMenu.emit(
+				TodoItemCreateContextMenuRequest(
+					todo = todo,
+					contextMenu = menu
+				)
+			)
+		}
 	}
 
 }

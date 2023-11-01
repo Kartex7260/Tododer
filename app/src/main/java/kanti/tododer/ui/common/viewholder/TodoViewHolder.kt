@@ -86,13 +86,19 @@ abstract class TodoViewHolder(
 	protected open fun onCreateContextMenu(menu: ContextMenu, view: View, menuInfo: ContextMenu.ContextMenuInfo?) {}
 
 	private fun createContextMenu(menu: ContextMenu, view: View, menuInfo: ContextMenu.ContextMenuInfo?) {
-		menu.add(view.context.getString(R.string.context_menu_delete)).apply {
+		menu.add(
+			CONTEXT_MENU_TODO_GROUP_ID,
+			CONTEXT_MENU_DELETE_ITEM_ID,
+			CONTEXT_MENU_DELETE_ORDER,
+			view.context.getString(R.string.context_menu_delete)
+		).apply {
 			setOnMenuItemClickListener {
-				event(EVENT_CONTEXT_MENU_DELETE, todo, view)
+				event(EVENT_CONTEXT_MENU_DELETE_ON_CLICK, todo, view)
 				true
 			}
 		}
 		onCreateContextMenu(menu, view, menuInfo)
+		event(EVENT_CONTEXT_MENU_ON_CREATE, todo, menu)
 	}
 
 	private fun updateView() {
@@ -128,7 +134,12 @@ abstract class TodoViewHolder(
 	companion object {
 
 		const val EVENT_ON_CLICK = -1
-		const val EVENT_CONTEXT_MENU_DELETE = -2
+		const val EVENT_CONTEXT_MENU_DELETE_ON_CLICK = -2
+		const val EVENT_CONTEXT_MENU_ON_CREATE = -3
+
+		const val CONTEXT_MENU_TODO_GROUP_ID = 0
+		const val CONTEXT_MENU_DELETE_ITEM_ID = 0
+		const val CONTEXT_MENU_DELETE_ORDER = 100
 
 		@SuppressLint("StaticFieldLeak")
 		val RootDefault: ViewGroup? = null
