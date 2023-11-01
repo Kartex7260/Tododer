@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.common.logTag
-import kanti.tododer.data.common.UiState
-import kanti.tododer.data.common.toUiState
+import kanti.tododer.data.common.isNull
+import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.FullIds
 import kanti.tododer.data.model.common.Todo
@@ -46,11 +46,47 @@ class TodoDetailViewModel @Inject constructor(
 	private val _todoDetail = MutableStateFlow(TodoDetailUiState.Empty)
 	val todoDetail = _todoDetail.asStateFlow()
 
-	private val _newTodoCreated = MutableSharedFlow<NewTodoCreatedUiState>()
+	private val _newTodoCreated = MutableSharedFlow<TodoSavedUiState>()
 	val newTodoCreated = _newTodoCreated.asSharedFlow()
 
 	val currentTodoType: Todo.Type? get() {
 		return currentFullId?.type
+	}
+
+	fun saveTitle(todo: Todo, title: String) {
+		viewModelScope.launch {
+			val fullId = todo.toFullId
+			when (fullId.type) {
+				Todo.Type.TASK -> saveTask(fullId.id) {
+					copy(
+						title = title
+					)
+				}
+				Todo.Type.PLAN -> savePlan(fullId.id) {
+					copy(
+						title = title
+					)
+				}
+			}
+		}
+	}
+
+	fun saveRemark(todo: Todo, remark: String) {
+		viewModelScope.launch {
+			val fullId = todo.toFullId
+			when (fullId.type) {
+				Todo.Type.TASK -> saveTask(fullId.id) {
+					copy(
+						remark = remark
+					)
+				}
+				Todo.Type.PLAN -> savePlan(fullId.id) {
+					copy(
+						remark = remark
+					)
+				}
+			}
+		}
 	}
 
 	fun deletePlan(todo: Todo) {
@@ -63,8 +99,8 @@ class TodoDetailViewModel @Inject constructor(
 		viewModelScope.launch {
 			if (currentFullId == null) {
 				_newTodoCreated.emit(
-					NewTodoCreatedUiState(
-						type = NewTodoCreatedUiState.Type.NoTodoInstalled
+					TodoSavedUiState(
+						type = TodoSavedUiState.Type.NoTodoInstalled
 					)
 				)
 			}
@@ -74,7 +110,7 @@ class TodoDetailViewModel @Inject constructor(
 					parentId = currentFullId!!.fullId
 				)
 			)
-			_newTodoCreated.emit(planFromDB.toNewTodoCreatedUiState)
+			_newTodoCreated.emit(planFromDB.toTodoSavedUiState)
 		}
 	}
 
@@ -82,8 +118,8 @@ class TodoDetailViewModel @Inject constructor(
 		viewModelScope.launch {
 			if (currentFullId == null) {
 				_newTodoCreated.emit(
-					NewTodoCreatedUiState(
-						type = NewTodoCreatedUiState.Type.NoTodoInstalled
+					TodoSavedUiState(
+						type = TodoSavedUiState.Type.NoTodoInstalled
 					)
 				)
 			}
@@ -93,7 +129,7 @@ class TodoDetailViewModel @Inject constructor(
 					parentId = currentFullId!!.fullId
 				)
 			)
-			_newTodoCreated.emit(taskFromDB.toNewTodoCreatedUiState)
+			_newTodoCreated.emit(taskFromDB.toTodoSavedUiState)
 		}
 	}
 

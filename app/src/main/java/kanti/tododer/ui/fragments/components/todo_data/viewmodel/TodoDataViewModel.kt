@@ -15,22 +15,53 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.IllegalStateException
 
 class TodoDataViewModel : ViewModel() {
 
+	private var currentTodo: Todo? = null
 	private val _todoElement = MutableStateFlow(TodoDataUiState())
 	val todoElement = _todoElement.asStateFlow()
 
 	private val _updateStateView = MutableSharedFlow<Unit>()
 	val updateStateView = _updateStateView.asSharedFlow()
 
-	private val _taskIsDone = MutableSharedFlow<TaskIsDoneRequest>(replay = 1)
+	private val _taskIsDone = MutableSharedFlow<SaveTodoDataRequest<Boolean>>(replay = 1)
 	val onTaskIsDone = _taskIsDone.asSharedFlow()
 
 	private val _planProgressRequest = MutableSharedFlow<PlanProgressRequest>(replay = 1)
 	val onPlanProgressRequest = _planProgressRequest.asSharedFlow()
 
+	private val _saveNewTitle = MutableSharedFlow<SaveTodoDataRequest<String>>()
+	val onSaveNewTitle = _saveNewTitle.asSharedFlow()
+
+	private val _saveNewRemark = MutableSharedFlow<SaveTodoDataRequest<String>>()
+	val onSaveNewRemark = _saveNewRemark.asSharedFlow()
+
+	fun saveNewTitle(title: String) {
+		viewModelScope.launch {
+			_saveNewTitle.emit(
+				SaveTodoDataRequest(
+					todo = requireCurrentTodo(),
+					data = title
+				)
+			)
+		}
+	}
+
+	fun saveNewRemark(remark: String) {
+		viewModelScope.launch {
+			_saveNewRemark.emit(
+				SaveTodoDataRequest(
+					todo = requireCurrentTodo(),
+					data = remark
+				)
+			)
+		}
+	}
+
 	fun sendTodo(todoElement: Todo? = null) {
+		currentTodo = todoElement
 		_todoElement.value = TodoDataUiState(
 			todoElement
 		)
@@ -66,5 +97,8 @@ class TodoDataViewModel : ViewModel() {
 			_updateStateView.emit(Unit)
 		}
 	}
+
+	private fun requireCurrentTodo() = currentTodo
+		?: throw IllegalStateException("Current todo is null!")
 
 }

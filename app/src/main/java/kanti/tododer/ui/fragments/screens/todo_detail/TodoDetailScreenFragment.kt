@@ -130,22 +130,22 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 	}
 
-	private fun showMessageFromTodoCreatedUiStateType(type: NewTodoCreatedUiState.Type): Boolean {
+	private fun showMessageFromTodoSavedUiStateType(type: TodoSavedUiState.Type): Boolean {
 		return when(type) {
-			is NewTodoCreatedUiState.Type.Success -> true
-			is NewTodoCreatedUiState.Type.NoTodoInstalled -> {
+			is TodoSavedUiState.Type.Success -> true
+			is TodoSavedUiState.Type.NoTodoInstalled -> {
 				toastAndBack(R.string.no_todo_installed, type)
 				false
 			}
-			is NewTodoCreatedUiState.Type.AlreadyExists -> {
+			is TodoSavedUiState.Type.AlreadyExists -> {
 				toastAndBack(R.string.already_exist, type)
 				false
 			}
-			is NewTodoCreatedUiState.Type.NotFound -> {
+			is TodoSavedUiState.Type.NotFound -> {
 				toastAndBack(R.string.not_found, type)
 				false
 			}
-			is NewTodoCreatedUiState.Type.Fail -> {
+			is TodoSavedUiState.Type.Fail -> {
 				toastAndBack(R.string.unexpected_error, type)
 				false
 			}
@@ -173,7 +173,7 @@ class TodoDetailScreenFragment : Fragment() {
 		back(1000L)
 	}
 
-	private fun toastAndBack(@StringRes resId: Int, type: NewTodoCreatedUiState.Type) {
+	private fun toastAndBack(@StringRes resId: Int, type: TodoSavedUiState.Type) {
 		val mess = getString(resId)
 		Toast.makeText(
 			requireContext(),
@@ -190,6 +190,14 @@ class TodoDetailScreenFragment : Fragment() {
 
 		observe(todoDataViewModel.onPlanProgressRequest) { progressRequest ->
 			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
+		}
+
+		observe(todoDataViewModel.onSaveNewTitle) { titleRequest ->
+			viewModel.saveTitle(titleRequest.todo, titleRequest.data)
+		}
+
+		observe(todoDataViewModel.onSaveNewRemark) { remarkRequest ->
+			viewModel.saveRemark(remarkRequest.todo, remarkRequest.data)
 		}
 	}
 

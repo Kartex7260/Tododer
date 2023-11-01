@@ -32,17 +32,19 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class TodoDataFragment : Fragment() {
 
-	private val marginStartTitleEditText: Int get() {
-		return TypedValue.applyDimension(
-			TypedValue.COMPLEX_UNIT_DIP,
-			16f,
-			resources.displayMetrics
-		).toInt()
+	private val editTitleTextChangeListener: (Editable?) -> Unit = { editable ->
+		editable?.apply {
+			viewModel.saveNewTitle(toString())
+		}
+	}
+	private val editRemarkTextChangeListener: (Editable?) -> Unit = { editable ->
+		editable?.apply {
+			viewModel.saveNewRemark(toString())
+		}
 	}
 
-	private var _view: FragmentTodoDataBinding? = null
-	private val view: FragmentTodoDataBinding get() { return _view!! }
-
+	private var _viewBinding: FragmentTodoDataBinding? = null
+	private val viewBinding: FragmentTodoDataBinding get() { return _viewBinding!! }
 	private val viewModel: TodoDataViewModel by viewModels(ownerProducer = {
 		requireParentFragment()
 	})
@@ -56,36 +58,40 @@ class TodoDataFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
-		if (_view == null) {
-			_view = FragmentTodoDataBinding.inflate(layoutInflater, container, false)
+		if (_viewBinding == null) {
+			_viewBinding = FragmentTodoDataBinding.inflate(layoutInflater, container, false)
 			todoStateViewHolderManager = TodoViewHolderManager(
 				TodoStateViewHolderFactory,
 				inflater
 			)
 		}
-		return view.root
+		return viewBinding.root
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				viewModel.todoElement.collectLatest { uiState ->
-					showData(uiState.todoElement)
-				}
-			}
+		observe(viewModel.todoElement) { uiState ->
+			viewBinding.unsubscribeTextFields()
+			showData(uiState.todoElement)
+			viewBinding.subscribeTextFields()
 		}
 
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				viewModel.updateStateView.collectLatest {
-					todoStateViewHolderManager.current?.also { viewHolder ->
-						viewHolder.todo = viewHolder.todo
-					}
-				}
+		observe(viewModel.updateStateView) {
+			todoStateViewHolderManager.current?.also { viewHolder ->
+				viewHolder.todo = viewHolder.todo
 			}
 		}
+	}
+
+	private fun FragmentTodoDataBinding.subscribeTextFields() {
+		editTextTodoDetailTitle.addTextChangedListener(afterTextChanged = editTitleTextChangeListener)
+		editTextTodoDetailRemark.addTextChangedListener(afterTextChanged = editRemarkTextChangeListener)
+	}
+
+	private fun FragmentTodoDataBinding.unsubscribeTextFields() {
+		editTextTodoDetailTitle.addTextChangedListener()
+		editTextTodoDetailRemark.addTextChangedListener()
 	}
 
 	private fun showData(todoElement: Todo?) {
@@ -138,27 +144,27 @@ class TodoDataFragment : Fragment() {
 	}
 
 	private fun showBasicData(title: String, remark: String) {
-		view.apply {
+		viewBinding.apply {
 			editTextTodoDetailTitle.text = editableFactory.newEditable(title)
 			editTextTodoDetailRemark.text = editableFactory.newEditable(remark)
 		}
 	}
 
 	private fun clearEditText() {
-		view.apply {
+		viewBinding.apply {
 			editTextTodoDetailTitle.text.clear()
 			editTextTodoDetailRemark.text.clear()
 		}
 	}
 
 	private fun showTodoDataState(todoStateView: TodoViewHolder) {
-		view.linearLayoutTodoDataStateView.apply {
+		viewBinding.linearLayoutTodoDataStateView.apply {
 			addView(todoStateView.view)
 		}
 	}
 
 	private fun hideTodoDataState() {
-		view.linearLayoutTodoDataStateView.apply {
+		viewBinding.linearLayoutTodoDataStateView.apply {
 			removeAllViews()
 		}
 	}
