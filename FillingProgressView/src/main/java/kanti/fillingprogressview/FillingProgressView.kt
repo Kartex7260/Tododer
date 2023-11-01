@@ -18,8 +18,8 @@ class FillingProgressView : View {
 	private var mBorderToDiameterRatio: Float by Delegates.notNull()
 
 	private var mMaxValueTransparency: Float by Delegates.notNull()
-	@ColorInt private var mColorAccent: Int = Color.BLACK
-	@ColorInt private var mColorOnSurface: Int = Color.BLACK
+	@ColorInt private var mForegroundTint: Int = Color.BLACK
+	@ColorInt private var mBackgroundTint: Int = Color.BLACK
 	private lateinit var mPaintBorderEmpty: Paint
 	private lateinit var mPaintBorderFull: Paint
 	private lateinit var mPaintBody: Paint
@@ -38,18 +38,18 @@ class FillingProgressView : View {
 			invalidate()
 		}
 
-	var colorAccent: Int
-		get() = mColorAccent
-		set(value) {
-			mColorAccent = value
+	var foregroundTint: Int
+		@ColorInt get() = mForegroundTint
+		set(@ColorInt value) {
+			mForegroundTint = value
 			computeColorsFromProgress()
 			invalidate()
 		}
 
-	var colorOnSurface: Int
-		get() = mColorOnSurface
-		set(value) {
-			mColorOnSurface = value
+	var backgroundTint: Int
+		@ColorInt get() = mBackgroundTint
+		set(@ColorInt value) {
+			mBackgroundTint = value
 			mPaintBorderEmpty.color = value
 			invalidate()
 		}
@@ -161,13 +161,13 @@ class FillingProgressView : View {
 		).apply {
 			try {
 				mProgress = clippingValue(getFloat(R.styleable.FillingProgressView_progress, 0f))
-				mColorAccent = getColor(
-					R.styleable.FillingProgressView_colorAccent,
-					mColorAccent
+				mForegroundTint = getColor(
+					R.styleable.FillingProgressView_foregroundTint,
+					mForegroundTint
 				)
-				mColorOnSurface = getColor(
-					R.styleable.FillingProgressView_colorOnSurface,
-					mColorOnSurface
+				mBackgroundTint = getColor(
+					R.styleable.FillingProgressView_backgroundTint,
+					mBackgroundTint
 				)
 				mDiameter = getDimension(
 					R.styleable.FillingProgressView_diameter,
@@ -205,7 +205,7 @@ class FillingProgressView : View {
 				mPaintBorderEmpty = Paint(Paint.ANTI_ALIAS_FLAG).apply {
 					style = Paint.Style.STROKE
 					strokeWidth = borderWidth
-					color = mColorOnSurface
+					color = mBackgroundTint
 				}
 				transparencyModifierBody = TransparencyColorModifier(
 					modifierMaxColor = mMaxValueTransparency
@@ -222,8 +222,8 @@ class FillingProgressView : View {
 	}
 
 	private fun computeColorsFromProgress() {
-		mPaintBorderFull.color = transparencyModifierBorder.modify(mColorAccent, mProgress)
-		mPaintBody.color = transparencyModifierBody.modify(mColorAccent, mProgress)
+		mPaintBorderFull.color = transparencyModifierBorder.modify(mForegroundTint, mProgress)
+		mPaintBody.color = transparencyModifierBody.modify(mForegroundTint, mProgress)
 	}
 
 	override fun onDraw(canvas: Canvas) {

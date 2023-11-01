@@ -7,8 +7,8 @@
 
     <style name="kanti.fillingprogressview.FillingProgressView" parent="kanti.progress">
         <item name="diameter">18dp</item>
-        <item name="colorAccent">?attr/colorAccent</item>
-        <item name="colorOnSurface">?attr/colorControlHighlight</item>
+        <item name="foregroundTint">?attr/colorSecondary</item>
+        <item name="backgroundTint">?attr/colorOnSurfaceVariant</item>
         <item name="borderToDiameterRatio">9</item>
         <item name="maxValueTransparency">0.9</item>
     </style>
