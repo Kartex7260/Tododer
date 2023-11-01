@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toTask
-import kanti.tododer.data.model.task.Task
 
 class TaskStateViewHolder(
 	todo: Todo,
@@ -20,11 +19,7 @@ class TaskStateViewHolder(
 	override fun createView(): View {
 		return CheckBox(layoutInflater.context).apply {
 			setOnCheckedChangeListener { _, isChecked ->
-				event(EVENT_IS_DONE, todo, isChecked) { todoFromDB ->
-					if (todoFromDB == null || todoFromDB !is Task)
-						return@event
-					todo = todoFromDB
-				}
+				event(EVENT_IS_DONE, todo, isChecked)
 			}
 		}
 	}

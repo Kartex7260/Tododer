@@ -133,14 +133,13 @@ class TodoDetailViewModel @Inject constructor(
 		}
 	}
 
-	fun taskIsDone(task: Task, isDone: Boolean, callback: MutableLiveData<UiState<Task>>) {
+	fun taskIsDone(task: Task, isDone: Boolean) {
 		viewModelScope.launch {
-			val taskRepositoryResult = taskRepository.replace(task) {
+			taskRepository.replace(task) {
 				copy(
 					done = isDone
 				)
 			}
-			callback.postValue(taskRepositoryResult.toUiState(Task.EMPTY))
 		}
 	}
 
@@ -151,7 +150,6 @@ class TodoDetailViewModel @Inject constructor(
 	}
 
 	fun pop() {
-		_todoDetail.value = _todoDetail.value.copy(process = true)
 		viewModelScope.launch {
 			try {
 				currentFullId = stack.pop()
@@ -171,8 +169,8 @@ class TodoDetailViewModel @Inject constructor(
 	fun showTodo(fullId: String) {
 		fun log(mes: String = "") = Log.d(logTag, "showTodo(String = \"$fullId\"): $mes")
 
-		_todoDetail.value = _todoDetail.value.copy(process = true)
 		viewModelScope.launch {
+			_todoDetail.value = _todoDetail.value.copy(process = true)
 			log(": coroutine start")
 			val parsedFullId = FullIds.parseFullId(fullId)
 			log("parsedFullId = $parsedFullId")
@@ -229,6 +227,22 @@ class TodoDetailViewModel @Inject constructor(
 		val repositoryResult = getPlanWithChildren(id)
 		Log.d(logTag, "getPlan(Int = \"$id\"): gotten plan with children (${repositoryResult.value})")
 		return repositoryResult.toTodoDetailUiState
+	}
+
+	private suspend fun saveTask(id: Int, body: Task.() -> Task) {
+		val task = taskRepository.getTask(id).also { repositoryResult ->
+			if (!repositoryResult.isSuccess || repositoryResult.isNull)
+				return
+		}.value!!
+		taskRepository.replace(task, body)
+	}
+
+	private suspend fun savePlan(id: Int, body: Plan.() -> Plan) {
+		val plan = planRepository.getPlan(id).also { repositoryResult ->
+			if (!repositoryResult.isSuccess || repositoryResult.isNull)
+				return
+		}.value!!
+		planRepository.replace(plan, body)
 	}
 
 }

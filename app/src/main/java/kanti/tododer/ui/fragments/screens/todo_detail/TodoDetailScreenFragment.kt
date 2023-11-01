@@ -17,15 +17,17 @@ import kanti.tododer.R
 import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.toTask
 import kanti.tododer.databinding.FragmentTodoDetailBinding
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.fragments.common.observe
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.fragments.dialog.TodoSelectorDialogFragment
-import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.NewTodoCreatedUiState
+import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoSavedUiState
 import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoDetailUiState
+import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.isNull
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -82,7 +84,7 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 
 		observe(viewModel.newTodoCreated) { uiState ->
-			val `continue` = showMessageFromTodoCreatedUiStateType(uiState.type)
+			val `continue` = showMessageFromTodoSavedUiStateType(uiState.type)
 			if (!`continue` && uiState.todo != null)
 				return@observe
 
@@ -90,6 +92,10 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 
 		observe(viewModel.todoDetail) { uiState ->
+			val `continue` = showMessageFromTodoDetailUiStateType(uiState.type)
+			if (!`continue`)
+				return@observe
+
 			showProcess(uiState.process)
 			Log.d(
 				hashLogTag,
@@ -103,8 +109,6 @@ class TodoDetailScreenFragment : Fragment() {
 						"todoListViewModel=${todoListViewModel.hashLogTag}"
 			)
 			todoListViewModel.sendTodoList(uiState.todoChildren)
-
-			showMessageFromTodoDetailUiStateType(uiState.type)
 		}
 
 		observeTodoDataFragment()
@@ -119,14 +123,26 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 	}
 
-	private fun showMessageFromTodoDetailUiStateType(type: TodoDetailUiState.Type) {
-		when (type) {
-			is TodoDetailUiState.Type.Empty -> {}
-			is TodoDetailUiState.Type.Success -> {}
-			is TodoDetailUiState.Type.EmptyStack -> { back() }
-			is TodoDetailUiState.Type.InvalidFullId -> { toastAndBack(R.string.invalid_data, type) }
-			is TodoDetailUiState.Type.NotFound -> { toastAndBack(R.string.not_found, type) }
-			else -> { toastAndBack(R.string.unexpected_error, type) }
+	private fun showMessageFromTodoDetailUiStateType(type: TodoDetailUiState.Type): Boolean {
+		return when (type) {
+			is TodoDetailUiState.Type.Empty -> true
+			is TodoDetailUiState.Type.Success -> true
+			is TodoDetailUiState.Type.EmptyStack -> {
+				back()
+				false
+			}
+			is TodoDetailUiState.Type.InvalidFullId -> {
+				toastAndBack(R.string.invalid_data, type)
+				false
+			}
+			is TodoDetailUiState.Type.NotFound -> {
+				toastAndBack(R.string.not_found, type)
+				false
+			}
+			else -> {
+				toastAndBack(R.string.unexpected_error, type)
+				false
+			}
 		}
 	}
 
@@ -185,7 +201,7 @@ class TodoDetailScreenFragment : Fragment() {
 
 	private fun observeTodoDataFragment() {
 		observe(todoDataViewModel.onTaskIsDone) { taskDone ->
-			viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
+			viewModel.taskIsDone(taskDone.todo.toTask, taskDone.data)
 		}
 
 		observe(todoDataViewModel.onPlanProgressRequest) { progressRequest ->
@@ -203,7 +219,7 @@ class TodoDetailScreenFragment : Fragment() {
 
 	private fun observeTodoListFragment() {
 		observe(todoListViewModel.onTaskIsDone) { taskDone ->
-			viewModel.taskIsDone(taskDone.task, taskDone.done, taskDone.callback)
+			viewModel.taskIsDone(taskDone.todo.toTask, taskDone.data)
 			todoDataViewModel.updateStateView()
 		}
 

@@ -133,7 +133,7 @@ class TodoListFragment : Fragment() {
 			TaskViewHolder.EVENT_IS_DONE -> {
 				log("viewHolder.setEventListenerIfNull=${hashCode()} {\n" +
 						"\tonEvent: EVENT_IS_DONE\n}")
-				eventTaskIsDone(task, value as Boolean, callback)
+				viewModel.taskIsDone(task, value as Boolean)
 			}
 		}
 	}
@@ -148,14 +148,6 @@ class TodoListFragment : Fragment() {
 						"\tonEvent: EVENT_PROGRESS_REQUEST\n}")
 				eventPlanProgressRequest(plan, callback)
 			}
-		}
-	}
-
-	private fun eventTaskIsDone(task: Task, isDone: Boolean, callback: TodoEventCallback?) {
-		val callbackLiveData = viewModel.taskIsDone(task, isDone)
-		callbackLiveData.observe(viewLifecycleOwner) { uiState ->
-			callback?.callback(uiState.value)
-			callbackLiveData.removeObservers(viewLifecycleOwner)
 		}
 	}
 

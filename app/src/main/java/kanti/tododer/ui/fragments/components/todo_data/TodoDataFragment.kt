@@ -2,17 +2,13 @@ package kanti.tododer.ui.fragments.components.todo_data
 
 import android.os.Bundle
 import android.text.Editable
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.databinding.FragmentTodoDataBinding
@@ -24,10 +20,9 @@ import kanti.tododer.ui.common.viewholder.TaskStateViewHolder
 import kanti.tododer.ui.common.viewholder.TodoStateViewHolderFactory
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.common.viewholder.TodoViewHolderManager
+import kanti.tododer.ui.fragments.common.observe
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.setEventListenerIfNull
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TodoDataFragment : Fragment() {
@@ -128,15 +123,11 @@ class TodoDataFragment : Fragment() {
 		showBasicData(task.title, task.remark)
 
 		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(task, setCurrent = true)
-		todoStateViewHolder.setEventListenerIfNull { type, todo, value, callback ->
+		todoStateViewHolder.setEventListenerIfNull { type, todo, value, _ ->
 			if (type != TaskStateViewHolder.EVENT_IS_DONE)
 				return@setEventListenerIfNull
 
-			val callbackLiveData = viewModel.taskIsDone(todo.toTask, value as Boolean)
-			callbackLiveData.observe(viewLifecycleOwner) { uiState ->
-				callback?.callback(uiState.value)
-				callbackLiveData.removeObservers(viewLifecycleOwner)
-			}
+			viewModel.taskIsDone(todo.toTask, value as Boolean)
 		}
 
 		hideTodoDataState()
