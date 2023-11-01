@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="todo">Todo</string>
+
     <string name="plan">Plan</string>
     <string name="task">Task</string>
+
+    <string name="title">Title</string>
+    <string name="remark">Remark</string>
 </resources>

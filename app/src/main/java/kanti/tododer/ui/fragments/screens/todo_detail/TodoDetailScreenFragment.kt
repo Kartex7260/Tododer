@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,7 @@ import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toTask
 import kanti.tododer.databinding.FragmentTodoDetailBinding
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
+import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
@@ -59,6 +61,17 @@ class TodoDetailScreenFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
+		requireActivityToolbar().apply {
+			title = getString(R.string.todo)
+			navigationIcon = AppCompatResources.getDrawable(
+				requireContext(),
+				R.drawable.baseline_arrow_back_24
+			)
+			setNavigationOnClickListener {
+				viewModel.pop()
+			}
+		}
+
 		requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
 			viewModel.pop()
 		}
@@ -95,6 +108,15 @@ class TodoDetailScreenFragment : Fragment() {
 			val `continue` = showMessageFromTodoDetailUiStateType(uiState.type)
 			if (!`continue`)
 				return@observe
+
+			requireActivityToolbar().apply {
+				if (uiState.todo == null)
+					return@observe
+				title = when (uiState.todo.type) {
+					Todo.Type.TASK -> getString(R.string.task)
+					Todo.Type.PLAN -> getString(R.string.plan)
+				}
+			}
 
 			showProcess(uiState.process)
 			Log.d(

@@ -24,6 +24,7 @@ import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewMod
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
+import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
 
 @AndroidEntryPoint
@@ -52,6 +53,11 @@ class TodoRootListScreenFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+
+		requireActivityToolbar().apply {
+			title = requireActivity().getString(R.string.app_name)
+			navigationIcon = null
+		}
 
 		setActivityFabOnClickListener {
 			viewModel.createNewPlan()

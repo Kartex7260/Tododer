@@ -6,16 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.TodoActivity">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="?attr/colorOnPrimary"
+        style="@style/Widget.Material3.Toolbar" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/navigationHostFragmentTodo"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:defaultNavHost="true"
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar"
         app:navGraph="@navigation/navigation_todo_list" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
