@@ -21,7 +21,7 @@ class PlanStateViewHolder(
 		return FillingProgressView(layoutInflater.context).apply {
 			setPadding(TypedValue.applyDimension(
 				TypedValue.COMPLEX_UNIT_DIP,
-				7f,
+				15f,
 				layoutInflater.context.resources.displayMetrics
 			).toInt())
 		}

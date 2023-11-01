@@ -6,35 +6,36 @@
 
     <LinearLayout
         android:id="@+id/linearLayoutTodoDataStateView"
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/editTextTodoDetailTitle"
-        android:gravity="center"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editTextTodoDetailTitle"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/editTextTodoDetailTitle"
-        style="@style/TextAppearance.Material3.TitleLarge"
+        style="@style/TextAppearance.Material3.HeadlineMedium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:autofillHints="title"
         android:ems="10"
         android:hint="@string/title"
-        android:inputType="text"
+        android:inputType="text|textLongMessage|textAutoComplete|textAutoCorrect|textMultiLine"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/linearLayoutTodoDataStateView"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="title" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextTodoDetailRemark"
-        style="@style/TextAppearance.AppCompat.Body1"
+        style="@style/TextAppearance.Material3.BodyMedium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

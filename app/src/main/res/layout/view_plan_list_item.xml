@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -17,37 +17,40 @@
             android:id="@+id/fillingProgressViewPlanListItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="15dp"
             app:layout_constraintBottom_toBottomOf="@+id/textViewTodoItemPlanTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textViewTodoItemPlanTitle" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewTodoItemPlanTitle"
             style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
+            android:singleLine="true"
             android:text="@string/title"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonPlanMore"
             app:layout_constraintStart_toEndOf="@id/fillingProgressViewPlanListItem"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewTodoItemPlanRemark"
             style="@style/TextAppearance.AppCompat.Small"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="16dp"
+            android:text="@string/remark"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonPlanMore"
             app:layout_constraintStart_toStartOf="@+id/textViewTodoItemPlanTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTodoItemPlanTitle"
-            android:text="@string/remark" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewTodoItemPlanTitle" />
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/imageButtonPlanMore"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="48dp"
@@ -58,4 +61,4 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/baseline_more_horiz_24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

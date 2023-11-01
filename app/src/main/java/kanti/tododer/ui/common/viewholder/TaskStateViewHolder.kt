@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import com.google.android.material.checkbox.MaterialCheckBox
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.toTask
 
@@ -17,7 +18,7 @@ class TaskStateViewHolder(
 	override val type: Todo.Type = Todo.Type.TASK
 
 	override fun createView(): View {
-		return CheckBox(layoutInflater.context).apply {
+		return MaterialCheckBox(layoutInflater.context).apply {
 			setOnCheckedChangeListener { _, isChecked ->
 				event(EVENT_IS_DONE, todo, isChecked)
 			}

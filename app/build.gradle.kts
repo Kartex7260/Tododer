@@ -87,6 +87,8 @@ dependencies {
 	implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
 	implementation("androidx.preference:preference-ktx:1.2.1")
 
+	implementation("com.google.android.material:material:1.10.0")
+
 	// di
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
 	kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
