@@ -204,6 +204,14 @@ class TodoDetailViewModel @Inject constructor(
 		}
 	}
 
+	fun reshowTodo() {
+		currentFullId?.also { fullId ->
+			viewModelScope.launch {
+				showTodo(fullId)
+			}
+		}
+	}
+
 	private suspend fun showTodoAndAddToStack(fullId: FullId) {
 		fun log(mes: String = "") = Log.d(logTag, "addToStack(FullId = \"$fullId\"): $mes")
 

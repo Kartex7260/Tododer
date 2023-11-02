@@ -1,5 +1,6 @@
 package kanti.tododer.ui.fragments.components.todo_data.viewmodel
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +19,12 @@ import kotlin.IllegalStateException
 
 class TodoDataViewModel : ViewModel() {
 
+	private var todoDataSaveObserver: TodoDataSaveLifecycleObserver? = null
 	private var currentTodo: Todo? = null
+		set(value) {
+			todoDataSaveObserver?.todo = value
+			field = value
+		}
 	private val _todoElement = MutableStateFlow(TodoDataUiState())
 	val todoElement = _todoElement.asStateFlow()
 
@@ -89,6 +95,10 @@ class TodoDataViewModel : ViewModel() {
 		viewModelScope.launch {
 			_updateStateView.emit(Unit)
 		}
+	}
+
+	fun setTodoDataSaveObserver(lifecycleOwner: LifecycleOwner, todoSavable: TodoSavable) {
+		todoDataSaveObserver = TodoDataSaveLifecycleObserver(lifecycleOwner, todoSavable)
 	}
 
 	private fun requireCurrentTodo() = currentTodo

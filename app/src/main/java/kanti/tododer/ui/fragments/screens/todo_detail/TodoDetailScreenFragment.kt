@@ -58,6 +58,11 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 	}
 
+	override fun onResume() {
+		super.onResume()
+		viewModel.reshowTodo()
+	}
+
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,

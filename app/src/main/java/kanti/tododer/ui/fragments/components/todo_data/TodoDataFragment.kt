@@ -17,11 +17,13 @@ import kanti.tododer.data.model.common.toPlan
 import kanti.tododer.data.model.common.toTask
 import kanti.tododer.ui.common.viewholder.PlanStateViewHolder
 import kanti.tododer.ui.common.viewholder.TaskStateViewHolder
+import kanti.tododer.ui.common.viewholder.TaskStateViewOwner
 import kanti.tododer.ui.common.viewholder.TodoStateViewHolderFactory
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.common.viewholder.TodoViewHolderManager
 import kanti.tododer.ui.fragments.common.observe
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
+import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoSavable
 import kanti.tododer.ui.fragments.components.todo_list.setEventListenerIfNull
 
 @AndroidEntryPoint
@@ -65,6 +67,33 @@ class TodoDataFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+
+		viewModel.setTodoDataSaveObserver(viewLifecycleOwner) { _, type ->
+			when (type) {
+				TodoSavable.Type.TITLE -> {
+					val title = viewBinding.editTextTodoDetailTitle.text.toString()
+					viewModel.saveNewTitle(title)
+				}
+				TodoSavable.Type.REMARK -> {
+					val remark = viewBinding.editTextTodoDetailRemark.text.toString()
+					viewModel.saveNewRemark(remark)
+				}
+				TodoSavable.Type.STATE -> {
+					val viewHolder = todoStateViewHolderManager.current ?: return@setTodoDataSaveObserver
+					if (viewHolder !is TaskStateViewOwner)
+						return@setTodoDataSaveObserver
+					when (viewHolder.todo.type) {
+						Todo.Type.TASK -> {
+							viewModel.taskIsDone(
+								viewHolder.todo.toTask,
+								viewHolder.stateView.isChecked
+							)
+						}
+						else -> {}
+					}
+				}
+			}
+		}
 
 		observe(viewModel.todoElement) { uiState ->
 			viewBinding.unsubscribeTextFields()

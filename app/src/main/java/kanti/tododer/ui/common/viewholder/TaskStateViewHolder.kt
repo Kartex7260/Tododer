@@ -13,9 +13,13 @@ class TaskStateViewHolder(
 	private val layoutInflater: LayoutInflater,
 	root: ViewGroup? = RootDefault,
 	attachToRoot: Boolean = AttachToRootDefault
-) : TodoViewHolder(todo, layoutInflater, NonResource, root, attachToRoot) {
+) : TodoViewHolder(todo, layoutInflater, NonResource, root, attachToRoot),
+	TaskStateViewOwner {
 
 	override val type: Todo.Type = Todo.Type.TASK
+
+	override val stateView: MaterialCheckBox
+		get() = view as MaterialCheckBox
 
 	override fun createView(): View {
 		return MaterialCheckBox(layoutInflater.context).apply {
@@ -39,3 +43,5 @@ class TaskStateViewHolder(
 	}
 
 }
+
+interface TaskStateViewOwner : TodoStateViewOwner<MaterialCheckBox>
