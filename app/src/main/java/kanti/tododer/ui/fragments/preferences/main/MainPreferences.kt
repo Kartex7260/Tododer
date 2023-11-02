@@ -2,13 +2,11 @@ package kanti.tododer.ui.fragments.preferences.main
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import kanti.tododer.R
-import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar
+import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.preferences.main.darkmode.DarkMode
 import kanti.tododer.ui.fragments.preferences.main.darkmode.changeDarkMode
 
@@ -21,15 +19,13 @@ class MainPreferences : PreferenceFragmentCompat() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		requireActivityToolbar().apply {
-			title = getString(R.string.preferences)
-			navigationIcon = AppCompatResources.getDrawable(
-				requireContext(),
-				R.drawable.baseline_arrow_back_24
-			)
-			setNavigationOnClickListener {
-				this@MainPreferences.findNavController().popBackStack()
-			}
+		setActivityToolbar(
+			title = R.string.preferences,
+			defTitle = R.string.app_name,
+			navIcon = R.drawable.baseline_arrow_back_24,
+			lifecycleOwner = viewLifecycleOwner
+		) {
+			findNavController().popBackStack()
 		}
 
 		findPreference<ListPreference>(getString(R.string.preferences_main_theme_value))?.apply {

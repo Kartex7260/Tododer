@@ -8,10 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.lifecyclelogger.LifecycleLogger
@@ -25,7 +21,7 @@ import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewMod
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
-import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar
+import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
 
 @AndroidEntryPoint
@@ -62,12 +58,11 @@ class TodoRootListScreenFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		requireActivityToolbar().apply {
-			title = requireActivity().getString(R.string.app_name)
-			navigationIcon = null
-
-			addMenuProvider(menuProvider, viewLifecycleOwner)
-		}
+		setActivityToolbar(
+			title = R.string.app_name,
+			lifecycleOwner = viewLifecycleOwner,
+			menuProvider = menuProvider
+		)
 
 		setActivityFabOnClickListener {
 			viewModel.createNewPlan()
