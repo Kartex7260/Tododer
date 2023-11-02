@@ -42,8 +42,8 @@ class PlanViewHolder(
 			}
 		}
 		view.findViewById<ImageButton>(R.id.imageButtonPlanMore).apply {
-			setOnClickListener { _ ->
-				showContextMenu()
+			setOnClickListener { v ->
+				view.showContextMenu(v.x, v.y)
 			}
 		}
 	}

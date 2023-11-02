@@ -32,8 +32,8 @@ class TaskViewHolder(
 			}
 		}
 		view.findViewById<ImageButton>(R.id.imageButtonTaskMore).apply {
-			setOnClickListener { _ ->
-				showContextMenu()
+			setOnClickListener { v ->
+				view.showContextMenu(v.x, v.y)
 			}
 		}
 	}
