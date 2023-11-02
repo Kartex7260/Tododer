@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Tododer.Base" parent="Theme.Material3.DayNight.NoActionBar">
+        <!--    StatusBar    -->
+        <item name="android:windowLightStatusBar">false</item>
+        <!--    navigationBar    -->
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

@@ -12,6 +12,9 @@
         <item name="colorOnSecondary">@color/material_dynamic_secondary10</item>
         <!--    StatusBar    -->
         <item name="android:windowLightStatusBar">false</item>
+        <!--    NavigationBar    -->
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 
 </resources>
