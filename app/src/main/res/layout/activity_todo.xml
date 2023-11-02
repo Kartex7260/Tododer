@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.TodoActivity">
+    tools:context=".ui.activities.TodoActivity" >
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
@@ -12,9 +12,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="?attr/colorPrimary"
-        app:titleTextColor="?attr/colorOnPrimary"
-        style="@style/Widget.Material3.Toolbar" />
+        android:theme="@style/ThemeOverlay.Tododer.Toolbar"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/navigationHostFragmentTodo"

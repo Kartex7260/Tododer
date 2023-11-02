@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.R
@@ -33,6 +34,13 @@ class TodoRootListScreenFragment : Fragment() {
 	private lateinit var view: FragmentTodoRootBinding
 	private val viewModel: TodoRootListViewModel by viewModels()
 	private val todoListViewModel: TodoListViewModel by viewModels()
+
+	private val menuProvider by lazy {
+		TodoRootListMenuProvide(
+			findNavController(),
+			TodoRootListScreenFragmentDirections.actionListToPreferences()
+		)
+	}
 
 	private lateinit var lifecycleLogger: LifecycleLogger
 
@@ -57,6 +65,8 @@ class TodoRootListScreenFragment : Fragment() {
 		requireActivityToolbar().apply {
 			title = requireActivity().getString(R.string.app_name)
 			navigationIcon = null
+
+			addMenuProvider(menuProvider, viewLifecycleOwner)
 		}
 
 		setActivityFabOnClickListener {
@@ -124,7 +134,7 @@ class TodoRootListScreenFragment : Fragment() {
 
 	private fun navigateToDetailScreen(todoElement: Todo) {
 		val navDirections = TodoRootListScreenFragmentDirections.actionListToDetail(todoElement.fullId)
-		view.root.findNavController().navigate(navDirections)
+		findNavController().navigate(navDirections)
 	}
 
 	private fun showMessageFromType(type: RepositoryResult.Type): Boolean {

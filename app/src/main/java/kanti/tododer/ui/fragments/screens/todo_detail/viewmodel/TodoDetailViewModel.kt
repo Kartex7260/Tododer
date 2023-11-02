@@ -89,7 +89,13 @@ class TodoDetailViewModel @Inject constructor(
 		}
 	}
 
-	fun deletePlan(todo: Todo) {
+	fun deleteTodo() {
+		val currentId = requireCurrentFullId()
+		deleteTodo(currentId)
+		pop()
+	}
+
+	fun deleteTodo(todo: Todo) {
 		viewModelScope.launch {
 			removeTodoWithChildrenUseCase(todo)
 		}
@@ -243,6 +249,12 @@ class TodoDetailViewModel @Inject constructor(
 				return
 		}.value!!
 		planRepository.replace(plan, body)
+	}
+
+	private fun requireCurrentFullId(): FullId {
+		if (currentFullId == null)
+			throw IllegalStateException("Todo is not set")
+		return currentFullId!!
 	}
 
 }

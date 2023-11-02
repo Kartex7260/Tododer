@@ -11,16 +11,23 @@
         <action
             android:id="@+id/action_list_to_detail"
             app:destination="@id/todoDetailFragment" />
+        <action
+            android:id="@+id/action_list_to_preferences"
+            app:destination="@id/mainPreferences" />
     </fragment>
     <fragment
         android:id="@+id/todoDetailFragment"
         android:name="kanti.tododer.ui.fragments.screens.todo_detail.TodoDetailScreenFragment"
         android:label="TodoDetailFragment" >
-        <action
-            android:id="@+id/action_detail_to_list"
-            app:destination="@id/todoListFragment" />
         <argument
             android:name="fullId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_detail_to_preferences"
+            app:destination="@id/mainPreferences" />
     </fragment>
+    <fragment
+        android:id="@+id/mainPreferences"
+        android:name="kanti.tododer.ui.fragments.preferences.main.MainPreferences"
+        android:label="MainPreferences" />
 </navigation>

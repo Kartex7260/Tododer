@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  Main preferences  -->
+    <string name="preferences">Settings</string>
+    <!--    Theme    -->
+    <string name="preferences_main_theme">Theme</string>
+    <string name="preferences_main_theme_value">theme</string>
+    <string name="preferences_main_theme_light">Light</string>
+    <string name="preferences_main_theme_dark">Dark</string>
+    <string name="preferences_main_theme_as_system">As in the system</string>
+    <string name="preferences_main_theme_light_value" translatable="false">light</string>
+    <string name="preferences_main_theme_dark_value" translatable="false">dark</string>
+    <string name="preferences_main_theme_as_system_value" translatable="false">as_system</string>
+
+</resources>

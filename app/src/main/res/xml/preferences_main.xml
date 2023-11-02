@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+        android:title="@string/preferences_main_theme"
+        android:key="@string/preferences_main_theme_value"
+        android:icon="@drawable/baseline_dark_mode_24"
+        android:entries="@array/preference_main_name"
+        android:entryValues="@array/preference_main_value"
+        android:defaultValue="@string/preferences_main_theme_as_system_value"
+        app:useSimpleSummaryProvider="true"/>
+</PreferenceScreen>

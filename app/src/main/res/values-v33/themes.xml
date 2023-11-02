@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="Theme.Tododer.Base" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/material_dynamic_primary60</item>
+        <item name="colorPrimaryVariant">@color/material_dynamic_primary40</item>
+        <item name="colorOnPrimary">@color/material_dynamic_neutral10</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/material_dynamic_secondary60</item>
+        <item name="colorSecondaryVariant">@color/material_dynamic_secondary40</item>
+        <item name="colorOnSecondary">@color/material_dynamic_secondary10</item>
+        <!--    StatusBar    -->
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+</resources>

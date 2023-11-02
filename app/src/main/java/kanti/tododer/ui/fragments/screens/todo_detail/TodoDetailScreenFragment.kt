@@ -29,7 +29,6 @@ import kanti.tododer.ui.fragments.dialog.TodoSelectorDialogFragment
 import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoSavedUiState
 import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.TodoDetailUiState
-import kanti.tododer.ui.fragments.screens.todo_detail.viewmodel.isNull
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -40,6 +39,16 @@ class TodoDetailScreenFragment : Fragment() {
 	private val viewModel: TodoDetailViewModel by viewModels()
 	private val todoListViewModel: TodoListViewModel by viewModels()
 	private val todoDataViewModel: TodoDataViewModel by viewModels()
+
+	private val menuProvider by lazy {
+		TodoDetailMenuProvider(
+			navController = findNavController(),
+			settingsNavDirections = TodoDetailScreenFragmentDirections.actionDetailToPreferences(),
+			delete = {
+				viewModel.deleteTodo()
+			}
+		)
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -70,6 +79,8 @@ class TodoDetailScreenFragment : Fragment() {
 			setNavigationOnClickListener {
 				viewModel.pop()
 			}
+
+			addMenuProvider(menuProvider, viewLifecycleOwner)
 		}
 
 		requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -254,7 +265,7 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 
 		observe(todoListViewModel.onDeleteTodo) { deleteRequest ->
-			viewModel.deletePlan(deleteRequest.todo)
+			viewModel.deleteTodo(deleteRequest.todo)
 		}
 	}
 

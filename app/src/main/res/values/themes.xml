@@ -1,16 +1,12 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.Tododer" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/material_dynamic_primary60</item>
-        <item name="colorPrimaryVariant">@color/material_dynamic_primary40</item>
-        <item name="colorOnPrimary">@color/material_dynamic_neutral10</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/material_dynamic_secondary60</item>
-        <item name="colorSecondaryVariant">@color/material_dynamic_secondary40</item>
-        <item name="colorOnSecondary">@color/material_dynamic_secondary10</item>
-        <!-- Status bar color. -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Tododer" parent="Theme.Tododer.Base">
         <item name="android:statusBarColor">?attr/colorPrimary</item>
-        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="ThemeOverlay.Tododer.Toolbar" parent="ThemeOverlay.Material3.Toolbar.Surface">
+        <item name="titleTextColor">?attr/colorOnPrimary</item>
+        <item name="android:moreIcon">@drawable/baseline_more_vert_24</item>
+        <item name="android:background">?attr/colorPrimary</item>
     </style>
 </resources>
