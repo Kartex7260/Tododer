@@ -12,7 +12,20 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:theme="@style/ThemeOverlay.Tododer.Toolbar"/>
+        android:theme="@style/ThemeOverlay.Tododer.Toolbar">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:visibility="gone"
+            android:id="@+id/toolbarButtonMore"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/baseline_more_vert_24"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:longClickable="false"/>
+
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/navigationHostFragmentTodo"

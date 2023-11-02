@@ -6,7 +6,6 @@
 
     <style name="ThemeOverlay.Tododer.Toolbar" parent="ThemeOverlay.Material3.Toolbar.Surface">
         <item name="titleTextColor">?attr/colorOnPrimary</item>
-        <item name="android:moreIcon">@drawable/baseline_more_vert_24</item>
         <item name="android:background">?attr/colorPrimary</item>
     </style>
 </resources>

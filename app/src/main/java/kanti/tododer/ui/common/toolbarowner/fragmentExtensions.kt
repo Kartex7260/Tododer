@@ -1,15 +1,18 @@
 package kanti.tododer.ui.common.toolbarowner
 
+import android.view.MenuInflater
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.view.MenuProvider
+import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.appbar.MaterialToolbar
-import java.security.PrivateKey
+import kanti.tododer.R
 
 val Fragment.activityToolbar: MaterialToolbar? get() {
 	if (activity == null || activity !is IToolbarOwner)
@@ -50,7 +53,7 @@ class ToolbarSetup(
 	@StringRes private val title: Int,
 	@StringRes private val defTitle: Int? = null,
 	@DrawableRes private val navIcon: Int? = null,
-	private val lifecycleOwner: LifecycleOwner,
+	lifecycleOwner: LifecycleOwner,
 	private val menuProvider: MenuProvider? = null,
 	private val click: ((View) -> Unit)? = null
 ) : DefaultLifecycleObserver {
@@ -69,7 +72,22 @@ class ToolbarSetup(
 			setNavigationOnClickListener(click)
 
 			menuProvider?.also {
-				addMenuProvider(it, lifecycleOwner)
+				toolbar.findViewById<AppCompatImageButton>(R.id.toolbarButtonMore).also { buttonMore ->
+					buttonMore.visibility = View.VISIBLE
+					buttonMore.setOnCreateContextMenuListener { menu, _, _ ->
+						menuProvider.onCreateMenu(menu, MenuInflater(toolbar.context))
+						for (item in menu.iterator()) {
+							item.setOnMenuItemClickListener { menuProvider.onMenuItemSelected(it) }
+						}
+					}
+					buttonMore.setOnClickListener {
+						showContextMenuForChild(
+							it,
+							it.x,
+							it.y
+						)
+					}
+				}
 			}
 		}
 	}
@@ -80,6 +98,12 @@ class ToolbarSetup(
 			title = defTitle?.let { context.getString(it) }
 			navigationIcon = null
 			setNavigationOnClickListener {  }
+
+			findViewById<AppCompatImageButton>(R.id.toolbarButtonMore).also { buttonMore ->
+				buttonMore.visibility = View.GONE
+				buttonMore.setOnCreateContextMenuListener { _, _, _ -> }
+				buttonMore.setOnClickListener {  }
+			}
 		}
 	}
 
