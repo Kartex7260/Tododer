@@ -16,6 +16,7 @@ class TodoDetailMenuProvider(
 
 	override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
 		menuInflater.inflate(R.menu.menu_base, menu)
+		menu.add(Menu.NONE, MENU_DELETE_ID, Menu.NONE, R.string.context_menu_delete)
 	}
 
 	override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
@@ -23,7 +24,17 @@ class TodoDetailMenuProvider(
 			navController.navigate(settingsNavDirections)
 			true
 		}
+		MENU_DELETE_ID -> {
+			delete()
+			true
+		}
 		else -> false
+	}
+
+	companion object {
+
+		const val MENU_DELETE_ID = 1
+
 	}
 
 }
