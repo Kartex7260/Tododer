@@ -77,8 +77,8 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 
 		setActivityFabOnClickListener {
-			viewModel.currentTodoType?.also { type ->
-				when (type) {
+			viewModel.currentTodoType?.apply {
+				when (this) {
 					Todo.Type.TASK -> {
 						viewModel.createNewTask()
 					}
