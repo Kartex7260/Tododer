@@ -17,6 +17,7 @@ import kanti.tododer.data.model.plan.IPlanRepository
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.ITaskRepository
 import kanti.tododer.data.model.task.Task
+import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase
@@ -36,7 +37,7 @@ class TodoDetailViewModel @Inject constructor(
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase,
-	private val taskRepository: ITaskRepository,
+	@StandardDataQualifier private val taskRepository: ITaskRepository,
 	private val planRepository: IPlanRepository
 ) : ViewModel() {
 

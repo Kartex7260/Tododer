@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.plan.asPlanEntity
 
 @Dao
 abstract class IPlanDao {
@@ -30,13 +29,13 @@ abstract class IPlanDao {
 	@Delete
 	abstract suspend fun delete(plan: PlanEntity): Int
 
-	suspend fun delete(plan: Plan): Int = delete(plan.asPlanEntity)
+	suspend fun delete(plan: Plan): Int = delete(plan.toPlanEntity())
 
 	@Query("DELETE FROM `plan`")
 	abstract suspend fun deleteAll()
 
 }
 
-suspend fun IPlanDao.insert(plan: Plan): Long = insert(plan.asPlanEntity)
+suspend fun IPlanDao.insert(plan: Plan): Long = insert(plan.toPlanEntity())
 
-suspend fun IPlanDao.replace(plan: Plan): Long = replace(plan.asPlanEntity)
+suspend fun IPlanDao.replace(plan: Plan): Long = replace(plan.toPlanEntity())

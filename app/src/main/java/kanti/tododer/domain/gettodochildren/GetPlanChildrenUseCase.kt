@@ -6,10 +6,11 @@ import kanti.tododer.data.model.plan.IPlanRepository
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.ITaskRepository
 import kanti.tododer.data.model.task.Task
+import kanti.tododer.di.StandardDataQualifier
 import javax.inject.Inject
 
 class GetPlanChildrenUseCase @Inject constructor(
-	private val taskRepository: ITaskRepository,
+	@StandardDataQualifier private val taskRepository: ITaskRepository,
 	private val planRepository: IPlanRepository
 ) {
 

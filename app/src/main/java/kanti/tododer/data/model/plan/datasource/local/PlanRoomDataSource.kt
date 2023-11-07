@@ -4,6 +4,7 @@ import kanti.tododer.data.common.LocalResult
 import kanti.tododer.data.common.localTryCatch
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.toPlan
 import javax.inject.Inject
 
 class PlanRoomDataSource @Inject constructor(

@@ -4,13 +4,14 @@ import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.plan.IPlanRepository
 import kanti.tododer.data.model.task.ITaskRepository
+import kanti.tododer.di.StandardDataQualifier
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RemovePlanWithChildrenUseCase @Inject constructor(
 	private val planRepository: IPlanRepository,
-	private val taskRepository: ITaskRepository
+	@StandardDataQualifier private val taskRepository: ITaskRepository
 ) {
 
 	suspend operator fun invoke(id: Int): Boolean {
