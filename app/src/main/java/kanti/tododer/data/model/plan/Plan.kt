@@ -8,7 +8,7 @@ data class Plan(
 	val parentId: String = "",
 	val title: String = "",
 	val remark: String = ""
-) : Todo() {
+) : Todo {
 	override val type: Todo.Type = Todo.Type.PLAN
 
 	companion object {

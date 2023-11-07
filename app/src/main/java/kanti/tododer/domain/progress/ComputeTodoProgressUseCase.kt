@@ -2,8 +2,8 @@ package kanti.tododer.domain.progress
 
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
-import kanti.tododer.data.model.common.toPlan
-import kanti.tododer.data.model.common.toTask
+import kanti.tododer.data.model.common.asPlan
+import kanti.tododer.data.model.common.asTask
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.progress.ITodoProgressRepository
@@ -19,10 +19,10 @@ class ComputeTodoProgressUseCase @Inject constructor(
 	suspend operator fun invoke(todo: Todo): Float {
 		return when(todo.type) {
 			Todo.Type.TASK -> {
-				computeTask(todo.toTask)
+				computeTask(todo.asTask)
 			}
 			Todo.Type.PLAN -> {
-				computePlan(todo.toPlan)
+				computePlan(todo.asPlan)
 			}
 		}
 	}

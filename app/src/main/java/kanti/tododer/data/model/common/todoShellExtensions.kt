@@ -6,12 +6,12 @@ import kanti.tododer.data.model.task.Task
 val Todo.fullId: String
 	get() = FullIds.from(this)
 
-val Todo.toPlan: Plan get() {
+val Todo.asPlan: Plan get() {
 	check(Todo.Type.PLAN)
 	return this as Plan
 }
 
-val Todo.toTask: Task get() {
+val Todo.asTask: Task get() {
 	check(Todo.Type.TASK)
 	return this as Task
 }

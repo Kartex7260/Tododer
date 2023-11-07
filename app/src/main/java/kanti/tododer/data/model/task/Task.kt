@@ -1,15 +1,15 @@
 package kanti.tododer.data.model.task
 
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.task.datasource.local.TaskEntity
 
 data class Task(
 	override val id: Int = 0,
-	val parentId: String = "",
-	val title: String = "",
-	val remark: String = "",
-	val done: Boolean = false
-) : Todo() {
+	override val parentId: String = "",
+	override val title: String = "",
+	override val remark: String = "",
+	override val done: Boolean = false
+) : ITask {
+
 	override val type: Todo.Type = Todo.Type.TASK
 
 	companion object {
@@ -20,12 +20,18 @@ data class Task(
 
 }
 
-val Task.asTaskEntity: TaskEntity get() {
-		return TaskEntity(
-			id = id,
-			parentId = parentId,
-			title = title,
-			remark = remark,
-			done = done
-		)
-	}
+fun ITask.toTask(
+	id: Int = this.id,
+	parentId: String = this.parentId,
+	title: String = this.title,
+	remark: String = this.remark,
+	done: Boolean = this.done
+): Task {
+	return Task(
+		id = id,
+		parentId = parentId,
+		title = title,
+		remark = remark,
+		done = done
+	)
+}

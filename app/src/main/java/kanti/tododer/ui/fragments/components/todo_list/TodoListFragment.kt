@@ -16,8 +16,8 @@ import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.toPlan
-import kanti.tododer.data.model.common.toTask
+import kanti.tododer.data.model.common.asPlan
+import kanti.tododer.data.model.common.asTask
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.databinding.FragmentTodoListBinding
@@ -119,8 +119,8 @@ class TodoListFragment : Fragment() {
 					}
 					else -> {
 						when (todo.type) {
-							Todo.Type.TASK -> taskEvents(type, todo.toTask, value, callback)
-							Todo.Type.PLAN -> planEvents(type, todo.toPlan, value, callback)
+							Todo.Type.TASK -> taskEvents(type, todo.asTask, value, callback)
+							Todo.Type.PLAN -> planEvents(type, todo.asPlan, value, callback)
 						}
 					}
 				}

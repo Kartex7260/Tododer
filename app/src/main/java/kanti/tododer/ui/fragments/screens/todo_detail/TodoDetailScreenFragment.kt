@@ -17,7 +17,7 @@ import kanti.tododer.R
 import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.toTask
+import kanti.tododer.data.model.common.asTask
 import kanti.tododer.databinding.FragmentTodoDetailBinding
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar
@@ -236,7 +236,7 @@ class TodoDetailScreenFragment : Fragment() {
 
 	private fun observeTodoDataFragment() {
 		observe(todoDataViewModel.onTaskIsDone) { taskDone ->
-			viewModel.taskIsDone(taskDone.todo.toTask, taskDone.data)
+			viewModel.taskIsDone(taskDone.todo.asTask, taskDone.data)
 		}
 
 		observe(todoDataViewModel.onPlanProgressRequest) { progressRequest ->
@@ -254,7 +254,7 @@ class TodoDetailScreenFragment : Fragment() {
 
 	private fun observeTodoListFragment() {
 		observe(todoListViewModel.onTaskIsDone) { taskDone ->
-			viewModel.taskIsDone(taskDone.todo.toTask, taskDone.data)
+			viewModel.taskIsDone(taskDone.todo.asTask, taskDone.data)
 			todoDataViewModel.updateStateView()
 		}
 

@@ -1,10 +1,10 @@
 package kanti.tododer.data.model.task.datasource.local
 
-import androidx.room.Query
 import kanti.tododer.data.common.LocalResult
 import kanti.tododer.data.common.tryCatch
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.toTask
 import javax.inject.Inject
 
 class TaskRoomDataSource @Inject constructor(

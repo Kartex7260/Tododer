@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.task.asTaskEntity
+import kanti.tododer.data.model.task.toTask
 
 @Dao
 abstract class TaskDao {
@@ -29,13 +29,13 @@ abstract class TaskDao {
 	@Delete
 	abstract suspend fun delete(task: TaskEntity): Int
 
-	suspend fun delete(task: Task): Int = delete(task.asTaskEntity)
+	suspend fun delete(task: Task): Int = delete(task.toTaskEntity())
 
 	@Query("DELETE FROM task")
 	abstract suspend fun deleteAll()
 
 }
 
-suspend fun TaskDao.insert(task: Task): Long = insert(task.asTaskEntity)
+suspend fun TaskDao.insert(task: Task): Long = insert(task.toTaskEntity())
 
-suspend fun TaskDao.replace(task: Task): Long = replace(task.asTaskEntity)
+suspend fun TaskDao.replace(task: Task): Long = replace(task.toTaskEntity())

@@ -3,13 +3,9 @@ package kanti.tododer.data.model.common
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 
-abstract class Todo : IdOwner {
+interface Todo : IdOwner {
 
-	abstract val type: Type
-
-	override fun toString(): String {
-		return "Todo(id=$id type=$type)"
-	}
+	val type: Type
 
 	enum class Type {
 		PLAN,
@@ -18,7 +14,7 @@ abstract class Todo : IdOwner {
 
 	companion object {
 
-		val Empty: Todo = object : Todo() {
+		val Empty: Todo = object : Todo {
 			override val type: Type = Type.TASK
 			override val id: Int = 0
 		}
