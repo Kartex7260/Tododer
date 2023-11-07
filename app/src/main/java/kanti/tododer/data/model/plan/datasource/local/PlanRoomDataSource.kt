@@ -1,7 +1,7 @@
 package kanti.tododer.data.model.plan.datasource.local
 
 import kanti.tododer.data.common.LocalResult
-import kanti.tododer.data.common.tryCatch
+import kanti.tododer.data.common.localTryCatch
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.plan.Plan
 import javax.inject.Inject
@@ -11,25 +11,25 @@ class PlanRoomDataSource @Inject constructor(
 ) : IPlanLocalDataSource {
 
 	override suspend fun getPlan(id: Int): LocalResult<Plan> {
-		return tryCatch {
+		return localTryCatch {
 			val plan = planDao.getPlan(id)?.toPlan()
-				?: return@tryCatch LocalResult(type = LocalResult.Type.NotFound())
+				?: return@localTryCatch LocalResult(type = LocalResult.Type.NotFound())
 			LocalResult(plan)
 		}
 	}
 
 	override suspend fun getChildren(fid: String): LocalResult<List<Plan>> {
-		return tryCatch {
+		return localTryCatch {
 			val children = planDao.getChildren(fid).map { it.toPlan() }
 			LocalResult(children)
 		}
 	}
 
 	override suspend fun insert(plan: Plan): LocalResult<Plan> {
-		return tryCatch {
+		return localTryCatch {
 			val rowId = planDao.insert(plan)
 			if (rowId == -1L) {
-				return@tryCatch LocalResult(type = LocalResult.Type.AlreadyExists(plan.fullId))
+				return@localTryCatch LocalResult(type = LocalResult.Type.AlreadyExists(plan.fullId))
 			}
 			val planFromDB = planDao.getByRowId(rowId)?.toPlan()
 			LocalResult(
@@ -44,7 +44,7 @@ class PlanRoomDataSource @Inject constructor(
 	}
 
 	override suspend fun replace(plan: Plan): LocalResult<Plan> {
-		return tryCatch {
+		return localTryCatch {
 			val rowId = planDao.replace(plan)
 			val planFromDB = planDao.getByRowId(rowId)?.toPlan()
 			LocalResult(

@@ -10,15 +10,23 @@ import kanti.tododer.data.progress.ITodoProgressRepository
 import kanti.tododer.data.progress.TodoProgressRepository
 import kanti.tododer.data.model.task.ITaskRepository
 import kanti.tododer.data.model.task.TaskRepository
+import kanti.tododer.data.model.task.archive.ArchiveTaskRepository
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface RepositoryModule {
 
+	@StandardDataQualifier
 	@Binds
 	@Singleton
 	fun bindTaskRepository(repository: TaskRepository): ITaskRepository
+
+	@ArchiveDataQualifier
+	@Binds
+	@Singleton
+	fun bindArchiveTaskRepository(repository: ArchiveTaskRepository): ITaskRepository
 
 	@Binds
 	@Singleton

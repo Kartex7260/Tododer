@@ -1,7 +1,7 @@
 package kanti.tododer.data.model.task.datasource.local
 
 import kanti.tododer.data.common.LocalResult
-import kanti.tododer.data.common.tryCatch
+import kanti.tododer.data.common.localTryCatch
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.toTask
@@ -12,22 +12,22 @@ class TaskRoomDataSource @Inject constructor(
 ) : ITaskLocalDataSource {
 
 	override suspend fun getTask(id: Int): LocalResult<Task> {
-		return tryCatch {
+		return localTryCatch {
 			val taskEntity = taskDao.getTask(id)
-				?: return@tryCatch LocalResult(type = LocalResult.Type.NotFound())
+				?: return@localTryCatch LocalResult(type = LocalResult.Type.NotFound())
 			LocalResult(taskEntity.toTask())
 		}
 	}
 
 	override suspend fun getChildren(fid: String): LocalResult<List<Task>> {
-		return tryCatch {
+		return localTryCatch {
 			val children = taskDao.getChildren(fid).map { it.toTask() }
 			LocalResult(children)
 		}
 	}
 
 	override suspend fun insert(task: Task): LocalResult<Task> {
-		return tryCatch {
+		return localTryCatch {
 			val rowId = taskDao.insert(task)
 			if (rowId == -1L) {
 				LocalResult(type = LocalResult.Type.AlreadyExists(task.fullId))
@@ -39,7 +39,7 @@ class TaskRoomDataSource @Inject constructor(
 	}
 
 	override suspend fun replace(task: Task): LocalResult<Task> {
-		return tryCatch {
+		return localTryCatch {
 			val rowId = taskDao.replace(task)
 			val taskFromDB = taskDao.getByRowId(rowId)?.toTask()
 			LocalResult(taskFromDB)

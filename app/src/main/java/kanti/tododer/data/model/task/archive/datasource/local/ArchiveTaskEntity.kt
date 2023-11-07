@@ -1,4 +1,4 @@
-package kanti.tododer.data.model.task.archive.datasource
+package kanti.tododer.data.model.task.archive.datasource.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

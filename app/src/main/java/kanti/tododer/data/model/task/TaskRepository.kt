@@ -3,10 +3,11 @@ package kanti.tododer.data.model.task
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.common.toRepositoryResult
 import kanti.tododer.data.model.task.datasource.local.ITaskLocalDataSource
+import kanti.tododer.di.StandardDataQualifier
 import javax.inject.Inject
 
 class TaskRepository @Inject constructor(
-	private val taskLocal: ITaskLocalDataSource
+	@StandardDataQualifier private val taskLocal: ITaskLocalDataSource
 ) : ITaskRepository {
 
 	override suspend fun getTask(id: Int): RepositoryResult<Task> {
