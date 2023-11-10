@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.task.ITask
+import kanti.tododer.data.model.task.BaseTask
 
 @Entity(tableName = "archive_task")
 class ArchiveTaskEntity(
@@ -14,13 +14,13 @@ class ArchiveTaskEntity(
 	override val title: String = "",
 	override val remark: String = "",
 	override val done: Boolean = false
-) : ITask {
+) : BaseTask {
 
 	 @Ignore override val type: Todo.Type = Todo.Type.TASK
 
 }
 
-fun ITask.toArchiveTaskEntity(
+fun BaseTask.toArchiveTaskEntity(
 	id: Int = this.id,
 	parentId: String = this.parentId,
 	title: String = this.title,

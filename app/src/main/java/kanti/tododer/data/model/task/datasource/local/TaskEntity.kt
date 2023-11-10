@@ -5,8 +5,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.task.ITask
-import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.BaseTask
 
 @Entity(tableName = "task")
 data class TaskEntity(
@@ -15,13 +14,13 @@ data class TaskEntity(
 	override val title: String = "",
 	override val remark: String = "",
 	override val done: Boolean = false
-) : ITask {
+) : BaseTask {
 
 	@Ignore override val type: Todo.Type = Todo.Type.TASK
 
 }
 
-fun ITask.toTaskEntity(
+fun BaseTask.toTaskEntity(
 	id: Int = this.id,
 	parentId: String = this.parentId,
 	title: String = this.title,

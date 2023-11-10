@@ -8,7 +8,7 @@ data class Task(
 	override val title: String = "",
 	override val remark: String = "",
 	override val done: Boolean = false
-) : ITask {
+) : BaseTask {
 
 	override val type: Todo.Type = Todo.Type.TASK
 
@@ -20,7 +20,7 @@ data class Task(
 
 }
 
-fun ITask.toTask(
+fun BaseTask.toTask(
 	id: Int = this.id,
 	parentId: String = this.parentId,
 	title: String = this.title,
