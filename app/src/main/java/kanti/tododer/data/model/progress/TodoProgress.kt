@@ -1,13 +1,18 @@
 package kanti.tododer.data.model.progress
 
-import kanti.tododer.data.model.progress.datasource.TodoProgressEntity
+import androidx.annotation.FloatRange
 
 data class TodoProgress(
-	val fullId: String,
-	val progress: Float
-)
+	override val fullId: String,
+	@FloatRange(0.0, 1.0) override val progress: Float
+) : BaseTodoProgress
 
-val TodoProgress.asTodoProgressEntity: TodoProgressEntity
-	get() {
-	return TodoProgressEntity(fullId, progress)
+fun BaseTodoProgress.toTodoProgress(
+	fullId: String = this.fullId,
+	progress: Float = this.progress
+): TodoProgress {
+	return TodoProgress(
+		fullId = fullId,
+		progress = progress
+	)
 }

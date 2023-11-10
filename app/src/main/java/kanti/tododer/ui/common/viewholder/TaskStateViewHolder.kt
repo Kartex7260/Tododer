@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import com.google.android.material.checkbox.MaterialCheckBox
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.asTask
+import kanti.tododer.data.model.task.asTask
 
 class TaskStateViewHolder(
 	todo: Todo,

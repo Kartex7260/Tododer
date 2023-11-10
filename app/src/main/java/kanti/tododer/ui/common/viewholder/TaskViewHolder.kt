@@ -8,7 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.asTask
+import kanti.tododer.data.model.task.asTask
 
 class TaskViewHolder(
 	todo: Todo,

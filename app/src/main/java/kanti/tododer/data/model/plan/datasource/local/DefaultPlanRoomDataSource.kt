@@ -2,16 +2,13 @@ package kanti.tododer.data.model.plan.datasource.local
 
 import kanti.tododer.data.common.LocalResult
 import kanti.tododer.data.common.localTryCatch
-import kanti.tododer.data.model.common.fullId
-import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.BasePlan
-import kanti.tododer.data.model.plan.toPlan
 
-class DefaultRoomDataSource(
+class DefaultPlanRoomDataSource(
 	private val localData: BasePlanDao
 ) : PlanLocalDataSource {
 
-	override suspend fun getPlan(id: Int): LocalResult<Plan> {
+	override suspend fun getPlan(id: Int): LocalResult<BasePlan> {
 		return localTryCatch {
 			val planFromDS = localData.getPlan(id)
 			LocalResult(
@@ -25,7 +22,7 @@ class DefaultRoomDataSource(
 		}
 	}
 
-	override suspend fun getChildren(fid: String): LocalResult<List<Plan>> {
+	override suspend fun getChildren(fid: String): LocalResult<List<BasePlan>> {
 		return localTryCatch {
 			val children = localData.getChildren(fid)
 			LocalResult(
@@ -34,7 +31,7 @@ class DefaultRoomDataSource(
 		}
 	}
 
-	override suspend fun insert(plan: Plan): LocalResult<Plan> {
+	override suspend fun insert(plan: BasePlan): LocalResult<BasePlan> {
 		return localTryCatch {
 			val planRowId = localData.insert(plan)
 			val planFromDS = localData.getByRowId(planRowId)
@@ -49,7 +46,7 @@ class DefaultRoomDataSource(
 		}
 	}
 
-	override suspend fun replace(plan: Plan): LocalResult<Plan> {
+	override suspend fun replace(plan: BasePlan): LocalResult<BasePlan> {
 		return localTryCatch {
 			val planRowId = localData.replace(plan)
 			val planFromDS = localData.getByRowId(planRowId)
@@ -64,7 +61,7 @@ class DefaultRoomDataSource(
 		}
 	}
 
-	override suspend fun delete(plan: Plan): Boolean {
+	override suspend fun delete(plan: BasePlan): Boolean {
 		return localData.delete(plan) == 1
 	}
 

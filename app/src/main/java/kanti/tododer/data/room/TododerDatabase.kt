@@ -8,7 +8,7 @@ import kanti.tododer.data.model.plan.datasource.local.PlanDao
 import kanti.tododer.data.model.plan.datasource.local.PlanEntity
 import kanti.tododer.data.model.task.archive.datasource.local.ArchiveTaskDao
 import kanti.tododer.data.model.task.archive.datasource.local.ArchiveTaskEntity
-import kanti.tododer.data.model.progress.datasource.IPlanProgressDao
+import kanti.tododer.data.model.progress.datasource.TodoProgressDao
 import kanti.tododer.data.model.progress.datasource.TodoProgressEntity
 import kanti.tododer.data.model.task.datasource.local.TaskDao
 import kanti.tododer.data.model.task.datasource.local.TaskEntity
@@ -33,6 +33,6 @@ abstract class TododerDatabase : RoomDatabase() {
 
 	abstract fun archiveTaskDao(): ArchiveTaskDao
 
-	abstract fun planProgressDao(): IPlanProgressDao
+	abstract fun planProgressDao(): TodoProgressDao
 
 }

@@ -9,10 +9,12 @@ import kanti.tododer.data.common.UiStateProcess
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.common.toUiState
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.getFromRoot
 import kanti.tododer.data.model.plan.insertToRoot
+import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.removewithchildren.RemoveTodoWithChildrenUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,16 +24,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoRootListViewModel @Inject constructor(
-	private val planRepository: PlanRepository,
+	@StandardDataQualifier private val planRepository: PlanRepository,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase
 ) : ViewModel() {
 
-	private val _plansUiStateProcess = UiStateProcess<List<Plan>>(listOf())
-	private val _plansLiveData = MutableLiveData<UiState<List<Plan>>>()
-	val plansLiveData: LiveData<UiState<List<Plan>>> = _plansLiveData
+	private val _plansUiStateProcess = UiStateProcess<List<BasePlan>>(listOf())
+	private val _plansLiveData = MutableLiveData<UiState<List<BasePlan>>>()
+	val plansLiveData: LiveData<UiState<List<BasePlan>>> = _plansLiveData
 
-	private val _newPlanCreated = MutableSharedFlow<UiState<Plan>>()
+	private val _newPlanCreated = MutableSharedFlow<UiState<BasePlan>>()
 	val newPlanCreated = _newPlanCreated.asSharedFlow()
 
 	init {
@@ -53,7 +55,7 @@ class TodoRootListViewModel @Inject constructor(
 		}
 	}
 
-	fun planProgressRequest(plan: Plan, callback: MutableLiveData<Float>) {
+	fun planProgressRequest(plan: BasePlan, callback: MutableLiveData<Float>) {
 		viewModelScope.launch {
 			computePlanProgressUseCase(plan, callback)
 		}

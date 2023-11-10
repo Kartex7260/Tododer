@@ -38,6 +38,7 @@ interface DataSourceBindsModule {
 	@Singleton
 	fun bindArchiveTaskRoomDataSource(dataSource: ArchiveTaskRoomDataSource): TaskLocalDataSource
 
+	@StandardDataQualifier
 	@Binds
 	@Singleton
 	fun bindPlanProgressDataSource(dataSource: TodoProgressRoomDataSource): TodoProgressLocalDataSource

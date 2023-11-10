@@ -16,10 +16,10 @@ import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.asPlan
-import kanti.tododer.data.model.common.asTask
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.asPlan
 import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.asTask
 import kanti.tododer.databinding.FragmentTodoListBinding
 import kanti.tododer.ui.common.viewholder.ItemListTodoViewHolderFactory
 import kanti.tododer.ui.common.viewholder.PlanViewHolder

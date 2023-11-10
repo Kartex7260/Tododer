@@ -1,7 +1,6 @@
 package kanti.tododer.domain.gettodochildren
 
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.di.StandardDataQualifier
 import javax.inject.Inject

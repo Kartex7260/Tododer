@@ -4,4 +4,4 @@ import javax.inject.Inject
 
 class PlanRoomDataSource @Inject constructor(
 	planDao: PlanDao
-) : PlanLocalDataSource by DefaultRoomDataSource(planDao)
+) : PlanLocalDataSource by DefaultPlanRoomDataSource(planDao)

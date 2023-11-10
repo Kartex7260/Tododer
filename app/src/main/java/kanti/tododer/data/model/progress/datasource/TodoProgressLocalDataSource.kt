@@ -1,14 +1,14 @@
 package kanti.tododer.data.model.progress.datasource
 
 import kanti.tododer.data.common.LocalResult
-import kanti.tododer.data.model.progress.TodoProgress
+import kanti.tododer.data.model.progress.BaseTodoProgress
 
 interface TodoProgressLocalDataSource {
 
-	suspend fun getPlanProgress(fullId: String): LocalResult<TodoProgress>
+	suspend fun getTodoProgress(fullId: String): LocalResult<BaseTodoProgress>
 
-	suspend fun insert(todoProgress: TodoProgress): LocalResult<TodoProgress>
+	suspend fun insert(todoProgress: BaseTodoProgress): LocalResult<BaseTodoProgress>
 
-	suspend fun delete(todoProgress: TodoProgress)
+	suspend fun delete(todoProgress: BaseTodoProgress)
 
 }

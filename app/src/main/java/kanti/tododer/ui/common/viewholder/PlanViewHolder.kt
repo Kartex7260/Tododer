@@ -8,7 +8,7 @@ import android.widget.TextView
 import kanti.fillingprogressview.FillingProgressView
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.asPlan
+import kanti.tododer.data.model.plan.asPlan
 
 class PlanViewHolder(
 	todo: Todo,

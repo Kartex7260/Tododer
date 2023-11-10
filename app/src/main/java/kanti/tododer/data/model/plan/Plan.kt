@@ -24,11 +24,21 @@ fun BasePlan.toPlan(
 	title: String = this.title,
 	remark: String = this.remark
 ): Plan {
+	if (this is Plan && id == this.id && parentId == this.parentId &&
+		title == this.title && remark == this.remark)
+		return this
 	return Plan(
 		id = id,
 		parentId = parentId,
 		title = title,
 		remark = remark
 	)
+}
+
+val Todo.asPlan: Plan get() {
+	checkType(Todo.Type.PLAN)
+	if (this !is BasePlan)
+		throw IllegalStateException("This todo is not implementation BasePlan")
+	return toPlan()
 }
 

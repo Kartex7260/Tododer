@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.fullId
 import kotlin.IllegalArgumentException
 
 abstract class TodoViewHolder(

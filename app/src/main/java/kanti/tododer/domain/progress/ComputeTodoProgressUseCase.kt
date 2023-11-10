@@ -1,18 +1,18 @@
 package kanti.tododer.domain.progress
 
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.fullId
-import kanti.tododer.data.model.common.asPlan
-import kanti.tododer.data.model.common.asTask
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.asPlan
 import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.progress.ITodoProgressRepository
+import kanti.tododer.data.model.progress.TodoProgressRepository
 import kanti.tododer.data.model.progress.TodoProgress
+import kanti.tododer.data.model.task.asTask
+import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.gettodochildren.GetTodoChildrenUseCase
 import javax.inject.Inject
 
 class ComputeTodoProgressUseCase @Inject constructor(
-	private val todoProgressRepository: ITodoProgressRepository,
+	@StandardDataQualifier private val todoProgressRepository: TodoProgressRepository,
 	private val getTodoChildrenUseCase: GetTodoChildrenUseCase
 ) {
 

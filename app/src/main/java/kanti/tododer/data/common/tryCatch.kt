@@ -9,6 +9,6 @@ suspend fun <T> localTryCatch(block: suspend () -> LocalResult<T>): LocalResult<
 		block()
 	} catch (th: Throwable) {
 		Log.w(LOG_TAG, th.message, th)
-		LocalResult(type = LocalResult.Type.Fail(th.message))
+		LocalResult(type = LocalResult.Type.Fail("localTryCatch (${th.message})"))
 	}
 }

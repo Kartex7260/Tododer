@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kanti.tododer.R
+import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.plan.Plan
 
 class PlanRecyclerAdapter(
-	private val plans: List<Plan>,
-	private val onItemClick: (Plan) -> Unit
+	private val plans: List<BasePlan>,
+	private val onItemClick: (BasePlan) -> Unit
 ) : RecyclerView.Adapter<PlanRecyclerAdapter.PlanViewHolder>() {
 
 	inner class PlanViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -18,7 +19,7 @@ class PlanRecyclerAdapter(
 		private val textViewTitle = view.findViewById<TextView>(R.id.textViewTodoItemPlanTitle)
 		private val textViewRemark = view.findViewById<TextView>(R.id.textViewTodoItemPlanRemark)
 
-		fun showPlan(plan: Plan) {
+		fun showPlan(plan: BasePlan) {
 			itemView.setOnClickListener { onItemClick(plan) }
 
 			textViewTitle.text = plan.title

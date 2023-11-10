@@ -27,6 +27,9 @@ fun BaseTask.toTask(
 	remark: String = this.remark,
 	done: Boolean = this.done
 ): Task {
+	if (this is Task && id == this.id && parentId == this.parentId && title == this.title &&
+		remark == this.remark && done == this.done)
+		return this
 	return Task(
 		id = id,
 		parentId = parentId,
@@ -34,4 +37,11 @@ fun BaseTask.toTask(
 		remark = remark,
 		done = done
 	)
+}
+
+val Todo.asTask: Task get() {
+	checkType(Todo.Type.TASK)
+	if (this !is BaseTask)
+		throw IllegalStateException("This is todo ($this) is not implementation BaseTask")
+	return toTask()
 }

@@ -1,7 +1,6 @@
 package kanti.tododer.domain.removewithchildren
 
 import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.di.StandardDataQualifier
@@ -10,7 +9,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RemovePlanWithChildrenUseCase @Inject constructor(
-	private val planRepository: PlanRepository,
+	@StandardDataQualifier private val planRepository: PlanRepository,
 	@StandardDataQualifier private val taskRepository: TaskRepository
 ) {
 

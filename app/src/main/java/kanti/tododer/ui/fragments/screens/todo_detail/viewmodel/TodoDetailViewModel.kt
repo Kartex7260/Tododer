@@ -11,12 +11,14 @@ import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.FullIds
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.fullId
-import kanti.tododer.data.model.common.toFullId
+import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.toPlan
+import kanti.tododer.data.model.task.BaseTask
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.toTask
 import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
@@ -38,7 +40,7 @@ class TodoDetailViewModel @Inject constructor(
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase,
 	@StandardDataQualifier private val taskRepository: TaskRepository,
-	private val planRepository: PlanRepository
+	@StandardDataQualifier private val planRepository: PlanRepository
 ) : ViewModel() {
 
 	private val stack = Stack<FullId>()
@@ -59,12 +61,12 @@ class TodoDetailViewModel @Inject constructor(
 			val fullId = todo.toFullId
 			when (fullId.type) {
 				Todo.Type.TASK -> saveTask(fullId.id) {
-					copy(
+					toTask(
 						title = title
 					)
 				}
 				Todo.Type.PLAN -> savePlan(fullId.id) {
-					copy(
+					toPlan(
 						title = title
 					)
 				}
@@ -77,12 +79,12 @@ class TodoDetailViewModel @Inject constructor(
 			val fullId = todo.toFullId
 			when (fullId.type) {
 				Todo.Type.TASK -> saveTask(fullId.id) {
-					copy(
+					toTask(
 						remark = remark
 					)
 				}
 				Todo.Type.PLAN -> savePlan(fullId.id) {
-					copy(
+					toPlan(
 						remark = remark
 					)
 				}
@@ -148,14 +150,14 @@ class TodoDetailViewModel @Inject constructor(
 	fun taskIsDone(task: Task, isDone: Boolean) {
 		viewModelScope.launch {
 			taskRepository.replace(task) {
-				copy(
+				toTask(
 					done = isDone
 				)
 			}
 		}
 	}
 
-	fun planProgressRequest(plan: Plan, callback: MutableLiveData<Float>) {
+	fun planProgressRequest(plan: BasePlan, callback: MutableLiveData<Float>) {
 		viewModelScope.launch {
 			computePlanProgressUseCase(plan, callback)
 		}
@@ -249,7 +251,7 @@ class TodoDetailViewModel @Inject constructor(
 		return repositoryResult.toTodoDetailUiState
 	}
 
-	private suspend fun saveTask(id: Int, body: Task.() -> Task) {
+	private suspend fun saveTask(id: Int, body: BaseTask.() -> BaseTask) {
 		val task = taskRepository.getTask(id).also { repositoryResult ->
 			if (!repositoryResult.isSuccess || repositoryResult.isNull)
 				return
@@ -257,7 +259,7 @@ class TodoDetailViewModel @Inject constructor(
 		taskRepository.replace(task, body)
 	}
 
-	private suspend fun savePlan(id: Int, body: Plan.() -> Plan) {
+	private suspend fun savePlan(id: Int, body: BasePlan.() -> BasePlan) {
 		val plan = planRepository.getPlan(id).also { repositoryResult ->
 			if (!repositoryResult.isSuccess || repositoryResult.isNull)
 				return

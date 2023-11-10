@@ -17,7 +17,7 @@ import kanti.tododer.R
 import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.asTask
+import kanti.tododer.data.model.task.asTask
 import kanti.tododer.databinding.FragmentTodoDetailBinding
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar

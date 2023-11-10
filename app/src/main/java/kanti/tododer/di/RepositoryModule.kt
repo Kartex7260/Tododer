@@ -6,8 +6,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.PlanRepositoryImpl
-import kanti.tododer.data.model.progress.ITodoProgressRepository
+import kanti.tododer.data.model.plan.archive.ArchivePlanRepositoryImpl
 import kanti.tododer.data.model.progress.TodoProgressRepository
+import kanti.tododer.data.model.progress.TodoProgressRepositoryImpl
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.data.model.task.TaskRepositoryImpl
 import kanti.tododer.data.model.task.archive.ArchiveTaskRepository
@@ -27,12 +28,19 @@ interface RepositoryModule {
 	@Singleton
 	fun bindArchiveTaskRepository(repository: ArchiveTaskRepository): TaskRepository
 
+	@StandardDataQualifier
 	@Binds
 	@Singleton
 	fun bindPlanRepository(repository: PlanRepositoryImpl): PlanRepository
 
+	@ArchiveDataQualifier
 	@Binds
 	@Singleton
-	fun bindPlanProgressRepository(repository: TodoProgressRepository): ITodoProgressRepository
+	fun bindArchivePlanRepository(repository: ArchivePlanRepositoryImpl): PlanRepository
+
+	@StandardDataQualifier
+	@Binds
+	@Singleton
+	fun bindPlanProgressRepository(repository: TodoProgressRepositoryImpl): TodoProgressRepository
 
 }

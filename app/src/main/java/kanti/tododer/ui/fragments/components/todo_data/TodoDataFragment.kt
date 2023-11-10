@@ -13,8 +13,8 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.databinding.FragmentTodoDataBinding
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.asPlan
-import kanti.tododer.data.model.common.asTask
+import kanti.tododer.data.model.plan.asPlan
+import kanti.tododer.data.model.task.asTask
 import kanti.tododer.ui.common.viewholder.PlanStateViewHolder
 import kanti.tododer.ui.common.viewholder.TaskStateViewHolder
 import kanti.tododer.ui.common.viewholder.TaskStateViewOwner

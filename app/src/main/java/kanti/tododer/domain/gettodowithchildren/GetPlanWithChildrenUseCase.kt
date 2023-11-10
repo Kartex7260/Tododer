@@ -1,14 +1,14 @@
 package kanti.tododer.domain.gettodowithchildren
 
 import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.model.common.toFullId
 import kanti.tododer.data.model.plan.PlanRepository
+import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.common.TodoWithChildren
 import kanti.tododer.domain.gettodochildren.GetPlanChildrenUseCase
 import javax.inject.Inject
 
 class GetPlanWithChildrenUseCase @Inject constructor(
-	private val planRepository: PlanRepository,
+	@StandardDataQualifier private val planRepository: PlanRepository,
 	private val getPlanChildrenUseCase: GetPlanChildrenUseCase
 ) {
 

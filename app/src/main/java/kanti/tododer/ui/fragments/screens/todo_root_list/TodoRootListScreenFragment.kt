@@ -19,7 +19,7 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.databinding.FragmentTodoRootBinding
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.fullId
+import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
@@ -123,7 +123,7 @@ class TodoRootListScreenFragment : Fragment() {
 		}
 	}
 
-	private fun showData(plans: List<Plan>) {
+	private fun showData(plans: List<BasePlan>) {
 		todoListViewModel.sendTodoList(plans)
 	}
 
