@@ -18,7 +18,7 @@ interface PlanDao : BasePlanDao {
 	}
 
 	@Query("SELECT * FROM `plan` WHERE parent_id = :parentId")
-	fun getChildrenRoom(parentId: String): List<PlanEntity>
+	suspend fun getChildrenRoom(parentId: String): List<PlanEntity>
 
 	override suspend fun getByRowId(rowId: Long): Plan? {
 		return getByRowIdRoom(rowId)?.toPlan()
