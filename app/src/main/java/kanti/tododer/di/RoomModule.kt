@@ -15,7 +15,7 @@ import kanti.tododer.data.model.plan.datasource.local.PlanDao
 import kanti.tododer.data.model.plan.datasource.local.PlanEntity
 import kanti.tododer.data.model.task.archive.datasource.local.ArchiveTaskDao
 import kanti.tododer.data.model.task.datasource.local.BaseTaskDao
-import kanti.tododer.data.progress.datasource.IPlanProgressDao
+import kanti.tododer.data.model.progress.datasource.IPlanProgressDao
 import kanti.tododer.data.model.task.datasource.local.TaskDao
 import kanti.tododer.data.room.TododerDatabase
 import javax.inject.Singleton

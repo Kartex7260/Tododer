@@ -1,9 +1,9 @@
-package kanti.tododer.data.progress.datasource
+package kanti.tododer.data.model.progress.datasource
 
 import androidx.annotation.FloatRange
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kanti.tododer.data.progress.TodoProgress
+import kanti.tododer.data.model.progress.TodoProgress
 
 @Entity(tableName = "plan_progress_cache")
 data class TodoProgressEntity(

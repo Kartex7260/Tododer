@@ -6,8 +6,8 @@ import kanti.tododer.data.model.common.asPlan
 import kanti.tododer.data.model.common.asTask
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.progress.ITodoProgressRepository
-import kanti.tododer.data.progress.TodoProgress
+import kanti.tododer.data.model.progress.ITodoProgressRepository
+import kanti.tododer.data.model.progress.TodoProgress
 import kanti.tododer.domain.gettodochildren.GetTodoChildrenUseCase
 import javax.inject.Inject
 

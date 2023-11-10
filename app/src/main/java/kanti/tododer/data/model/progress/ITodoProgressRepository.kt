@@ -1,4 +1,4 @@
-package kanti.tododer.data.progress
+package kanti.tododer.data.model.progress
 
 import kanti.tododer.data.common.RepositoryResult
 

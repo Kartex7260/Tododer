@@ -1,12 +1,12 @@
-package kanti.tododer.data.progress.datasource
+package kanti.tododer.data.model.progress.datasource
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import kanti.tododer.data.progress.TodoProgress
-import kanti.tododer.data.progress.asTodoProgressEntity
+import kanti.tododer.data.model.progress.TodoProgress
+import kanti.tododer.data.model.progress.asTodoProgressEntity
 
 @Dao
 abstract class IPlanProgressDao {

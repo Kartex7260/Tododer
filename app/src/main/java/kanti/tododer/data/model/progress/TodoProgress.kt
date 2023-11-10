@@ -1,6 +1,6 @@
-package kanti.tododer.data.progress
+package kanti.tododer.data.model.progress
 
-import kanti.tododer.data.progress.datasource.TodoProgressEntity
+import kanti.tododer.data.model.progress.datasource.TodoProgressEntity
 
 data class TodoProgress(
 	val fullId: String,

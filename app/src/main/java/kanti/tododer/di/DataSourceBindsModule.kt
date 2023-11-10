@@ -8,8 +8,8 @@ import kanti.tododer.data.model.plan.archive.datasource.local.ArchivePlanRoomDat
 import kanti.tododer.data.model.plan.datasource.local.PlanLocalDataSource
 import kanti.tododer.data.model.plan.datasource.local.PlanRoomDataSource
 import kanti.tododer.data.model.task.archive.datasource.local.ArchiveTaskRoomDataSource
-import kanti.tododer.data.progress.datasource.TodoProgressLocalDataSource
-import kanti.tododer.data.progress.datasource.TodoProgressRoomDataSource
+import kanti.tododer.data.model.progress.datasource.TodoProgressLocalDataSource
+import kanti.tododer.data.model.progress.datasource.TodoProgressRoomDataSource
 import kanti.tododer.data.model.task.datasource.local.TaskLocalDataSource
 import kanti.tododer.data.model.task.datasource.local.TaskRoomDataSource
 import javax.inject.Singleton

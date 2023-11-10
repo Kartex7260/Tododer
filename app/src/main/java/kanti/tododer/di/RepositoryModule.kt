@@ -6,8 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.PlanRepositoryImpl
-import kanti.tododer.data.progress.ITodoProgressRepository
-import kanti.tododer.data.progress.TodoProgressRepository
+import kanti.tododer.data.model.progress.ITodoProgressRepository
+import kanti.tododer.data.model.progress.TodoProgressRepository
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.data.model.task.TaskRepositoryImpl
 import kanti.tododer.data.model.task.archive.ArchiveTaskRepository

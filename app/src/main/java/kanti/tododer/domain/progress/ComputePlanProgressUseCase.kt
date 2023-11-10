@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.progress.ITodoProgressRepository
+import kanti.tododer.data.model.progress.ITodoProgressRepository
 import kanti.tododer.domain.gettodochildren.GetTodoChildrenUseCase
 import javax.inject.Inject
 

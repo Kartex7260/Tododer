@@ -1,8 +1,8 @@
-package kanti.tododer.data.progress
+package kanti.tododer.data.model.progress
 
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.common.toRepositoryResult
-import kanti.tododer.data.progress.datasource.TodoProgressLocalDataSource
+import kanti.tododer.data.model.progress.datasource.TodoProgressLocalDataSource
 import javax.inject.Inject
 
 class TodoProgressRepository @Inject constructor(
