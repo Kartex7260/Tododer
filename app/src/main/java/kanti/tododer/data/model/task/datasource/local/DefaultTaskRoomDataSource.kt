@@ -5,10 +5,9 @@ import kanti.tododer.data.common.localTryCatch
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.toTask
-import kanti.tododer.di.StandardDataQualifier
 
 class DefaultTaskRoomDataSource(
-	@StandardDataQualifier private val taskDao: BaseTaskDao
+	private val taskDao: BaseTaskDao
 ) : TaskLocalDataSource {
 
 	override suspend fun getTask(id: Int): LocalResult<Task> {
