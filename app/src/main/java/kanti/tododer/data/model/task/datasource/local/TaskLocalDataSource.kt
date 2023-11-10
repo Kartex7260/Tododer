@@ -3,7 +3,7 @@ package kanti.tododer.data.model.task.datasource.local
 import kanti.tododer.data.common.LocalResult
 import kanti.tododer.data.model.task.Task
 
-interface ITaskLocalDataSource {
+interface TaskLocalDataSource {
 
 	suspend fun getTask(id: Int): LocalResult<Task>
 

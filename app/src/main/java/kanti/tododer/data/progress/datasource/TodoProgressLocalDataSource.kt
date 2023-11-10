@@ -3,7 +3,7 @@ package kanti.tododer.data.progress.datasource
 import kanti.tododer.data.common.LocalResult
 import kanti.tododer.data.progress.TodoProgress
 
-interface ITodoProgressLocalDataSource {
+interface TodoProgressLocalDataSource {
 
 	suspend fun getPlanProgress(fullId: String): LocalResult<TodoProgress>
 

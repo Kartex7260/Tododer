@@ -1,4 +1,4 @@
-package kanti.tododer.data.model.task.archive.datasource.local
+package kanti.tododer.data.model.task.datasource.local
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,59 +6,58 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.task.datasource.local.BaseTaskDao
 import kanti.tododer.data.model.task.toTask
 
 @Dao
-interface ArchiveTaskDao : BaseTaskDao {
+interface TaskDao : BaseTaskDao {
 
 	override suspend fun getChildren(parentId: String): List<Task> {
 		return getChildrenRoom(parentId).map { it.toTask() }
 	}
 
-	@Query("SELECT * FROM archive_task WHERE parent_id = :parentId")
-	suspend fun getChildrenRoom(parentId: String): List<ArchiveTaskEntity>
+	@Query("SELECT * FROM task WHERE parent_id = :parentId")
+	suspend fun getChildrenRoom(parentId: String): List<TaskEntity>
 
 	override suspend fun getByRowId(rowId: Long): Task? {
 		return getByRowIdRoom(rowId)?.toTask()
 	}
 
-	@Query("SELECT * FROM archive_task WHERE rowid = :rowId")
-	suspend fun getByRowIdRoom(rowId: Long): ArchiveTaskEntity?
+	@Query("SELECT * FROM task WHERE rowid = :rowId")
+	suspend fun getByRowIdRoom(rowId: Long): TaskEntity?
 
 	override suspend fun getTask(id: Int): Task? {
 		return getTaskRoom(id)?.toTask()
 	}
 
-	@Query("SELECT * FROM archive_task WHERE id = :id")
-	suspend fun getTaskRoom(id: Int): ArchiveTaskEntity?
+	@Query("SELECT * FROM task WHERE id = :id")
+	suspend fun getTaskRoom(id: Int): TaskEntity?
 
 	override suspend fun replace(task: Task): Long {
-		return replaceRoom(task.toArchiveTaskEntity())
+		return replaceRoom(task.toTaskEntity())
 	}
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun replaceRoom(task: ArchiveTaskEntity): Long
+	suspend fun replaceRoom(task: TaskEntity): Long
 
 	override suspend fun insert(task: Task): Long {
-		return insertRoom(task.toArchiveTaskEntity())
+		return insertRoom(task.toTaskEntity())
 	}
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	suspend fun insertRoom(task: ArchiveTaskEntity): Long
+	suspend fun insertRoom(task: TaskEntity): Long
 
 	override suspend fun delete(task: Task): Int {
-		return deleteRoom(task.toArchiveTaskEntity())
+		return deleteRoom(task.toTaskEntity())
 	}
 
 	@Delete
-	suspend fun deleteRoom(task: ArchiveTaskEntity): Int
+	suspend fun deleteRoom(task: TaskEntity): Int
 
 	override suspend fun deleteAll() {
 		deleteAllRoom()
 	}
 
-	@Query("DELETE FROM archive_task")
+	@Query("DELETE FROM task")
 	suspend fun deleteAllRoom()
 
 }

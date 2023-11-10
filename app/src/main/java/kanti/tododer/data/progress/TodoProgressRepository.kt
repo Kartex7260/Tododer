@@ -2,11 +2,11 @@ package kanti.tododer.data.progress
 
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.common.toRepositoryResult
-import kanti.tododer.data.progress.datasource.ITodoProgressLocalDataSource
+import kanti.tododer.data.progress.datasource.TodoProgressLocalDataSource
 import javax.inject.Inject
 
 class TodoProgressRepository @Inject constructor(
-	private val planProgressDatSource: ITodoProgressLocalDataSource
+	private val planProgressDatSource: TodoProgressLocalDataSource
 ) : ITodoProgressRepository {
 
 	override suspend fun getPlanProgress(fullId: String): RepositoryResult<TodoProgress> {

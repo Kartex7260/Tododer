@@ -1,35 +1,19 @@
 package kanti.tododer.data.model.task
 
 import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.common.toRepositoryResult
-import kanti.tododer.data.model.task.datasource.local.ITaskLocalDataSource
-import kanti.tododer.di.StandardDataQualifier
-import javax.inject.Inject
 
-class TaskRepository @Inject constructor(
-	@StandardDataQualifier private val taskLocal: ITaskLocalDataSource
-) : ITaskRepository {
+interface TaskRepository {
 
-	override suspend fun getTask(id: Int): RepositoryResult<Task> {
-		val task = taskLocal.getTask(id)
-		return task.toRepositoryResult()
-	}
+	suspend fun getTask(id: Int): RepositoryResult<Task>
 
-	override suspend fun getChildren(fid: String): RepositoryResult<List<Task>> {
-		return taskLocal.getChildren(fid).toRepositoryResult()
-	}
+	suspend fun getChildren(fid: String): RepositoryResult<List<Task>>
 
-	override suspend fun insert(task: Task): RepositoryResult<Task> = taskLocal.insert(task)
-		.toRepositoryResult()
+	suspend fun insert(task: Task): RepositoryResult<Task>
 
-	override suspend fun replace(task: Task, body: (Task.() -> Task)?): RepositoryResult<Task> {
-		val newTask = body?.let { task.it() }
-		val taskFromDB = taskLocal.replace(newTask ?: task)
-		return taskFromDB.toRepositoryResult()
-	}
+	suspend fun replace(task: Task, body: (Task.() -> Task)? = null): RepositoryResult<Task>
 
-	override suspend fun delete(task: Task): Boolean = taskLocal.delete(task)
+	suspend fun delete(task: Task): Boolean
 
-	override suspend fun deleteAll() = taskLocal.deleteAll()
+	suspend fun deleteAll()
 
 }

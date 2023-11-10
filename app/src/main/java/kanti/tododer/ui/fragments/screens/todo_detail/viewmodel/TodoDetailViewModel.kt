@@ -13,9 +13,9 @@ import kanti.tododer.data.model.common.FullIds
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.common.toFullId
-import kanti.tododer.data.model.plan.IPlanRepository
+import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.task.ITaskRepository
+import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
@@ -37,8 +37,8 @@ class TodoDetailViewModel @Inject constructor(
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase,
-	@StandardDataQualifier private val taskRepository: ITaskRepository,
-	private val planRepository: IPlanRepository
+	@StandardDataQualifier private val taskRepository: TaskRepository,
+	private val planRepository: PlanRepository
 ) : ViewModel() {
 
 	private val stack = Stack<FullId>()

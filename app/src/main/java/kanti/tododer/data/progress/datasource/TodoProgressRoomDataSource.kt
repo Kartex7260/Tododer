@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class TodoProgressRoomDataSource @Inject constructor(
 	private val planProgressDao: IPlanProgressDao
-) : ITodoProgressLocalDataSource {
+) : TodoProgressLocalDataSource {
 
 	override suspend fun getPlanProgress(fullId: String): LocalResult<TodoProgress> {
 		val planProgress = planProgressDao.getPlanProgress(fullId)

@@ -2,7 +2,7 @@ package kanti.tododer.data.model.plan
 
 import kanti.tododer.data.model.common.Todo
 
-interface IPlan : Todo {
+interface BasePlan : Todo {
 
 	val parentId: String
 	val title: String

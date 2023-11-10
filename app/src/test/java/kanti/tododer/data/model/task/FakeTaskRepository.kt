@@ -2,7 +2,7 @@ package kanti.tododer.data.model.task
 
 import kanti.tododer.data.common.RepositoryResult
 
-class FakeTaskRepository : ITaskRepository {
+class FakeTaskRepository : TaskRepository {
 
 	private val _tasks = mutableListOf<Task>()
 	val tasks: List<Task>

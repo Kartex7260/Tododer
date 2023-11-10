@@ -4,14 +4,13 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kanti.tododer.data.model.plan.IPlanRepository
 import kanti.tododer.data.model.plan.PlanRepository
+import kanti.tododer.data.model.plan.PlanRepositoryImpl
 import kanti.tododer.data.progress.ITodoProgressRepository
 import kanti.tododer.data.progress.TodoProgressRepository
-import kanti.tododer.data.model.task.ITaskRepository
 import kanti.tododer.data.model.task.TaskRepository
+import kanti.tododer.data.model.task.TaskRepositoryImpl
 import kanti.tododer.data.model.task.archive.ArchiveTaskRepository
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -21,16 +20,16 @@ interface RepositoryModule {
 	@StandardDataQualifier
 	@Binds
 	@Singleton
-	fun bindTaskRepository(repository: TaskRepository): ITaskRepository
+	fun bindTaskRepository(repository: TaskRepositoryImpl): TaskRepository
 
 	@ArchiveDataQualifier
 	@Binds
 	@Singleton
-	fun bindArchiveTaskRepository(repository: ArchiveTaskRepository): ITaskRepository
+	fun bindArchiveTaskRepository(repository: ArchiveTaskRepository): TaskRepository
 
 	@Binds
 	@Singleton
-	fun bindPlanRepository(repository: PlanRepository): IPlanRepository
+	fun bindPlanRepository(repository: PlanRepositoryImpl): PlanRepository
 
 	@Binds
 	@Singleton

@@ -1,14 +1,13 @@
 package kanti.tododer.domain.gettodochildren
 
-import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.fullId
-import kanti.tododer.data.model.task.ITaskRepository
+import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.di.StandardDataQualifier
 import javax.inject.Inject
 
 class GetTaskChildrenUseCase @Inject constructor(
-	@StandardDataQualifier private val taskRepository: ITaskRepository
+	@StandardDataQualifier private val taskRepository: TaskRepository
 ) {
 
 	suspend operator fun invoke(todo: Todo): List<Todo> {

@@ -9,7 +9,7 @@ import kanti.tododer.data.common.UiStateProcess
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.common.toUiState
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.IPlanRepository
+import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.getFromRoot
 import kanti.tododer.data.model.plan.insertToRoot
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoRootListViewModel @Inject constructor(
-	private val planRepository: IPlanRepository,
+	private val planRepository: PlanRepository,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase
 ) : ViewModel() {

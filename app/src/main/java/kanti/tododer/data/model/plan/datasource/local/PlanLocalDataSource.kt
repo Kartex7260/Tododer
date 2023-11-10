@@ -3,7 +3,7 @@ package kanti.tododer.data.model.plan.datasource.local
 import kanti.tododer.data.common.LocalResult
 import kanti.tododer.data.model.plan.Plan
 
-interface IPlanLocalDataSource {
+interface PlanLocalDataSource {
 
 	suspend fun getPlan(id: Int): LocalResult<Plan>
 

@@ -8,7 +8,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kanti.tododer.common.Const
-import kanti.tododer.data.model.plan.datasource.local.IPlanDao
+import kanti.tododer.data.model.plan.archive.datasource.local.ArchivePlanDao
+import kanti.tododer.data.model.plan.archive.datasource.local.ArchivePlanEntity
+import kanti.tododer.data.model.plan.datasource.local.BasePlanDao
+import kanti.tododer.data.model.plan.datasource.local.PlanDao
+import kanti.tododer.data.model.plan.datasource.local.PlanEntity
+import kanti.tododer.data.model.task.archive.datasource.local.ArchiveTaskDao
+import kanti.tododer.data.model.task.datasource.local.BaseTaskDao
 import kanti.tododer.data.progress.datasource.IPlanProgressDao
 import kanti.tododer.data.model.task.datasource.local.TaskDao
 import kanti.tododer.data.room.TododerDatabase
@@ -30,14 +36,26 @@ object RoomModule {
 
 	@Provides
 	@Singleton
-	fun providePlanDao(room: TododerDatabase): IPlanDao {
+	fun providePlanDao(room: TododerDatabase): PlanDao {
 		return room.planDao()
+	}
+
+	@Provides
+	@Singleton
+	fun provideArchivePlanDao(room: TododerDatabase): ArchivePlanDao {
+		return room.archivePlanDao()
 	}
 
 	@Provides
 	@Singleton
 	fun provideTaskDao(room: TododerDatabase): TaskDao {
 		return room.taskDao()
+	}
+
+	@Provides
+	@Singleton
+	fun provideArchiveTaskDao(room: TododerDatabase): ArchiveTaskDao {
+		return room.archiveTaskDao()
 	}
 
 	@Provides
