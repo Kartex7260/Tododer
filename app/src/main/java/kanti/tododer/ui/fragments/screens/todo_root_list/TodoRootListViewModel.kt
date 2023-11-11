@@ -40,6 +40,10 @@ class TodoRootListViewModel @Inject constructor(
 		getRootPlans()
 	}
 
+	fun toArchive(todo: Todo) {
+		TODO("Write archive logic")
+	}
+
 	fun deleteTodo(todo: Todo) {
 		viewModelScope.launch {
 			removeTodoWithChildrenUseCase(todo)

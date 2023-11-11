@@ -3,6 +3,7 @@ package kanti.tododer.ui.fragments.screens.todo_root_list
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -109,6 +110,21 @@ class TodoRootListScreenFragment : Fragment() {
 				"onDeleteTodo.collectLatest { $deleteRequest }"
 			)
 			viewModel.deleteTodo(deleteRequest.todo)
+		}
+
+		observe(todoListViewModel.todoItemCreateContextMenu) { createMenuRequest ->
+			createMenuRequest.contextMenu.add(
+				Menu.NONE,
+				1,
+				0,
+				R.string.to_archive
+			).apply {
+				setOnMenuItemClickListener {
+					viewModel.toArchive(createMenuRequest.todo)
+					todoListViewModel.todoArchived(createMenuRequest.todo)
+					true
+				}
+			}
 		}
 	}
 

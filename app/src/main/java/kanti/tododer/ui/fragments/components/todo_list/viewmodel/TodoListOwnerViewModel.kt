@@ -6,6 +6,7 @@ import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.task.BaseTask
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 interface TodoListOwnerViewModel {
@@ -13,6 +14,8 @@ interface TodoListOwnerViewModel {
 	var todoViewHolderFactory: TodoViewHolder.Factory
 
 	val todoList: StateFlow<List<Todo>>
+
+	val todoArchived: SharedFlow<Todo>
 
 	fun deleteTodo(todo: Todo)
 

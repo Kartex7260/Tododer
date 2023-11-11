@@ -14,6 +14,7 @@ import kanti.tododer.ui.fragments.components.common.PlanProgressRequest
 import kanti.tododer.ui.fragments.components.common.SaveTodoDataRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -41,6 +42,9 @@ class TodoListViewModel : ViewModel(), TodoListOwnerViewModel, TodoListUserViewM
 
 	private val _todoItemCreateContextMenu = MutableSharedFlow<TodoItemCreateContextMenuRequest>()
 	override val todoItemCreateContextMenu = _todoItemCreateContextMenu.asSharedFlow()
+
+	private val _todoArchived = MutableSharedFlow<Todo>()
+	override val todoArchived = _todoArchived.asSharedFlow()
 
 	override fun deleteTodo(todo: Todo) {
 		viewModelScope.launch {
@@ -91,6 +95,12 @@ class TodoListViewModel : ViewModel(), TodoListOwnerViewModel, TodoListUserViewM
 					contextMenu = menu
 				)
 			)
+		}
+	}
+
+	override fun todoArchived(todo: Todo) {
+		viewModelScope.launch {
+			_todoArchived.emit(todo)
 		}
 	}
 
