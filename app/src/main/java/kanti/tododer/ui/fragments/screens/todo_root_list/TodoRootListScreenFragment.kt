@@ -22,13 +22,14 @@ import kanti.tododer.databinding.FragmentScreenTodoRootListBinding
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
+import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListUserViewModel
 
 @AndroidEntryPoint
 class TodoRootListScreenFragment : Fragment() {
 
 	private lateinit var view: FragmentScreenTodoRootListBinding
 	private val viewModel: TodoRootListViewModel by viewModels()
-	private val todoListViewModel: TodoListViewModel by viewModels()
+	private val todoListViewModel: TodoListUserViewModel by viewModels<TodoListViewModel>()
 
 	private val menuProvider by lazy {
 		TodoRootListMenuProvide(
@@ -84,7 +85,7 @@ class TodoRootListScreenFragment : Fragment() {
 			}
 		}
 
-		observe(todoListViewModel.onElementClick) { todoElement ->
+		observe(todoListViewModel.elementClick) { todoElement ->
 			Log.d(
 				this@TodoRootListScreenFragment.hashLogTag,
 				"onElementClick.collectLatest { $todoElement }"
@@ -92,7 +93,7 @@ class TodoRootListScreenFragment : Fragment() {
 			navigateToDetailScreen(todoElement)
 		}
 
-		observe(todoListViewModel.onPlanProgressRequest) { progressRequest ->
+		observe(todoListViewModel.planProgressRequest) { progressRequest ->
 			Log.d(
 				this@TodoRootListScreenFragment.hashLogTag,
 				"onPlanProgressRequest.collectLatest { $progressRequest }"
@@ -100,7 +101,7 @@ class TodoRootListScreenFragment : Fragment() {
 			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
 		}
 
-		observe(todoListViewModel.onDeleteTodo) { deleteRequest ->
+		observe(todoListViewModel.deleteTodo) { deleteRequest ->
 			Log.d(
 				this@TodoRootListScreenFragment.hashLogTag,
 				"onDeleteTodo.collectLatest { $deleteRequest }"

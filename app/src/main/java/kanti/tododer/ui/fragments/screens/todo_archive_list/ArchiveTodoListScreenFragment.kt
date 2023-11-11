@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.databinding.FragmentScreenTodoArchiveListBinding
+import kanti.tododer.ui.fragments.common.observe
+import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListUserViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.fragments.screens.todo_archive_list.viewholder.ArchiveTodoViewHolderFactory
 import kanti.tododer.ui.fragments.screens.todo_archive_list.viewmodel.ArchiveTodoListViewModel
@@ -19,7 +21,7 @@ class ArchiveTodoListScreenFragment : Fragment() {
 	private val viewBinding: FragmentScreenTodoArchiveListBinding get() = _viewBinding!!
 
 	private val viewModel: ArchiveTodoListViewModel by viewModels()
-	private val todoListViewModel: TodoListViewModel by viewModels()
+	private val todoListViewModel: TodoListUserViewModel by viewModels<TodoListViewModel>()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -43,11 +45,30 @@ class ArchiveTodoListScreenFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+
+		observe(viewModel.archivePlans) { uiState ->
+			showProcess(uiState.process)
+
+			todoListViewModel.sendTodoList(uiState.plans)
+		}
+
+		observeTodoListViewModel()
 	}
 
 	override fun onResume() {
 		super.onResume()
 		viewModel.getArchivePlans()
+	}
+
+	private fun showProcess(process: Boolean) {
+		if (process) {
+			viewBinding.progressBarTodoArchive.visibility = View.VISIBLE
+		} else {
+			viewBinding.progressBarTodoArchive.visibility = View.GONE
+		}
+	}
+
+	private fun observeTodoListViewModel() {
 	}
 
 }

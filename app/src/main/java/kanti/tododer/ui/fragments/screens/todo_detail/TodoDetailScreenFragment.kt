@@ -23,6 +23,7 @@ import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
+import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataUserViewModel
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.fragments.dialog.TodoSelectorDialogFragment
@@ -38,7 +39,7 @@ class TodoDetailScreenFragment : Fragment() {
 	private lateinit var view: FragmentScreenTodoDetailBinding
 	private val viewModel: TodoDetailViewModel by viewModels()
 	private val todoListViewModel: TodoListViewModel by viewModels()
-	private val todoDataViewModel: TodoDataViewModel by viewModels()
+	private val todoDataViewModel: TodoDataUserViewModel by viewModels<TodoDataViewModel>()
 
 	private val menuProvider by lazy {
 		TodoDetailMenuProvider(
@@ -235,38 +236,38 @@ class TodoDetailScreenFragment : Fragment() {
 	}
 
 	private fun observeTodoDataFragment() {
-		observe(todoDataViewModel.onTaskIsDone) { taskDone ->
+		observe(todoDataViewModel.taskIsDone) { taskDone ->
 			viewModel.taskIsDone(taskDone.todo.asTask, taskDone.data)
 		}
 
-		observe(todoDataViewModel.onPlanProgressRequest) { progressRequest ->
+		observe(todoDataViewModel.planProgressRequest) { progressRequest ->
 			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
 		}
 
-		observe(todoDataViewModel.onSaveNewTitle) { titleRequest ->
+		observe(todoDataViewModel.saveNewTitle) { titleRequest ->
 			viewModel.saveTitle(titleRequest.todo, titleRequest.data)
 		}
 
-		observe(todoDataViewModel.onSaveNewRemark) { remarkRequest ->
+		observe(todoDataViewModel.saveNewRemark) { remarkRequest ->
 			viewModel.saveRemark(remarkRequest.todo, remarkRequest.data)
 		}
 	}
 
 	private fun observeTodoListFragment() {
-		observe(todoListViewModel.onTaskIsDone) { taskDone ->
+		observe(todoListViewModel.taskIsDone) { taskDone ->
 			viewModel.taskIsDone(taskDone.todo.asTask, taskDone.data)
 			todoDataViewModel.updateStateView()
 		}
 
-		observe(todoListViewModel.onElementClick) {
+		observe(todoListViewModel.elementClick) {
 			viewModel.showTodo(it)
 		}
 
-		observe(todoListViewModel.onPlanProgressRequest) { progressRequest ->
+		observe(todoListViewModel.planProgressRequest) { progressRequest ->
 			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
 		}
 
-		observe(todoListViewModel.onDeleteTodo) { deleteRequest ->
+		observe(todoListViewModel.deleteTodo) { deleteRequest ->
 			viewModel.deleteTodo(deleteRequest.todo)
 		}
 	}

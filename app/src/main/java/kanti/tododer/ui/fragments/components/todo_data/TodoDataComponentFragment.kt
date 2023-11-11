@@ -22,6 +22,7 @@ import kanti.tododer.ui.common.viewholder.TodoStateViewHolderFactory
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.common.viewholder.TodoViewHolderManager
 import kanti.tododer.ui.fragments.common.observe
+import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataOwnerViewModel
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoSavable
 import kanti.tododer.ui.fragments.components.todo_list.setEventListenerIfNull
@@ -42,7 +43,7 @@ class TodoDataComponentFragment : Fragment() {
 
 	private var _viewBinding: FragmentComponentTodoDataBinding? = null
 	private val viewBinding: FragmentComponentTodoDataBinding get() { return _viewBinding!! }
-	private val viewModel: TodoDataViewModel by viewModels(ownerProducer = {
+	private val viewModel: TodoDataOwnerViewModel by viewModels<TodoDataViewModel>(ownerProducer = {
 		requireParentFragment()
 	})
 

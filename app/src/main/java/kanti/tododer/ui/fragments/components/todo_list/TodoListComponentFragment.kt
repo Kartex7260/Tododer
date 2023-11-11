@@ -21,13 +21,13 @@ import kanti.tododer.data.model.plan.asPlan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.asTask
 import kanti.tododer.databinding.FragmentComponentTodoListBinding
-import kanti.tododer.ui.common.viewholder.ItemListTodoViewHolderFactory
 import kanti.tododer.ui.common.viewholder.PlanViewHolder
 import kanti.tododer.ui.common.viewholder.TaskViewHolder
 import kanti.tododer.ui.common.viewholder.TodoEventCallback
 import kanti.tododer.ui.common.viewholder.TodoEventListener
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.common.viewholder.TodoViewHolderManager
+import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListOwnerViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -37,7 +37,7 @@ class TodoListComponentFragment : Fragment() {
 	private var _viewBinding: FragmentComponentTodoListBinding? = null
 	private val viewBinding: FragmentComponentTodoListBinding get() { return _viewBinding!! }
 
-	private val viewModel: TodoListViewModel by viewModels(ownerProducer = {
+	private val viewModel: TodoListOwnerViewModel by viewModels<TodoListViewModel>(ownerProducer = {
 		requireParentFragment()
 	})
 
