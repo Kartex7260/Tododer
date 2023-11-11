@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import kanti.tododer.R
 import kanti.tododer.databinding.FragmentScreenTodoArchiveListBinding
+import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListUserViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
@@ -45,6 +47,11 @@ class ArchiveTodoListScreenFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+
+		setActivityToolbar(
+			title = R.string.archive,
+			lifecycleOwner =  viewLifecycleOwner
+		)
 
 		observe(viewModel.archivePlans) { uiState ->
 			showProcess(uiState.process)
