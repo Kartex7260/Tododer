@@ -10,7 +10,7 @@ import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.task.asTask
 
-class TaskViewHolder(
+open class TaskViewHolder(
 	todo: Todo,
 	layoutInflater: LayoutInflater,
 	root: ViewGroup? = RootDefault,

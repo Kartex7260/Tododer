@@ -10,7 +10,7 @@ import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.asPlan
 
-class PlanViewHolder(
+open class PlanViewHolder(
 	todo: Todo,
 	layoutInflater: LayoutInflater,
 	root: ViewGroup? = RootDefault,
