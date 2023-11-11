@@ -41,7 +41,7 @@ class TodoRootListViewModel @Inject constructor(
 	}
 
 	fun toArchive(todo: Todo) {
-		TODO("Write archive logic")
+//		TODO("Write archive logic")
 	}
 
 	fun deleteTodo(todo: Todo) {

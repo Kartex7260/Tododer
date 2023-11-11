@@ -16,7 +16,9 @@ class TodoViewHolderManager(
 		private set
 
 	fun remove(todoElement: Todo) {
+		val view = getViewHolder(todoElement, false).view
 		todoViewHolderHashMap.remove(todoElement.fullId)
+		root?.removeView(view)
 	}
 
 	fun getViewHolder(todoElement: Todo, attachToRoot: Boolean = false, setCurrent: Boolean = false): TodoViewHolder {

@@ -27,6 +27,7 @@ import kanti.tododer.ui.common.viewholder.TodoEventCallback
 import kanti.tododer.ui.common.viewholder.TodoEventListener
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.common.viewholder.TodoViewHolderManager
+import kanti.tododer.ui.fragments.common.observe
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListOwnerViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -75,22 +76,22 @@ class TodoListComponentFragment : Fragment() {
 
 		Log.d(hashLogTag, "onViewCreated(View, Bundle?): subscribe to viewModel.todoList\n" +
 				"viewModel=${viewModel.hashLogTag}")
-		viewLifecycleOwner.lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				viewModel.todoList.collectLatest { elements ->
-					Log.d(
-						hashLogTag,
-						"onViewCreated(View, Bundle?): get observe notification=$elements"
-					)
-					viewBinding.linearLayoutChildren.apply {
-						removeAllViews()
-						for (todoElement in elements) {
-							val viewHolder = getViewHolder(todoElement)
-							addView(viewHolder.view)
-						}
-					}
+		observe(viewModel.todoList) { elements ->
+			Log.d(
+				hashLogTag,
+				"onViewCreated(View, Bundle?): get observe notification=$elements"
+			)
+			viewBinding.linearLayoutChildren.apply {
+				removeAllViews()
+				for (todoElement in elements) {
+					val viewHolder = getViewHolder(todoElement)
+					addView(viewHolder.view)
 				}
 			}
+		}
+
+		observe(viewModel.todoArchived) { todo ->
+			viewHolderManager.remove(todo)
 		}
 	}
 
@@ -114,7 +115,6 @@ class TodoListComponentFragment : Fragment() {
 					TodoViewHolder.EVENT_CONTEXT_MENU_DELETE_ON_CLICK -> {
 						viewModel.deleteTodo(todo)
 						viewHolderManager.remove(todo)
-						viewBinding.linearLayoutChildren.removeView(viewHolder.view)
 					}
 					TodoViewHolder.EVENT_CONTEXT_MENU_ON_CREATE -> {
 						if (value == null || value !is ContextMenu)
