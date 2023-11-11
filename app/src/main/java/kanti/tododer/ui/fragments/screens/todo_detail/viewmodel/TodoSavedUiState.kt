@@ -63,7 +63,7 @@ val RepositoryResult<out Todo>.toTodoSavedUiState: TodoSavedUiState get() {
 
 val RepositoryResult.Type.toNewTodoCreatedType: TodoSavedUiState.Type get() {
 	return when(this) {
-		is RepositoryResult.Type.Success -> TodoSavedUiState.Type.Success
+		is RepositoryResult.Type.SuccessLocal -> TodoSavedUiState.Type.Success
 		is RepositoryResult.Type.NotFound -> TodoSavedUiState.Type.NotFound(message)
 		is RepositoryResult.Type.AlreadyExists -> TodoSavedUiState.Type.AlreadyExists(fullId, message)
 		is RepositoryResult.Type.Fail -> TodoSavedUiState.Type.Fail(message)

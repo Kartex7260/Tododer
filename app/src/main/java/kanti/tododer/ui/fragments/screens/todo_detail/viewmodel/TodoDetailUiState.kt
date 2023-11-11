@@ -54,7 +54,7 @@ val RepositoryResult<TodoWithChildren>.toTodoDetailUiState: TodoDetailUiState
 private val RepositoryResult.Type.toTodoDetailType: TodoDetailUiState.Type
 	get() {
 		return when (this) {
-			is RepositoryResult.Type.Success -> TodoDetailUiState.Type.Success
+			is RepositoryResult.Type.SuccessLocal -> TodoDetailUiState.Type.Success
 			is RepositoryResult.Type.NotFound -> TodoDetailUiState.Type.NotFound(message)
 			is RepositoryResult.Type.AlreadyExists -> TodoDetailUiState.Type.AlreadyExists(
 				fullId,

@@ -23,7 +23,7 @@ class ComputePlanProgressUseCase @Inject constructor(
 	private suspend fun sendCachedData(plan: BasePlan, callback: MutableLiveData<Float>) {
 		val repRes = todoProgressRepository.getTodoProgress(plan.fullId)
 		when (repRes.type) {
-			RepositoryResult.Type.Success -> {
+			RepositoryResult.Type.SuccessLocal -> {
 				callback.postValue(repRes.value?.progress ?: defProgressValue)
 			}
 			else -> {

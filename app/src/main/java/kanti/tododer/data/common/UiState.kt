@@ -5,7 +5,7 @@ typealias Type = RepositoryResult.Type
 data class UiState<T>(
 	val value: T,
 	val process: Boolean = false,
-	val type: Type = RepositoryResult.Type.Success
+	val type: Type = RepositoryResult.Type.SuccessLocal
 )
 
 class UiStateProcess<T>(defValue: T) {
@@ -32,7 +32,7 @@ val <T> UiState<T>.isNull: Boolean
 	get() = value == null
 
 val <T> UiState<T>.isSuccess: Boolean
-	get() = type is RepositoryResult.Type.Success
+	get() = type is RepositoryResult.Type.SuccessLocal
 
 val <T> UiState<T>.isNotFound: Boolean
 	get() = type is RepositoryResult.Type.NotFound

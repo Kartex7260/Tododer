@@ -62,7 +62,7 @@ class TodoListComponentFragment : Fragment() {
 				false
 			)
 			viewHolderManager = TodoViewHolderManager(
-				ItemListTodoViewHolderFactory,
+				viewModel.todoViewHolderFactory,
 				inflater,
 				viewBinding.linearLayoutChildren
 			)

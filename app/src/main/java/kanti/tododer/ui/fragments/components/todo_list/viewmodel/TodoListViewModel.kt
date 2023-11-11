@@ -5,9 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.ui.common.viewholder.ItemListTodoViewHolderFactory
+import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.fragments.components.common.PlanProgressRequest
 import kanti.tododer.ui.fragments.components.common.SaveTodoDataRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,6 +22,8 @@ import kotlinx.coroutines.launch
 class TodoListViewModel : ViewModel() {
 
 	private val logTag = javaClass.simpleName
+
+	var todoViewHolderFactory: TodoViewHolder.Factory = ItemListTodoViewHolderFactory
 
 	private val _todoListLiveData = MutableStateFlow<List<Todo>>(listOf())
 	val todoList = _todoListLiveData.asStateFlow()

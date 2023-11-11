@@ -133,7 +133,7 @@ class TodoRootListScreenFragment : Fragment() {
 
 	private fun showMessageFromType(type: RepositoryResult.Type): Boolean {
 		return when(type) {
-			is RepositoryResult.Type.Success -> { true }
+			is RepositoryResult.Type.SuccessLocal -> { true }
 			is RepositoryResult.Type.AlreadyExists -> {
 				Toast.makeText(
 					requireContext(),

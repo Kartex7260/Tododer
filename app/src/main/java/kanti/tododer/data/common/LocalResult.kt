@@ -42,7 +42,7 @@ fun <T> LocalResult<T>.toRepositoryResult(): RepositoryResult<T> {
 
 fun LocalResult.Type.toRepositoryType(): RepositoryResult.Type {
 	return when (this) {
-		is LocalResult.Type.Success -> RepositoryResult.Type.Success
+		is LocalResult.Type.Success -> RepositoryResult.Type.SuccessLocal
 		is LocalResult.Type.NotFound -> RepositoryResult.Type.NotFound(message)
 		is LocalResult.Type.AlreadyExists -> RepositoryResult.Type.AlreadyExists(fullId, message)
 		is LocalResult.Type.Fail -> RepositoryResult.Type.Fail(message)

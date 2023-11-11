@@ -2,10 +2,11 @@ package kanti.tododer.data.common
 
 data class RepositoryResult<T>(
 	val value: T? = null,
-	val type: Type = Type.Success
+	val type: Type = Type.SuccessLocal
 ) {
 	sealed class Type(val type: String = "", val message: String? = null) {
-		data object Success : Type("Success")
+//		data object SuccessRemote : Type("SuccessRemote")
+		data object SuccessLocal : Type("SuccessLocal")
 //		class NoConnection(message: String? = null) : Type("NoConnection", message)
 //		class NoAuthorization(message: String? = null) : Type("NoAuthorization", message)
 		class NotFound(message: String? = null) : Type("NotFound", message)
@@ -28,7 +29,7 @@ val <T> RepositoryResult<T>.isNull: Boolean
 	get() = value == null
 
 val <T> RepositoryResult<T>.isSuccess: Boolean
-	get() = type is RepositoryResult.Type.Success
+	get() = type is RepositoryResult.Type.SuccessLocal
 
 val <T> RepositoryResult<T>.isNotFound: Boolean
 	get() = type is RepositoryResult.Type.NotFound
