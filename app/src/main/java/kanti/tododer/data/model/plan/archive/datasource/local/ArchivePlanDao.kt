@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.archive.toArchivePlan
 import kanti.tododer.data.model.plan.datasource.local.BasePlanDao
 import kanti.tododer.data.model.plan.toPlan
 
@@ -14,21 +15,21 @@ import kanti.tododer.data.model.plan.toPlan
 interface ArchivePlanDao : BasePlanDao {
 
 	override suspend fun getChildren(parentId: String): List<BasePlan> {
-		return getChildrenRoom(parentId).map { it.toPlan() }
+		return getChildrenRoom(parentId).map { it.toArchivePlan() }
 	}
 
 	@Query("SELECT * FROM archive_plan WHERE parent_id = :parentId")
 	suspend fun getChildrenRoom(parentId: String): List<ArchivePlanEntity>
 
 	override suspend fun getByRowId(rowId: Long): BasePlan? {
-		return getByRowIdRoom(rowId)?.toPlan()
+		return getByRowIdRoom(rowId)?.toArchivePlan()
 	}
 
 	@Query("SELECT * FROM archive_plan WHERE rowid = :rowId")
 	suspend fun getByRowIdRoom(rowId: Long): ArchivePlanEntity?
 
 	override suspend fun getPlan(id: Int): BasePlan? {
-		return getPlanRoom(id)?.toPlan()
+		return getPlanRoom(id)?.toArchivePlan()
 	}
 
 	@Query("SELECT * FROM archive_plan WHERE id = :id")
