@@ -20,7 +20,7 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.asPlan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.asTask
-import kanti.tododer.databinding.FragmentTodoListBinding
+import kanti.tododer.databinding.FragmentComponentTodoListBinding
 import kanti.tododer.ui.common.viewholder.ItemListTodoViewHolderFactory
 import kanti.tododer.ui.common.viewholder.PlanViewHolder
 import kanti.tododer.ui.common.viewholder.TaskViewHolder
@@ -32,10 +32,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TodoListFragment : Fragment() {
+class TodoListComponentFragment : Fragment() {
 
-	private var _viewBinding: FragmentTodoListBinding? = null
-	private val viewBinding: FragmentTodoListBinding get() { return _viewBinding!! }
+	private var _viewBinding: FragmentComponentTodoListBinding? = null
+	private val viewBinding: FragmentComponentTodoListBinding get() { return _viewBinding!! }
 
 	private val viewModel: TodoListViewModel by viewModels(ownerProducer = {
 		requireParentFragment()
@@ -56,7 +56,11 @@ class TodoListFragment : Fragment() {
 		savedInstanceState: Bundle?
 	): View {
 		if (_viewBinding == null) {
-			_viewBinding = FragmentTodoListBinding.inflate(inflater, container, false)
+			_viewBinding = FragmentComponentTodoListBinding.inflate(
+				inflater,
+				container,
+				false
+			)
 			viewHolderManager = TodoViewHolderManager(
 				ItemListTodoViewHolderFactory,
 				inflater,

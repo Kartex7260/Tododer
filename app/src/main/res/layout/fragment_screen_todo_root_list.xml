@@ -17,7 +17,7 @@
             android:id="@+id/fragmentContainerViewTodoRoot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="kanti.tododer.ui.fragments.components.todo_list.TodoListFragment" />
+            android:name="kanti.tododer.ui.fragments.components.todo_list.TodoListComponentFragment" />
     </androidx.core.widget.NestedScrollView>
 
     <ProgressBar

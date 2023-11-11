@@ -11,10 +11,10 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
-import kanti.tododer.databinding.FragmentTodoDataBinding
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.asPlan
 import kanti.tododer.data.model.task.asTask
+import kanti.tododer.databinding.FragmentComponentTodoDataBinding
 import kanti.tododer.ui.common.viewholder.PlanStateViewHolder
 import kanti.tododer.ui.common.viewholder.TaskStateViewHolder
 import kanti.tododer.ui.common.viewholder.TaskStateViewOwner
@@ -27,7 +27,7 @@ import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoSavable
 import kanti.tododer.ui.fragments.components.todo_list.setEventListenerIfNull
 
 @AndroidEntryPoint
-class TodoDataFragment : Fragment() {
+class TodoDataComponentFragment : Fragment() {
 
 	private val editTitleTextChangeListener: (Editable?) -> Unit = { editable ->
 		editable?.apply {
@@ -40,8 +40,8 @@ class TodoDataFragment : Fragment() {
 		}
 	}
 
-	private var _viewBinding: FragmentTodoDataBinding? = null
-	private val viewBinding: FragmentTodoDataBinding get() { return _viewBinding!! }
+	private var _viewBinding: FragmentComponentTodoDataBinding? = null
+	private val viewBinding: FragmentComponentTodoDataBinding get() { return _viewBinding!! }
 	private val viewModel: TodoDataViewModel by viewModels(ownerProducer = {
 		requireParentFragment()
 	})
@@ -56,7 +56,11 @@ class TodoDataFragment : Fragment() {
 		savedInstanceState: Bundle?
 	): View {
 		if (_viewBinding == null) {
-			_viewBinding = FragmentTodoDataBinding.inflate(layoutInflater, container, false)
+			_viewBinding = FragmentComponentTodoDataBinding.inflate(
+				layoutInflater,
+				container,
+				false
+			)
 			todoStateViewHolderManager = TodoViewHolderManager(
 				TodoStateViewHolderFactory,
 				inflater
@@ -108,12 +112,12 @@ class TodoDataFragment : Fragment() {
 		}
 	}
 
-	private fun FragmentTodoDataBinding.subscribeTextFields() {
+	private fun FragmentComponentTodoDataBinding.subscribeTextFields() {
 		editTextTodoDetailTitle.addTextChangedListener(afterTextChanged = editTitleTextChangeListener)
 		editTextTodoDetailRemark.addTextChangedListener(afterTextChanged = editRemarkTextChangeListener)
 	}
 
-	private fun FragmentTodoDataBinding.unsubscribeTextFields() {
+	private fun FragmentComponentTodoDataBinding.unsubscribeTextFields() {
 		editTextTodoDetailTitle.addTextChangedListener()
 		editTextTodoDetailRemark.addTextChangedListener()
 	}

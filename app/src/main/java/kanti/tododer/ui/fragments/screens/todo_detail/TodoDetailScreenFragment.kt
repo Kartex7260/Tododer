@@ -18,7 +18,7 @@ import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.task.asTask
-import kanti.tododer.databinding.FragmentTodoDetailBinding
+import kanti.tododer.databinding.FragmentScreenTodoDetailBinding
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class TodoDetailScreenFragment : Fragment() {
 
-	private lateinit var view: FragmentTodoDetailBinding
+	private lateinit var view: FragmentScreenTodoDetailBinding
 	private val viewModel: TodoDetailViewModel by viewModels()
 	private val todoListViewModel: TodoListViewModel by viewModels()
 	private val todoDataViewModel: TodoDataViewModel by viewModels()
@@ -68,7 +68,7 @@ class TodoDetailScreenFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
-		view = FragmentTodoDetailBinding.inflate(inflater, container, false)
+		view = FragmentScreenTodoDetailBinding.inflate(inflater, container, false)
 		return view.root
 	}
 

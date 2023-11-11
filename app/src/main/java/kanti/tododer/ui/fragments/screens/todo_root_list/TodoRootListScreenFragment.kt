@@ -15,11 +15,10 @@ import kanti.tododer.R
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.common.isSuccess
-import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.databinding.FragmentTodoRootBinding
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.BasePlan
+import kanti.tododer.databinding.FragmentScreenTodoRootListBinding
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
@@ -27,7 +26,7 @@ import kanti.tododer.ui.fragments.common.observe
 @AndroidEntryPoint
 class TodoRootListScreenFragment : Fragment() {
 
-	private lateinit var view: FragmentTodoRootBinding
+	private lateinit var view: FragmentScreenTodoRootListBinding
 	private val viewModel: TodoRootListViewModel by viewModels()
 	private val todoListViewModel: TodoListViewModel by viewModels()
 
@@ -50,7 +49,7 @@ class TodoRootListScreenFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
-		view = FragmentTodoRootBinding.inflate(inflater, container, false)
+		view = FragmentScreenTodoRootListBinding.inflate(inflater, container, false)
 
 		return view.root
 	}
