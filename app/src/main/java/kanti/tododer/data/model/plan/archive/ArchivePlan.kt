@@ -15,6 +15,13 @@ data class ArchivePlan(
 
 }
 
+val Todo.asArchivePlan: ArchivePlan get() {
+	checkType(Todo.Type.PLAN)
+	if (this !is BaseArchivePlan)
+		throw IllegalStateException("This todo ($this) is not implementation BaseArchivePlan")
+	return toArchivePlan()
+}
+
 fun BasePlan.toArchivePlan(
 	id: Int = this.id,
 	parentId: String = this.parentId,
