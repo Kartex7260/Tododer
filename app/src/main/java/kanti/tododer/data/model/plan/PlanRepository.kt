@@ -8,20 +8,20 @@ interface PlanRepository {
 
 	suspend fun getChildren(fid: String): RepositoryResult<List<BasePlan>>
 
+	suspend fun insert(vararg plan: BasePlan): RepositoryResult<Unit>
+
 	suspend fun insert(plan: BasePlan): RepositoryResult<BasePlan>
 
-	suspend fun insert(list: List<BasePlan>): RepositoryResult<Unit>
+	suspend fun update(vararg plan: BasePlan): RepositoryResult<Unit>
 
-	suspend fun replace(
+	suspend fun update(
 		plan: BasePlan,
-		body: (BasePlan.() -> BasePlan)? = null
+		update: (BasePlan.() -> BasePlan)? = null
 	): RepositoryResult<BasePlan>
 
-	suspend fun replace(list: List<BasePlan>): RepositoryResult<Unit>
+	suspend fun delete(vararg plan: BasePlan): RepositoryResult<Unit>
 
 	suspend fun delete(plan: BasePlan): Boolean
-
-	suspend fun delete(list: List<BasePlan>): RepositoryResult<Unit>
 
 	suspend fun deleteAll()
 

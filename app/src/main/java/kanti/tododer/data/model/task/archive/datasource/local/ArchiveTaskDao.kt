@@ -5,8 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kanti.tododer.data.model.task.BaseTask
-import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.datasource.local.BaseTaskDao
 import kanti.tododer.data.model.task.toTask
 
@@ -34,47 +34,38 @@ interface ArchiveTaskDao : BaseTaskDao {
 	@Query("SELECT * FROM archive_task WHERE id = :id")
 	suspend fun getTaskRoom(id: Int): ArchiveTaskEntity?
 
-	override suspend fun replace(task: BaseTask): Long {
-		return replaceRoom(task.toArchiveTaskEntity())
+	override suspend fun insert(vararg task: BaseTask) {
+		insertRoom(*task.map { it.toArchiveTaskEntity() }.toTypedArray())
 	}
-
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun replaceRoom(task: ArchiveTaskEntity): Long
-
-	override suspend fun replace(list: List<BaseTask>) {
-		replaceRoom(list.map { it.toArchiveTaskEntity() })
-	}
-
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun replaceRoom(list: List<ArchiveTaskEntity>)
 
 	override suspend fun insert(task: BaseTask): Long {
-		return insertRoom(task.toArchiveTaskEntity())
+		return insertRoom(task.toArchiveTaskEntity())[0]
 	}
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	suspend fun insertRoom(task: ArchiveTaskEntity): Long
+	suspend fun insertRoom(vararg task: ArchiveTaskEntity): Array<Long>
 
-	override suspend fun insert(list: List<BaseTask>) {
-		return insertRoom(list.map { it.toArchiveTaskEntity() })
+	override suspend fun update(vararg task: BaseTask) {
+		updateRoom(*task.map { it.toArchiveTaskEntity() }.toTypedArray())
 	}
 
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	suspend fun insertRoom(list: List<ArchiveTaskEntity>)
+	override suspend fun update(task: BaseTask): Boolean {
+		return updateRoom(task.toArchiveTaskEntity()) == 1
+	}
 
-	override suspend fun delete(task: BaseTask): Int {
-		return deleteRoom(task.toArchiveTaskEntity())
+	@Update
+	suspend fun updateRoom(vararg task: ArchiveTaskEntity): Int
+
+	override suspend fun delete(vararg task: BaseTask) {
+		deleteRoom(*task.map { it.toArchiveTaskEntity() }.toTypedArray())
+	}
+
+	override suspend fun delete(task: BaseTask): Boolean {
+		return deleteRoom(task.toArchiveTaskEntity()) == 1
 	}
 
 	@Delete
-	suspend fun deleteRoom(task: ArchiveTaskEntity): Int
-
-	override suspend fun delete(list: List<BaseTask>) {
-		return deleteRoom(list.map { it.toArchiveTaskEntity() })
-	}
-
-	@Delete
-	suspend fun deleteRoom(list: List<ArchiveTaskEntity>)
+	suspend fun deleteRoom(vararg tasK: ArchiveTaskEntity): Int
 
 	override suspend fun deleteAll() {
 		deleteAllRoom()

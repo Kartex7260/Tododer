@@ -9,17 +9,17 @@ interface TaskLocalDataSource {
 
 	suspend fun getChildren(fid: String): LocalResult<List<BaseTask>>
 
+	suspend fun insert(vararg task: BaseTask): LocalResult<Unit>
+
 	suspend fun insert(task: BaseTask): LocalResult<BaseTask>
 
-	suspend fun insert(task: List<BaseTask>): LocalResult<Unit>
+	suspend fun update(vararg task: BaseTask): LocalResult<Unit>
 
-	suspend fun replace(task: BaseTask): LocalResult<BaseTask>
+	suspend fun update(task: BaseTask): LocalResult<BaseTask>
 
-	suspend fun replace(task: List<BaseTask>): LocalResult<Unit>
+	suspend fun delete(vararg task: BaseTask): LocalResult<Unit>
 
 	suspend fun delete(task: BaseTask): Boolean
-
-	suspend fun delete(tasK: List<BaseTask>): LocalResult<Unit>
 
 	suspend fun deleteAll()
 

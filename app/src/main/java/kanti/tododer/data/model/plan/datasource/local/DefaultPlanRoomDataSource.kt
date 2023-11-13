@@ -5,12 +5,12 @@ import kanti.tododer.data.common.localTryCatch
 import kanti.tododer.data.model.plan.BasePlan
 
 class DefaultPlanRoomDataSource(
-	private val localData: BasePlanDao
+	private val planDao: BasePlanDao
 ) : PlanLocalDataSource {
 
 	override suspend fun getPlan(id: Int): LocalResult<BasePlan> {
 		return localTryCatch {
-			val planFromDS = localData.getPlan(id)
+			val planFromDS = planDao.getPlan(id)
 			LocalResult(
 				value = planFromDS,
 				type = if (planFromDS == null) {
@@ -24,70 +24,65 @@ class DefaultPlanRoomDataSource(
 
 	override suspend fun getChildren(fid: String): LocalResult<List<BasePlan>> {
 		return localTryCatch {
-			val children = localData.getChildren(fid)
+			val children = planDao.getChildren(fid)
 			LocalResult(
 				value = children
 			)
 		}
 	}
 
-	override suspend fun insert(plan: BasePlan): LocalResult<BasePlan> {
+	override suspend fun insert(vararg plan: BasePlan): LocalResult<Unit> {
 		return localTryCatch {
-			val planRowId = localData.insert(plan)
-			val planFromDS = localData.getByRowId(planRowId)
-			LocalResult(
-				value = planFromDS,
-				type = if (planFromDS == null) {
-					LocalResult.Type.AlreadyExists(plan.fullId)
-				} else {
-					LocalResult.Type.Success
-				}
-			)
-		}
-	}
-
-	override suspend fun insert(list: List<BasePlan>): LocalResult<Unit> {
-		return localTryCatch {
-			localData.insert(list)
+			planDao.insert(*plan)
 			LocalResult()
 		}
 	}
 
-	override suspend fun replace(plan: BasePlan): LocalResult<BasePlan> {
+	override suspend fun insert(plan: BasePlan): LocalResult<BasePlan> {
 		return localTryCatch {
-			val planRowId = localData.replace(plan)
-			val planFromDS = localData.getByRowId(planRowId)
-			LocalResult(
-				value = planFromDS,
-				type = if (planFromDS == null) {
-					LocalResult.Type.Fail(plan.fullId)
-				} else {
-					LocalResult.Type.Success
-				}
-			)
+			val planRowId = planDao.insert(plan)
+			if (planRowId == -1L) {
+				return@localTryCatch LocalResult(
+					type = LocalResult.Type.AlreadyExists(plan.fullId)
+				)
+			}
+			val planFromDB = planDao.getByRowId(planRowId)!!
+			LocalResult(planFromDB)
 		}
 	}
 
-	override suspend fun replace(list: List<BasePlan>): LocalResult<Unit> {
+	override suspend fun update(vararg plan: BasePlan): LocalResult<Unit> {
 		return localTryCatch {
-			localData.replace(list)
+			planDao.update(*plan)
+			LocalResult()
+		}
+	}
+
+	override suspend fun update(plan: BasePlan): LocalResult<BasePlan> {
+		return localTryCatch {
+			planDao.update(plan)
+			val planFromDB = planDao.getPlan(plan.id)!!
+			LocalResult(planFromDB)
+		}
+	}
+
+	override suspend fun delete(vararg plan: BasePlan): LocalResult<Unit> {
+		return localTryCatch {
+			planDao.delete(*plan)
 			LocalResult()
 		}
 	}
 
 	override suspend fun delete(plan: BasePlan): Boolean {
-		return localData.delete(plan) == 1
-	}
-
-	override suspend fun delete(list: List<BasePlan>): LocalResult<Unit> {
-		return localTryCatch {
-			localData.delete(list)
-			LocalResult()
+		return try {
+			planDao.delete(plan)
+		} catch (th: Throwable) {
+			false
 		}
 	}
 
 	override suspend fun deleteAll() {
-		localData.deleteAll()
+		planDao.deleteAll()
 	}
 
 }

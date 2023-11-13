@@ -37,15 +37,15 @@ class MovePlanUseCase @Inject constructor(
 
 	private suspend fun removeFrom(from: RepositorySet, planWithProgeny: PlanWithProgeny) {
 		from.apply {
-			planRepository.delete(planWithProgeny.plans)
-			taskRepository.delete(planWithProgeny.tasks)
+			planRepository.delete(*planWithProgeny.plans.toTypedArray())
+			taskRepository.delete(*planWithProgeny.tasks.toTypedArray())
 		}
 	}
 
 	private suspend fun addTo(to: RepositorySet, planWithProgeny: PlanWithProgeny) {
 		to.apply {
-			planRepository.replace(planWithProgeny.plans)
-			taskRepository.replace(planWithProgeny.tasks)
+			planRepository.insert(*planWithProgeny.plans.toTypedArray())
+			taskRepository.insert(*planWithProgeny.tasks.toTypedArray())
 		}
 	}
 

@@ -10,17 +10,17 @@ interface PlanLocalDataSource {
 
 	suspend fun getChildren(fid: String): LocalResult<List<BasePlan>>
 
+	suspend fun insert(vararg plan: BasePlan): LocalResult<Unit>
+
 	suspend fun insert(plan: BasePlan): LocalResult<BasePlan>
 
-	suspend fun insert(list: List<BasePlan>): LocalResult<Unit>
+	suspend fun update(vararg plan: BasePlan): LocalResult<Unit>
 
-	suspend fun replace(plan: BasePlan): LocalResult<BasePlan>
+	suspend fun update(plan: BasePlan): LocalResult<BasePlan>
 
-	suspend fun replace(list: List<BasePlan>): LocalResult<Unit>
+	suspend fun delete(vararg plan: BasePlan): LocalResult<Unit>
 
 	suspend fun delete(plan: BasePlan): Boolean
-
-	suspend fun delete(list: List<BasePlan>): LocalResult<Unit>
 
 	suspend fun deleteAll()
 

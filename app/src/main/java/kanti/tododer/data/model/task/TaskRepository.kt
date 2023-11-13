@@ -8,20 +8,20 @@ interface TaskRepository {
 
 	suspend fun getChildren(fid: String): RepositoryResult<List<BaseTask>>
 
+	suspend fun insert(vararg task: BaseTask): RepositoryResult<Unit>
+
 	suspend fun insert(task: BaseTask): RepositoryResult<BaseTask>
 
-	suspend fun insert(list: List<BaseTask>): RepositoryResult<Unit>
+	suspend fun update(vararg task: BaseTask): RepositoryResult<Unit>
 
-	suspend fun replace(
+	suspend fun update(
 		task: BaseTask,
-		body: (BaseTask.() -> BaseTask)? = null
+		update: (BaseTask.() -> BaseTask)? = null
 	): RepositoryResult<BaseTask>
 
-	suspend fun replace(list: List<BaseTask>): RepositoryResult<Unit>
+	suspend fun delete(vararg task: BaseTask): RepositoryResult<Unit>
 
 	suspend fun delete(task: BaseTask): Boolean
-
-	suspend fun delete(list: List<BaseTask>): RepositoryResult<Unit>
 
 	suspend fun deleteAll()
 

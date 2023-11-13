@@ -14,10 +14,13 @@ import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.getFromRoot
 import kanti.tododer.data.model.plan.insertToRoot
+import kanti.tododer.data.model.task.TaskRepository
+import kanti.tododer.di.ArchiveDataQualifier
 import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.todomove.MoveTodoUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.removewithchildren.RemoveTodoWithProgenyUseCase
+import kanti.tododer.domain.todomove.RepositorySet
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -26,7 +29,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoRootListViewModel @Inject constructor(
-	@StandardDataQualifier private val planRepository: PlanRepository,
+	@StandardDataQualifier private val standardPlanRepository: PlanRepository,
+	@ArchiveDataQualifier private val archivePlanRepository: PlanRepository,
+	@StandardDataQualifier private val standardTaskRepository: TaskRepository,
+	@ArchiveDataQualifier private val archiveTaskRepository: TaskRepository,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val removeTodoWithProgenyUseCase: RemoveTodoWithProgenyUseCase,
 	private val moveTodoUseCase: MoveTodoUseCase
@@ -45,7 +51,17 @@ class TodoRootListViewModel @Inject constructor(
 
 	fun toArchive(todo: Todo) {
 		viewModelScope.launch(NonCancellable) {
-			moveTodoUseCase(todo)
+			moveTodoUseCase(
+				from = RepositorySet(
+					standardTaskRepository,
+					standardPlanRepository
+				),
+				to = RepositorySet(
+					archiveTaskRepository,
+					archivePlanRepository
+				),
+				todo = todo
+			)
 		}
 	}
 
@@ -58,7 +74,7 @@ class TodoRootListViewModel @Inject constructor(
 	fun getRootPlans() {
 		_plansLiveData.value = _plansUiStateProcess.process
 		viewModelScope.launch {
-			val rootPlans = planRepository.getFromRoot()
+			val rootPlans = standardPlanRepository.getFromRoot()
 			val uiState = rootPlans.toUiState(listOf())
 			_plansLiveData.postValue(uiState)
 		}
@@ -72,7 +88,7 @@ class TodoRootListViewModel @Inject constructor(
 
 	fun createNewPlan() {
 		viewModelScope.launch {
-			val planFromDB = planRepository.insertToRoot()
+			val planFromDB = standardPlanRepository.insertToRoot()
 			_newPlanCreated.emit(planFromDB.toUiState(Plan.Empty))
 		}
 	}

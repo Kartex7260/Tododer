@@ -1,13 +1,12 @@
 package kanti.tododer.data.model.plan.datasource.local
 
-import android.media.Image.Plane
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kanti.tododer.data.model.plan.BasePlan
-import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.toPlan
 
 @Dao
@@ -35,47 +34,38 @@ interface PlanDao : BasePlanDao {
 	@Query("SELECT * FROM `plan` WHERE id = :id")
 	suspend fun getPlanRoom(id: Int): PlanEntity?
 
-	override suspend fun replace(plan: BasePlan): Long {
-		return replaceRoom(plan.toPlanEntity())
+	override suspend fun insert(vararg plan: BasePlan) {
+		insertRoom(*plan.map { it.toPlanEntity() }.toTypedArray())
 	}
-
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun replaceRoom(plan: PlanEntity): Long
-
-	override suspend fun replace(list: List<BasePlan>) {
-		replaceRoom(list.map { it.toPlanEntity() })
-	}
-
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun replaceRoom(list: List<PlanEntity>)
 
 	override suspend fun insert(plan: BasePlan): Long {
-		return insertRoom(plan.toPlanEntity())
+		return insertRoom(plan.toPlanEntity())[0]
 	}
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	suspend fun insertRoom(plan: PlanEntity): Long
+	suspend fun insertRoom(vararg plan: PlanEntity): Array<Long>
 
-	override suspend fun insert(list: List<BasePlan>) {
-		insertRoom(list.map { it.toPlanEntity() })
+	override suspend fun update(vararg plan: BasePlan) {
+		updateRoom(*plan.map { it.toPlanEntity() }.toTypedArray())
 	}
 
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	suspend fun insertRoom(list: List<PlanEntity>)
+	override suspend fun update(plan: BasePlan): Boolean {
+		return updateRoom(plan.toPlanEntity()) == 1
+	}
 
-	override suspend fun delete(plan: BasePlan): Int {
-		return deleteRoom(plan.toPlanEntity())
+	@Update
+	suspend fun updateRoom(vararg plan: PlanEntity): Int
+
+	override suspend fun delete(vararg plan: BasePlan) {
+		deleteRoom(*plan.map { it.toPlanEntity() }.toTypedArray())
+	}
+
+	override suspend fun delete(plan: BasePlan): Boolean {
+		return deleteRoom(plan.toPlanEntity()) == 1
 	}
 
 	@Delete
-	suspend fun deleteRoom(plan: PlanEntity): Int
-
-	override suspend fun delete(list: List<BasePlan>) {
-		deleteRoom(list.map { it.toPlanEntity() })
-	}
-
-	@Delete
-	suspend fun deleteRoom(list: List<PlanEntity>)
+	suspend fun deleteRoom(vararg plan: PlanEntity): Int
 
 	override suspend fun deleteAll() {
 		deleteAllRoom()

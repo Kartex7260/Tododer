@@ -149,7 +149,7 @@ class TodoDetailViewModel @Inject constructor(
 
 	fun taskIsDone(task: Task, isDone: Boolean) {
 		viewModelScope.launch {
-			taskRepository.replace(task) {
+			taskRepository.update(task) {
 				toTask(
 					done = isDone
 				)
@@ -256,7 +256,7 @@ class TodoDetailViewModel @Inject constructor(
 			if (!repositoryResult.isSuccess || repositoryResult.isNull)
 				return
 		}.value!!
-		taskRepository.replace(task, body)
+		taskRepository.update(task, body)
 	}
 
 	private suspend fun savePlan(id: Int, body: BasePlan.() -> BasePlan) {
@@ -264,7 +264,7 @@ class TodoDetailViewModel @Inject constructor(
 			if (!repositoryResult.isSuccess || repositoryResult.isNull)
 				return
 		}.value!!
-		planRepository.replace(plan, body)
+		planRepository.update(plan, body)
 	}
 
 }

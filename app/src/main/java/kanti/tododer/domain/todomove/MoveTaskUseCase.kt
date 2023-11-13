@@ -33,11 +33,11 @@ class MoveTaskUseCase @Inject constructor(
 	}
 
 	private suspend fun removeFrom(from: TaskRepository, taskWithProgeny: TaskWithProgeny) {
-		from.delete(taskWithProgeny.tasks)
+		from.delete(*taskWithProgeny.tasks.toTypedArray())
 	}
 
 	private suspend fun addTo(to: TaskRepository, taskWithProgeny: TaskWithProgeny) {
-		to.replace(taskWithProgeny.tasks)
+		to.update(*taskWithProgeny.tasks.toTypedArray())
 	}
 
 }

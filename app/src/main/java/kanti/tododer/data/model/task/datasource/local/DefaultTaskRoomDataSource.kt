@@ -24,55 +24,60 @@ class DefaultTaskRoomDataSource(
 		}
 	}
 
-	override suspend fun insert(task: BaseTask): LocalResult<BaseTask> {
+	override suspend fun insert(vararg task: BaseTask): LocalResult<Unit> {
 		return localTryCatch {
-			val rowId = taskDao.insert(task)
-			if (rowId == -1L) {
-				LocalResult(type = LocalResult.Type.AlreadyExists(task.fullId))
-			} else {
-				val taskFromDB = taskDao.getByRowId(rowId)?.toTask()
-				LocalResult(taskFromDB)
-			}
-		}
-	}
-
-	override suspend fun insert(task: List<BaseTask>): LocalResult<Unit> {
-		return localTryCatch {
-			taskDao.insert(task)
+			taskDao.insert(*task)
 			LocalResult()
 		}
 	}
 
-	override suspend fun replace(task: BaseTask): LocalResult<BaseTask> {
+	override suspend fun insert(task: BaseTask): LocalResult<BaseTask> {
 		return localTryCatch {
-			val rowId = taskDao.replace(task)
-			val taskFromDB = taskDao.getByRowId(rowId)?.toTask()
+			val taskRowId = taskDao.insert(task)
+			if (taskRowId == -1L)
+				return@localTryCatch LocalResult(
+					type = LocalResult.Type.AlreadyExists(task.fullId)
+				)
+			val taskFromDB = taskDao.getByRowId(taskRowId)!!
 			LocalResult(taskFromDB)
 		}
 	}
 
-	override suspend fun replace(task: List<BaseTask>): LocalResult<Unit> {
+	override suspend fun update(vararg task: BaseTask): LocalResult<Unit> {
 		return localTryCatch {
-			taskDao.replace(task)
+			taskDao.update(*task)
+			LocalResult()
+		}
+	}
+
+	override suspend fun update(task: BaseTask): LocalResult<BaseTask> {
+		return localTryCatch {
+			taskDao.update(task)
+			val taskFromDB = taskDao.getTask(task.id)!!
+			LocalResult(taskFromDB)
+		}
+	}
+
+	override suspend fun delete(vararg task: BaseTask): LocalResult<Unit> {
+		return localTryCatch {
+			taskDao.delete(*task)
 			LocalResult()
 		}
 	}
 
 	override suspend fun delete(task: BaseTask): Boolean {
 		return try {
-			taskDao.delete(task) == 1
+			taskDao.delete(task)
 		} catch (th: Throwable) {
 			false
 		}
 	}
 
-	override suspend fun delete(task: List<BaseTask>): LocalResult<Unit> {
-		return localTryCatch {
-			taskDao.delete(task)
-			LocalResult()
+	override suspend fun deleteAll() {
+		try {
+			taskDao.deleteAll()
+		} catch (_: Throwable) {
 		}
 	}
-
-	override suspend fun deleteAll() = taskDao.deleteAll()
 
 }

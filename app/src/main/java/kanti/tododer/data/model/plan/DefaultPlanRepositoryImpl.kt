@@ -5,43 +5,45 @@ import kanti.tododer.data.common.toRepositoryResult
 import kanti.tododer.data.model.plan.datasource.local.PlanLocalDataSource
 
 class DefaultPlanRepositoryImpl(
-	private val planLocal: PlanLocalDataSource
+	private val localDataSource: PlanLocalDataSource
 ) : PlanRepository {
 
 	override suspend fun getPlan(id: Int): RepositoryResult<BasePlan> {
-		val plan = planLocal.getPlan(id)
-		return plan.toRepositoryResult()
+		return localDataSource.getPlan(id).toRepositoryResult()
 	}
 
-	override suspend fun getChildren(fid: String): RepositoryResult<List<BasePlan>> = planLocal
-		.getChildren(fid).toRepositoryResult()
+	override suspend fun getChildren(fid: String): RepositoryResult<List<BasePlan>> {
+		return localDataSource.getChildren(fid).toRepositoryResult()
+	}
+
+	override suspend fun insert(vararg plan: BasePlan): RepositoryResult<Unit> {
+		return localDataSource.insert(*plan).toRepositoryResult()
+	}
 
 	override suspend fun insert(plan: BasePlan): RepositoryResult<BasePlan> {
-		return planLocal.insert(plan).toRepositoryResult()
+		return localDataSource.insert(plan).toRepositoryResult()
 	}
 
-	override suspend fun insert(list: List<BasePlan>): RepositoryResult<Unit> {
-		return planLocal.insert(list).toRepositoryResult()
+	override suspend fun update(vararg plan: BasePlan): RepositoryResult<Unit> {
+		return localDataSource.update(*plan).toRepositoryResult()
 	}
 
-	override suspend fun replace(
+	override suspend fun update(
 		plan: BasePlan,
-		body: (BasePlan.() -> BasePlan)?
+		update: (BasePlan.() -> BasePlan)?
 	): RepositoryResult<BasePlan> {
-		val newPlan = body?.let { plan.it() }
-		return planLocal.replace(newPlan ?: plan).toRepositoryResult()
+		val updatedPlan = update?.let { plan.it() } ?: plan
+		return localDataSource.update(updatedPlan).toRepositoryResult()
 	}
 
-	override suspend fun replace(list: List<BasePlan>): RepositoryResult<Unit> {
-		return planLocal.replace(list).toRepositoryResult()
+	override suspend fun delete(vararg plan: BasePlan): RepositoryResult<Unit> {
+		return localDataSource.delete(*plan).toRepositoryResult()
 	}
 
-	override suspend fun delete(plan: BasePlan): Boolean = planLocal.delete(plan)
-
-	override suspend fun delete(list: List<BasePlan>): RepositoryResult<Unit> {
-		return planLocal.delete(list).toRepositoryResult()
+	override suspend fun delete(plan: BasePlan): Boolean {
+		return localDataSource.delete(plan)
 	}
 
-	override suspend fun deleteAll() = planLocal.deleteAll()
+	override suspend fun deleteAll() = localDataSource.deleteAll()
 
 }
