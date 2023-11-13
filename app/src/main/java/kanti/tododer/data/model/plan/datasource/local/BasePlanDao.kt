@@ -12,9 +12,15 @@ interface BasePlanDao {
 
 	suspend fun replace(plan: BasePlan): Long
 
+	suspend fun replace(list: List<BasePlan>)
+
 	suspend fun insert(plan: BasePlan): Long
 
+	suspend fun insert(list: List<BasePlan>)
+
 	suspend fun delete(plan: BasePlan): Int
+
+	suspend fun delete(list: List<BasePlan>)
 
 	suspend fun deleteAll()
 

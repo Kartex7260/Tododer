@@ -46,6 +46,13 @@ class DefaultPlanRoomDataSource(
 		}
 	}
 
+	override suspend fun insert(list: List<BasePlan>): LocalResult<Unit> {
+		return localTryCatch {
+			localData.insert(list)
+			LocalResult()
+		}
+	}
+
 	override suspend fun replace(plan: BasePlan): LocalResult<BasePlan> {
 		return localTryCatch {
 			val planRowId = localData.replace(plan)
@@ -61,8 +68,22 @@ class DefaultPlanRoomDataSource(
 		}
 	}
 
+	override suspend fun replace(list: List<BasePlan>): LocalResult<Unit> {
+		return localTryCatch {
+			localData.replace(list)
+			LocalResult()
+		}
+	}
+
 	override suspend fun delete(plan: BasePlan): Boolean {
 		return localData.delete(plan) == 1
+	}
+
+	override suspend fun delete(list: List<BasePlan>): LocalResult<Unit> {
+		return localTryCatch {
+			localData.delete(list)
+			LocalResult()
+		}
 	}
 
 	override suspend fun deleteAll() {

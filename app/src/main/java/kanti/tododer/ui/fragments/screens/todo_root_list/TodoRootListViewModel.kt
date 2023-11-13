@@ -15,9 +15,9 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.getFromRoot
 import kanti.tododer.data.model.plan.insertToRoot
 import kanti.tododer.di.StandardDataQualifier
-import kanti.tododer.domain.archiving.ArchiveTodoUseCase
+import kanti.tododer.domain.todomove.MoveTodoUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
-import kanti.tododer.domain.removewithchildren.RemoveTodoWithChildrenUseCase
+import kanti.tododer.domain.removewithchildren.RemoveTodoWithProgenyUseCase
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -28,8 +28,8 @@ import javax.inject.Inject
 class TodoRootListViewModel @Inject constructor(
 	@StandardDataQualifier private val planRepository: PlanRepository,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
-	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase,
-	private val archiveTodoUseCase: ArchiveTodoUseCase
+	private val removeTodoWithProgenyUseCase: RemoveTodoWithProgenyUseCase,
+	private val moveTodoUseCase: MoveTodoUseCase
 ) : ViewModel() {
 
 	private val _plansUiStateProcess = UiStateProcess<List<BasePlan>>(listOf())
@@ -45,13 +45,13 @@ class TodoRootListViewModel @Inject constructor(
 
 	fun toArchive(todo: Todo) {
 		viewModelScope.launch(NonCancellable) {
-			archiveTodoUseCase(todo)
+			moveTodoUseCase(todo)
 		}
 	}
 
 	fun deleteTodo(todo: Todo) {
 		viewModelScope.launch {
-			removeTodoWithChildrenUseCase(todo)
+			removeTodoWithProgenyUseCase(todo)
 		}
 	}
 

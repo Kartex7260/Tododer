@@ -5,7 +5,7 @@ import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.di.StandardDataQualifier
 import javax.inject.Inject
 
-class RemoveTaskWithChildrenUseCase @Inject constructor(
+class RemoveTaskWithProgenyUseCase @Inject constructor(
 	@StandardDataQualifier private val taskRepository: TaskRepository
 ) {
 

@@ -1,5 +1,6 @@
 package kanti.tododer.data.model.task
 
+import kanti.tododer.data.common.LocalResult
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.common.toRepositoryResult
 import kanti.tododer.data.model.task.datasource.local.TaskLocalDataSource
@@ -21,6 +22,10 @@ class DefaultTaskRepositoryImpl(
 		return taskLocal.insert(task).toRepositoryResult()
 	}
 
+	override suspend fun insert(list: List<BaseTask>): RepositoryResult<Unit> {
+		return taskLocal.insert(list).toRepositoryResult()
+	}
+
 	override suspend fun replace(
 		task: BaseTask,
 		body: (BaseTask.() -> BaseTask)?
@@ -30,7 +35,15 @@ class DefaultTaskRepositoryImpl(
 		return taskFromDB.toRepositoryResult()
 	}
 
+	override suspend fun replace(list: List<BaseTask>): RepositoryResult<Unit> {
+		return taskLocal.replace(list).toRepositoryResult()
+	}
+
 	override suspend fun delete(task: BaseTask): Boolean = taskLocal.delete(task)
+
+	override suspend fun delete(list: List<BaseTask>): RepositoryResult<Unit> {
+		return taskLocal.delete(list).toRepositoryResult()
+	}
 
 	override suspend fun deleteAll() = taskLocal.deleteAll()
 

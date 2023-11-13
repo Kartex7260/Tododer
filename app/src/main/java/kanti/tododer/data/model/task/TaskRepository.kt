@@ -10,12 +10,18 @@ interface TaskRepository {
 
 	suspend fun insert(task: BaseTask): RepositoryResult<BaseTask>
 
+	suspend fun insert(list: List<BaseTask>): RepositoryResult<Unit>
+
 	suspend fun replace(
 		task: BaseTask,
 		body: (BaseTask.() -> BaseTask)? = null
 	): RepositoryResult<BaseTask>
 
+	suspend fun replace(list: List<BaseTask>): RepositoryResult<Unit>
+
 	suspend fun delete(task: BaseTask): Boolean
+
+	suspend fun delete(list: List<BaseTask>): RepositoryResult<Unit>
 
 	suspend fun deleteAll()
 

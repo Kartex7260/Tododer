@@ -42,6 +42,13 @@ interface PlanDao : BasePlanDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	suspend fun replaceRoom(plan: PlanEntity): Long
 
+	override suspend fun replace(list: List<BasePlan>) {
+		replaceRoom(list.map { it.toPlanEntity() })
+	}
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	suspend fun replaceRoom(list: List<PlanEntity>)
+
 	override suspend fun insert(plan: BasePlan): Long {
 		return insertRoom(plan.toPlanEntity())
 	}
@@ -49,12 +56,26 @@ interface PlanDao : BasePlanDao {
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	suspend fun insertRoom(plan: PlanEntity): Long
 
+	override suspend fun insert(list: List<BasePlan>) {
+		insertRoom(list.map { it.toPlanEntity() })
+	}
+
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	suspend fun insertRoom(list: List<PlanEntity>)
+
 	override suspend fun delete(plan: BasePlan): Int {
 		return deleteRoom(plan.toPlanEntity())
 	}
 
 	@Delete
 	suspend fun deleteRoom(plan: PlanEntity): Int
+
+	override suspend fun delete(list: List<BasePlan>) {
+		deleteRoom(list.map { it.toPlanEntity() })
+	}
+
+	@Delete
+	suspend fun deleteRoom(list: List<PlanEntity>)
 
 	override suspend fun deleteAll() {
 		deleteAllRoom()

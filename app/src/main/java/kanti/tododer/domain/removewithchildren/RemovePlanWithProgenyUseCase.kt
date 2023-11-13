@@ -8,7 +8,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class RemovePlanWithChildrenUseCase @Inject constructor(
+class RemovePlanWithProgenyUseCase @Inject constructor(
 	@StandardDataQualifier private val planRepository: PlanRepository,
 	@StandardDataQualifier private val taskRepository: TaskRepository
 ) {

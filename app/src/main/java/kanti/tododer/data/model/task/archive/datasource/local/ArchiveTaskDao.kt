@@ -41,6 +41,13 @@ interface ArchiveTaskDao : BaseTaskDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	suspend fun replaceRoom(task: ArchiveTaskEntity): Long
 
+	override suspend fun replace(list: List<BaseTask>) {
+		replaceRoom(list.map { it.toArchiveTaskEntity() })
+	}
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	suspend fun replaceRoom(list: List<ArchiveTaskEntity>)
+
 	override suspend fun insert(task: BaseTask): Long {
 		return insertRoom(task.toArchiveTaskEntity())
 	}
@@ -48,12 +55,26 @@ interface ArchiveTaskDao : BaseTaskDao {
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	suspend fun insertRoom(task: ArchiveTaskEntity): Long
 
+	override suspend fun insert(list: List<BaseTask>) {
+		return insertRoom(list.map { it.toArchiveTaskEntity() })
+	}
+
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	suspend fun insertRoom(list: List<ArchiveTaskEntity>)
+
 	override suspend fun delete(task: BaseTask): Int {
 		return deleteRoom(task.toArchiveTaskEntity())
 	}
 
 	@Delete
 	suspend fun deleteRoom(task: ArchiveTaskEntity): Int
+
+	override suspend fun delete(list: List<BaseTask>) {
+		return deleteRoom(list.map { it.toArchiveTaskEntity() })
+	}
+
+	@Delete
+	suspend fun deleteRoom(list: List<ArchiveTaskEntity>)
 
 	override suspend fun deleteAll() {
 		deleteAllRoom()

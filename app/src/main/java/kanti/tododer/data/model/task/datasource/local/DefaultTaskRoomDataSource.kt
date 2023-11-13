@@ -36,6 +36,13 @@ class DefaultTaskRoomDataSource(
 		}
 	}
 
+	override suspend fun insert(task: List<BaseTask>): LocalResult<Unit> {
+		return localTryCatch {
+			taskDao.insert(task)
+			LocalResult()
+		}
+	}
+
 	override suspend fun replace(task: BaseTask): LocalResult<BaseTask> {
 		return localTryCatch {
 			val rowId = taskDao.replace(task)
@@ -44,11 +51,25 @@ class DefaultTaskRoomDataSource(
 		}
 	}
 
+	override suspend fun replace(task: List<BaseTask>): LocalResult<Unit> {
+		return localTryCatch {
+			taskDao.replace(task)
+			LocalResult()
+		}
+	}
+
 	override suspend fun delete(task: BaseTask): Boolean {
 		return try {
 			taskDao.delete(task) == 1
 		} catch (th: Throwable) {
 			false
+		}
+	}
+
+	override suspend fun delete(task: List<BaseTask>): LocalResult<Unit> {
+		return localTryCatch {
+			taskDao.delete(task)
+			LocalResult()
 		}
 	}
 

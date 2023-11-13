@@ -12,9 +12,15 @@ interface PlanLocalDataSource {
 
 	suspend fun insert(plan: BasePlan): LocalResult<BasePlan>
 
+	suspend fun insert(list: List<BasePlan>): LocalResult<Unit>
+
 	suspend fun replace(plan: BasePlan): LocalResult<BasePlan>
 
+	suspend fun replace(list: List<BasePlan>): LocalResult<Unit>
+
 	suspend fun delete(plan: BasePlan): Boolean
+
+	suspend fun delete(list: List<BasePlan>): LocalResult<Unit>
 
 	suspend fun deleteAll()
 

@@ -13,9 +13,15 @@ interface BaseTaskDao {
 
 	suspend fun replace(task: BaseTask): Long
 
+	suspend fun replace(list: List<BaseTask>)
+
 	suspend fun insert(task: BaseTask): Long
 
+	suspend fun insert(list: List<BaseTask>)
+
 	suspend fun delete(task: BaseTask): Int
+
+	suspend fun delete(list: List<BaseTask>)
 
 	suspend fun deleteAll()
 
