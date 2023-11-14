@@ -14,10 +14,12 @@ import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.getFromRoot
 import kanti.tododer.data.model.plan.insertToRoot
+import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.archiving.ArchiveTodoUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
-import kanti.tododer.domain.removewithchildren.RemoveTodoWithProgenyUseCase
+import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
+import kanti.tododer.domain.todomove.RepositorySet
 import kanti.tododer.ui.viewmodelfeatures.DeleteTodoFeature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
@@ -27,15 +29,21 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TodoRootListFeature @Inject constructor(
+class TodoRootListViewModel @Inject constructor(
 	@StandardDataQualifier private val standardPlanRepository: PlanRepository,
+	@StandardDataQualifier private val standardTaskRepository: TaskRepository,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
-	override val removeTodoWithProgenyUseCase: RemoveTodoWithProgenyUseCase,
+	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase,
 	private val archiveTodoUseCase: ArchiveTodoUseCase
 ) : ViewModel(), DeleteTodoFeature {
 
 	override val coroutineScope: CoroutineScope
 		get() = viewModelScope
+	override val repositorySet: RepositorySet
+		get() = RepositorySet(
+			standardTaskRepository,
+			standardPlanRepository
+		)
 
 	private val _plansUiStateProcess = UiStateProcess<List<BasePlan>>(listOf())
 	private val _plansLiveData = MutableLiveData<UiState<List<BasePlan>>>()

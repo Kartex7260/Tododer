@@ -1,18 +1,18 @@
 package kanti.tododer.ui.viewmodelfeatures
 
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.domain.removewithchildren.RemoveTodoWithProgenyUseCase
-import kotlinx.coroutines.CoroutineScope
+import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
+import kanti.tododer.domain.todomove.RepositorySet
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 
-interface DeleteTodoFeature : CoroutineScopeFeature {
+interface DeleteTodoFeature : CoroutineScopeFeature, RepositorySetFeature {
 
-	val removeTodoWithProgenyUseCase: RemoveTodoWithProgenyUseCase
+	val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase
 
 	fun deleteTodo(todo: Todo) {
 		coroutineScope.launch(NonCancellable) {
-			removeTodoWithProgenyUseCase(todo)
+			deleteTodoWithProgenyUseCase(repositorySet, todo)
 		}
 	}
 

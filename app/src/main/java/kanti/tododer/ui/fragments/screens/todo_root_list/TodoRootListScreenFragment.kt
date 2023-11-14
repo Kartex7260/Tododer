@@ -29,7 +29,7 @@ import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListUserVie
 class TodoRootListScreenFragment : Fragment() {
 
 	private lateinit var view: FragmentScreenTodoRootListBinding
-	private val viewModel: TodoRootListFeature by viewModels()
+	private val viewModel: TodoRootListViewModel by viewModels()
 	private val todoListViewModel: TodoListUserViewModel by viewModels<TodoListViewModel>()
 
 	private val menuProvider by lazy {

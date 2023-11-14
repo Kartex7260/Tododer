@@ -4,15 +4,14 @@ import kanti.tododer.data.common.isAlreadyExists
 import kanti.tododer.data.common.isNull
 import kanti.tododer.data.model.task.FakeTaskRepository
 import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.task.fullId
-import kanti.tododer.domain.removewithchildren.RemoveTaskWithProgenyUseCase
+import kanti.tododer.domain.deletetodowithchildren.DeleteTaskWithProgenyUseCase
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class RemoveTaskWithProgenyUseCaseTest {
+class DeleteTaskWithProgenyUseCaseTest {
 
 	private val taskRepository = FakeTaskRepository()
 	private val delete1List = mutableListOf<Task>()
@@ -71,21 +70,21 @@ class RemoveTaskWithProgenyUseCaseTest {
 
 	@Test
 	fun delete1() = runTest {
-		val useCase = RemoveTaskWithProgenyUseCase(taskRepository)
+		val useCase = DeleteTaskWithProgenyUseCase(taskRepository)
 		useCase(task1Id)
 		Assertions.assertEquals(delete1List, taskRepository.tasks)
 	}
 
 	@Test
 	fun delete11() = runTest {
-		val useCase = RemoveTaskWithProgenyUseCase(taskRepository)
+		val useCase = DeleteTaskWithProgenyUseCase(taskRepository)
 		useCase(task11Id)
 		Assertions.assertEquals(delete11List, taskRepository.tasks)
 	}
 
 	@Test
 	fun delete12() = runTest {
-		val useCase = RemoveTaskWithProgenyUseCase(taskRepository)
+		val useCase = DeleteTaskWithProgenyUseCase(taskRepository)
 		useCase(task12Id)
 		Assertions.assertEquals(delete12List, taskRepository.tasks)
 	}
@@ -96,7 +95,7 @@ class RemoveTaskWithProgenyUseCaseTest {
 		if (repositoryResult.isAlreadyExists || repositoryResult.isNull)
 			Assertions.fail<Task>("Error inserting task")
 		delete1_2List.add(repositoryResult.value!!)
-		val useCase = RemoveTaskWithProgenyUseCase(taskRepository)
+		val useCase = DeleteTaskWithProgenyUseCase(taskRepository)
 		useCase(task1Id)
 		Assertions.assertEquals(delete1_2List, taskRepository.tasks)
 	}

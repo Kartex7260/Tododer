@@ -23,7 +23,10 @@ import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase
-import kanti.tododer.domain.removewithchildren.RemoveTodoWithProgenyUseCase
+import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
+import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.ui.viewmodelfeatures.DeleteTodoFeature
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -38,10 +41,18 @@ class TodoDetailViewModel @Inject constructor(
 	private val getTaskWithChildren: GetTaskWithChildrenUseCase,
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
-	private val removeTodoWithProgenyUseCase: RemoveTodoWithProgenyUseCase,
+	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase,
 	@StandardDataQualifier private val taskRepository: TaskRepository,
 	@StandardDataQualifier private val planRepository: PlanRepository
-) : ViewModel() {
+) : ViewModel(), DeleteTodoFeature {
+
+	override val coroutineScope: CoroutineScope
+		get() = viewModelScope
+	override val repositorySet: RepositorySet
+		get() = RepositorySet(
+			taskRepository,
+			planRepository
+		)
 
 	private val stack = Stack<FullId>()
 	private var currentFullId: FullId? = null
@@ -101,12 +112,6 @@ class TodoDetailViewModel @Inject constructor(
 		}
 		deleteTodo(currentFullId!!)
 		pop()
-	}
-
-	fun deleteTodo(todo: Todo) {
-		viewModelScope.launch {
-			removeTodoWithProgenyUseCase(todo)
-		}
 	}
 
 	fun createNewPlan() {

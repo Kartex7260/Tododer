@@ -6,9 +6,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.getFromRoot
+import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.di.ArchiveDataQualifier
 import kanti.tododer.domain.archiving.UnarchiveTodoUseCase
-import kanti.tododer.domain.removewithchildren.RemoveTodoWithProgenyUseCase
+import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
+import kanti.tododer.domain.todomove.RepositorySet
 import kanti.tododer.ui.viewmodelfeatures.DeleteTodoFeature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
@@ -20,12 +22,18 @@ import javax.inject.Inject
 @HiltViewModel
 class ArchiveTodoListViewModel @Inject constructor(
 	@ArchiveDataQualifier private val archivePlanRepository: PlanRepository,
+	@ArchiveDataQualifier private val archiveTaskRepository: TaskRepository,
 	private val unarchiveTodoUseCase: UnarchiveTodoUseCase,
-	override val removeTodoWithProgenyUseCase: RemoveTodoWithProgenyUseCase
+	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase
 ) : ViewModel(), DeleteTodoFeature {
 
 	override val coroutineScope: CoroutineScope
 		get() = viewModelScope
+	override val repositorySet: RepositorySet
+		get() = RepositorySet(
+			archiveTaskRepository,
+			archivePlanRepository
+		)
 
 	private val _archivePlans = MutableStateFlow(ArchivePlansUiState())
 	val archivePlans = _archivePlans.asStateFlow()
