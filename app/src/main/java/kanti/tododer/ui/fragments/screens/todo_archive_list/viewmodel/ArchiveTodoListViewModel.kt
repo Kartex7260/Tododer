@@ -10,8 +10,11 @@ import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.di.ArchiveDataQualifier
 import kanti.tododer.domain.archiving.UnarchiveTodoUseCase
 import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
+import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.ui.viewmodelfeatures.ComputePlanProgressFeature
 import kanti.tododer.ui.viewmodelfeatures.DeleteTodoFeature
+import kanti.tododer.ui.viewmodelfeatures.TaskIsDoneFeature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,16 +25,17 @@ import javax.inject.Inject
 @HiltViewModel
 class ArchiveTodoListViewModel @Inject constructor(
 	@ArchiveDataQualifier private val archivePlanRepository: PlanRepository,
-	@ArchiveDataQualifier private val archiveTaskRepository: TaskRepository,
+	@ArchiveDataQualifier override val taskRepository: TaskRepository,
 	private val unarchiveTodoUseCase: UnarchiveTodoUseCase,
-	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase
-) : ViewModel(), DeleteTodoFeature {
+	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase,
+	override val computePlanProgressUseCase: ComputePlanProgressUseCase
+) : ViewModel(), DeleteTodoFeature, TaskIsDoneFeature, ComputePlanProgressFeature {
 
 	override val coroutineScope: CoroutineScope
 		get() = viewModelScope
 	override val repositorySet: RepositorySet
 		get() = RepositorySet(
-			archiveTaskRepository,
+			taskRepository,
 			archivePlanRepository
 		)
 

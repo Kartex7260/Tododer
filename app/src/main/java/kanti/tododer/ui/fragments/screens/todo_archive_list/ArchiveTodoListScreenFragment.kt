@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.task.asTask
 import kanti.tododer.databinding.FragmentScreenTodoArchiveListBinding
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
@@ -97,6 +98,9 @@ class ArchiveTodoListScreenFragment : Fragment() {
 		}
 		observe(todoListViewModel.deleteTodo) { deleteRequest ->
 			viewModel.deleteTodo(deleteRequest.todo)
+		}
+		observe(todoListViewModel.planProgressRequest) { progressRequest ->
+			viewModel.computePlanProgress(progressRequest.plan, progressRequest.callback)
 		}
 	}
 
