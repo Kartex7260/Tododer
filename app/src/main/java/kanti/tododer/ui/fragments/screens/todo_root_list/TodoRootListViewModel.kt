@@ -17,6 +17,7 @@ import kanti.tododer.data.model.plan.insertToRoot
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.di.ArchiveDataQualifier
 import kanti.tododer.di.StandardDataQualifier
+import kanti.tododer.domain.archiving.ArchiveTodoUseCase
 import kanti.tododer.domain.todomove.MoveTodoUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.removewithchildren.RemoveTodoWithProgenyUseCase
@@ -30,12 +31,9 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoRootListViewModel @Inject constructor(
 	@StandardDataQualifier private val standardPlanRepository: PlanRepository,
-	@ArchiveDataQualifier private val archivePlanRepository: PlanRepository,
-	@StandardDataQualifier private val standardTaskRepository: TaskRepository,
-	@ArchiveDataQualifier private val archiveTaskRepository: TaskRepository,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val removeTodoWithProgenyUseCase: RemoveTodoWithProgenyUseCase,
-	private val moveTodoUseCase: MoveTodoUseCase
+	private val archiveTodoUseCase: ArchiveTodoUseCase
 ) : ViewModel() {
 
 	private val _plansUiStateProcess = UiStateProcess<List<BasePlan>>(listOf())
@@ -51,17 +49,7 @@ class TodoRootListViewModel @Inject constructor(
 
 	fun toArchive(todo: Todo) {
 		viewModelScope.launch(NonCancellable) {
-			moveTodoUseCase(
-				from = RepositorySet(
-					standardTaskRepository,
-					standardPlanRepository
-				),
-				to = RepositorySet(
-					archiveTaskRepository,
-					archivePlanRepository
-				),
-				todo = todo
-			)
+			archiveTodoUseCase(todo)
 		}
 	}
 
