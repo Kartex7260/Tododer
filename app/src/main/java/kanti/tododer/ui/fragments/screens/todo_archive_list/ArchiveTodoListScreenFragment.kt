@@ -95,6 +95,9 @@ class ArchiveTodoListScreenFragment : Fragment() {
 				true
 			}
 		}
+		observe(todoListViewModel.deleteTodo) { deleteRequest ->
+			viewModel.deleteTodo(deleteRequest.todo)
+		}
 	}
 
 	private fun navigateToDetailScreen(todoElement: Todo) {
