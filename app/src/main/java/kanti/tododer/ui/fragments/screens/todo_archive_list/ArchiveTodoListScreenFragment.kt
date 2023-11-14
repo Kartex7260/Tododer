@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
+import kanti.tododer.data.model.common.Todo
 import kanti.tododer.databinding.FragmentScreenTodoArchiveListBinding
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
@@ -15,6 +17,7 @@ import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListUserVie
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.fragments.screens.todo_archive_list.viewholder.ArchiveTodoViewHolderFactory
 import kanti.tododer.ui.fragments.screens.todo_archive_list.viewmodel.ArchiveTodoListViewModel
+import kanti.tododer.ui.fragments.screens.todo_root_list.TodoRootListScreenFragmentDirections
 
 @AndroidEntryPoint
 class ArchiveTodoListScreenFragment : Fragment() {
@@ -76,6 +79,15 @@ class ArchiveTodoListScreenFragment : Fragment() {
 	}
 
 	private fun observeTodoListViewModel() {
+		observe(todoListViewModel.elementClick) {
+			navigateToDetailScreen(it)
+		}
+	}
+
+	private fun navigateToDetailScreen(todoElement: Todo) {
+		val navDirections = ArchiveTodoListScreenFragmentDirections
+			.actionArchiveListToArchiveDetail(todoElement.fullId)
+		findNavController().navigate(navDirections)
 	}
 
 }
