@@ -98,7 +98,7 @@ class TodoListViewModel : ViewModel(), TodoListOwnerViewModel, TodoListUserViewM
 		}
 	}
 
-	override fun todoArchived(todo: Todo) {
+	override fun removeTodoView(todo: Todo) {
 		viewModelScope.launch {
 			_todoArchived.emit(todo)
 		}

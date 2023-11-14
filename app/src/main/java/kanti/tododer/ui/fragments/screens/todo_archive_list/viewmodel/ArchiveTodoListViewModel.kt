@@ -3,6 +3,7 @@ package kanti.tododer.ui.fragments.screens.todo_archive_list.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.getFromRoot
 import kanti.tododer.di.ArchiveDataQualifier
@@ -32,6 +33,10 @@ class ArchiveTodoListViewModel @Inject constructor(
 				type = archivePlansRepositoryResult.type
 			)
 		}
+	}
+
+	fun unarchiveTodo(todo: Todo) {
+
 	}
 
 }

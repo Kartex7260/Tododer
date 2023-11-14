@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">Tododer</string>
 
     <string name="archive">Archive</string>
-    <string name="to_archive">To archive</string>
+    <string name="to_archive">Archive</string>
+    <string name="unarchive">Unarchive</string>
 
 </resources>

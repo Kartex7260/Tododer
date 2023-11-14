@@ -2,6 +2,7 @@ package kanti.tododer.ui.fragments.screens.todo_archive_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -17,7 +18,6 @@ import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListUserVie
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.fragments.screens.todo_archive_list.viewholder.ArchiveTodoViewHolderFactory
 import kanti.tododer.ui.fragments.screens.todo_archive_list.viewmodel.ArchiveTodoListViewModel
-import kanti.tododer.ui.fragments.screens.todo_root_list.TodoRootListScreenFragmentDirections
 
 @AndroidEntryPoint
 class ArchiveTodoListScreenFragment : Fragment() {
@@ -81,6 +81,19 @@ class ArchiveTodoListScreenFragment : Fragment() {
 	private fun observeTodoListViewModel() {
 		observe(todoListViewModel.elementClick) {
 			navigateToDetailScreen(it)
+		}
+		observe(todoListViewModel.todoItemCreateContextMenu) { createMenuRequest ->
+			val todo = createMenuRequest.todo
+			createMenuRequest.contextMenu.add(
+				Menu.NONE,
+				1,
+				Menu.NONE,
+				R.string.unarchive
+			).setOnMenuItemClickListener {
+				viewModel.unarchiveTodo(todo)
+				todoListViewModel.removeTodoView(todo)
+				true
+			}
 		}
 	}
 

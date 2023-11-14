@@ -22,6 +22,6 @@ interface TodoListUserViewModel {
 
 	fun sendTodoList(list: List<Todo> = listOf())
 
-	fun todoArchived(todo: Todo)
+	fun removeTodoView(todo: Todo)
 
 }
