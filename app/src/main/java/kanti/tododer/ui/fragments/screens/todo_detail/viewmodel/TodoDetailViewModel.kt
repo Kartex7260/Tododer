@@ -26,6 +26,9 @@ import kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase
 import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
 import kanti.tododer.domain.todomove.RepositorySet
 import kanti.tododer.ui.viewmodelfeatures.DeleteTodoFeature
+import kanti.tododer.ui.viewmodelfeatures.SaveRemarkFeature
+import kanti.tododer.ui.viewmodelfeatures.SaveTitleFeature
+import kanti.tododer.ui.viewmodelfeatures.TaskIsDoneFeature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,9 +45,9 @@ class TodoDetailViewModel @Inject constructor(
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase,
-	@StandardDataQualifier private val taskRepository: TaskRepository,
-	@StandardDataQualifier private val planRepository: PlanRepository
-) : ViewModel(), DeleteTodoFeature {
+	@StandardDataQualifier override val taskRepository: TaskRepository,
+	@StandardDataQualifier override val planRepository: PlanRepository
+) : ViewModel(), DeleteTodoFeature, SaveTitleFeature, SaveRemarkFeature, TaskIsDoneFeature {
 
 	override val coroutineScope: CoroutineScope
 		get() = viewModelScope
@@ -65,42 +68,6 @@ class TodoDetailViewModel @Inject constructor(
 
 	val currentTodoType: Todo.Type? get() {
 		return currentFullId?.type
-	}
-
-	fun saveTitle(todo: Todo, title: String) {
-		viewModelScope.launch {
-			val fullId = todo.toFullId
-			when (fullId.type) {
-				Todo.Type.TASK -> saveTask(fullId.id) {
-					toTask(
-						title = title
-					)
-				}
-				Todo.Type.PLAN -> savePlan(fullId.id) {
-					toPlan(
-						title = title
-					)
-				}
-			}
-		}
-	}
-
-	fun saveRemark(todo: Todo, remark: String) {
-		viewModelScope.launch {
-			val fullId = todo.toFullId
-			when (fullId.type) {
-				Todo.Type.TASK -> saveTask(fullId.id) {
-					toTask(
-						remark = remark
-					)
-				}
-				Todo.Type.PLAN -> savePlan(fullId.id) {
-					toPlan(
-						remark = remark
-					)
-				}
-			}
-		}
 	}
 
 	fun deleteTodo() {
@@ -149,16 +116,6 @@ class TodoDetailViewModel @Inject constructor(
 				)
 			)
 			_newTodoCreated.emit(taskFromDB.toTodoSavedUiState)
-		}
-	}
-
-	fun taskIsDone(task: Task, isDone: Boolean) {
-		viewModelScope.launch {
-			taskRepository.update(task) {
-				toTask(
-					done = isDone
-				)
-			}
 		}
 	}
 
@@ -236,40 +193,12 @@ class TodoDetailViewModel @Inject constructor(
 
 	private suspend fun showTodo(fullId: FullId): Boolean {
 		val uiState = when (fullId.type) {
-			Todo.Type.PLAN -> getPlan(fullId.id)
-			Todo.Type.TASK -> getTask(fullId.id)
+			Todo.Type.PLAN -> getPlanWithChildren(fullId.id).toTodoDetailUiState
+			Todo.Type.TASK -> getTaskWithChildren(fullId.id).toTodoDetailUiState
 		}
 		Log.d(logTag, "showTodo(FullId = \"$fullId\"): get uiState=$uiState")
 		_todoDetail.value = uiState
 		return uiState.isSuccess
-	}
-
-	private suspend fun getTask(id: Int): TodoDetailUiState {
-		val repositoryResult = getTaskWithChildren(id)
-		Log.d(logTag, "getTask(Int = \"$id\"): gotten task with children (${repositoryResult.value})")
-		return repositoryResult.toTodoDetailUiState
-	}
-
-	private suspend fun getPlan(id: Int): TodoDetailUiState {
-		val repositoryResult = getPlanWithChildren(id)
-		Log.d(logTag, "getPlan(Int = \"$id\"): gotten plan with children (${repositoryResult.value})")
-		return repositoryResult.toTodoDetailUiState
-	}
-
-	private suspend fun saveTask(id: Int, body: BaseTask.() -> BaseTask) {
-		val task = taskRepository.getTask(id).also { repositoryResult ->
-			if (!repositoryResult.isSuccess || repositoryResult.isNull)
-				return
-		}.value!!
-		taskRepository.update(task, body)
-	}
-
-	private suspend fun savePlan(id: Int, body: BasePlan.() -> BasePlan) {
-		val plan = planRepository.getPlan(id).also { repositoryResult ->
-			if (!repositoryResult.isSuccess || repositoryResult.isNull)
-				return
-		}.value!!
-		planRepository.update(plan, body)
 	}
 
 }

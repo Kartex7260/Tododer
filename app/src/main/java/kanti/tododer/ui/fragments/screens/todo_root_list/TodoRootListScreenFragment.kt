@@ -100,7 +100,7 @@ class TodoRootListScreenFragment : Fragment() {
 				this@TodoRootListScreenFragment.hashLogTag,
 				"onPlanProgressRequest.collectLatest { $progressRequest }"
 			)
-			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
+			viewModel.computePlanProgress(progressRequest.plan, progressRequest.callback)
 		}
 
 		observe(todoListViewModel.deleteTodo) { deleteRequest ->
@@ -119,7 +119,7 @@ class TodoRootListScreenFragment : Fragment() {
 				R.string.to_archive
 			).apply {
 				setOnMenuItemClickListener {
-					viewModel.toArchive(createMenuRequest.todo)
+					viewModel.archiveTodo(createMenuRequest.todo)
 					todoListViewModel.removeTodoView(createMenuRequest.todo)
 					true
 				}

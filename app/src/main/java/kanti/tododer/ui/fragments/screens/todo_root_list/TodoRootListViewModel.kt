@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.common.UiStateProcess
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.common.toUiState
-import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.Plan
@@ -20,9 +19,10 @@ import kanti.tododer.domain.archiving.ArchiveTodoUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
 import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.ui.viewmodelfeatures.ArchiveTodoFeature
 import kanti.tododer.ui.viewmodelfeatures.DeleteTodoFeature
+import kanti.tododer.ui.viewmodelfeatures.ComputePlanProgressFeature
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -32,10 +32,10 @@ import javax.inject.Inject
 class TodoRootListViewModel @Inject constructor(
 	@StandardDataQualifier private val standardPlanRepository: PlanRepository,
 	@StandardDataQualifier private val standardTaskRepository: TaskRepository,
-	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
+	override val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase,
-	private val archiveTodoUseCase: ArchiveTodoUseCase
-) : ViewModel(), DeleteTodoFeature {
+	override val archiveTodoUseCase: ArchiveTodoUseCase
+) : ViewModel(), DeleteTodoFeature, ArchiveTodoFeature, ComputePlanProgressFeature {
 
 	override val coroutineScope: CoroutineScope
 		get() = viewModelScope
@@ -56,24 +56,12 @@ class TodoRootListViewModel @Inject constructor(
 		getRootPlans()
 	}
 
-	fun toArchive(todo: Todo) {
-		coroutineScope.launch(NonCancellable) {
-			archiveTodoUseCase(todo)
-		}
-	}
-
 	fun getRootPlans() {
 		_plansLiveData.value = _plansUiStateProcess.process
 		coroutineScope.launch {
 			val rootPlans = standardPlanRepository.getFromRoot()
 			val uiState = rootPlans.toUiState(listOf())
 			_plansLiveData.postValue(uiState)
-		}
-	}
-
-	fun planProgressRequest(plan: BasePlan, callback: MutableLiveData<Float>) {
-		coroutineScope.launch {
-			computePlanProgressUseCase(plan, callback)
 		}
 	}
 
