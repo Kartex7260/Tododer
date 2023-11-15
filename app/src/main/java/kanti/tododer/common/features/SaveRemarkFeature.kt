@@ -1,24 +1,24 @@
-package kanti.tododer.ui.viewmodelfeatures
+package kanti.tododer.common.features
 
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.toPlan
 import kanti.tododer.data.model.task.toTask
 import kotlinx.coroutines.launch
 
-interface SaveTitleFeature : CoroutineScopeFeature, UpdateTaskFeature, UpdatePlanFeature {
+interface SaveRemarkFeature : CoroutineScopeFeature, UpdatePlanFeature, UpdateTaskFeature {
 
-	fun saveTitle(todo: Todo, title: String) {
+	fun saveRemark(todo: Todo, remark: String) {
 		coroutineScope.launch {
 			val fullId = todo.toFullId
 			when (fullId.type) {
 				Todo.Type.TASK -> updateTask(fullId.id) {
 					toTask(
-						title = title
+						remark = remark
 					)
 				}
 				Todo.Type.PLAN -> updatePlan(fullId.id) {
 					toPlan(
-						title = title
+						remark = remark
 					)
 				}
 			}

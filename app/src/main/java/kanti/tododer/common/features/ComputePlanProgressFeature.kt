@@ -1,4 +1,4 @@
-package kanti.tododer.ui.viewmodelfeatures
+package kanti.tododer.common.features
 
 import androidx.lifecycle.MutableLiveData
 import kanti.tododer.data.model.plan.BasePlan

@@ -1,4 +1,4 @@
-package kanti.tododer.ui.viewmodelfeatures
+package kanti.tododer.common.features
 
 import kanti.tododer.data.common.isNull
 import kanti.tododer.data.common.isSuccess

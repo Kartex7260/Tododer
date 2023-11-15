@@ -19,9 +19,9 @@ import kanti.tododer.domain.archiving.ArchiveTodoUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
 import kanti.tododer.domain.todomove.RepositorySet
-import kanti.tododer.ui.viewmodelfeatures.ArchiveTodoFeature
-import kanti.tododer.ui.viewmodelfeatures.DeleteTodoFeature
-import kanti.tododer.ui.viewmodelfeatures.ComputePlanProgressFeature
+import kanti.tododer.common.features.ArchiveTodoFeature
+import kanti.tododer.common.features.DeleteTodoFeature
+import kanti.tododer.common.features.ComputePlanProgressFeature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

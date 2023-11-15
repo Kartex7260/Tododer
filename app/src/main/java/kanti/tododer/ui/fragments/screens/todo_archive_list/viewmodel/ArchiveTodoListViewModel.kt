@@ -12,9 +12,9 @@ import kanti.tododer.domain.archiving.UnarchiveTodoUseCase
 import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.todomove.RepositorySet
-import kanti.tododer.ui.viewmodelfeatures.ComputePlanProgressFeature
-import kanti.tododer.ui.viewmodelfeatures.DeleteTodoFeature
-import kanti.tododer.ui.viewmodelfeatures.TaskIsDoneFeature
+import kanti.tododer.common.features.ComputePlanProgressFeature
+import kanti.tododer.common.features.DeleteTodoFeature
+import kanti.tododer.common.features.TaskIsDoneFeature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow

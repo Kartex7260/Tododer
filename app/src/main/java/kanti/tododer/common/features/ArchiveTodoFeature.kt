@@ -1,4 +1,4 @@
-package kanti.tododer.ui.viewmodelfeatures
+package kanti.tododer.common.features
 
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.domain.archiving.ArchiveTodoUseCase

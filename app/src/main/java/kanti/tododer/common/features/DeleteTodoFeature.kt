@@ -1,8 +1,7 @@
-package kanti.tododer.ui.viewmodelfeatures
+package kanti.tododer.common.features
 
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
-import kanti.tododer.domain.todomove.RepositorySet
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 
