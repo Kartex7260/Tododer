@@ -20,7 +20,7 @@ import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewMod
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.databinding.FragmentScreenTodoRootListBinding
-import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
+import kanti.tododer.ui.common.fabowner.setActivityFab
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListUserViewModel
@@ -66,7 +66,7 @@ class TodoRootListScreenFragment : Fragment() {
 			menuProvider = menuProvider
 		)
 
-		setActivityFabOnClickListener {
+		setActivityFab {
 			viewModel.createNewPlan()
 		}
 

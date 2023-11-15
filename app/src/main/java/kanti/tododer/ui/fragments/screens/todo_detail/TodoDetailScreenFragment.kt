@@ -19,7 +19,7 @@ import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.task.asTask
 import kanti.tododer.databinding.FragmentScreenTodoDetailBinding
-import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
+import kanti.tododer.ui.common.fabowner.setActivityFab
 import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
@@ -90,7 +90,7 @@ class TodoDetailScreenFragment : Fragment() {
 			viewModel.pop()
 		}
 
-		setActivityFabOnClickListener {
+		setActivityFab {
 			viewModel.currentTodoType?.apply {
 				when (this) {
 					Todo.Type.TASK -> {
