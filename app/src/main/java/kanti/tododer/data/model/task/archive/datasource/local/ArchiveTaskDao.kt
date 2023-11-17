@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kanti.tododer.data.model.task.BaseTask
+import kanti.tododer.data.model.task.archive.toArchiveTask
 import kanti.tododer.data.model.task.datasource.local.BaseTaskDao
 import kanti.tododer.data.model.task.toTask
 
@@ -14,21 +15,21 @@ import kanti.tododer.data.model.task.toTask
 interface ArchiveTaskDao : BaseTaskDao {
 
 	override suspend fun getChildren(parentId: String): List<BaseTask> {
-		return getChildrenRoom(parentId).map { it.toTask() }
+		return getChildrenRoom(parentId).map { it.toArchiveTask() }
 	}
 
 	@Query("SELECT * FROM archive_task WHERE parent_id = :parentId")
 	suspend fun getChildrenRoom(parentId: String): List<ArchiveTaskEntity>
 
 	override suspend fun getByRowId(rowId: Long): BaseTask? {
-		return getByRowIdRoom(rowId)?.toTask()
+		return getByRowIdRoom(rowId)?.toArchiveTask()
 	}
 
 	@Query("SELECT * FROM archive_task WHERE rowid = :rowId")
 	suspend fun getByRowIdRoom(rowId: Long): ArchiveTaskEntity?
 
 	override suspend fun getTask(id: Int): BaseTask? {
-		return getTaskRoom(id)?.toTask()
+		return getTaskRoom(id)?.toArchiveTask()
 	}
 
 	@Query("SELECT * FROM archive_task WHERE id = :id")

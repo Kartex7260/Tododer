@@ -5,11 +5,12 @@ import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.di.StandardDataQualifier
 import javax.inject.Inject
 
-class GetTaskChildrenUseCase @Inject constructor(
-	@StandardDataQualifier private val taskRepository: TaskRepository
-) {
+class GetTaskChildrenUseCase @Inject constructor() {
 
-	suspend operator fun invoke(todo: Todo): List<Todo> {
+	suspend operator fun invoke(
+		taskRepository: TaskRepository,
+		todo: Todo
+	): List<Todo> {
 		val repositoryResult = taskRepository.getChildren(todo.fullId)
 		return repositoryResult.value ?: listOf()
 	}

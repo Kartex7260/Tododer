@@ -70,6 +70,7 @@ dependencies {
 	testImplementation("junit:junit:4.13.2")
 	testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 
 	// ui

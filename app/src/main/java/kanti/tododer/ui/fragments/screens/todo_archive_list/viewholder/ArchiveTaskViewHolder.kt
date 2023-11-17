@@ -8,6 +8,7 @@ import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.task.archive.BaseArchiveTask
 import kanti.tododer.data.model.task.archive.asArchiveTask
+import kanti.tododer.data.model.task.archive.asBaseArchiveTask
 import kanti.tododer.ui.common.viewholder.TaskViewHolder
 
 class ArchiveTaskViewHolder(
@@ -19,12 +20,13 @@ class ArchiveTaskViewHolder(
 
 	init {
 		if (todo !is BaseArchiveTask)
-			throw IllegalArgumentException("ArchiveTaskViewHolder work only with BaseArchiveTask")
+			throw IllegalArgumentException("ArchiveTaskViewHolder work only with BaseArchiveTask " +
+					"current = $todo")
 	}
 
 	override fun onBindData(view: View, todo: Todo) {
 		super.onBindData(view, todo)
-		val archiveTask = todo.asArchiveTask
+		val archiveTask = todo.asBaseArchiveTask
 
 		view.findViewById<CheckBox>(R.id.checkBoxTodoItemTaskDone).apply {
 			isEnabled = !archiveTask.hollow

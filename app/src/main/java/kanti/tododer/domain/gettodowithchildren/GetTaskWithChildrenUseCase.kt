@@ -8,16 +8,21 @@ import kanti.tododer.domain.gettodochildren.GetTaskChildrenUseCase
 import javax.inject.Inject
 
 class GetTaskWithChildrenUseCase @Inject constructor(
-	@StandardDataQualifier private val taskRepository: TaskRepository,
 	private val getTaskChildrenUseCase: GetTaskChildrenUseCase
 ) {
 
-	suspend operator fun invoke(id: Int): RepositoryResult<TodoWithChildren> {
+	suspend operator fun invoke(
+		taskRepository: TaskRepository,
+		id: Int
+	): RepositoryResult<TodoWithChildren> {
 		val repositoryResult = taskRepository.getTask(id)
 
 		val task = repositoryResult.value
 		val childTasks = if (task != null)
-			getTaskChildrenUseCase(task.toFullId)
+			getTaskChildrenUseCase(
+				taskRepository,
+				task.toFullId
+			)
 		else
 			listOf()
 

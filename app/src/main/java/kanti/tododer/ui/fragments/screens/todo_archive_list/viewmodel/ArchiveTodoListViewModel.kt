@@ -15,6 +15,8 @@ import kanti.tododer.domain.todomove.RepositorySet
 import kanti.tododer.common.features.ComputePlanProgressFeature
 import kanti.tododer.common.features.DeleteTodoFeature
 import kanti.tododer.common.features.TaskIsDoneFeature
+import kanti.tododer.data.model.progress.TodoProgressRepository
+import kanti.tododer.di.StandardDataQualifier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,11 +26,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArchiveTodoListViewModel @Inject constructor(
-	@ArchiveDataQualifier private val archivePlanRepository: PlanRepository,
+	@ArchiveDataQualifier private val planRepository: PlanRepository,
 	@ArchiveDataQualifier override val taskRepository: TaskRepository,
 	private val unarchiveTodoUseCase: UnarchiveTodoUseCase,
 	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase,
-	override val computePlanProgressUseCase: ComputePlanProgressUseCase
+	override val computePlanProgressUseCase: ComputePlanProgressUseCase,
+	@StandardDataQualifier override val todoProgressRepository: TodoProgressRepository
 ) : ViewModel(), DeleteTodoFeature, TaskIsDoneFeature, ComputePlanProgressFeature {
 
 	override val coroutineScope: CoroutineScope
@@ -36,7 +39,7 @@ class ArchiveTodoListViewModel @Inject constructor(
 	override val repositorySet: RepositorySet
 		get() = RepositorySet(
 			taskRepository,
-			archivePlanRepository
+			planRepository
 		)
 
 	private val _archivePlans = MutableStateFlow(ArchivePlansUiState())
@@ -49,7 +52,7 @@ class ArchiveTodoListViewModel @Inject constructor(
 	fun getArchivePlans() {
 		_archivePlans.value = _archivePlans.value.copy(process = true)
 		viewModelScope.launch {
-			val archivePlansRepositoryResult = archivePlanRepository.getFromRoot()
+			val archivePlansRepositoryResult = planRepository.getFromRoot()
 			_archivePlans.value = ArchivePlansUiState(
 				plans = archivePlansRepositoryResult.value ?: listOf(),
 				type = archivePlansRepositoryResult.type

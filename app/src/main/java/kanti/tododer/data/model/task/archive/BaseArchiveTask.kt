@@ -1,5 +1,6 @@
 package kanti.tododer.data.model.task.archive
 
+import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.task.BaseTask
 
 interface BaseArchiveTask : BaseTask {
@@ -10,4 +11,8 @@ interface BaseArchiveTask : BaseTask {
 		const val HOLLOW_DEFAULT = false
 	}
 
+}
+
+val Todo.asBaseArchiveTask: BaseArchiveTask get() {
+	return this as BaseArchiveTask
 }

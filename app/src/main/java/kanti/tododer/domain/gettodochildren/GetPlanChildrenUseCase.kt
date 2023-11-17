@@ -5,25 +5,31 @@ import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.task.BaseTask
 import kanti.tododer.data.model.task.TaskRepository
-import kanti.tododer.di.StandardDataQualifier
+import kanti.tododer.domain.todomove.RepositorySet
 import javax.inject.Inject
 
-class GetPlanChildrenUseCase @Inject constructor(
-	@StandardDataQualifier private val taskRepository: TaskRepository,
-	@StandardDataQualifier private val planRepository: PlanRepository
-) {
+class GetPlanChildrenUseCase @Inject constructor() {
 
-	suspend operator fun invoke(todo: Todo): List<Todo> {
-		val childrenPlan = getChildrenPlans(todo)
-		val childrenTask = getChildrenTasks(todo)
+	suspend operator fun invoke(
+		repositorySet: RepositorySet,
+		todo: Todo
+	): List<Todo> {
+		val childrenPlan = getChildrenPlans(repositorySet.planRepository, todo)
+		val childrenTask = getChildrenTasks(repositorySet.taskRepository, todo)
 		return childrenPlan + childrenTask
 	}
 
-	private suspend fun getChildrenPlans(todo: Todo): List<BasePlan> {
+	private suspend fun getChildrenPlans(
+		planRepository: PlanRepository,
+		todo: Todo
+	): List<BasePlan> {
 		return planRepository.getChildren(todo.fullId).value ?: listOf()
 	}
 
-	private suspend fun getChildrenTasks(todo: Todo): List<BaseTask> {
+	private suspend fun getChildrenTasks(
+		taskRepository: TaskRepository,
+		todo: Todo
+	): List<BaseTask> {
 		return taskRepository.getChildren(todo.fullId).value ?: listOf()
 	}
 

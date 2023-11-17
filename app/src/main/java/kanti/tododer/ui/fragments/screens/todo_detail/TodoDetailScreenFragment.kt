@@ -241,7 +241,7 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 
 		observe(todoDataViewModel.planProgressRequest) { progressRequest ->
-			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
+			viewModel.computePlanProgress(progressRequest.plan, progressRequest.callback)
 		}
 
 		observe(todoDataViewModel.saveNewTitle) { titleRequest ->
@@ -264,7 +264,7 @@ class TodoDetailScreenFragment : Fragment() {
 		}
 
 		observe(todoListViewModel.planProgressRequest) { progressRequest ->
-			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
+			viewModel.computePlanProgress(progressRequest.plan, progressRequest.callback)
 		}
 
 		observe(todoListViewModel.deleteTodo) { deleteRequest ->

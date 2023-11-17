@@ -43,7 +43,7 @@ data class TodoDetailUiState(
 
 val RepositoryResult<TodoWithChildren>.toTodoDetailUiState: TodoDetailUiState
 	get() {
-		val children = value?.childTasks ?: listOf()
+		val children = value?.children ?: listOf()
 		return TodoDetailUiState(
 			todo = value?.todo,
 			todoChildren = children,

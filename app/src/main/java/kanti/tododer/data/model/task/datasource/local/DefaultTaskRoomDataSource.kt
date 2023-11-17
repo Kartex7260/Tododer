@@ -11,16 +11,18 @@ class DefaultTaskRoomDataSource(
 
 	override suspend fun getTask(id: Int): LocalResult<BaseTask> {
 		return localTryCatch {
-			val taskEntity = taskDao.getTask(id)
+			val task = taskDao.getTask(id)
 				?: return@localTryCatch LocalResult(type = LocalResult.Type.NotFound())
-			LocalResult(taskEntity.toTask())
+			LocalResult(task)
 		}
 	}
 
 	override suspend fun getChildren(fid: String): LocalResult<List<BaseTask>> {
 		return localTryCatch {
-			val children = taskDao.getChildren(fid).map { it.toTask() }
-			LocalResult(children)
+			val children = taskDao.getChildren(fid)
+			LocalResult(
+				value = children
+			)
 		}
 	}
 

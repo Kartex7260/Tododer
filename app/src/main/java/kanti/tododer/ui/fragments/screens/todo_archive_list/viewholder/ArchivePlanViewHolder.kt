@@ -8,6 +8,7 @@ import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.archive.BaseArchivePlan
 import kanti.tododer.data.model.plan.archive.asArchivePlan
+import kanti.tododer.data.model.plan.archive.asBaseArchivePlan
 import kanti.tododer.ui.common.viewholder.PlanViewHolder
 
 class ArchivePlanViewHolder(
@@ -24,7 +25,7 @@ class ArchivePlanViewHolder(
 
 	override fun onBindData(view: View, todo: Todo) {
 		super.onBindData(view, todo)
-		val archivePlan = todo.asArchivePlan
+		val archivePlan = todo.asBaseArchivePlan
 
 		view.findViewById<FillingProgressView>(R.id.fillingProgressViewPlanListItem).apply {
 			isEnabled = !archivePlan.hollow

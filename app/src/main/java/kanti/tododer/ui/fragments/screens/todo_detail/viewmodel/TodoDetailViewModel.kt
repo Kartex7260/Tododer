@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kanti.tododer.common.features.ComputePlanProgressFeature
 import kanti.tododer.common.logTag
 import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.FullIds
@@ -24,6 +25,8 @@ import kanti.tododer.common.features.DeleteTodoFeature
 import kanti.tododer.common.features.SaveRemarkFeature
 import kanti.tododer.common.features.SaveTitleFeature
 import kanti.tododer.common.features.TaskIsDoneFeature
+import kanti.tododer.common.features.TodoProgressRepositoryFeature
+import kanti.tododer.data.model.progress.TodoProgressRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,11 +41,13 @@ import javax.inject.Inject
 class TodoDetailViewModel @Inject constructor(
 	private val getTaskWithChildren: GetTaskWithChildrenUseCase,
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
-	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
+	override val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase,
 	@StandardDataQualifier override val taskRepository: TaskRepository,
-	@StandardDataQualifier override val planRepository: PlanRepository
-) : ViewModel(), DeleteTodoFeature, SaveTitleFeature, SaveRemarkFeature, TaskIsDoneFeature {
+	@StandardDataQualifier override val planRepository: PlanRepository,
+	@StandardDataQualifier override val todoProgressRepository: TodoProgressRepository
+) : ViewModel(), DeleteTodoFeature, SaveTitleFeature, SaveRemarkFeature, TaskIsDoneFeature,
+	ComputePlanProgressFeature {
 
 	override val coroutineScope: CoroutineScope
 		get() = viewModelScope
@@ -114,12 +119,6 @@ class TodoDetailViewModel @Inject constructor(
 		}
 	}
 
-	fun planProgressRequest(plan: BasePlan, callback: MutableLiveData<Float>) {
-		viewModelScope.launch {
-			computePlanProgressUseCase(plan, callback)
-		}
-	}
-
 	fun pop() {
 		viewModelScope.launch {
 			try {
@@ -188,8 +187,14 @@ class TodoDetailViewModel @Inject constructor(
 
 	private suspend fun showTodo(fullId: FullId): Boolean {
 		val uiState = when (fullId.type) {
-			Todo.Type.PLAN -> getPlanWithChildren(fullId.id).toTodoDetailUiState
-			Todo.Type.TASK -> getTaskWithChildren(fullId.id).toTodoDetailUiState
+			Todo.Type.PLAN -> getPlanWithChildren(
+				repositorySet,
+				fullId.id
+			).toTodoDetailUiState
+			Todo.Type.TASK -> getTaskWithChildren(
+				taskRepository,
+				fullId.id
+			).toTodoDetailUiState
 		}
 		Log.d(logTag, "showTodo(FullId = \"$fullId\"): get uiState=$uiState")
 		_todoDetail.value = uiState

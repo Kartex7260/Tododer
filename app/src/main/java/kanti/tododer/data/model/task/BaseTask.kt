@@ -11,3 +11,7 @@ interface BaseTask : Todo, IdOwner {
 	val done: Boolean
 
 }
+
+val Todo.asBaseTask: BaseTask get() {
+	return this as BaseTask
+}

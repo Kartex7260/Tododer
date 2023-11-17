@@ -2,6 +2,7 @@ package kanti.tododer.domain.gettodochildren
 
 import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.domain.todomove.RepositorySet
 import javax.inject.Inject
 
 class GetTodoChildrenUseCase @Inject constructor(
@@ -9,9 +10,18 @@ class GetTodoChildrenUseCase @Inject constructor(
 	private val getTaskChildrenUseCase: GetTaskChildrenUseCase
 ) {
 
-	suspend operator fun invoke(todo: Todo): List<Todo> = when(todo.type) {
-		Todo.Type.TASK -> getTaskChildrenUseCase(todo)
-		Todo.Type.PLAN -> getPlanChildrenUseCase(todo)
+	suspend operator fun invoke(
+		repositorySet: RepositorySet,
+		todo: Todo
+	): List<Todo> = when(todo.type) {
+		Todo.Type.TASK -> getTaskChildrenUseCase(
+			repositorySet.taskRepository,
+			todo
+		)
+		Todo.Type.PLAN -> getPlanChildrenUseCase(
+			repositorySet,
+			todo
+		)
 	}
 
 }

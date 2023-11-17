@@ -22,6 +22,7 @@ import kanti.tododer.domain.todomove.RepositorySet
 import kanti.tododer.common.features.ArchiveTodoFeature
 import kanti.tododer.common.features.DeleteTodoFeature
 import kanti.tododer.common.features.ComputePlanProgressFeature
+import kanti.tododer.data.model.progress.TodoProgressRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -34,7 +35,8 @@ class TodoRootListViewModel @Inject constructor(
 	@StandardDataQualifier private val standardTaskRepository: TaskRepository,
 	override val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase,
-	override val archiveTodoUseCase: ArchiveTodoUseCase
+	override val archiveTodoUseCase: ArchiveTodoUseCase,
+	@StandardDataQualifier override val todoProgressRepository: TodoProgressRepository
 ) : ViewModel(), DeleteTodoFeature, ArchiveTodoFeature, ComputePlanProgressFeature {
 
 	override val coroutineScope: CoroutineScope

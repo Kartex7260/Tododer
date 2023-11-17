@@ -9,3 +9,7 @@ interface BasePlan : Todo {
 	val remark: String
 
 }
+
+val Todo.asBasePlan: BasePlan get() {
+	return this as BasePlan
+}
