@@ -1,26 +1,25 @@
 package kanti.tododer.data.model.plan.datasource.local
 
 import kanti.tododer.data.common.LocalResult
-import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.plan.Plan
 
 interface PlanLocalDataSource {
 
-	suspend fun getPlan(id: Int): LocalResult<BasePlan>
+	suspend fun getPlan(id: Int): LocalResult<Plan>
 
-	suspend fun getChildren(fid: String): LocalResult<List<BasePlan>>
+	suspend fun getChildren(fid: String): LocalResult<List<Plan>>
 
-	suspend fun insert(vararg plan: BasePlan): LocalResult<Unit>
+	suspend fun insert(vararg plan: Plan): LocalResult<Unit>
 
-	suspend fun insert(plan: BasePlan): LocalResult<BasePlan>
+	suspend fun insert(plan: Plan): LocalResult<Plan>
 
-	suspend fun update(vararg plan: BasePlan): LocalResult<Unit>
+	suspend fun update(vararg plan: Plan): LocalResult<Unit>
 
-	suspend fun update(plan: BasePlan): LocalResult<BasePlan>
+	suspend fun update(plan: Plan): LocalResult<Plan>
 
-	suspend fun delete(vararg plan: BasePlan): LocalResult<Unit>
+	suspend fun delete(vararg plan: Plan): LocalResult<Unit>
 
-	suspend fun delete(plan: BasePlan): Boolean
+	suspend fun delete(plan: Plan): Boolean
 
 	suspend fun deleteAll()
 

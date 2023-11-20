@@ -6,9 +6,7 @@ import android.view.ViewGroup
 import kanti.fillingprogressview.FillingProgressView
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.archive.BaseArchivePlan
-import kanti.tododer.data.model.plan.archive.asArchivePlan
-import kanti.tododer.data.model.plan.archive.asBaseArchivePlan
+import kanti.tododer.data.model.plan.archive.ArchivePlan
 import kanti.tododer.ui.common.viewholder.PlanViewHolder
 
 class ArchivePlanViewHolder(
@@ -19,13 +17,13 @@ class ArchivePlanViewHolder(
 ) : PlanViewHolder(todo, layoutInflater, root, attachToRoot) {
 
 	init {
-		if (todo !is BaseArchivePlan)
+		if (todo !is ArchivePlan)
 			throw IllegalArgumentException("ArchivePlanViewHolder work only with BaseArchivePlan")
 	}
 
 	override fun onBindData(view: View, todo: Todo) {
 		super.onBindData(view, todo)
-		val archivePlan = todo.asBaseArchivePlan
+		val archivePlan = todo as ArchivePlan
 
 		view.findViewById<FillingProgressView>(R.id.fillingProgressViewPlanListItem).apply {
 			isEnabled = !archivePlan.hollow

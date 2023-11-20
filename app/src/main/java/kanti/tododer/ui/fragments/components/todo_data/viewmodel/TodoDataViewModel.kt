@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.task.BaseTask
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.ui.fragments.components.common.PlanProgressRequest
 import kanti.tododer.ui.fragments.components.common.SaveTodoDataRequest
@@ -74,7 +72,7 @@ class TodoDataViewModel : ViewModel(), TodoDataOwnerViewModel, TodoDataUserViewM
 		)
 	}
 
-	override fun taskIsDone(task: BaseTask, done: Boolean) {
+	override fun taskIsDone(task: Task, done: Boolean) {
 		viewModelScope.launch {
 			_taskIsDone.emit(
 				SaveTodoDataRequest(task, done)
@@ -82,7 +80,7 @@ class TodoDataViewModel : ViewModel(), TodoDataOwnerViewModel, TodoDataUserViewM
 		}
 	}
 
-	override fun planProgressRequest(plan: BasePlan): LiveData<Float> {
+	override fun planProgressRequest(plan: Plan): LiveData<Float> {
 		val callback = MutableLiveData<Float>()
 		viewModelScope.launch {
 			_planProgressRequest.emit(PlanProgressRequest(

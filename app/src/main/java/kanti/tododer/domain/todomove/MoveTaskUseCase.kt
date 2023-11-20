@@ -2,7 +2,7 @@ package kanti.tododer.domain.todomove
 
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.common.isSuccess
-import kanti.tododer.data.model.task.BaseTask
+import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.domain.gettodowithprogeny.task.GetTaskWithProgenyUseCase
 import kanti.tododer.domain.gettodowithprogeny.task.TaskWithProgeny
@@ -18,7 +18,7 @@ class MoveTaskUseCase @Inject constructor(
 	suspend operator fun invoke(
 		from: TaskRepository,
 		to: TaskRepository,
-		task: BaseTask
+		task: Task
 	): RepositoryResult<Unit> {
 		val taskWithProgeny = getTaskWithProgenyUseCase(from, task)
 		if (!taskWithProgeny.isSuccess || taskWithProgeny.value == null)

@@ -2,13 +2,13 @@ package kanti.tododer.data.model.plan.datasource.local
 
 import kanti.tododer.data.common.LocalResult
 import kanti.tododer.data.common.localTryCatch
-import kanti.tododer.data.model.plan.BasePlan
+import kanti.tododer.data.model.plan.Plan
 
 class DefaultPlanRoomDataSource(
 	private val planDao: BasePlanDao
 ) : PlanLocalDataSource {
 
-	override suspend fun getPlan(id: Int): LocalResult<BasePlan> {
+	override suspend fun getPlan(id: Int): LocalResult<Plan> {
 		return localTryCatch {
 			val planFromDS = planDao.getPlan(id)
 			LocalResult(
@@ -22,7 +22,7 @@ class DefaultPlanRoomDataSource(
 		}
 	}
 
-	override suspend fun getChildren(fid: String): LocalResult<List<BasePlan>> {
+	override suspend fun getChildren(fid: String): LocalResult<List<Plan>> {
 		return localTryCatch {
 			val children = planDao.getChildren(fid)
 			LocalResult(
@@ -31,14 +31,14 @@ class DefaultPlanRoomDataSource(
 		}
 	}
 
-	override suspend fun insert(vararg plan: BasePlan): LocalResult<Unit> {
+	override suspend fun insert(vararg plan: Plan): LocalResult<Unit> {
 		return localTryCatch {
 			planDao.insert(*plan)
 			LocalResult()
 		}
 	}
 
-	override suspend fun insert(plan: BasePlan): LocalResult<BasePlan> {
+	override suspend fun insert(plan: Plan): LocalResult<Plan> {
 		return localTryCatch {
 			val planRowId = planDao.insert(plan)
 			if (planRowId == -1L) {
@@ -51,14 +51,14 @@ class DefaultPlanRoomDataSource(
 		}
 	}
 
-	override suspend fun update(vararg plan: BasePlan): LocalResult<Unit> {
+	override suspend fun update(vararg plan: Plan): LocalResult<Unit> {
 		return localTryCatch {
 			planDao.update(*plan)
 			LocalResult()
 		}
 	}
 
-	override suspend fun update(plan: BasePlan): LocalResult<BasePlan> {
+	override suspend fun update(plan: Plan): LocalResult<Plan> {
 		return localTryCatch {
 			planDao.update(plan)
 			val planFromDB = planDao.getPlan(plan.id)!!
@@ -66,14 +66,14 @@ class DefaultPlanRoomDataSource(
 		}
 	}
 
-	override suspend fun delete(vararg plan: BasePlan): LocalResult<Unit> {
+	override suspend fun delete(vararg plan: Plan): LocalResult<Unit> {
 		return localTryCatch {
 			planDao.delete(*plan)
 			LocalResult()
 		}
 	}
 
-	override suspend fun delete(plan: BasePlan): Boolean {
+	override suspend fun delete(plan: Plan): Boolean {
 		return try {
 			planDao.delete(plan)
 		} catch (th: Throwable) {

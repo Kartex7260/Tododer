@@ -4,24 +4,24 @@ import kanti.tododer.data.common.RepositoryResult
 
 interface PlanRepository {
 
-	suspend fun getPlan(id: Int): RepositoryResult<BasePlan>
+	suspend fun getPlan(id: Int): RepositoryResult<Plan>
 
-	suspend fun getChildren(fid: String): RepositoryResult<List<BasePlan>>
+	suspend fun getChildren(fid: String): RepositoryResult<List<Plan>>
 
-	suspend fun insert(vararg plan: BasePlan): RepositoryResult<Unit>
+	suspend fun insert(vararg plan: Plan): RepositoryResult<Unit>
 
-	suspend fun insert(plan: BasePlan): RepositoryResult<BasePlan>
+	suspend fun insert(plan: Plan): RepositoryResult<Plan>
 
-	suspend fun update(vararg plan: BasePlan): RepositoryResult<Unit>
+	suspend fun update(vararg plan: Plan): RepositoryResult<Unit>
 
 	suspend fun update(
-		plan: BasePlan,
-		update: (BasePlan.() -> BasePlan)? = null
-	): RepositoryResult<BasePlan>
+		plan: Plan,
+		update: (Plan.() -> Plan)? = null
+	): RepositoryResult<Plan>
 
-	suspend fun delete(vararg plan: BasePlan): RepositoryResult<Unit>
+	suspend fun delete(vararg plan: Plan): RepositoryResult<Unit>
 
-	suspend fun delete(plan: BasePlan): Boolean
+	suspend fun delete(plan: Plan): Boolean
 
 	suspend fun deleteAll()
 

@@ -1,7 +1,6 @@
 package kanti.tododer.data.model.task
 
 import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.model.common.fullId
 
 class FakeTaskRepository : TaskRepository {
 
@@ -20,19 +19,18 @@ class FakeTaskRepository : TaskRepository {
 		return RepositoryResult(children)
 	}
 
-	override suspend fun insert(task: Task): RepositoryResult<Task> {
-		val taskWithId = taskWithId(task)
-		val index = _tasks.indexOfFirst { it.id == task.id }
-		if (index == -1) {
-			_tasks.add(taskWithId)
-		} else {
-			return RepositoryResult(type = RepositoryResult.Type.AlreadyExists(taskWithId.fullId))
+	override suspend fun insert(vararg task: Task): RepositoryResult<Unit> {
+		val taskWithId = tasksWithId(*task)
+		return try {
+			_tasks.addAll(taskWithId)
+			RepositoryResult()
+		} catch (th: Throwable) {
+			RepositoryResult(type = RepositoryResult.Type.Fail(th.message))
 		}
-		return RepositoryResult(taskWithId)
 	}
 
-	override suspend fun replace(task: Task, body: (Task.() -> Task)?): RepositoryResult<Task> {
-		val editedTask = body?.let { task.it() } ?: task
+	override suspend fun update(task: Task, update: (Task.() -> Task)?): RepositoryResult<Task> {
+		val editedTask = update?.let { task.it() } ?: task
 		val taskWithId = taskWithId(editedTask)
 		val index = _tasks.indexOfFirst { it.id == task.id }
 		if (index == -1) {
@@ -54,11 +52,24 @@ class FakeTaskRepository : TaskRepository {
 	val isEmpty: Boolean
 		get() = _tasks.isEmpty()
 
+	private class LastIndexOwner(var lastIndex: Int)
+
+	private fun tasksWithId(vararg task: Task): Array<Task> {
+		var lastIndex = _tasks.size
+		return Array(task.size) { index ->
+			if (task[index].id != 0) {
+				task[index]
+			} else {
+				task[index].toTask(id = lastIndex++ + 1)
+			}
+		}
+	}
+
 	private fun taskWithId(task: Task): Task {
 		return if (task.id != 0) {
 			task
 		} else {
-			task.copy(id = _tasks.size + 1)
+			task.toTask(id = _tasks.size + 1)
 		}
 	}
 

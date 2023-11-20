@@ -9,10 +9,12 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.plan.PlanImpl
+import kanti.tododer.data.model.task.TaskImpl
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.asPlan
+import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.asTask
 import kanti.tododer.databinding.FragmentComponentTodoDataBinding
 import kanti.tododer.ui.common.viewholder.PlanStateViewHolder
@@ -130,15 +132,15 @@ class TodoDataComponentFragment : Fragment() {
 		}
 
 		when (todoElement.type) {
-			Todo.Type.TASK -> showTask(todoElement.asTask)
-			Todo.Type.PLAN -> showPlan(todoElement.asPlan)
+			Todo.Type.TASK -> showTask(todoElement as Task)
+			Todo.Type.PLAN -> showPlan(todoElement as Plan)
 		}
 	}
 
-	private fun showPlan(plan: Plan) {
-		showBasicData(plan.title, plan.remark)
+	private fun showPlan(planImpl: Plan) {
+		showBasicData(planImpl.title, planImpl.remark)
 
-		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(plan, setCurrent = true)
+		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(planImpl, setCurrent = true)
 		todoStateViewHolder.setEventListenerIfNull { type, todo, _, callback ->
 			if (type != PlanStateViewHolder.EVENT_PROGRESS_REQUEST)
 				return@setEventListenerIfNull

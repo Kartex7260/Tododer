@@ -8,22 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.plan.asBasePlan
-import kanti.tododer.data.model.plan.asPlan
-import kanti.tododer.data.model.task.BaseTask
 import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.task.asBaseTask
-import kanti.tododer.data.model.task.asTask
 import kanti.tododer.databinding.FragmentComponentTodoListBinding
 import kanti.tododer.ui.common.viewholder.PlanViewHolder
 import kanti.tododer.ui.common.viewholder.TaskViewHolder
@@ -33,8 +24,6 @@ import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.common.viewholder.TodoViewHolderManager
 import kanti.tododer.ui.fragments.common.observe
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListOwnerViewModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TodoListComponentFragment : Fragment() {
@@ -127,8 +116,8 @@ class TodoListComponentFragment : Fragment() {
 					}
 					else -> {
 						when (todo.type) {
-							Todo.Type.TASK -> taskEvents(type, todo.asBaseTask, value, callback)
-							Todo.Type.PLAN -> planEvents(type, todo.asBasePlan, value, callback)
+							Todo.Type.TASK -> taskEvents(type, todo as Task, value, callback)
+							Todo.Type.PLAN -> planEvents(type, todo as Plan, value, callback)
 						}
 					}
 				}
@@ -139,7 +128,7 @@ class TodoListComponentFragment : Fragment() {
 		return viewHolder
 	}
 
-	private fun taskEvents(type: Int, task: BaseTask, value: Any?, callback: TodoEventCallback?) {
+	private fun taskEvents(type: Int, task: Task, value: Any?, callback: TodoEventCallback?) {
 		fun log(mes: String) = Log.d(hashLogTag, "taskEvents(type = $type, " +
 				"Plan = $task, value = $value, callback = $callback): $mes")
 
@@ -152,7 +141,7 @@ class TodoListComponentFragment : Fragment() {
 		}
 	}
 
-	private fun planEvents(type: Int, plan: BasePlan, value: Any?, callback: TodoEventCallback?) {
+	private fun planEvents(type: Int, plan: Plan, value: Any?, callback: TodoEventCallback?) {
 		fun log(mes: String) = Log.d(hashLogTag, "planEvents(type = $type, " +
 				"Plan = $plan, value = $value, callback = $callback): $mes")
 
@@ -165,7 +154,7 @@ class TodoListComponentFragment : Fragment() {
 		}
 	}
 
-	private fun eventPlanProgressRequest(plan: BasePlan, callback: TodoEventCallback?) {
+	private fun eventPlanProgressRequest(plan: Plan, callback: TodoEventCallback?) {
 		val callbackLiveData = viewModel.progressRequest(plan)
 		callbackLiveData.observe(viewLifecycleOwner) { progress ->
 			callback?.callback(progress)

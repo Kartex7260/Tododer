@@ -10,9 +10,9 @@ import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.FullIds
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.PlanRepository
-import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.PlanImpl
 import kanti.tododer.data.model.task.TaskRepository
-import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.TaskImpl
 import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
@@ -89,12 +89,12 @@ class TodoDetailViewModel @Inject constructor(
 				)
 			}
 
-			val planFromDB = planRepository.insert(
-				Plan(
+			val planImplFromDB = planRepository.insert(
+				PlanImpl(
 					parentId = currentFullId!!.fullId
 				)
 			)
-			_newTodoCreated.emit(planFromDB.toTodoSavedUiState)
+			_newTodoCreated.emit(planImplFromDB.toTodoSavedUiState)
 		}
 	}
 
@@ -109,7 +109,7 @@ class TodoDetailViewModel @Inject constructor(
 			}
 
 			val taskFromDB = taskRepository.insert(
-				Task(
+				TaskImpl(
 					parentId = currentFullId!!.fullId
 				)
 			)

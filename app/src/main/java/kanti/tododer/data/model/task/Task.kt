@@ -1,47 +1,13 @@
 package kanti.tododer.data.model.task
 
+import kanti.tododer.data.model.common.IdOwner
 import kanti.tododer.data.model.common.Todo
 
-data class Task(
-	override val id: Int = 0,
-	override val parentId: String = "",
-	override val title: String = "",
-	override val remark: String = "",
-	override val done: Boolean = false
-) : BaseTask {
+interface Task : Todo, IdOwner {
 
-	override val type: Todo.Type = Todo.Type.TASK
+	val parentId: String
+	val title: String
+	val remark: String
+	val done: Boolean
 
-	companion object {
-
-		val EMPTY = Task()
-
-	}
-
-}
-
-fun BaseTask.toTask(
-	id: Int = this.id,
-	parentId: String = this.parentId,
-	title: String = this.title,
-	remark: String = this.remark,
-	done: Boolean = this.done
-): Task {
-	if (this is Task && id == this.id && parentId == this.parentId && title == this.title &&
-		remark == this.remark && done == this.done)
-		return this
-	return Task(
-		id = id,
-		parentId = parentId,
-		title = title,
-		remark = remark,
-		done = done
-	)
-}
-
-val Todo.asTask: Task get() {
-	checkType(Todo.Type.TASK)
-	if (this !is BaseTask)
-		throw IllegalStateException("This is todo ($this) is not implementation BaseTask")
-	return toTask()
 }

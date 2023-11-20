@@ -1,26 +1,26 @@
 package kanti.tododer.data.model.plan.datasource.local
 
-import kanti.tododer.data.model.plan.BasePlan
+import kanti.tododer.data.model.plan.Plan
 
 interface BasePlanDao {
 
-	suspend fun getChildren(parentId: String): List<BasePlan>
+	suspend fun getChildren(parentId: String): List<Plan>
 
-	suspend fun getByRowId(rowId: Long): BasePlan?
+	suspend fun getByRowId(rowId: Long): Plan?
 
-	suspend fun getPlan(id: Int): BasePlan?
+	suspend fun getPlan(id: Int): Plan?
 
-	suspend fun update(vararg plan: BasePlan)
+	suspend fun update(vararg plan: Plan)
 
-	suspend fun update(plan: BasePlan): Boolean
+	suspend fun update(plan: Plan): Boolean
 
-	suspend fun insert(vararg plan: BasePlan)
+	suspend fun insert(vararg plan: Plan)
 
-	suspend fun insert(plan: BasePlan): Long
+	suspend fun insert(plan: Plan): Long
 
-	suspend fun delete(vararg plan: BasePlan)
+	suspend fun delete(vararg plan: Plan)
 
-	suspend fun delete(plan: BasePlan): Boolean
+	suspend fun delete(plan: Plan): Boolean
 
 	suspend fun deleteAll()
 

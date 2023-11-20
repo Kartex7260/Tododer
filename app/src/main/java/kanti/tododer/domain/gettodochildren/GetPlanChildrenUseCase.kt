@@ -1,9 +1,9 @@
 package kanti.tododer.domain.gettodochildren
 
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.BasePlan
+import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanRepository
-import kanti.tododer.data.model.task.BaseTask
+import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.domain.todomove.RepositorySet
 import javax.inject.Inject
@@ -22,14 +22,14 @@ class GetPlanChildrenUseCase @Inject constructor() {
 	private suspend fun getChildrenPlans(
 		planRepository: PlanRepository,
 		todo: Todo
-	): List<BasePlan> {
+	): List<Plan> {
 		return planRepository.getChildren(todo.fullId).value ?: listOf()
 	}
 
 	private suspend fun getChildrenTasks(
 		taskRepository: TaskRepository,
 		todo: Todo
-	): List<BaseTask> {
+	): List<Task> {
 		return taskRepository.getChildren(todo.fullId).value ?: listOf()
 	}
 

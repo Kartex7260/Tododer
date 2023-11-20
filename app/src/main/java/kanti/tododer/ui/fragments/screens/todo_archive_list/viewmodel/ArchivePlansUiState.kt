@@ -1,10 +1,10 @@
 package kanti.tododer.ui.fragments.screens.todo_archive_list.viewmodel
 
 import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.model.plan.BasePlan
+import kanti.tododer.data.model.plan.Plan
 
 data class ArchivePlansUiState(
-	val plans: List<BasePlan> = listOf(),
+	val plans: List<Plan> = listOf(),
 	val type: RepositoryResult.Type = RepositoryResult.Type.SuccessLocal,
 	val process: Boolean = false
 )

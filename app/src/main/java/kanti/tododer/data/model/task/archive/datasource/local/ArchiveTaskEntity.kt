@@ -5,10 +5,8 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.task.BaseTask
+import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.archive.ArchiveTask
-import kanti.tododer.data.model.task.archive.BaseArchiveTask
-import kanti.tododer.data.model.task.archive.toArchiveTask
 
 @Entity(tableName = "archive_task")
 class ArchiveTaskEntity(
@@ -17,14 +15,14 @@ class ArchiveTaskEntity(
 	override val title: String = "",
 	override val remark: String = "",
 	override val done: Boolean = false,
-	override val hollow: Boolean = BaseArchiveTask.HOLLOW_DEFAULT
-) : BaseArchiveTask {
+	override val hollow: Boolean = ArchiveTask.HOLLOW_DEFAULT
+) : ArchiveTask {
 
 	 @Ignore override val type: Todo.Type = Todo.Type.TASK
 
 }
 
-fun BaseTask.toArchiveTaskEntity(
+fun Task.toArchiveTaskEntity(
 	id: Int = this.id,
 	parentId: String = this.parentId,
 	title: String = this.title,

@@ -8,9 +8,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.common.UiStateProcess
 import kanti.tododer.data.common.UiState
 import kanti.tododer.data.common.toUiState
-import kanti.tododer.data.model.plan.BasePlan
-import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.PlanRepository
+import kanti.tododer.data.model.plan.PlanImpl
 import kanti.tododer.data.model.plan.getFromRoot
 import kanti.tododer.data.model.plan.insertToRoot
 import kanti.tododer.data.model.task.TaskRepository
@@ -47,11 +47,11 @@ class TodoRootListViewModel @Inject constructor(
 			standardPlanRepository
 		)
 
-	private val _plansUiStateProcess = UiStateProcess<List<BasePlan>>(listOf())
-	private val _plansLiveData = MutableLiveData<UiState<List<BasePlan>>>()
-	val plansLiveData: LiveData<UiState<List<BasePlan>>> = _plansLiveData
+	private val _plansUiStateProcess = UiStateProcess<List<Plan>>(listOf())
+	private val _plansLiveData = MutableLiveData<UiState<List<Plan>>>()
+	val plansLiveData: LiveData<UiState<List<Plan>>> = _plansLiveData
 
-	private val _newPlanCreated = MutableSharedFlow<UiState<BasePlan>>()
+	private val _newPlanCreated = MutableSharedFlow<UiState<Plan>>()
 	val newPlanCreated = _newPlanCreated.asSharedFlow()
 
 	init {
@@ -70,7 +70,7 @@ class TodoRootListViewModel @Inject constructor(
 	fun createNewPlan() {
 		coroutineScope.launch {
 			val planFromDB = standardPlanRepository.insertToRoot()
-			_newPlanCreated.emit(planFromDB.toUiState(Plan.Empty))
+			_newPlanCreated.emit(planFromDB.toUiState(PlanImpl.Empty))
 		}
 	}
 

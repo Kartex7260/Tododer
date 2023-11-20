@@ -2,9 +2,8 @@ package kanti.tododer.domain.progress
 
 import androidx.lifecycle.MutableLiveData
 import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.model.plan.BasePlan
+import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.progress.TodoProgressRepository
-import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.todomove.RepositorySet
 import javax.inject.Inject
 
@@ -17,7 +16,7 @@ class ComputePlanProgressUseCase @Inject constructor(
 	suspend operator fun invoke(
 		todoProgressRepository: TodoProgressRepository,
 		repositorySet: RepositorySet,
-		plan: BasePlan,
+		plan: Plan,
 		callback: MutableLiveData<Float>
 	) {
 		sendCachedData(
@@ -35,7 +34,7 @@ class ComputePlanProgressUseCase @Inject constructor(
 
 	private suspend fun sendCachedData(
 		todoProgressRepository: TodoProgressRepository,
-		plan: BasePlan,
+		plan: Plan,
 		callback: MutableLiveData<Float>
 	) {
 		val repRes = todoProgressRepository.getTodoProgress(plan.fullId)

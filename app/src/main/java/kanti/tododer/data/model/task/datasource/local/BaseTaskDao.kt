@@ -1,27 +1,27 @@
 package kanti.tododer.data.model.task.datasource.local
 
-import kanti.tododer.data.model.task.BaseTask
+import kanti.tododer.data.model.task.Task
 
 
 interface BaseTaskDao {
 
-	suspend fun getChildren(parentId: String): List<BaseTask>
+	suspend fun getChildren(parentId: String): List<Task>
 
-	suspend fun getByRowId(rowId: Long): BaseTask?
+	suspend fun getByRowId(rowId: Long): Task?
 
-	suspend fun getTask(id: Int): BaseTask?
+	suspend fun getTask(id: Int): Task?
 
-	suspend fun insert(vararg task: BaseTask)
+	suspend fun insert(vararg task: Task)
 
-	suspend fun insert(task: BaseTask): Long
+	suspend fun insert(task: Task): Long
 
-	suspend fun update(vararg task: BaseTask)
+	suspend fun update(vararg task: Task)
 
-	suspend fun update(task: BaseTask): Boolean
+	suspend fun update(task: Task): Boolean
 
-	suspend fun delete(vararg task: BaseTask)
+	suspend fun delete(vararg task: Task)
 
-	suspend fun delete(task: BaseTask): Boolean
+	suspend fun delete(task: Task): Boolean
 
 	suspend fun deleteAll()
 

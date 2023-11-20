@@ -1,7 +1,5 @@
 package kanti.tododer.data.model.task.datasource.local
 
-import kanti.tododer.data.model.task.Task
-
 class FakeTaskDao : TaskDao() {
 
 	private val tasks = mutableListOf<TaskEntity>()

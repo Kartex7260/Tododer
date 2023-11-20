@@ -2,14 +2,13 @@ package kanti.tododer.data.model.task.datasource.local
 
 import kanti.tododer.data.common.LocalResult
 import kanti.tododer.data.common.localTryCatch
-import kanti.tododer.data.model.task.BaseTask
-import kanti.tododer.data.model.task.toTask
+import kanti.tododer.data.model.task.Task
 
 class DefaultTaskRoomDataSource(
 	private val taskDao: BaseTaskDao
 ) : TaskLocalDataSource {
 
-	override suspend fun getTask(id: Int): LocalResult<BaseTask> {
+	override suspend fun getTask(id: Int): LocalResult<Task> {
 		return localTryCatch {
 			val task = taskDao.getTask(id)
 				?: return@localTryCatch LocalResult(type = LocalResult.Type.NotFound())
@@ -17,7 +16,7 @@ class DefaultTaskRoomDataSource(
 		}
 	}
 
-	override suspend fun getChildren(fid: String): LocalResult<List<BaseTask>> {
+	override suspend fun getChildren(fid: String): LocalResult<List<Task>> {
 		return localTryCatch {
 			val children = taskDao.getChildren(fid)
 			LocalResult(
@@ -26,14 +25,14 @@ class DefaultTaskRoomDataSource(
 		}
 	}
 
-	override suspend fun insert(vararg task: BaseTask): LocalResult<Unit> {
+	override suspend fun insert(vararg task: Task): LocalResult<Unit> {
 		return localTryCatch {
 			taskDao.insert(*task)
 			LocalResult()
 		}
 	}
 
-	override suspend fun insert(task: BaseTask): LocalResult<BaseTask> {
+	override suspend fun insert(task: Task): LocalResult<Task> {
 		return localTryCatch {
 			val taskRowId = taskDao.insert(task)
 			if (taskRowId == -1L)
@@ -45,14 +44,14 @@ class DefaultTaskRoomDataSource(
 		}
 	}
 
-	override suspend fun update(vararg task: BaseTask): LocalResult<Unit> {
+	override suspend fun update(vararg task: Task): LocalResult<Unit> {
 		return localTryCatch {
 			taskDao.update(*task)
 			LocalResult()
 		}
 	}
 
-	override suspend fun update(task: BaseTask): LocalResult<BaseTask> {
+	override suspend fun update(task: Task): LocalResult<Task> {
 		return localTryCatch {
 			taskDao.update(task)
 			val taskFromDB = taskDao.getTask(task.id)!!
@@ -60,14 +59,14 @@ class DefaultTaskRoomDataSource(
 		}
 	}
 
-	override suspend fun delete(vararg task: BaseTask): LocalResult<Unit> {
+	override suspend fun delete(vararg task: Task): LocalResult<Unit> {
 		return localTryCatch {
 			taskDao.delete(*task)
 			LocalResult()
 		}
 	}
 
-	override suspend fun delete(task: BaseTask): Boolean {
+	override suspend fun delete(task: Task): Boolean {
 		return try {
 			taskDao.delete(task)
 		} catch (th: Throwable) {

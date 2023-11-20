@@ -2,10 +2,8 @@ package kanti.tododer.domain.gettodowithprogeny.plan
 
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.BasePlan
-import kanti.tododer.data.model.plan.PlanRepository
-import kanti.tododer.data.model.task.BaseTask
-import kanti.tododer.data.model.task.TaskRepository
+import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.task.Task
 import kanti.tododer.domain.todomove.RepositorySet
 import javax.inject.Inject
 
@@ -18,8 +16,8 @@ class GetPlanWithProgenyUseCase @Inject constructor() {
 		val plan = repositorySet.planRepository.getPlan(todo.id).value
 			?: return RepositoryResult(type = RepositoryResult.Type.NotFound(todo.fullId))
 
-		val plans = mutableListOf<BasePlan>()
-		val tasks = mutableListOf<BaseTask>()
+		val plans = mutableListOf<Plan>()
+		val tasks = mutableListOf<Task>()
 		plans.add(plan)
 
 		getPlansToList(repositorySet, plan, plans, tasks)
@@ -34,8 +32,8 @@ class GetPlanWithProgenyUseCase @Inject constructor() {
 	private suspend fun getPlansToList(
 		repositorySet: RepositorySet,
 		todo: Todo,
-		planList: MutableList<BasePlan>,
-		taskList: MutableList<BaseTask>
+		planList: MutableList<Plan>,
+		taskList: MutableList<Task>
 	) {
 		getTasksToList(repositorySet, todo, taskList)
 		val plansChildren = repositorySet.planRepository.getChildren(todo.fullId).value ?: return
@@ -49,7 +47,7 @@ class GetPlanWithProgenyUseCase @Inject constructor() {
 	private suspend fun getTasksToList(
 		repositorySet: RepositorySet,
 		todo: Todo,
-		list: MutableList<BaseTask>
+		list: MutableList<Task>
 	) {
 		val children = repositorySet.taskRepository.getChildren(todo.fullId).value ?: return
 

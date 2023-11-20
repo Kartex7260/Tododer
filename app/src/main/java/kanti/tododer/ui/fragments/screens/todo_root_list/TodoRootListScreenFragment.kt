@@ -18,7 +18,7 @@ import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.common.isSuccess
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.BasePlan
+import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.databinding.FragmentScreenTodoRootListBinding
 import kanti.tododer.ui.common.fabowner.setActivityFab
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
@@ -140,7 +140,7 @@ class TodoRootListScreenFragment : Fragment() {
 		}
 	}
 
-	private fun showData(plans: List<BasePlan>) {
+	private fun showData(plans: List<Plan>) {
 		todoListViewModel.sendTodoList(plans)
 	}
 

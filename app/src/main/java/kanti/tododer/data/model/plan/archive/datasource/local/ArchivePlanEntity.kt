@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.BasePlan
-import kanti.tododer.data.model.plan.archive.BaseArchivePlan
+import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.archive.ArchivePlan
 
 @Entity(tableName = "archive_plan")
 data class ArchivePlanEntity(
@@ -15,13 +15,13 @@ data class ArchivePlanEntity(
 	override val title: String = "",
 	override val remark: String = "",
 	override val hollow: Boolean = false
-) : BaseArchivePlan {
+) : ArchivePlan {
 
 	@Ignore override val type: Todo.Type = Todo.Type.PLAN
 
 }
 
-fun BasePlan.toArchivePlanEntity(
+fun Plan.toArchivePlanEntity(
 	id: Int = this.id,
 	parentId: String = this.parentId,
 	title: String = this.title,
@@ -38,9 +38,9 @@ fun BasePlan.toArchivePlanEntity(
 		parentId = parentId,
 		title = title,
 		remark = remark,
-		hollow = hollow ?: if (this is BaseArchivePlan)
+		hollow = hollow ?: if (this is ArchivePlan)
 			this.hollow
 		else
-			BaseArchivePlan.HOLLOW_DEFAULT
+			ArchivePlan.HOLLOW_DEFAULT
 	)
 }

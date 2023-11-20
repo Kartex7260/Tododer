@@ -6,15 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.BasePlan
-import kanti.tododer.data.model.task.BaseTask
+import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.task.Task
 import kanti.tododer.ui.common.viewholder.ItemListTodoViewHolderFactory
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.fragments.components.common.PlanProgressRequest
 import kanti.tododer.ui.fragments.components.common.SaveTodoDataRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -66,7 +65,7 @@ class TodoListViewModel : ViewModel(), TodoListOwnerViewModel, TodoListUserViewM
 		}
 	}
 
-	override fun taskIsDone(task: BaseTask, done: Boolean) {
+	override fun taskIsDone(task: Task, done: Boolean) {
 		viewModelScope.launch {
 			_taskIsDone.emit(
 				SaveTodoDataRequest(task, done)
@@ -74,7 +73,7 @@ class TodoListViewModel : ViewModel(), TodoListOwnerViewModel, TodoListUserViewM
 		}
 	}
 
-	override fun progressRequest(plan: BasePlan): LiveData<Float> {
+	override fun progressRequest(plan: Plan): LiveData<Float> {
 		val callback = MutableLiveData<Float>()
 		viewModelScope.launch {
 			_planProgressRequest.emit(

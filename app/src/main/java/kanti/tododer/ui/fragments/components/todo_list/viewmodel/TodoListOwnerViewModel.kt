@@ -3,8 +3,8 @@ package kanti.tododer.ui.fragments.components.todo_list.viewmodel
 import android.view.ContextMenu
 import androidx.lifecycle.LiveData
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.BasePlan
-import kanti.tododer.data.model.task.BaseTask
+import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.task.Task
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,9 +21,9 @@ interface TodoListOwnerViewModel {
 
 	fun elementClick(todo: Todo)
 
-	fun taskIsDone(task: BaseTask, done: Boolean)
+	fun taskIsDone(task: Task, done: Boolean)
 
-	fun progressRequest(plan: BasePlan): LiveData<Float>
+	fun progressRequest(plan: Plan): LiveData<Float>
 
 	fun todoItemCreateContextMenu(todo: Todo, menu: ContextMenu)
 

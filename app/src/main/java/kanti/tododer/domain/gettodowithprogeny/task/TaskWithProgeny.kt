@@ -1,7 +1,7 @@
 package kanti.tododer.domain.gettodowithprogeny.task
 
-import kanti.tododer.data.model.task.BaseTask
+import kanti.tododer.data.model.task.Task
 
 data class TaskWithProgeny(
-	val tasks: List<BaseTask>
+	val tasks: List<Task>
 )

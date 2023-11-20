@@ -2,7 +2,7 @@ package kanti.tododer.domain.todomove
 
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.common.isSuccess
-import kanti.tododer.data.model.plan.BasePlan
+import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.domain.gettodowithprogeny.plan.GetPlanWithProgenyUseCase
 import kanti.tododer.domain.gettodowithprogeny.plan.PlanWithProgeny
 import kotlinx.coroutines.coroutineScope
@@ -17,7 +17,7 @@ class MovePlanUseCase @Inject constructor(
 	suspend operator fun invoke(
 		from: RepositorySet,
 		to: RepositorySet,
-		plan: BasePlan
+		plan: Plan
 	): RepositoryResult<Unit> {
 		val planWithProgeny = getPlanWithProgenyUseCase(from, plan)
 		if (!planWithProgeny.isSuccess || planWithProgeny.value == null)

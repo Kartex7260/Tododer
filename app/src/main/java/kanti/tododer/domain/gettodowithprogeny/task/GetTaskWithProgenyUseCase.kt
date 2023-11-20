@@ -2,7 +2,7 @@ package kanti.tododer.domain.gettodowithprogeny.task
 
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.task.BaseTask
+import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.TaskRepository
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class GetTaskWithProgenyUseCase @Inject constructor() {
 		val task = taskRepository.getTask(todo.id).value
 			?: return RepositoryResult(type = RepositoryResult.Type.NotFound(todo.fullId))
 
-		val tasks = mutableListOf<BaseTask>()
+		val tasks = mutableListOf<Task>()
 		tasks.add(task)
 		getChildrenToList(taskRepository, task, tasks)
 		return RepositoryResult(
@@ -26,7 +26,7 @@ class GetTaskWithProgenyUseCase @Inject constructor() {
 	private suspend fun getChildrenToList(
 		taskRepository: TaskRepository,
 		todo: Todo,
-		list: MutableList<BaseTask>
+		list: MutableList<Task>
 	) {
 		val children = taskRepository.getChildren(todo.fullId).value
 			?: return

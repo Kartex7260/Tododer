@@ -3,7 +3,7 @@ package kanti.tododer.domain.task
 import kanti.tododer.data.common.isAlreadyExists
 import kanti.tododer.data.common.isNull
 import kanti.tododer.data.model.task.FakeTaskRepository
-import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.TaskImpl
 import kanti.tododer.domain.deletetodowithchildren.DeleteTaskWithProgenyUseCase
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
@@ -14,10 +14,10 @@ import org.junit.jupiter.api.Test
 class DeleteTaskWithProgenyUseCaseTest {
 
 	private val taskRepository = FakeTaskRepository()
-	private val delete1List = mutableListOf<Task>()
-	private val delete11List = mutableListOf<Task>()
-	private val delete12List = mutableListOf<Task>()
-	private val delete1_2List = mutableListOf<Task>()
+	private val delete1List = mutableListOf<TaskImpl>()
+	private val delete11List = mutableListOf<TaskImpl>()
+	private val delete12List = mutableListOf<TaskImpl>()
+	private val delete1_2List = mutableListOf<TaskImpl>()
 
 
 	private val task1Id: Int = 1
@@ -28,35 +28,35 @@ class DeleteTaskWithProgenyUseCaseTest {
 
 	@BeforeEach
 	fun setUp() = runTest {
-		suspend fun Task.add(): Task {
+		suspend fun TaskImpl.add(): TaskImpl {
 			val repRes = taskRepository.insert(this)
 			println("(${toString()}) repRes: ${repRes.type}")
 			return this
 		}
-		fun Task.add(list: MutableList<Task>): Task {
+		fun TaskImpl.add(list: MutableList<TaskImpl>): TaskImpl {
 			list.add(this)
 			return this
 		}
-		val task1 = Task(
+		val task1 = TaskImpl(
 			id = task1Id,
 			title = "Level 0"
 		).add().add(delete11List).add(delete12List)
-		val task11 = Task(
+		val task11 = TaskImpl(
 			id = task11Id,
 			title = "Level 1: 1 (${task1.fullId})",
 			parentId = task1.fullId
 		).add().add(delete12List)
-		val task12 = Task(
+		val task12 = TaskImpl(
 			id = task12Id,
 			title = "Level 1: 2 (${task1.fullId})",
 			parentId = task1.fullId
 		).add().add(delete11List)
-		val task111 = Task(
+		val task111 = TaskImpl(
 			id = task111Id,
 			title = "Level 2: 1 (${task11.fullId})",
 			parentId = task11.fullId
 		).add().add(delete12List)
-		val task112 = Task(
+		val task112 = TaskImpl(
 			id = task112Id,
 			title = "Level 2: 2 (${task11.fullId})",
 			parentId = task11.fullId
@@ -91,9 +91,9 @@ class DeleteTaskWithProgenyUseCaseTest {
 
 	@Test
 	fun delete1_2() = runTest {
-		val repositoryResult = taskRepository.insert(Task(title = "Level 0 2"))
+		val repositoryResult = taskRepository.insert(TaskImpl(title = "Level 0 2"))
 		if (repositoryResult.isAlreadyExists || repositoryResult.isNull)
-			Assertions.fail<Task>("Error inserting task")
+			Assertions.fail<TaskImpl>("Error inserting task")
 		delete1_2List.add(repositoryResult.value!!)
 		val useCase = DeleteTaskWithProgenyUseCase(taskRepository)
 		useCase(task1Id)
