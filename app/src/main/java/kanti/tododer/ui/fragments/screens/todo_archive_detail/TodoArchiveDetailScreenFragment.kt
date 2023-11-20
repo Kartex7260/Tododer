@@ -2,6 +2,7 @@ package kanti.tododer.ui.fragments.screens.todo_archive_detail
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -14,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.R
 import kanti.tododer.common.Const
+import kanti.tododer.data.model.common.toFullId
 import kanti.tododer.databinding.FragmentScreenTodoArchiveDetailBinding
 import kanti.tododer.ui.fragments.common.observe
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataUserViewModel
@@ -32,7 +34,7 @@ class TodoArchiveDetailScreenFragment : Fragment() {
 	private var _viewBinding: FragmentScreenTodoArchiveDetailBinding? = null
 	private val viewBinding: FragmentScreenTodoArchiveDetailBinding get() = _viewBinding!!
 
-	private val todoDataViewModeL: TodoDataUserViewModel by viewModels<TodoDataViewModel>()
+	private val todoDataViewModel: TodoDataUserViewModel by viewModels<TodoDataViewModel>()
 	private val todoListViewModel: TodoListUserViewModel by viewModels<TodoListViewModel>()
 	private val viewModel: TodoArchiveDetailViewModel by viewModels()
 
@@ -41,7 +43,7 @@ class TodoArchiveDetailScreenFragment : Fragment() {
 		todoListViewModel.todoViewHolderFactory = ArchiveTodoViewHolderFactory
 		requireArguments().apply {
 			val fullId = getString(Const.NAVIGATION_ARGUMENT_FULL_ID) as String
-			viewModel.showTodo(fullId)
+			viewModel.pushTodo(fullId)
 		}
 	}
 
@@ -65,8 +67,47 @@ class TodoArchiveDetailScreenFragment : Fragment() {
 		observe(viewModel.currentTodo) { uiState ->
 			showProcess(uiState.process)
 			showType(uiState.type)
-			todoDataViewModeL.sendTodo(uiState.todo)
+			todoDataViewModel.sendTodo(uiState.todo)
 			todoListViewModel.sendTodoList(uiState.todoChildren)
+		}
+
+		observeDataComponent()
+		observeListComponent()
+	}
+
+	private fun observeListComponent() {
+		observe(todoListViewModel.deleteTodo) { deleteRequest ->
+			viewModel.deleteTodo(deleteRequest.todo)
+		}
+		observe(todoListViewModel.planProgressRequest) { progressRequest ->
+			viewModel.computePlanProgress(progressRequest.plan, progressRequest.callback)
+		}
+		observe(todoListViewModel.elementClick) {
+			viewModel.pushTodo(it.toFullId)
+		}
+		observe(todoListViewModel.todoItemCreateContextMenu) { createMenuRequest ->
+			createMenuRequest.contextMenu.add(
+				Menu.NONE,
+				1,
+				Menu.NONE,
+				R.string.unarchive
+			).setOnMenuItemClickListener {
+				viewModel.unarchiveTodo(createMenuRequest.todo)
+				todoListViewModel.removeTodoView(createMenuRequest.todo)
+				true
+			}
+		}
+	}
+
+	private fun observeDataComponent() {
+		observe(todoDataViewModel.planProgressRequest) { progressRequest ->
+			viewModel.computePlanProgress(progressRequest.plan, progressRequest.callback)
+		}
+		observe(todoDataViewModel.saveNewTitle) { saveTitleRequest ->
+			viewModel.saveTitle(saveTitleRequest.todo, saveTitleRequest.data)
+		}
+		observe(todoDataViewModel.saveNewRemark) { saveRemarkRequest ->
+			viewModel.saveRemark(saveRemarkRequest.todo, saveRemarkRequest.data)
 		}
 	}
 

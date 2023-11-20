@@ -1,7 +1,6 @@
 package kanti.tododer.ui.fragments.screens.todo_detail.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +9,6 @@ import kanti.tododer.common.logTag
 import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.FullIds
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.BasePlan
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.TaskRepository
@@ -25,7 +23,7 @@ import kanti.tododer.common.features.DeleteTodoFeature
 import kanti.tododer.common.features.SaveRemarkFeature
 import kanti.tododer.common.features.SaveTitleFeature
 import kanti.tododer.common.features.TaskIsDoneFeature
-import kanti.tododer.common.features.TodoProgressRepositoryFeature
+import kanti.tododer.data.model.common.toFullId
 import kanti.tododer.data.model.progress.TodoProgressRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow

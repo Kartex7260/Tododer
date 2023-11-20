@@ -1,9 +1,7 @@
 package kanti.tododer.domain.gettodowithchildren
 
 import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.model.plan.PlanRepository
-import kanti.tododer.data.model.task.TaskRepository
-import kanti.tododer.di.StandardDataQualifier
+import kanti.tododer.data.model.common.toFullId
 import kanti.tododer.domain.common.TodoWithChildren
 import kanti.tododer.domain.gettodochildren.GetPlanChildrenUseCase
 import kanti.tododer.domain.todomove.RepositorySet
