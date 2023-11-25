@@ -15,7 +15,7 @@ class GetTaskWithChildrenUseCase @Inject constructor(
 		taskRepository: TaskRepository,
 		id: Int
 	): RepositoryResult<TodoWithChildren> {
-		val repositoryResult = taskRepository.getTask(id)
+		val repositoryResult = taskRepository.getTodo(id)
 
 		val task = repositoryResult.value
 		val childTasks = if (task != null)

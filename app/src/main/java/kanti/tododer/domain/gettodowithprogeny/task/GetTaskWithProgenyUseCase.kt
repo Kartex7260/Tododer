@@ -12,7 +12,7 @@ class GetTaskWithProgenyUseCase @Inject constructor() {
 		taskRepository: TaskRepository,
 		todo: Todo
 	): RepositoryResult<TaskWithProgeny> {
-		val task = taskRepository.getTask(todo.id).value
+		val task = taskRepository.getTodo(todo.id).value
 			?: return RepositoryResult(type = RepositoryResult.Type.NotFound(todo.fullId))
 
 		val tasks = mutableListOf<Task>()

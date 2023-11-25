@@ -1,6 +1,6 @@
 package kanti.tododer.data.model.common
 
-interface Todo : IdOwner {
+interface Todo : IdOwner, ParentOwner {
 
 	val type: Type
 
@@ -23,6 +23,7 @@ interface Todo : IdOwner {
 		val Empty: Todo = object : Todo {
 			override val type: Type = Type.TASK
 			override val id: Int = 0
+			override val parentId: String = ""
 		}
 
 	}

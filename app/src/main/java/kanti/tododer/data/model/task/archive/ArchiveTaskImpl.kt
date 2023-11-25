@@ -18,7 +18,7 @@ data class ArchiveTaskImpl(
 
 val Todo.asArchiveTask: ArchiveTask get() {
 	checkType(Todo.Type.TASK)
-	if (this !is ArchiveTask)
+	if (this !is Task)
 		throw IllegalStateException("This todo ($this) not implementation BaseArchiveTask")
 	return toArchiveTask()
 }

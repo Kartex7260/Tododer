@@ -27,41 +27,41 @@ interface ArchivePlanDao : BasePlanDao {
 	@Query("SELECT * FROM archive_plan WHERE rowid = :rowId")
 	suspend fun getByRowIdRoom(rowId: Long): ArchivePlanEntity?
 
-	override suspend fun getPlan(id: Int): Plan? {
+	override suspend fun getTodo(id: Int): Plan? {
 		return getPlanRoom(id)?.toArchivePlan()
 	}
 
 	@Query("SELECT * FROM archive_plan WHERE id = :id")
 	suspend fun getPlanRoom(id: Int): ArchivePlanEntity?
 
-	override suspend fun insert(vararg plan: Plan) {
-		insertRoom(*plan.map { it.toArchivePlanEntity() }.toTypedArray())
+	override suspend fun insert(vararg todo: Plan) {
+		insertRoom(*todo.map { it.toArchivePlanEntity() }.toTypedArray())
 	}
 
-	override suspend fun insert(plan: Plan): Long {
-		return insertRoom(plan.toArchivePlanEntity())[0]
+	override suspend fun insert(todo: Plan): Long {
+		return insertRoom(todo.toArchivePlanEntity())[0]
 	}
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	suspend fun insertRoom(vararg plan: ArchivePlanEntity): Array<Long>
 
-	override suspend fun update(vararg plan: Plan) {
-		updateRoom(*plan.map { it.toArchivePlanEntity() }.toTypedArray())
+	override suspend fun update(vararg todo: Plan) {
+		updateRoom(*todo.map { it.toArchivePlanEntity() }.toTypedArray())
 	}
 
-	override suspend fun update(plan: Plan): Boolean {
-		return updateRoom(plan.toArchivePlanEntity()) == 1
+	override suspend fun update(todo: Plan): Boolean {
+		return updateRoom(todo.toArchivePlanEntity()) == 1
 	}
 
 	@Update
 	suspend fun updateRoom(vararg plan: ArchivePlanEntity): Int
 
-	override suspend fun delete(vararg plan: Plan) {
-		deleteRoom(*plan.map { it.toArchivePlanEntity() }.toTypedArray())
+	override suspend fun delete(vararg todo: Plan) {
+		deleteRoom(*todo.map { it.toArchivePlanEntity() }.toTypedArray())
 	}
 
-	override suspend fun delete(plan: Plan): Boolean {
-		return deleteRoom(plan.toArchivePlanEntity()) == 1
+	override suspend fun delete(todo: Plan): Boolean {
+		return deleteRoom(todo.toArchivePlanEntity()) == 1
 	}
 
 	@Delete

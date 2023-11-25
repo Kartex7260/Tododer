@@ -17,7 +17,7 @@ data class ArchivePlanImpl(
 
 val Todo.asArchivePlan: ArchivePlan get() {
 	checkType(Todo.Type.PLAN)
-	if (this !is ArchivePlan)
+	if (this !is Plan)
 		throw IllegalStateException("This todo ($this) is not implementation BaseArchivePlan")
 	return toArchivePlan()
 }

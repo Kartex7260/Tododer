@@ -7,7 +7,7 @@ import kanti.tododer.data.model.plan.Plan
 interface UpdatePlanFeature : PlanRepositoryFeature {
 
 	suspend fun updatePlan(id: Int, body: Plan.() -> Plan) {
-		val plan = planRepository.getPlan(id).also { repositoryResult ->
+		val plan = planRepository.getTodo(id).also { repositoryResult ->
 			if (!repositoryResult.isSuccess || repositoryResult.isNull)
 				return
 		}.value!!

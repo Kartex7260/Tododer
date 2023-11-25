@@ -13,7 +13,7 @@ class GetPlanWithProgenyUseCase @Inject constructor() {
 		repositorySet: RepositorySet,
 		todo: Todo
 	): RepositoryResult<PlanWithProgeny> {
-		val plan = repositorySet.planRepository.getPlan(todo.id).value
+		val plan = repositorySet.planRepository.getTodo(todo.id).value
 			?: return RepositoryResult(type = RepositoryResult.Type.NotFound(todo.fullId))
 
 		val plans = mutableListOf<Plan>()

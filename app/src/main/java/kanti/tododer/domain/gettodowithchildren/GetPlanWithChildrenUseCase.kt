@@ -15,7 +15,7 @@ class GetPlanWithChildrenUseCase @Inject constructor(
 		repositorySet: RepositorySet,
 		id: Int
 	): RepositoryResult<TodoWithChildren> {
-		val repositoryResult = repositorySet.planRepository.getPlan(id)
+		val repositoryResult = repositorySet.planRepository.getTodo(id)
 
 		val plan = repositoryResult.value
 		val childPlans = if (plan != null)

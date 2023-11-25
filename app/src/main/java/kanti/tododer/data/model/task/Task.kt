@@ -1,11 +1,9 @@
 package kanti.tododer.data.model.task
 
-import kanti.tododer.data.model.common.IdOwner
 import kanti.tododer.data.model.common.Todo
 
-interface Task : Todo, IdOwner {
+interface Task : Todo {
 
-	val parentId: String
 	val title: String
 	val remark: String
 	val done: Boolean

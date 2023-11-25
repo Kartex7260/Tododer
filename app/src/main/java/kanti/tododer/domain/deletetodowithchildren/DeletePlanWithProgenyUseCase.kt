@@ -3,7 +3,6 @@ package kanti.tododer.domain.deletetodowithchildren
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.task.TaskRepository
-import kanti.tododer.di.StandardDataQualifier
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +14,7 @@ class DeletePlanWithProgenyUseCase @Inject constructor() {
 		taskRepository: TaskRepository,
 		id: Int
 	): Boolean {
-		val parentPlan = planRepository.getPlan(id)
+		val parentPlan = planRepository.getTodo(id)
 		if (parentPlan.type is RepositoryResult.Type.NotFound || parentPlan.value == null)
 			return false
 

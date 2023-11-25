@@ -7,7 +7,7 @@ import kanti.tododer.data.model.task.Task
 interface UpdateTaskFeature : TaskRepositoryFeature {
 
 	suspend fun updateTask(id: Int, body: Task.() -> Task) {
-		val task = taskRepository.getTask(id).also { repositoryResult ->
+		val task = taskRepository.getTodo(id).also { repositoryResult ->
 			if (!repositoryResult.isSuccess || repositoryResult.isNull)
 				return
 		}.value!!
