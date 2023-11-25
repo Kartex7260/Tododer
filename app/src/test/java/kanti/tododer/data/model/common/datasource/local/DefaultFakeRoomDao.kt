@@ -20,7 +20,9 @@ class DefaultFakeRoomDao<T>(
 
 	suspend fun getByRowIdRoom(rowId: Long): T? {
 		return async {
-			todos.getOrNull(rowId.toInt())
+			if (rowId < 1)
+				throw IllegalArgumentException("rowId cannot be less than 0")
+			todos.getOrNull(rowId.toInt() - 1)
 		}
 	}
 
@@ -33,16 +35,18 @@ class DefaultFakeRoomDao<T>(
 	suspend fun insertRoom(vararg todo: T): Array<Long> {
 		val rowIds = mutableListOf<Long>()
 		fun addTodo(id: Int, todo: T): Int {
-			if (containsTask(todo))
+			if (containsTask(todo)) {
+				rowIds.add(-1)
 				return id
+			}
 			return if (todo.id == 0) {
 				val newId = id + 1
 				todos.add(todo.newId(newId))
-				rowIds.add(todos.indexOfFirst { it.id == newId }.toLong())
+				rowIds.add(todos.indexOfFirst { it.id == newId }.toLong() + 1)
 				newId
 			} else {
 				todos.add(todo)
-				rowIds.add(todos.indexOfFirst { it.id == todo.id }.toLong())
+				rowIds.add(todos.indexOfFirst { it.id == todo.id }.toLong() + 1)
 				todo.id
 			}
 		}

@@ -4,6 +4,7 @@ import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.TaskImpl
 import kanti.tododer.data.model.task.toTask
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -39,9 +40,9 @@ class DefaultFakeRoomDaoTest {
 		parentId = parentId
 	)
 
-	@BeforeEach
-	fun before() = runTest {
-		dao.deleteAllRoom()
+	@AfterEach
+	fun after() {
+		dao.todos.clear()
 	}
 
 	@Test
@@ -85,7 +86,7 @@ class DefaultFakeRoomDaoTest {
 	@Test
 	@DisplayName("getByRowIdRoom(Long): Return null")
 	fun getByRowIdRoomNull() = runTest {
-		val task = dao.getByRowIdRoom(0L)
+		val task = dao.getByRowIdRoom(1L)
 		Assertions.assertNull(task)
 	}
 
@@ -95,7 +96,7 @@ class DefaultFakeRoomDaoTest {
 		dao.todos.apply {
 			add(task1)
 		}
-		val task = dao.getByRowIdRoom(0L)
+		val task = dao.getByRowIdRoom(1L)
 		Assertions.assertEquals(task1, task)
 	}
 
@@ -106,7 +107,7 @@ class DefaultFakeRoomDaoTest {
 			add(task1)
 			add(task2)
 		}
-		val task = dao.getByRowIdRoom(1L)
+		val task = dao.getByRowIdRoom(2L)
 		Assertions.assertEquals(task2, task)
 	}
 
@@ -147,7 +148,7 @@ class DefaultFakeRoomDaoTest {
 			dao.todos.toTypedArray()
 		)
 		Assertions.assertArrayEquals(
-			arrayOf(0L),
+			arrayOf(1L),
 			rowIds
 		)
 	}
@@ -161,7 +162,7 @@ class DefaultFakeRoomDaoTest {
 			dao.todos.toTypedArray()
 		)
 		Assertions.assertArrayEquals(
-			arrayOf(0L, 1L),
+			arrayOf(1L, 2L),
 			rowIds
 		)
 	}
@@ -175,7 +176,7 @@ class DefaultFakeRoomDaoTest {
 			dao.todos.toTypedArray()
 		)
 		Assertions.assertArrayEquals(
-			arrayOf(0L, 1L, 2L),
+			arrayOf(1L, 2L, 3L),
 			rowIds
 		)
 	}
@@ -190,11 +191,11 @@ class DefaultFakeRoomDaoTest {
 			dao.todos.toTypedArray()
 		)
 		Assertions.assertArrayEquals(
-			arrayOf(0L, 1L),
+			arrayOf(1L, 2L),
 			rowIds1
 		)
 		Assertions.assertArrayEquals(
-			arrayOf(2L),
+			arrayOf(3L),
 			rowIds2
 		)
 	}

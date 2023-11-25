@@ -64,7 +64,7 @@ interface TaskDao : BaseTaskDao {
 	}
 
 	@Delete
-	suspend fun deleteRoom(vararg tasK: TaskEntity): Int
+	suspend fun deleteRoom(vararg task: TaskEntity): Int
 
 	override suspend fun deleteAll() {
 		deleteAllRoom()
