@@ -30,7 +30,7 @@ val <T> LocalResult<T>.isNotFound: Boolean
 val <T> LocalResult<T>.isAlreadyExists: Boolean
 	get() = type is LocalResult.Type.AlreadyExists
 
-val <T> LocalResult<T>.isNFail: Boolean
+val <T> LocalResult<T>.isFail: Boolean
 	get() = type is LocalResult.Type.Fail
 
 fun <T> LocalResult<T>.toRepositoryResult(): RepositoryResult<T> {

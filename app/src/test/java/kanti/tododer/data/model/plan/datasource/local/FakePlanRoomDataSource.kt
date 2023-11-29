@@ -1,3 +1,5 @@
 package kanti.tododer.data.model.plan.datasource.local
 
-class FakePlanRoomDataSource : PlanLocalDataSource by DefaultPlanRoomDataSource(FakePlanDao())
+class FakePlanRoomDataSource(
+	val plans: MutableList<PlanEntity> = mutableListOf()
+) : PlanLocalDataSource by DefaultPlanRoomDataSource(FakePlanDao(plans))

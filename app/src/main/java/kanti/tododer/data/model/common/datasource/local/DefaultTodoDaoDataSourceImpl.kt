@@ -2,10 +2,8 @@ package kanti.tododer.data.model.common.datasource.local
 
 import kanti.tododer.data.common.LocalResult
 import kanti.tododer.data.common.localTryCatch
-import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.Plan
 
-class DefaultTodoDaoDataSource<Todo>(
+class DefaultTodoDaoDataSourceImpl<Todo>(
 	private val planDao: TodoDao<Todo>
 ) : TodoLocalDataSource<Todo> where Todo : kanti.tododer.data.model.common.Todo {
 
@@ -61,7 +59,12 @@ class DefaultTodoDaoDataSource<Todo>(
 
 	override suspend fun update(todo: Todo): LocalResult<Todo> {
 		return localTryCatch {
-			planDao.update(todo)
+			val updated = planDao.update(todo)
+			if (!updated) {
+				return@localTryCatch LocalResult(
+					type = LocalResult.Type.NotFound(todo.fullId)
+				)
+			}
 			val planFromDB = planDao.getTodo(todo.id)!!
 			LocalResult(planFromDB)
 		}
