@@ -25,7 +25,7 @@ import kanti.tododer.domain.common.TodoWithChildren
 import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
 import kanti.tododer.domain.gettodowithchildren.GetTodoWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

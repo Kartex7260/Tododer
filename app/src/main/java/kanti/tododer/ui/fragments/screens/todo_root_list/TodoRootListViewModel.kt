@@ -18,7 +18,7 @@ import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.archiving.ArchiveTodoUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import kanti.tododer.common.features.ArchiveTodoFeature
 import kanti.tododer.common.features.DeleteTodoFeature
 import kanti.tododer.common.features.ComputePlanProgressFeature

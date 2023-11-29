@@ -1,7 +1,7 @@
 package kanti.tododer.domain.deletetodowithchildren
 
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import javax.inject.Inject
 
 class DeleteTodoWithProgenyUseCase @Inject constructor(

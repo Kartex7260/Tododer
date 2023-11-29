@@ -1,8 +1,7 @@
 package kanti.tododer.domain.gettodochildren
 
-import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import javax.inject.Inject
 
 class GetTodoChildrenUseCase @Inject constructor(

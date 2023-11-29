@@ -11,7 +11,7 @@ import kanti.tododer.data.model.task.asTask
 import kanti.tododer.di.ArchiveDataQualifier
 import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.GetForerunnersUseCase
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import javax.inject.Inject
 
 class CreateHollowForerunnersUseCase @Inject constructor(

@@ -18,7 +18,7 @@ import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase
 import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import kanti.tododer.common.features.DeleteTodoFeature
 import kanti.tododer.common.features.SaveRemarkFeature
 import kanti.tododer.common.features.SaveTitleFeature

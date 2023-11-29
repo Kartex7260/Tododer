@@ -1,6 +1,6 @@
 package kanti.tododer.common.features
 
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 
 interface RepositorySetFeature {
 

@@ -4,7 +4,7 @@ import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.model.common.toFullId
 import kanti.tododer.domain.common.TodoWithChildren
 import kanti.tododer.domain.gettodochildren.GetPlanChildrenUseCase
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import javax.inject.Inject
 
 class GetPlanWithChildrenUseCase @Inject constructor(

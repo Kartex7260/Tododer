@@ -8,7 +8,7 @@ import kanti.tododer.di.ArchiveDataQualifier
 import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.hollowparents.CreateHollowForerunnersUseCase
 import kanti.tododer.domain.todomove.MoveTodoUseCase
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject

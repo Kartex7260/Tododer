@@ -2,15 +2,13 @@ package kanti.tododer.domain.progress
 
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.plan.PlanImpl
 import kanti.tododer.data.model.plan.asPlan
-import kanti.tododer.data.model.task.TaskImpl
 import kanti.tododer.data.model.progress.TodoProgressRepository
 import kanti.tododer.data.model.progress.TodoProgress
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.task.asTask
 import kanti.tododer.domain.gettodochildren.GetTodoChildrenUseCase
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import javax.inject.Inject
 
 class ComputeTodoProgressUseCase @Inject constructor(

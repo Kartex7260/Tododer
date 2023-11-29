@@ -8,7 +8,7 @@ import kanti.tododer.data.model.task.FakeTaskRepository
 import kanti.tododer.data.model.task.TaskImpl
 import kanti.tododer.data.model.task.datasource.local.TaskEntity
 import kanti.tododer.data.model.task.datasource.local.toTaskEntity
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName

@@ -3,7 +3,7 @@ package kanti.tododer.domain
 import kanti.tododer.data.model.common.FullIds
 import kanti.tododer.data.model.common.ParentOwner
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import javax.inject.Inject
 
 class GetParentUseCase @Inject constructor() {

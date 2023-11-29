@@ -7,7 +7,7 @@ import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.di.ArchiveDataQualifier
 import kanti.tododer.di.StandardDataQualifier
 import kanti.tododer.domain.todomove.MoveTodoUseCase
-import kanti.tododer.domain.todomove.RepositorySet
+import kanti.tododer.data.model.RepositorySet
 import javax.inject.Inject
 
 class UnarchiveTodoUseCase @Inject constructor(

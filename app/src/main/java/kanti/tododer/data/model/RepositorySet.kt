@@ -1,4 +1,4 @@
-package kanti.tododer.domain.todomove
+package kanti.tododer.data.model
 
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.task.TaskRepository
