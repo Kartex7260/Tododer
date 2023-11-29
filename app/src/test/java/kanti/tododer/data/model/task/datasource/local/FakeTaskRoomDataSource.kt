@@ -1,3 +1,5 @@
 package kanti.tododer.data.model.task.datasource.local
 
-class FakeTaskRoomDataSource : TaskLocalDataSource by DefaultTaskRoomDataSource(FakeTaskDao())
+class FakeTaskRoomDataSource(
+	val tasks: MutableList<TaskEntity> = mutableListOf()
+) : TaskLocalDataSource by DefaultTaskRoomDataSource(FakeTaskDao(tasks))
