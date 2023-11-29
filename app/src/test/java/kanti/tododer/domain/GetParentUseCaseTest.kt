@@ -11,7 +11,6 @@ import kanti.tododer.data.model.task.datasource.local.toTaskEntity
 import kanti.tododer.domain.todomove.RepositorySet
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -28,6 +27,11 @@ class GetParentUseCaseTest {
 	private val planParentId = 1
 	private val planParent = PlanImpl(
 		id = planParentId
+	)
+	private val planChildId = 2
+	private val planChild = PlanImpl(
+		id = planChildId,
+		parentId = planParent.fullId
 	)
 	private val taskChild1Id = 1
 	private val taskChild1 = TaskImpl(
@@ -57,17 +61,24 @@ class GetParentUseCaseTest {
 	}
 
 	@Test
-	@DisplayName("result 1")
-	fun result1() = runTest {
+	@DisplayName("result  task1")
+	fun resultTask1() = runTest {
 		val parent = useCase(repositorySet, taskChild1)
 		Assertions.assertEquals(planParent, parent)
 	}
 
 	@Test
-	@DisplayName("result 2")
-	fun result2() = runTest {
+	@DisplayName("result task 2")
+	fun resultTask2() = runTest {
 		val parent = useCase(repositorySet, taskChildChild1)
 		Assertions.assertEquals(taskChild1, parent)
+	}
+
+	@Test
+	@DisplayName("result plan")
+	fun resultPlan() = runTest {
+	    val parent = useCase(repositorySet, planChild)
+		Assertions.assertEquals(planParent, parent)
 	}
 
 }
