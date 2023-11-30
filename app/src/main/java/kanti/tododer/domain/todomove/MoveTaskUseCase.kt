@@ -37,7 +37,7 @@ class MoveTaskUseCase @Inject constructor(
 	}
 
 	private suspend fun addTo(to: TaskRepository, taskWithProgeny: TaskWithProgeny) {
-		to.update(*taskWithProgeny.tasks.toTypedArray())
+		to.insert(*taskWithProgeny.tasks.toTypedArray())
 	}
 
 }
