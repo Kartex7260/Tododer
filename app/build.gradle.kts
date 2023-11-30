@@ -59,6 +59,7 @@ dependencies {
 	implementation("androidx.legacy:legacy-support-v4:1.0.0")
 	implementation(project(mapOf("path" to ":LifecycleLogger")))
 	implementation(project(mapOf("path" to ":FillingProgressView")))
+	testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
 	val hiltVersion = "2.48"
 	val roomVersion = "2.5.2"
