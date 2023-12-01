@@ -1,59 +1,58 @@
 package kanti.tododer.data.model.task.datasource.local
 
-import androidx.room.Query
-import kanti.tododer.data.common.LocalResult
-import kanti.tododer.data.common.tryCatch
-import kanti.tododer.data.model.common.fullId
+import kanti.tododer.data.model.common.result.GetLocalResult
+import kanti.tododer.data.common.resultTryCatch
+import kanti.tododer.data.common.todoLocalResultTryCatch
+import kanti.tododer.data.common.todoResultTryCatch
+import kanti.tododer.data.model.common.localUnexpectedByRowId
 import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.toTask
 import javax.inject.Inject
 
 class TaskRoomDataSource @Inject constructor(
 	private val taskDao: TaskDao
-) : ITaskLocalDataSource {
+) : TaskLocalDataSource {
 
-	override suspend fun getTask(id: Int): LocalResult<Task> {
-		return tryCatch {
-			val taskEntity = taskDao.getTask(id)
-				?: return@tryCatch LocalResult(type = LocalResult.Type.NotFound())
-			LocalResult(taskEntity.toTask())
+	override suspend fun getTask(id: Int): GetLocalResult<Task> {
+		return todoLocalResultTryCatch {
+			val task = taskDao.getTask(id)?.toTask()
+				?: return@todoLocalResultTryCatch GetLocalResult.NotFound(id.toString())
+			GetLocalResult.Success(task)
 		}
 	}
 
-	override suspend fun getChildren(fid: String): LocalResult<List<Task>> {
-		return tryCatch {
+	override suspend fun getChildren(fid: String): Result<List<Task>> {
+		return todoResultTryCatch {
 			val children = taskDao.getChildren(fid).map { it.toTask() }
-			LocalResult(children)
+			Result.success(children)
 		}
 	}
 
-	override suspend fun insert(task: Task): LocalResult<Task> {
-		return tryCatch {
-			val rowId = taskDao.insert(task)
-			if (rowId == -1L) {
-				LocalResult(type = LocalResult.Type.AlreadyExists(task.fullId))
-			} else {
-				val taskFromDB = taskDao.getByRowId(rowId)?.toTask()
-				LocalResult(taskFromDB)
-			}
+	override suspend fun insert(task: Task): Result<Task> {
+		return todoResultTryCatch {
+			val rowId = taskDao.insert(task.toTaskEntity())[0]
+			val taskFromDB = taskDao.getByRowId(rowId)?.toTask() ?:
+				return@todoResultTryCatch localUnexpectedByRowId(task, rowId)
+			Result.success(taskFromDB)
 		}
 	}
 
-	override suspend fun replace(task: Task): LocalResult<Task> {
-		return tryCatch {
-			val rowId = taskDao.replace(task)
-			val taskFromDB = taskDao.getByRowId(rowId)?.toTask()
-			LocalResult(taskFromDB)
+	override suspend fun insert(vararg task: Task): Result<Unit> {
+		return resultTryCatch {
+			taskDao.delete(*task.map { it.toTaskEntity() }.toTypedArray())
 		}
 	}
 
-	override suspend fun delete(task: Task): Boolean {
-		return try {
-			taskDao.delete(task) == 1
-		} catch (th: Throwable) {
-			false
+	override suspend fun delete(vararg task: Task): Result<Unit> {
+		return resultTryCatch {
+			taskDao.delete(*task.map { it.toTaskEntity() }.toTypedArray())
 		}
 	}
 
-	override suspend fun deleteAll() = taskDao.deleteAll()
+	override suspend fun deleteAll(): Result<Unit> {
+		return resultTryCatch {
+			taskDao.deleteAll()
+		}
+	}
 
 }

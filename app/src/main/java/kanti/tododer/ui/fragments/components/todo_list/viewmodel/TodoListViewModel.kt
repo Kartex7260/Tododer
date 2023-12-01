@@ -1,24 +1,22 @@
 package kanti.tododer.ui.fragments.components.todo_list.viewmodel
 
 import android.view.ContextMenu
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.result.GetRepositoryResult
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.ui.fragments.components.common.PlanProgressRequest
 import kanti.tododer.ui.fragments.components.common.SaveTodoDataRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class TodoListViewModel : ViewModel() {
-
-	private val logTag = javaClass.simpleName
 
 	private val _todoListLiveData = MutableStateFlow<List<Todo>>(listOf())
 	val todoList = _todoListLiveData.asStateFlow()
@@ -66,8 +64,8 @@ class TodoListViewModel : ViewModel() {
 		}
 	}
 
-	fun progressRequest(plan: Plan): LiveData<Float> {
-		val callback = MutableLiveData<Float>()
+	fun progressRequest(plan: Plan): SharedFlow<GetRepositoryResult<Float>> {
+		val callback = MutableSharedFlow<GetRepositoryResult<Float>>()
 		viewModelScope.launch {
 			_planProgressRequest.emit(
 				PlanProgressRequest(

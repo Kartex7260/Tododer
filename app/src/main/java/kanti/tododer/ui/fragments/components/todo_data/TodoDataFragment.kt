@@ -13,8 +13,8 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.task.Task
 import kanti.tododer.databinding.FragmentTodoDataBinding
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.toPlan
-import kanti.tododer.data.model.common.toTask
+import kanti.tododer.data.model.plan.asPlan
+import kanti.tododer.data.model.task.asTask
 import kanti.tododer.ui.common.viewholder.PlanStateViewHolder
 import kanti.tododer.ui.common.viewholder.TaskStateViewHolder
 import kanti.tododer.ui.common.viewholder.TaskStateViewOwner
@@ -85,7 +85,7 @@ class TodoDataFragment : Fragment() {
 					when (viewHolder.todo.type) {
 						Todo.Type.TASK -> {
 							viewModel.taskIsDone(
-								viewHolder.todo.toTask,
+								viewHolder.todo.asTask,
 								viewHolder.stateView.isChecked
 							)
 						}
@@ -125,8 +125,8 @@ class TodoDataFragment : Fragment() {
 		}
 
 		when (todoElement.type) {
-			Todo.Type.TASK -> showTask(todoElement.toTask)
-			Todo.Type.PLAN -> showPlan(todoElement.toPlan)
+			Todo.Type.TASK -> showTask(todoElement.asTask)
+			Todo.Type.PLAN -> showPlan(todoElement.asPlan)
 		}
 	}
 
@@ -138,8 +138,8 @@ class TodoDataFragment : Fragment() {
 			if (type != PlanStateViewHolder.EVENT_PROGRESS_REQUEST)
 				return@setEventListenerIfNull
 
-			val callbackLiveData = viewModel.planProgressRequest(todo.toPlan)
-			callbackLiveData.observe(viewLifecycleOwner) { progress ->
+			val callbackSharedFlow = viewModel.planProgressRequest(todo.asPlan)
+			observe(callbackSharedFlow) { progress ->
 				callback?.callback(progress)
 			}
 		}
@@ -156,7 +156,7 @@ class TodoDataFragment : Fragment() {
 			if (type != TaskStateViewHolder.EVENT_IS_DONE)
 				return@setEventListenerIfNull
 
-			viewModel.taskIsDone(todo.toTask, value as Boolean)
+			viewModel.taskIsDone(todo.asTask, value as Boolean)
 		}
 
 		hideTodoDataState()

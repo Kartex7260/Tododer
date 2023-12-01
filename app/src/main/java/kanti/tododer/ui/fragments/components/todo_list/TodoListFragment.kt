@@ -16,10 +16,10 @@ import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.toPlan
-import kanti.tododer.data.model.common.toTask
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.asPlan
 import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.asTask
 import kanti.tododer.databinding.FragmentTodoListBinding
 import kanti.tododer.ui.common.viewholder.ItemListTodoViewHolderFactory
 import kanti.tododer.ui.common.viewholder.PlanViewHolder
@@ -28,6 +28,7 @@ import kanti.tododer.ui.common.viewholder.TodoEventCallback
 import kanti.tododer.ui.common.viewholder.TodoEventListener
 import kanti.tododer.ui.common.viewholder.TodoViewHolder
 import kanti.tododer.ui.common.viewholder.TodoViewHolderManager
+import kanti.tododer.ui.fragments.common.observe
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -119,8 +120,8 @@ class TodoListFragment : Fragment() {
 					}
 					else -> {
 						when (todo.type) {
-							Todo.Type.TASK -> taskEvents(type, todo.toTask, value, callback)
-							Todo.Type.PLAN -> planEvents(type, todo.toPlan, value, callback)
+							Todo.Type.TASK -> taskEvents(type, todo.asTask, value, callback)
+							Todo.Type.PLAN -> planEvents(type, todo.asPlan, value, callback)
 						}
 					}
 				}
@@ -158,8 +159,8 @@ class TodoListFragment : Fragment() {
 	}
 
 	private fun eventPlanProgressRequest(plan: Plan, callback: TodoEventCallback?) {
-		val callbackLiveData = viewModel.progressRequest(plan)
-		callbackLiveData.observe(viewLifecycleOwner) { progress ->
+		val callbackFlow = viewModel.progressRequest(plan)
+		observe(callbackFlow) { progress ->
 			callback?.callback(progress)
 		}
 	}

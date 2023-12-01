@@ -13,8 +13,7 @@ class TodoSelectorDialogFragment : DialogFragment() {
 		fun select(type: Todo.Type)
 	}
 
-	var todoSelectListener: TodoSelectListener? = null
-		private set
+	private var todoSelectListener: TodoSelectListener? = null
 
 	fun setTodoSelectListener(listener: TodoSelectListener? = null) {
 		todoSelectListener = listener

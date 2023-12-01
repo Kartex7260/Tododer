@@ -1,28 +1,27 @@
 package kanti.tododer.domain.removewithchildren
 
-import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.model.common.fullId
-import kanti.tododer.data.model.task.ITaskRepository
+import kanti.tododer.data.model.common.result.asSuccess
+import kanti.tododer.data.model.task.TaskRepository
 import javax.inject.Inject
 
 class RemoveTaskWithChildrenUseCase @Inject constructor(
-	private val taskRepository: ITaskRepository
+	private val taskRepository: TaskRepository
 ) {
 
 	suspend operator fun invoke(id: Int): Boolean {
 		val parentTask = taskRepository.getTask(id)
-		if (parentTask.type is RepositoryResult.Type.NotFound || parentTask.value == null)
-			return false
+		val sucParentTask = parentTask.asSuccess ?: return false
 
-		val result = taskRepository.delete(parentTask.value)
-		deleteChildren(parentTask.value.fullId)
+		val result = taskRepository.delete(sucParentTask.value)
+		deleteChildren(sucParentTask.value.fullId)
 
-		return result
+		return result.isSuccess
 	}
 
 	private suspend fun deleteChildren(fullId: String) {
 		val children = taskRepository.getChildren(fullId)
-		for (child in children.value!!) {
+		val sucChildren = children.getOrDefault(listOf())
+		for (child in sucChildren) {
 			taskRepository.delete(child)
 			deleteChildren(child.fullId)
 		}

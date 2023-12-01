@@ -1,86 +1,71 @@
 package kanti.tododer.ui.fragments.screens.todo_detail.viewmodel
 
-import kanti.tododer.data.common.RepositoryResult
+import kanti.tododer.data.model.common.result.GetRepositoryResult
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.domain.common.TodoWithChildren
 
-data class TodoDetailUiState(
-	val todo: Todo? = null,
-	val todoChildren: List<Todo> = listOf(),
-	val process: Boolean = false,
-	val type: Type = Type.Success
-) {
+sealed class TodoDetailUiState {
 
-	sealed class Type(val type: String = "", val message: String? = null) {
-		data object Empty : Type("Empty")
-		data object Success : Type("Success")
-//		class NoConnection(message: String? = null) : Type("NoConnection", message)
-//		class NoAuthorization(message: String? = null) : Type("NoAuthorization", message)
-		class NotFound(message: String? = null) : Type("NotFound", message)
-		class AlreadyExists(
-			val fullId: String? = null,
-			message: String? = null
-		) : Type(
-			"AlreadyExists",
-			"AlreadyExists${if (fullId != null) " (Id: $fullId): " else ": "}$message"
-		)
-		class InvalidFullId(message: String? = null) : Type("InvalidFullId", message)
-		data object EmptyStack : Type("EmptyStack")
-		class Fail(message: String? = null) : Type("Fail", message)
+	class Success(
+		val todo: Todo,
+		val todoChildren: List<Todo> = listOf(),
+	) : TodoDetailUiState()
 
-		override fun toString(): String {
-			return "TodoDetailUiState.Type.$type"
-		}
-	}
+	class NotFound(
+		val id: String
+	) : TodoDetailUiState()
 
-	companion object {
+	data object Empty : TodoDetailUiState()
 
-		val Empty = TodoDetailUiState(type = Type.Empty)
+	data object Process : TodoDetailUiState()
 
+	data object InvalidFullId : TodoDetailUiState()
+
+	data object EmptyStack : TodoDetailUiState()
+
+	class Fail(
+		message: String?,
+		val throwable: Throwable? = null
+	) : TodoDetailUiState() {
+		val message: String = message ?: "[Not message]"
 	}
 
 }
 
-val RepositoryResult<TodoWithChildren>.toTodoDetailUiState: TodoDetailUiState
-	get() {
-		val children = value?.childTasks ?: listOf()
-		return TodoDetailUiState(
-			todo = value?.todo,
-			todoChildren = children,
-			type = type.toTodoDetailType
-		)
-	}
-
-private val RepositoryResult.Type.toTodoDetailType: TodoDetailUiState.Type
-	get() {
-		return when (this) {
-			is RepositoryResult.Type.Success -> TodoDetailUiState.Type.Success
-			is RepositoryResult.Type.NotFound -> TodoDetailUiState.Type.NotFound(message)
-			is RepositoryResult.Type.AlreadyExists -> TodoDetailUiState.Type.AlreadyExists(
-				fullId,
-				message
-			)
-			else -> TodoDetailUiState.Type.Fail(message)
+val GetRepositoryResult<TodoWithChildren>.toTodoDetailUiState: TodoDetailUiState get() {
+	return when (this) {
+		is GetRepositoryResult.Success -> {
+			TodoDetailUiState.Success(value.todo, value.childTasks)
+		}
+		is GetRepositoryResult.NotFound -> {
+			TodoDetailUiState.NotFound(id)
+		}
+		is GetRepositoryResult.Fail -> {
+			TodoDetailUiState.Fail(message, th)
 		}
 	}
+}
 
-val TodoDetailUiState.isNull: Boolean
-	get() = todo == null
+val TodoDetailUiState.asSuccess: TodoDetailUiState.Success? get() {
+	if (this !is TodoDetailUiState.Success)
+		return null
+	return this
+}
 
-val TodoDetailUiState.isSuccess: Boolean
-	get() = type is TodoDetailUiState.Type.Success
-
-val TodoDetailUiState.isNotFound: Boolean
-	get() = type is TodoDetailUiState.Type.NotFound
-
-val TodoDetailUiState.isAlreadyExists: Boolean
-	get() = type is TodoDetailUiState.Type.AlreadyExists
+val TodoDetailUiState.asNotFound: TodoDetailUiState.NotFound? get() {
+	if (this !is TodoDetailUiState.NotFound)
+		return null
+	return this
+}
 
 val TodoDetailUiState.isInvalidFullId: Boolean
-	get() = type is TodoDetailUiState.Type.InvalidFullId
+	get() = this is TodoDetailUiState.InvalidFullId
 
 val TodoDetailUiState.isEmptyStack: Boolean
-	get() = type is TodoDetailUiState.Type.EmptyStack
+	get() = this is TodoDetailUiState.EmptyStack
 
-val TodoDetailUiState.isFail: Boolean
-	get() = type is TodoDetailUiState.Type.Fail
+val TodoDetailUiState.asFail: TodoDetailUiState.Fail? get() {
+	if (this !is TodoDetailUiState.Fail)
+		return null
+	return this
+}

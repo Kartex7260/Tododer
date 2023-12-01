@@ -1,31 +1,27 @@
 package kanti.tododer.data.model.task
 
+import kanti.tododer.data.model.common.RemarkOwner
+import kanti.tododer.data.model.common.TitleOwner
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.task.datasource.local.TaskEntity
 
-data class Task(
-	override val id: Int = 0,
-	val parentId: String = "",
-	val title: String = "",
-	val remark: String = "",
-	val done: Boolean = false
-) : Todo() {
-	override val type: Todo.Type = Todo.Type.TASK
+interface Task : Todo, TitleOwner, RemarkOwner {
 
-	companion object {
-
-		val EMPTY = Task()
-
-	}
+	val done: Boolean
 
 }
 
-val Task.asTaskEntity: TaskEntity get() {
-		return TaskEntity(
-			id = id,
-			parentId = parentId,
-			title = title,
-			remark = remark,
-			done = done
-		)
-	}
+fun Task(
+	id: Int = 0,
+	parentId: String = "",
+	title: String = "",
+	remark: String = "",
+	done: Boolean = false
+): Task {
+	return TaskImpl(
+		id = id,
+		parentId = parentId,
+		title = title,
+		remark = remark,
+		done = done
+	)
+}

@@ -1,9 +1,10 @@
 package kanti.tododer.ui.fragments.components.common
 
-import androidx.lifecycle.MutableLiveData
+import kanti.tododer.data.model.common.result.GetRepositoryResult
 import kanti.tododer.data.model.plan.Plan
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 data class PlanProgressRequest(
 	val plan: Plan,
-	val callback: MutableLiveData<Float>
+	val callback: MutableSharedFlow<GetRepositoryResult<Float>>
 )

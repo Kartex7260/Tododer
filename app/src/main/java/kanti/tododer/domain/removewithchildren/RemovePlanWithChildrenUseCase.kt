@@ -1,42 +1,43 @@
 package kanti.tododer.domain.removewithchildren
 
-import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.model.common.fullId
-import kanti.tododer.data.model.plan.IPlanRepository
-import kanti.tododer.data.model.task.ITaskRepository
+import kanti.tododer.data.model.common.result.asSuccess
+import kanti.tododer.data.model.plan.PlanRepository
+import kanti.tododer.data.model.task.TaskRepository
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RemovePlanWithChildrenUseCase @Inject constructor(
-	private val planRepository: IPlanRepository,
-	private val taskRepository: ITaskRepository
+	private val planRepository: PlanRepository,
+	private val taskRepository: TaskRepository
 ) {
 
 	suspend operator fun invoke(id: Int): Boolean {
 		val parentPlan = planRepository.getPlan(id)
-		if (parentPlan.type is RepositoryResult.Type.NotFound || parentPlan.value == null)
-			return false
+		val successParentPlan = parentPlan.asSuccess ?: return false
 
-		val result = planRepository.delete(parentPlan.value)
-		deleteChildPlans(parentPlan.value.fullId)
+		val result = planRepository.delete(successParentPlan.value)
+		deleteChildPlans(successParentPlan.value.fullId)
 
-		return result
+		return result.isSuccess
 	}
 
 	private suspend fun deleteChildPlans(fullId: String) {
 		val childPlans = planRepository.getChildren(fullId)
 		val childTasks = taskRepository.getChildren(fullId)
 
+		val sucChildPlans = childPlans.getOrDefault(listOf())
+		val sucChildTasks = childTasks.getOrDefault(listOf())
+
 		coroutineScope {
 			launch {
-				for (child in childPlans.value!!) {
+				for (child in sucChildPlans) {
 					planRepository.delete(child)
 					deleteChildPlans(child.fullId)
 				}
 			}
 			launch {
-				for (child in childTasks.value!!) {
+				for (child in sucChildTasks) {
 					taskRepository.delete(child)
 					deleteChildTasks(child.fullId)
 				}
@@ -46,7 +47,8 @@ class RemovePlanWithChildrenUseCase @Inject constructor(
 
 	private suspend fun deleteChildTasks(fullId: String) {
 		val children = taskRepository.getChildren(fullId)
-		for (child in children.value!!) {
+		val sucChildren = children.getOrDefault(listOf())
+		for (child in sucChildren) {
 			taskRepository.delete(child)
 			deleteChildTasks(child.fullId)
 		}

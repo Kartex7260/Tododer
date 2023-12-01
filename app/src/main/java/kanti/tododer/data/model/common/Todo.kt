@@ -1,14 +1,13 @@
 package kanti.tododer.data.model.common
 
-import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.common.fullid.FullIds
 
-abstract class Todo : IdOwner {
+interface Todo : IdOwner, ParentOwner {
 
-	abstract val type: Type
+	val type: Type
 
-	override fun toString(): String {
-		return "Todo(id=$id type=$type)"
+	val fullId: String get() {
+		return FullIds.from(this)
 	}
 
 	enum class Type {
@@ -18,9 +17,10 @@ abstract class Todo : IdOwner {
 
 	companion object {
 
-		val Empty: Todo = object : Todo() {
-			override val type: Type = Type.TASK
+		val Empty: Todo = object : Todo {
+			override val type: Todo.Type = Todo.Type.TASK
 			override val id: Int = 0
+			override val parentId: String = ""
 		}
 
 	}

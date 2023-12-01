@@ -8,7 +8,9 @@ import android.widget.TextView
 import kanti.fillingprogressview.FillingProgressView
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.toPlan
+import kanti.tododer.data.model.common.result.GetRepositoryResult
+import kanti.tododer.data.model.common.result.asSuccess
+import kanti.tododer.data.model.plan.asPlan
 
 class PlanViewHolder(
 	todo: Todo,
@@ -20,7 +22,7 @@ class PlanViewHolder(
 	override val type: Todo.Type = Todo.Type.PLAN
 
 	override fun onBindData(view: View, todo: Todo) {
-		val plan = todo.toPlan
+		val plan = todo.asPlan
 		view.findViewById<TextView>(R.id.textViewTodoItemPlanTitle).apply {
 			text = plan.title
 		}
@@ -35,10 +37,11 @@ class PlanViewHolder(
 		}
 		view.findViewById<FillingProgressView>(R.id.fillingProgressViewPlanListItem).apply {
 			event(EVENT_PROGRESS_REQUEST, plan) { todoProgress ->
-				if (todoProgress == null || todoProgress !is Float) {
+				if (todoProgress == null || todoProgress !is GetRepositoryResult<*>) {
 					return@event
 				}
-				progress = todoProgress
+				val sucTodoProgress = todoProgress.asSuccess ?: return@event
+				progress = sucTodoProgress.value as Float
 			}
 		}
 		view.findViewById<ImageButton>(R.id.imageButtonPlanMore).apply {

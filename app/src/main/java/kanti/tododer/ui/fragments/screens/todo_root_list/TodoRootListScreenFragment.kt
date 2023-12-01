@@ -13,13 +13,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kanti.lifecyclelogger.LifecycleLogger
 import kanti.tododer.R
 import kanti.tododer.common.hashLogTag
-import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.databinding.FragmentTodoRootBinding
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.fullId
+import kanti.tododer.data.model.common.result.ResultUiState
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
@@ -69,19 +67,38 @@ class TodoRootListScreenFragment : Fragment() {
 		}
 
 		observe(viewModel.newPlanCreated) { uiState ->
-			val `continue` = showMessageFromType(uiState.type)
-			if (!`continue`)
-				return@observe
-
-			navigateToDetailScreen(uiState.value)
+			when(uiState) {
+				is ResultUiState.Success -> {
+					navigateToDetailScreen(uiState.value)
+				}
+				is ResultUiState.Process -> {}
+				is ResultUiState.Fail -> {
+					Toast.makeText(
+						requireContext(),
+						"${getString(R.string.unexpected_error)}: ${uiState.message}",
+						Toast.LENGTH_SHORT
+					).show()
+				}
+			}
 		}
 
 		viewModel.plansLiveData.observe(viewLifecycleOwner) { uiState ->
-			processView(uiState.process)
-			showData(uiState.value)
-
-			if (!uiState.isSuccess) {
-				Toast.makeText(requireContext(), R.string.unexpected_error, Toast.LENGTH_SHORT).show()
+			processView(false)
+			when (uiState) {
+				is ResultUiState.Process -> {
+					processView(true)
+				}
+				is ResultUiState.Success -> {
+					showData(uiState.value)
+				}
+				is ResultUiState.Fail -> {
+					val stg = getString(R.string.unexpected_error)
+					Toast.makeText(
+						requireContext(),
+						"$stg: ${uiState.message}",
+						Toast.LENGTH_SHORT
+					).show()
+				}
 			}
 		}
 
@@ -130,36 +147,6 @@ class TodoRootListScreenFragment : Fragment() {
 	private fun navigateToDetailScreen(todoElement: Todo) {
 		val navDirections = TodoRootListScreenFragmentDirections.actionListToDetail(todoElement.fullId)
 		findNavController().navigate(navDirections)
-	}
-
-	private fun showMessageFromType(type: RepositoryResult.Type): Boolean {
-		return when(type) {
-			is RepositoryResult.Type.Success -> { true }
-			is RepositoryResult.Type.AlreadyExists -> {
-				Toast.makeText(
-					requireContext(),
-					"${getString(R.string.not_found)}: ${type.fullId}",
-					Toast.LENGTH_SHORT
-				).show()
-				false
-			}
-			is RepositoryResult.Type.NotFound -> {
-				Toast.makeText(
-					requireContext(),
-					"${getString(R.string.not_found)}: ${type.message}",
-					Toast.LENGTH_SHORT
-				).show()
-				false
-			}
-			else -> {
-				Toast.makeText(
-					requireContext(),
-					"${getString(R.string.unexpected_error)}: ${type.message}",
-					Toast.LENGTH_SHORT
-				).show()
-				false
-			}
-		}
 	}
 
 }

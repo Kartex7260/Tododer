@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.core.view.setPadding
 import kanti.fillingprogressview.FillingProgressView
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.result.GetRepositoryResult
+import kanti.tododer.data.model.common.result.asSuccess
 
 class PlanStateViewHolder(
 	todo: Todo,
@@ -31,9 +33,10 @@ class PlanStateViewHolder(
 		val progressView = view as FillingProgressView
 
 		event(EVENT_PROGRESS_REQUEST, todo) { progress ->
-			if (progress == null || progress !is Float)
+			if (progress == null || progress !is GetRepositoryResult<*>)
 				return@event
-			progressView.progress = progress
+			val sucProgress = progress.asSuccess ?: return@event
+			progressView.progress = sucProgress.value as Float
 		}
 	}
 

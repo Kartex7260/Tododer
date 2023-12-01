@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.fullId
+import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.asPlan
+import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.asTask
 import kotlin.IllegalArgumentException
 
 abstract class TodoViewHolder(
@@ -116,14 +119,14 @@ abstract class TodoViewHolder(
 	interface Factory {
 
 		fun createTaskViewHolder(
-			todo: Todo,
+			todo: Task,
 			layoutInflater: LayoutInflater,
 			root: ViewGroup? = RootDefault,
 			attachToRoot: Boolean = AttachToRootDefault
 		): TodoViewHolder
 
 		fun createPlanViewHolder(
-			todo: Todo,
+			todo: Plan,
 			layoutInflater: LayoutInflater,
 			root: ViewGroup? = RootDefault,
 			attachToRoot: Boolean = AttachToRootDefault
@@ -146,15 +149,6 @@ abstract class TodoViewHolder(
 		const val AttachToRootDefault = false
 		const val NonResource = 0
 
-		fun empty(todo: Todo, layoutInflater: LayoutInflater): TodoViewHolder = object : TodoViewHolder(
-			todo,
-			layoutInflater,
-			NonResource
-		) {
-			override val type: Todo.Type = todo.type
-			override fun onBindData(view: View, todo: Todo) {}
-		}
-
 		fun newInstance(
 			todoViewHolderFactory: Factory,
 			todo: Todo,
@@ -164,10 +158,20 @@ abstract class TodoViewHolder(
 		): TodoViewHolder {
 			return when (todo.type) {
 				Todo.Type.TASK -> {
-					todoViewHolderFactory.createTaskViewHolder(todo, layoutInflater, root, attachToRoot)
+					todoViewHolderFactory.createTaskViewHolder(
+						todo.asTask,
+						layoutInflater,
+						root,
+						attachToRoot
+					)
 				}
 				Todo.Type.PLAN -> {
-					todoViewHolderFactory.createPlanViewHolder(todo, layoutInflater, root, attachToRoot)
+					todoViewHolderFactory.createPlanViewHolder(
+						todo.asPlan,
+						layoutInflater,
+						root,
+						attachToRoot
+					)
 				}
 			}
 		}

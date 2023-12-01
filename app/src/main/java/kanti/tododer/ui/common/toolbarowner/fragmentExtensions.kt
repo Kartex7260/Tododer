@@ -15,16 +15,16 @@ import com.google.android.material.appbar.MaterialToolbar
 import kanti.tododer.R
 
 val Fragment.activityToolbar: MaterialToolbar? get() {
-	if (activity == null || activity !is IToolbarOwner)
+	if (activity == null || activity !is ToolbarOwner)
 		return null
-	return (activity as IToolbarOwner).toolbar
+	return (activity as ToolbarOwner).toolbar
 }
 
 fun Fragment.requireActivityToolbar(): MaterialToolbar {
 	val activity = requireActivity()
-	if (activity !is IToolbarOwner)
+	if (activity !is ToolbarOwner)
 		throw IllegalStateException("Activity not implementation IToolbarOwner")
-	return (activity as IToolbarOwner).toolbar
+	return (activity as ToolbarOwner).toolbar
 }
 
 fun Fragment.setActivityToolbar(

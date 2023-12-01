@@ -1,18 +1,16 @@
 package kanti.tododer.domain.gettodochildren
 
-import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.fullId
-import kanti.tododer.data.model.task.ITaskRepository
+import kanti.tododer.data.model.common.result.GetRepositoryResult
+import kanti.tododer.data.model.task.TaskRepository
 import javax.inject.Inject
 
 class GetTaskChildrenUseCase @Inject constructor(
-	private val taskRepository: ITaskRepository
+	private val taskRepository: TaskRepository
 ) {
 
-	suspend operator fun invoke(todo: Todo): List<Todo> {
-		val repositoryResult = taskRepository.getChildren(todo.fullId)
-		return repositoryResult.value ?: listOf()
+	suspend operator fun invoke(todo: Todo): Result<List<Todo>> {
+		return taskRepository.getChildren(todo.fullId)
 	}
 
 }

@@ -2,9 +2,9 @@ package kanti.tododer.data.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import kanti.tododer.data.model.plan.datasource.local.IPlanDao
+import kanti.tododer.data.model.plan.datasource.local.PlanDao
 import kanti.tododer.data.model.plan.datasource.local.PlanEntity
-import kanti.tododer.data.progress.datasource.IPlanProgressDao
+import kanti.tododer.data.progress.datasource.TodoProgressDao
 import kanti.tododer.data.progress.datasource.TodoProgressEntity
 import kanti.tododer.data.model.task.datasource.local.TaskDao
 import kanti.tododer.data.model.task.datasource.local.TaskEntity
@@ -19,10 +19,10 @@ import kanti.tododer.data.model.task.datasource.local.TaskEntity
 )
 abstract class TododerDatabase : RoomDatabase() {
 
-	abstract fun planDao(): IPlanDao
+	abstract fun planDao(): PlanDao
 
 	abstract fun taskDao(): TaskDao
 
-	abstract fun planProgressDao(): IPlanProgressDao
+	abstract fun planProgressDao(): TodoProgressDao
 
 }

@@ -6,11 +6,11 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.databinding.ActivityTodoBinding
-import kanti.tododer.ui.common.fabowner.IFloatingActionButtonOwner
-import kanti.tododer.ui.common.toolbarowner.IToolbarOwner
+import kanti.tododer.ui.common.fabowner.FloatingActionButtonOwner
+import kanti.tododer.ui.common.toolbarowner.ToolbarOwner
 
 @AndroidEntryPoint
-class TodoActivity : AppCompatActivity(), IFloatingActionButtonOwner, IToolbarOwner {
+class TodoActivity : AppCompatActivity(), FloatingActionButtonOwner, ToolbarOwner {
 
 	private lateinit var viewBinding: ActivityTodoBinding
 	override val floatingActionButton: FloatingActionButton by lazy {

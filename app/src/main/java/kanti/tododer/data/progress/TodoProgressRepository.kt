@@ -1,25 +1,15 @@
 package kanti.tododer.data.progress
 
-import kanti.tododer.data.common.RepositoryResult
-import kanti.tododer.data.common.toRepositoryResult
-import kanti.tododer.data.progress.datasource.ITodoProgressLocalDataSource
-import javax.inject.Inject
+import kanti.tododer.data.model.common.result.GetRepositoryResult
 
-class TodoProgressRepository @Inject constructor(
-	private val planProgressDatSource: ITodoProgressLocalDataSource
-) : ITodoProgressRepository {
+interface TodoProgressRepository {
 
-	override suspend fun getPlanProgress(fullId: String): RepositoryResult<TodoProgress> {
-		val localResult = planProgressDatSource.getPlanProgress(fullId)
-		return localResult.toRepositoryResult()
-	}
+	suspend fun getPlanProgress(fullId: String): GetRepositoryResult<TodoProgress>
 
-	override suspend fun insert(todoProgress: TodoProgress): RepositoryResult<TodoProgress> {
-		val localResult = planProgressDatSource.insert(todoProgress)
-		return localResult.toRepositoryResult()
-	}
+	suspend fun insert(todoProgress: TodoProgress): Result<TodoProgress>
 
-	override suspend fun delete(todoProgress: TodoProgress) {
-		planProgressDatSource.delete(todoProgress)
-	}
+	suspend fun insert(vararg todoProgress: TodoProgress): Result<Unit>
+
+	suspend fun delete(vararg todoProgress: TodoProgress): Result<Unit>
+
 }

@@ -9,8 +9,8 @@ fun Fragment.setActivityFabOnClickListener(listener: View.OnClickListener?) {
 }
 
 val Fragment.activityFab: FloatingActionButton? get() {
-	if (activity != null && activity is IFloatingActionButtonOwner) {
-		val fabOwner = requireActivity() as IFloatingActionButtonOwner
+	if (activity != null && activity is FloatingActionButtonOwner) {
+		val fabOwner = requireActivity() as FloatingActionButtonOwner
 		return fabOwner.floatingActionButton
 	}
 	return null
@@ -18,7 +18,7 @@ val Fragment.activityFab: FloatingActionButton? get() {
 
 fun Fragment.requireActivityFab(): FloatingActionButton {
 	val activity = requireActivity()
-	if (activity !is IFloatingActionButtonOwner)
+	if (activity !is FloatingActionButtonOwner)
 		throw IllegalStateException("Activity $activity not implementation IFloatingActionButtonOwner")
-	return (activity as IFloatingActionButtonOwner).floatingActionButton
+	return (activity as FloatingActionButtonOwner).floatingActionButton
 }

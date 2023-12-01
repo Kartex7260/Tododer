@@ -7,11 +7,22 @@ import kanti.tododer.data.progress.TodoProgress
 
 @Entity(tableName = "plan_progress_cache")
 data class TodoProgressEntity(
-	@PrimaryKey val fullId: String,
-	@FloatRange(from = 0.0, to = 1.0) val progress: Float
-)
+	@PrimaryKey override val fullId: String,
+	@FloatRange(from = 0.0, to = 1.0) override val progress: Float
+) : TodoProgress
 
-val TodoProgressEntity.asTodoProgress: TodoProgress
-	get() {
-	return TodoProgress(fullId, progress)
+fun TodoProgress.toTodoProgressEntity(
+	fullId: String = this.fullId,
+	@FloatRange(from = 0.0, to = 1.0) progress: Float = this.progress
+): TodoProgressEntity {
+	if (
+		this is TodoProgressEntity &&
+		fullId == this.fullId &&
+		progress == this.progress
+	)
+		return this
+	return TodoProgressEntity(
+		fullId = fullId,
+		progress = progress
+	)
 }

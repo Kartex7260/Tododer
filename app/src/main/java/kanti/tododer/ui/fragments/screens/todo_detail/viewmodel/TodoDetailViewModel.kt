@@ -1,22 +1,22 @@
 package kanti.tododer.ui.fragments.screens.todo_detail.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.common.logTag
-import kanti.tododer.data.common.isNull
-import kanti.tododer.data.common.isSuccess
-import kanti.tododer.data.model.common.FullId
-import kanti.tododer.data.model.common.FullIds
+import kanti.tododer.data.model.common.fullid.FullId
+import kanti.tododer.data.model.common.fullid.FullIds
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.fullId
-import kanti.tododer.data.model.common.toFullId
-import kanti.tododer.data.model.plan.IPlanRepository
+import kanti.tododer.data.model.common.fullid.asFullId
+import kanti.tododer.data.model.common.result.GetRepositoryResult
+import kanti.tododer.data.model.common.result.asSuccess
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.task.ITaskRepository
+import kanti.tododer.data.model.plan.PlanRepository
+import kanti.tododer.data.model.plan.toPlan
+import kanti.tododer.data.model.task.TaskRepository
 import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.toTask
 import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase
@@ -36,14 +36,14 @@ class TodoDetailViewModel @Inject constructor(
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase,
-	private val taskRepository: ITaskRepository,
-	private val planRepository: IPlanRepository
+	private val taskRepository: TaskRepository,
+	private val planRepository: PlanRepository
 ) : ViewModel() {
 
 	private val stack = Stack<FullId>()
 	private var currentFullId: FullId? = null
 
-	private val _todoDetail = MutableStateFlow(TodoDetailUiState.Empty)
+	private val _todoDetail = MutableStateFlow<TodoDetailUiState>(TodoDetailUiState.Empty)
 	val todoDetail = _todoDetail.asStateFlow()
 
 	private val _newTodoCreated = MutableSharedFlow<TodoSavedUiState>()
@@ -55,15 +55,15 @@ class TodoDetailViewModel @Inject constructor(
 
 	fun saveTitle(todo: Todo, title: String) {
 		viewModelScope.launch {
-			val fullId = todo.toFullId
+			val fullId = todo.asFullId
 			when (fullId.type) {
 				Todo.Type.TASK -> saveTask(fullId.id) {
-					copy(
+					toTask(
 						title = title
 					)
 				}
 				Todo.Type.PLAN -> savePlan(fullId.id) {
-					copy(
+					toPlan(
 						title = title
 					)
 				}
@@ -73,15 +73,15 @@ class TodoDetailViewModel @Inject constructor(
 
 	fun saveRemark(todo: Todo, remark: String) {
 		viewModelScope.launch {
-			val fullId = todo.toFullId
+			val fullId = todo.asFullId
 			when (fullId.type) {
 				Todo.Type.TASK -> saveTask(fullId.id) {
-					copy(
+					toTask(
 						remark = remark
 					)
 				}
 				Todo.Type.PLAN -> savePlan(fullId.id) {
-					copy(
+					toPlan(
 						remark = remark
 					)
 				}
@@ -91,9 +91,7 @@ class TodoDetailViewModel @Inject constructor(
 
 	fun deleteTodo() {
 		if (currentFullId == null) {
-			_todoDetail.value = _todoDetail.value.copy(
-				type = TodoDetailUiState.Type.EmptyStack
-			)
+			_todoDetail.value = TodoDetailUiState.Empty
 			return
 		}
 		deleteTodo(currentFullId!!)
@@ -110,9 +108,7 @@ class TodoDetailViewModel @Inject constructor(
 		viewModelScope.launch {
 			if (currentFullId == null) {
 				_newTodoCreated.emit(
-					TodoSavedUiState(
-						type = TodoSavedUiState.Type.NoTodoInstalled
-					)
+					TodoSavedUiState.NoTodoInstalled
 				)
 			}
 
@@ -129,9 +125,7 @@ class TodoDetailViewModel @Inject constructor(
 		viewModelScope.launch {
 			if (currentFullId == null) {
 				_newTodoCreated.emit(
-					TodoSavedUiState(
-						type = TodoSavedUiState.Type.NoTodoInstalled
-					)
+					TodoSavedUiState.NoTodoInstalled
 				)
 			}
 
@@ -146,15 +140,11 @@ class TodoDetailViewModel @Inject constructor(
 
 	fun taskIsDone(task: Task, isDone: Boolean) {
 		viewModelScope.launch {
-			taskRepository.replace(task) {
-				copy(
-					done = isDone
-				)
-			}
+			taskRepository.insert(task.toTask(done = isDone))
 		}
 	}
 
-	fun planProgressRequest(plan: Plan, callback: MutableLiveData<Float>) {
+	fun planProgressRequest(plan: Plan, callback: MutableSharedFlow<GetRepositoryResult<Float>>) {
 		viewModelScope.launch {
 			computePlanProgressUseCase(plan, callback)
 		}
@@ -166,12 +156,11 @@ class TodoDetailViewModel @Inject constructor(
 				currentFullId = stack.pop()
 				showTodo(currentFullId!!)
 			} catch (th: EmptyStackException) {
-				_todoDetail.value = TodoDetailUiState(
-					type = TodoDetailUiState.Type.EmptyStack
-				)
+				_todoDetail.value = TodoDetailUiState.EmptyStack
 			} catch (th: Throwable) {
-				_todoDetail.value = TodoDetailUiState(
-					type = TodoDetailUiState.Type.Fail(th.message)
+				_todoDetail.value = TodoDetailUiState.Fail(
+					message = th.message,
+					throwable = th
 				)
 			}
 		}
@@ -181,14 +170,12 @@ class TodoDetailViewModel @Inject constructor(
 		fun log(mes: String = "") = Log.d(logTag, "showTodo(String = \"$fullId\"): $mes")
 
 		viewModelScope.launch {
-			_todoDetail.value = _todoDetail.value.copy(process = true)
+			_todoDetail.value = TodoDetailUiState.Process
 			log(": coroutine start")
 			val parsedFullId = FullIds.parseFullId(fullId)
 			log("parsedFullId = $parsedFullId")
 			if (parsedFullId == null) {
-				_todoDetail.value = TodoDetailUiState(
-					type = TodoDetailUiState.Type.InvalidFullId(fullId)
-				)
+				_todoDetail.value = TodoDetailUiState.InvalidFullId
 				return@launch
 			}
 
@@ -197,9 +184,9 @@ class TodoDetailViewModel @Inject constructor(
 	}
 
 	fun showTodo(todo: Todo) {
-		_todoDetail.value = _todoDetail.value.copy(process = true)
+		_todoDetail.value = TodoDetailUiState.Process
 		viewModelScope.launch {
-			val fullId = todo.toFullId
+			val fullId = todo.asFullId
 			showTodoAndAddToStack(fullId)
 		}
 	}
@@ -233,35 +220,29 @@ class TodoDetailViewModel @Inject constructor(
 		}
 		Log.d(logTag, "showTodo(FullId = \"$fullId\"): get uiState=$uiState")
 		_todoDetail.value = uiState
-		return uiState.isSuccess
+		return uiState.asSuccess != null
 	}
 
 	private suspend fun getTask(id: Int): TodoDetailUiState {
 		val repositoryResult = getTaskWithChildren(id)
-		Log.d(logTag, "getTask(Int = \"$id\"): gotten task with children (${repositoryResult.value})")
+		Log.d(logTag, "getTask(Int = \"$id\"): gotten task with children (${repositoryResult})")
 		return repositoryResult.toTodoDetailUiState
 	}
 
 	private suspend fun getPlan(id: Int): TodoDetailUiState {
 		val repositoryResult = getPlanWithChildren(id)
-		Log.d(logTag, "getPlan(Int = \"$id\"): gotten plan with children (${repositoryResult.value})")
+		Log.d(logTag, "getPlan(Int = \"$id\"): gotten plan with children (${repositoryResult})")
 		return repositoryResult.toTodoDetailUiState
 	}
 
 	private suspend fun saveTask(id: Int, body: Task.() -> Task) {
-		val task = taskRepository.getTask(id).also { repositoryResult ->
-			if (!repositoryResult.isSuccess || repositoryResult.isNull)
-				return
-		}.value!!
-		taskRepository.replace(task, body)
+		val task = taskRepository.getTask(id).asSuccess?.value ?: return
+		taskRepository.insert(task.body())
 	}
 
 	private suspend fun savePlan(id: Int, body: Plan.() -> Plan) {
-		val plan = planRepository.getPlan(id).also { repositoryResult ->
-			if (!repositoryResult.isSuccess || repositoryResult.isNull)
-				return
-		}.value!!
-		planRepository.replace(plan, body)
+		val plan = planRepository.getPlan(id).asSuccess?.value ?: return
+		planRepository.insert(plan.body())
 	}
 
 }

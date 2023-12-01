@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import com.google.android.material.checkbox.MaterialCheckBox
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.common.toTask
+import kanti.tododer.data.model.task.asTask
 
 class TaskStateViewHolder(
 	todo: Todo,
@@ -30,7 +30,7 @@ class TaskStateViewHolder(
 	}
 
 	override fun onBindData(view: View, todo: Todo) {
-		val task = todo.toTask
+		val task = todo.asTask
 
 		val checkBox = view as CheckBox
 		checkBox.isChecked = task.done
