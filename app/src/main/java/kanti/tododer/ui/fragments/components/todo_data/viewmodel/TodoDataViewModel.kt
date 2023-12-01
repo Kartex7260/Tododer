@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.IllegalStateException
 
-class TodoDataViewModel : ViewModel(), TodoDataOwnerViewModel, TodoDataUserViewModel {
+class TodoDataViewModel : ViewModel() {
 
 	private var todoDataSaveObserver: TodoDataSaveLifecycleObserver? = null
 	private var currentTodo: Todo? = null
@@ -26,24 +26,24 @@ class TodoDataViewModel : ViewModel(), TodoDataOwnerViewModel, TodoDataUserViewM
 			field = value
 		}
 	private val _todoElement = MutableStateFlow(TodoDataUiState())
-	override val todoElement = _todoElement.asStateFlow()
+	val todoElement = _todoElement.asStateFlow()
 
 	private val _updateStateView = MutableSharedFlow<Unit>()
-	override val updateStateView = _updateStateView.asSharedFlow()
+	val updateStateView = _updateStateView.asSharedFlow()
 
 	private val _taskIsDone = MutableSharedFlow<SaveTodoDataRequest<Boolean>>(replay = 1)
-	override val taskIsDone = _taskIsDone.asSharedFlow()
+	val onTaskIsDone = _taskIsDone.asSharedFlow()
 
 	private val _planProgressRequest = MutableSharedFlow<PlanProgressRequest>(replay = 1)
-	override val planProgressRequest = _planProgressRequest.asSharedFlow()
+	val onPlanProgressRequest = _planProgressRequest.asSharedFlow()
 
 	private val _saveNewTitle = MutableSharedFlow<SaveTodoDataRequest<String>>()
-	override val saveNewTitle = _saveNewTitle.asSharedFlow()
+	val onSaveNewTitle = _saveNewTitle.asSharedFlow()
 
 	private val _saveNewRemark = MutableSharedFlow<SaveTodoDataRequest<String>>()
-	override val saveNewRemark = _saveNewRemark.asSharedFlow()
+	val onSaveNewRemark = _saveNewRemark.asSharedFlow()
 
-	override fun saveNewTitle(title: String) {
+	fun saveNewTitle(title: String) {
 		viewModelScope.launch {
 			_saveNewTitle.emit(
 				SaveTodoDataRequest(
@@ -54,7 +54,7 @@ class TodoDataViewModel : ViewModel(), TodoDataOwnerViewModel, TodoDataUserViewM
 		}
 	}
 
-	override fun saveNewRemark(remark: String) {
+	fun saveNewRemark(remark: String) {
 		viewModelScope.launch {
 			_saveNewRemark.emit(
 				SaveTodoDataRequest(
@@ -65,14 +65,14 @@ class TodoDataViewModel : ViewModel(), TodoDataOwnerViewModel, TodoDataUserViewM
 		}
 	}
 
-	override fun sendTodo(todoElement: Todo?) {
+	fun sendTodo(todoElement: Todo? = null) {
 		currentTodo = todoElement
 		_todoElement.value = TodoDataUiState(
 			todoElement
 		)
 	}
 
-	override fun taskIsDone(task: Task, done: Boolean) {
+	fun taskIsDone(task: Task, done: Boolean) {
 		viewModelScope.launch {
 			_taskIsDone.emit(
 				SaveTodoDataRequest(task, done)
@@ -80,7 +80,7 @@ class TodoDataViewModel : ViewModel(), TodoDataOwnerViewModel, TodoDataUserViewM
 		}
 	}
 
-	override fun planProgressRequest(plan: Plan): LiveData<Float> {
+	fun planProgressRequest(plan: Plan): LiveData<Float> {
 		val callback = MutableLiveData<Float>()
 		viewModelScope.launch {
 			_planProgressRequest.emit(PlanProgressRequest(
@@ -91,13 +91,13 @@ class TodoDataViewModel : ViewModel(), TodoDataOwnerViewModel, TodoDataUserViewM
 		return callback
 	}
 
-	override fun updateStateView() {
+	fun updateStateView() {
 		viewModelScope.launch {
 			_updateStateView.emit(Unit)
 		}
 	}
 
-	override fun setTodoDataSaveObserver(lifecycleOwner: LifecycleOwner, todoSavable: TodoSavable) {
+	fun setTodoDataSaveObserver(lifecycleOwner: LifecycleOwner, todoSavable: TodoSavable) {
 		todoDataSaveObserver = TodoDataSaveLifecycleObserver(lifecycleOwner, todoSavable)
 	}
 

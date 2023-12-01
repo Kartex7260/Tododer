@@ -27,7 +27,7 @@ android {
 		minSdk = 24
 		targetSdk = 34
 		versionCode = 1
-		versionName = "2.0.0"
+		versionName = "1.0.0"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}
@@ -39,7 +39,6 @@ android {
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-rules.pro"
 			)
-			signingConfig = signingConfigs.getByName("debug")
 		}
 	}
 	compileOptions {
@@ -59,7 +58,6 @@ dependencies {
 	implementation("androidx.legacy:legacy-support-v4:1.0.0")
 	implementation(project(mapOf("path" to ":LifecycleLogger")))
 	implementation(project(mapOf("path" to ":FillingProgressView")))
-	testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
 	val hiltVersion = "2.48"
 	val roomVersion = "2.5.2"
@@ -71,7 +69,6 @@ dependencies {
 	testImplementation("junit:junit:4.13.2")
 	testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 
 	// ui

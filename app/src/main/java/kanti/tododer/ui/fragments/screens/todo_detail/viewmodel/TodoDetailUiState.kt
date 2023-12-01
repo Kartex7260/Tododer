@@ -43,7 +43,7 @@ data class TodoDetailUiState(
 
 val RepositoryResult<TodoWithChildren>.toTodoDetailUiState: TodoDetailUiState
 	get() {
-		val children = value?.children ?: listOf()
+		val children = value?.childTasks ?: listOf()
 		return TodoDetailUiState(
 			todo = value?.todo,
 			todoChildren = children,
@@ -54,7 +54,7 @@ val RepositoryResult<TodoWithChildren>.toTodoDetailUiState: TodoDetailUiState
 private val RepositoryResult.Type.toTodoDetailType: TodoDetailUiState.Type
 	get() {
 		return when (this) {
-			is RepositoryResult.Type.SuccessLocal -> TodoDetailUiState.Type.Success
+			is RepositoryResult.Type.Success -> TodoDetailUiState.Type.Success
 			is RepositoryResult.Type.NotFound -> TodoDetailUiState.Type.NotFound(message)
 			is RepositoryResult.Type.AlreadyExists -> TodoDetailUiState.Type.AlreadyExists(
 				fullId,

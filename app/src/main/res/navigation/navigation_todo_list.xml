@@ -14,9 +14,6 @@
         <action
             android:id="@+id/action_list_to_preferences"
             app:destination="@id/mainPreferences" />
-        <action
-            android:id="@+id/action_root_to_archive"
-            app:destination="@id/archiveTodoListFragment" />
     </fragment>
     <fragment
         android:id="@+id/todoDetailFragment"
@@ -33,20 +30,4 @@
         android:id="@+id/mainPreferences"
         android:name="kanti.tododer.ui.fragments.preferences.main.MainPreferences"
         android:label="MainPreferences" />
-    <fragment
-        android:id="@+id/archiveTodoListFragment"
-        android:name="kanti.tododer.ui.fragments.screens.todo_archive_list.ArchiveTodoListScreenFragment"
-        android:label="ArchiveTodoListScreenFragment" >
-        <action
-            android:id="@+id/action_archiveList_to_archiveDetail"
-            app:destination="@id/todoArchiveDetailScreenFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/todoArchiveDetailScreenFragment"
-        android:name="kanti.tododer.ui.fragments.screens.todo_archive_detail.TodoArchiveDetailScreenFragment"
-        android:label="TodoArchiveDetailScreenFragment" >
-        <argument
-            android:name="fullId"
-            app:argType="string" />
-    </fragment>
 </navigation>

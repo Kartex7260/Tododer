@@ -2,44 +2,29 @@ package kanti.tododer.domain.progress
 
 import androidx.lifecycle.MutableLiveData
 import kanti.tododer.data.common.RepositoryResult
+import kanti.tododer.data.model.common.fullId
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.progress.TodoProgressRepository
-import kanti.tododer.data.model.RepositorySet
+import kanti.tododer.data.progress.ITodoProgressRepository
+import kanti.tododer.domain.gettodochildren.GetTodoChildrenUseCase
 import javax.inject.Inject
 
 class ComputePlanProgressUseCase @Inject constructor(
+	private val planProgressRepository: ITodoProgressRepository,
 	private val computeTodoProgressUseCase: ComputeTodoProgressUseCase,
 ) {
 
 	private val defProgressValue: Float = 0f
 
-	suspend operator fun invoke(
-		todoProgressRepository: TodoProgressRepository,
-		repositorySet: RepositorySet,
-		plan: Plan,
-		callback: MutableLiveData<Float>
-	) {
-		sendCachedData(
-			todoProgressRepository,
-			plan,
-			callback
-		)
-		val progress = computeTodoProgressUseCase(
-			todoProgressRepository,
-			repositorySet,
-			plan
-		)
+	suspend operator fun invoke(plan: Plan, callback: MutableLiveData<Float>) {
+		sendCachedData(plan, callback)
+		val progress = computeTodoProgressUseCase(plan)
 		callback.postValue(progress)
 	}
 
-	private suspend fun sendCachedData(
-		todoProgressRepository: TodoProgressRepository,
-		plan: Plan,
-		callback: MutableLiveData<Float>
-	) {
-		val repRes = todoProgressRepository.getTodoProgress(plan.fullId)
+	private suspend fun sendCachedData(plan: Plan, callback: MutableLiveData<Float>) {
+		val repRes = planProgressRepository.getPlanProgress(plan.fullId)
 		when (repRes.type) {
-			RepositoryResult.Type.SuccessLocal -> {
+			RepositoryResult.Type.Success -> {
 				callback.postValue(repRes.value?.progress ?: defProgressValue)
 			}
 			else -> {

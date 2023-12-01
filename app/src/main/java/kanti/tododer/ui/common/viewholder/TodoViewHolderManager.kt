@@ -3,6 +3,7 @@ package kanti.tododer.ui.common.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import kanti.tododer.data.model.common.Todo
+import kanti.tododer.data.model.common.fullId
 
 class TodoViewHolderManager(
 	private val todoViewHolderFactory: TodoViewHolder.Factory,
@@ -16,9 +17,7 @@ class TodoViewHolderManager(
 		private set
 
 	fun remove(todoElement: Todo) {
-		val view = getViewHolder(todoElement, false).view
 		todoViewHolderHashMap.remove(todoElement.fullId)
-		root?.removeView(view)
 	}
 
 	fun getViewHolder(todoElement: Todo, attachToRoot: Boolean = false, setCurrent: Boolean = false): TodoViewHolder {

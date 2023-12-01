@@ -1,11 +1,14 @@
 package kanti.tododer.data.model.common
 
-interface Todo : IdOwner, ParentOwner {
+import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.task.Task
 
-	val type: Type
+abstract class Todo : IdOwner {
 
-	val fullId: String get() {
-		return FullIds.from(this)
+	abstract val type: Type
+
+	override fun toString(): String {
+		return "Todo(id=$id type=$type)"
 	}
 
 	enum class Type {
@@ -13,17 +16,11 @@ interface Todo : IdOwner, ParentOwner {
 		TASK
 	}
 
-	fun checkType(type: Type) {
-		if (this.type != type)
-			throw IllegalStateException("This todo (${this.type}) is not $type")
-	}
-
 	companion object {
 
-		val Empty: Todo = object : Todo {
+		val Empty: Todo = object : Todo() {
 			override val type: Type = Type.TASK
 			override val id: Int = 0
-			override val parentId: String = ""
 		}
 
 	}

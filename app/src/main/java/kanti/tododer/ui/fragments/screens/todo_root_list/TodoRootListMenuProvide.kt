@@ -10,8 +10,7 @@ import kanti.tododer.R
 
 class TodoRootListMenuProvide(
 	private val navController: NavController,
-	private val settingsNavDirections: NavDirections,
-	private val archiveNavDirections: NavDirections
+	private val settingsNavDirections: NavDirections
 ) : MenuProvider {
 
 	override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -21,10 +20,6 @@ class TodoRootListMenuProvide(
 	override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
 		R.id.menu_base_settings -> {
 			navController.navigate(settingsNavDirections)
-			true
-		}
-		R.id.menu_base_archive -> {
-			navController.navigate(archiveNavDirections)
 			true
 		}
 		else -> false

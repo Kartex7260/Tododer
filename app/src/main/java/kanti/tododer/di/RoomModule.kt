@@ -8,10 +8,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kanti.tododer.common.Const
-import kanti.tododer.data.model.plan.archive.datasource.local.ArchivePlanDao
-import kanti.tododer.data.model.plan.datasource.local.PlanDao
-import kanti.tododer.data.model.task.archive.datasource.local.ArchiveTaskDao
-import kanti.tododer.data.model.progress.datasource.TodoProgressDao
+import kanti.tododer.data.model.plan.datasource.local.IPlanDao
+import kanti.tododer.data.progress.datasource.IPlanProgressDao
 import kanti.tododer.data.model.task.datasource.local.TaskDao
 import kanti.tododer.data.room.TododerDatabase
 import javax.inject.Singleton
@@ -32,14 +30,8 @@ object RoomModule {
 
 	@Provides
 	@Singleton
-	fun providePlanDao(room: TododerDatabase): PlanDao {
+	fun providePlanDao(room: TododerDatabase): IPlanDao {
 		return room.planDao()
-	}
-
-	@Provides
-	@Singleton
-	fun provideArchivePlanDao(room: TododerDatabase): ArchivePlanDao {
-		return room.archivePlanDao()
 	}
 
 	@Provides
@@ -50,13 +42,7 @@ object RoomModule {
 
 	@Provides
 	@Singleton
-	fun provideArchiveTaskDao(room: TododerDatabase): ArchiveTaskDao {
-		return room.archiveTaskDao()
-	}
-
-	@Provides
-	@Singleton
-	fun providePlanProgressDao(room: TododerDatabase): TodoProgressDao {
+	fun providePlanProgressDao(room: TododerDatabase): IPlanProgressDao {
 		return room.planProgressDao()
 	}
 

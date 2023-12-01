@@ -50,7 +50,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_add_24"
         android:focusable="true"
-        style="@style/Widget.Material3.FloatingActionButton.Primary"
-        android:visibility="gone"/>
+        style="@style/Widget.Material3.FloatingActionButton.Primary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

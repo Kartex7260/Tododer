@@ -17,13 +17,12 @@ import kanti.tododer.R
 import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.task.asTask
-import kanti.tododer.databinding.FragmentScreenTodoDetailBinding
-import kanti.tododer.ui.common.fabowner.setActivityFab
+import kanti.tododer.data.model.common.toTask
+import kanti.tododer.databinding.FragmentTodoDetailBinding
+import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
-import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataUserViewModel
 import kanti.tododer.ui.fragments.components.todo_data.viewmodel.TodoDataViewModel
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.fragments.dialog.TodoSelectorDialogFragment
@@ -36,10 +35,10 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class TodoDetailScreenFragment : Fragment() {
 
-	private lateinit var view: FragmentScreenTodoDetailBinding
+	private lateinit var view: FragmentTodoDetailBinding
 	private val viewModel: TodoDetailViewModel by viewModels()
 	private val todoListViewModel: TodoListViewModel by viewModels()
-	private val todoDataViewModel: TodoDataUserViewModel by viewModels<TodoDataViewModel>()
+	private val todoDataViewModel: TodoDataViewModel by viewModels()
 
 	private val menuProvider by lazy {
 		TodoDetailMenuProvider(
@@ -69,7 +68,7 @@ class TodoDetailScreenFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
-		view = FragmentScreenTodoDetailBinding.inflate(inflater, container, false)
+		view = FragmentTodoDetailBinding.inflate(inflater, container, false)
 		return view.root
 	}
 
@@ -90,7 +89,7 @@ class TodoDetailScreenFragment : Fragment() {
 			viewModel.pop()
 		}
 
-		setActivityFab {
+		setActivityFabOnClickListener {
 			viewModel.currentTodoType?.apply {
 				when (this) {
 					Todo.Type.TASK -> {
@@ -236,38 +235,38 @@ class TodoDetailScreenFragment : Fragment() {
 	}
 
 	private fun observeTodoDataFragment() {
-		observe(todoDataViewModel.taskIsDone) { taskDone ->
-			viewModel.taskIsDone(taskDone.todo.asTask, taskDone.data)
+		observe(todoDataViewModel.onTaskIsDone) { taskDone ->
+			viewModel.taskIsDone(taskDone.todo.toTask, taskDone.data)
 		}
 
-		observe(todoDataViewModel.planProgressRequest) { progressRequest ->
-			viewModel.computePlanProgress(progressRequest.plan, progressRequest.callback)
+		observe(todoDataViewModel.onPlanProgressRequest) { progressRequest ->
+			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
 		}
 
-		observe(todoDataViewModel.saveNewTitle) { titleRequest ->
+		observe(todoDataViewModel.onSaveNewTitle) { titleRequest ->
 			viewModel.saveTitle(titleRequest.todo, titleRequest.data)
 		}
 
-		observe(todoDataViewModel.saveNewRemark) { remarkRequest ->
+		observe(todoDataViewModel.onSaveNewRemark) { remarkRequest ->
 			viewModel.saveRemark(remarkRequest.todo, remarkRequest.data)
 		}
 	}
 
 	private fun observeTodoListFragment() {
-		observe(todoListViewModel.taskIsDone) { taskDone ->
-			viewModel.taskIsDone(taskDone.todo.asTask, taskDone.data)
+		observe(todoListViewModel.onTaskIsDone) { taskDone ->
+			viewModel.taskIsDone(taskDone.todo.toTask, taskDone.data)
 			todoDataViewModel.updateStateView()
 		}
 
-		observe(todoListViewModel.elementClick) {
+		observe(todoListViewModel.onElementClick) {
 			viewModel.showTodo(it)
 		}
 
-		observe(todoListViewModel.planProgressRequest) { progressRequest ->
-			viewModel.computePlanProgress(progressRequest.plan, progressRequest.callback)
+		observe(todoListViewModel.onPlanProgressRequest) { progressRequest ->
+			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
 		}
 
-		observe(todoListViewModel.deleteTodo) { deleteRequest ->
+		observe(todoListViewModel.onDeleteTodo) { deleteRequest ->
 			viewModel.deleteTodo(deleteRequest.todo)
 		}
 	}

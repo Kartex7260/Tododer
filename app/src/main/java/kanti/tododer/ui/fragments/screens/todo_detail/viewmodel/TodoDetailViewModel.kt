@@ -1,31 +1,26 @@
 package kanti.tododer.ui.fragments.screens.todo_detail.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kanti.tododer.common.features.ComputePlanProgressFeature
 import kanti.tododer.common.logTag
+import kanti.tododer.data.common.isNull
+import kanti.tododer.data.common.isSuccess
 import kanti.tododer.data.model.common.FullId
 import kanti.tododer.data.model.common.FullIds
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.PlanRepository
-import kanti.tododer.data.model.plan.PlanImpl
-import kanti.tododer.data.model.task.TaskRepository
-import kanti.tododer.data.model.task.TaskImpl
-import kanti.tododer.di.StandardDataQualifier
+import kanti.tododer.data.model.common.fullId
+import kanti.tododer.data.model.common.toFullId
+import kanti.tododer.data.model.plan.IPlanRepository
+import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.task.ITaskRepository
+import kanti.tododer.data.model.task.Task
 import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase
-import kanti.tododer.domain.deletetodowithchildren.DeleteTodoWithProgenyUseCase
-import kanti.tododer.data.model.RepositorySet
-import kanti.tododer.common.features.DeleteTodoFeature
-import kanti.tododer.common.features.SaveRemarkFeature
-import kanti.tododer.common.features.SaveTitleFeature
-import kanti.tododer.common.features.TaskIsDoneFeature
-import kanti.tododer.data.model.common.toFullId
-import kanti.tododer.data.model.progress.TodoProgressRepository
-import kotlinx.coroutines.CoroutineScope
+import kanti.tododer.domain.removewithchildren.RemoveTodoWithChildrenUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -39,21 +34,11 @@ import javax.inject.Inject
 class TodoDetailViewModel @Inject constructor(
 	private val getTaskWithChildren: GetTaskWithChildrenUseCase,
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
-	override val computePlanProgressUseCase: ComputePlanProgressUseCase,
-	override val deleteTodoWithProgenyUseCase: DeleteTodoWithProgenyUseCase,
-	@StandardDataQualifier override val taskRepository: TaskRepository,
-	@StandardDataQualifier override val planRepository: PlanRepository,
-	@StandardDataQualifier override val todoProgressRepository: TodoProgressRepository
-) : ViewModel(), DeleteTodoFeature, SaveTitleFeature, SaveRemarkFeature, TaskIsDoneFeature,
-	ComputePlanProgressFeature {
-
-	override val coroutineScope: CoroutineScope
-		get() = viewModelScope
-	override val repositorySet: RepositorySet
-		get() = RepositorySet(
-			taskRepository,
-			planRepository
-		)
+	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
+	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase,
+	private val taskRepository: ITaskRepository,
+	private val planRepository: IPlanRepository
+) : ViewModel() {
 
 	private val stack = Stack<FullId>()
 	private var currentFullId: FullId? = null
@@ -68,6 +53,42 @@ class TodoDetailViewModel @Inject constructor(
 		return currentFullId?.type
 	}
 
+	fun saveTitle(todo: Todo, title: String) {
+		viewModelScope.launch {
+			val fullId = todo.toFullId
+			when (fullId.type) {
+				Todo.Type.TASK -> saveTask(fullId.id) {
+					copy(
+						title = title
+					)
+				}
+				Todo.Type.PLAN -> savePlan(fullId.id) {
+					copy(
+						title = title
+					)
+				}
+			}
+		}
+	}
+
+	fun saveRemark(todo: Todo, remark: String) {
+		viewModelScope.launch {
+			val fullId = todo.toFullId
+			when (fullId.type) {
+				Todo.Type.TASK -> saveTask(fullId.id) {
+					copy(
+						remark = remark
+					)
+				}
+				Todo.Type.PLAN -> savePlan(fullId.id) {
+					copy(
+						remark = remark
+					)
+				}
+			}
+		}
+	}
+
 	fun deleteTodo() {
 		if (currentFullId == null) {
 			_todoDetail.value = _todoDetail.value.copy(
@@ -77,6 +98,12 @@ class TodoDetailViewModel @Inject constructor(
 		}
 		deleteTodo(currentFullId!!)
 		pop()
+	}
+
+	fun deleteTodo(todo: Todo) {
+		viewModelScope.launch {
+			removeTodoWithChildrenUseCase(todo)
+		}
 	}
 
 	fun createNewPlan() {
@@ -89,12 +116,12 @@ class TodoDetailViewModel @Inject constructor(
 				)
 			}
 
-			val planImplFromDB = planRepository.insert(
-				PlanImpl(
+			val planFromDB = planRepository.insert(
+				Plan(
 					parentId = currentFullId!!.fullId
 				)
 			)
-			_newTodoCreated.emit(planImplFromDB.toTodoSavedUiState)
+			_newTodoCreated.emit(planFromDB.toTodoSavedUiState)
 		}
 	}
 
@@ -109,11 +136,27 @@ class TodoDetailViewModel @Inject constructor(
 			}
 
 			val taskFromDB = taskRepository.insert(
-				TaskImpl(
+				Task(
 					parentId = currentFullId!!.fullId
 				)
 			)
 			_newTodoCreated.emit(taskFromDB.toTodoSavedUiState)
+		}
+	}
+
+	fun taskIsDone(task: Task, isDone: Boolean) {
+		viewModelScope.launch {
+			taskRepository.replace(task) {
+				copy(
+					done = isDone
+				)
+			}
+		}
+	}
+
+	fun planProgressRequest(plan: Plan, callback: MutableLiveData<Float>) {
+		viewModelScope.launch {
+			computePlanProgressUseCase(plan, callback)
 		}
 	}
 
@@ -185,18 +228,40 @@ class TodoDetailViewModel @Inject constructor(
 
 	private suspend fun showTodo(fullId: FullId): Boolean {
 		val uiState = when (fullId.type) {
-			Todo.Type.PLAN -> getPlanWithChildren(
-				repositorySet,
-				fullId.id
-			).toTodoDetailUiState
-			Todo.Type.TASK -> getTaskWithChildren(
-				taskRepository,
-				fullId.id
-			).toTodoDetailUiState
+			Todo.Type.PLAN -> getPlan(fullId.id)
+			Todo.Type.TASK -> getTask(fullId.id)
 		}
 		Log.d(logTag, "showTodo(FullId = \"$fullId\"): get uiState=$uiState")
 		_todoDetail.value = uiState
 		return uiState.isSuccess
+	}
+
+	private suspend fun getTask(id: Int): TodoDetailUiState {
+		val repositoryResult = getTaskWithChildren(id)
+		Log.d(logTag, "getTask(Int = \"$id\"): gotten task with children (${repositoryResult.value})")
+		return repositoryResult.toTodoDetailUiState
+	}
+
+	private suspend fun getPlan(id: Int): TodoDetailUiState {
+		val repositoryResult = getPlanWithChildren(id)
+		Log.d(logTag, "getPlan(Int = \"$id\"): gotten plan with children (${repositoryResult.value})")
+		return repositoryResult.toTodoDetailUiState
+	}
+
+	private suspend fun saveTask(id: Int, body: Task.() -> Task) {
+		val task = taskRepository.getTask(id).also { repositoryResult ->
+			if (!repositoryResult.isSuccess || repositoryResult.isNull)
+				return
+		}.value!!
+		taskRepository.replace(task, body)
+	}
+
+	private suspend fun savePlan(id: Int, body: Plan.() -> Plan) {
+		val plan = planRepository.getPlan(id).also { repositoryResult ->
+			if (!repositoryResult.isSuccess || repositoryResult.isNull)
+				return
+		}.value!!
+		planRepository.replace(plan, body)
 	}
 
 }

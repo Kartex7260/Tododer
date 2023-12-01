@@ -3,7 +3,6 @@ package kanti.tododer.ui.fragments.screens.todo_root_list
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -16,27 +15,26 @@ import kanti.tododer.R
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.common.RepositoryResult
 import kanti.tododer.data.common.isSuccess
+import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.databinding.FragmentTodoRootBinding
 import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.databinding.FragmentScreenTodoRootListBinding
-import kanti.tododer.ui.common.fabowner.setActivityFab
+import kanti.tododer.data.model.common.fullId
+import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.setActivityToolbar
 import kanti.tododer.ui.fragments.common.observe
-import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListUserViewModel
 
 @AndroidEntryPoint
 class TodoRootListScreenFragment : Fragment() {
 
-	private lateinit var view: FragmentScreenTodoRootListBinding
+	private lateinit var view: FragmentTodoRootBinding
 	private val viewModel: TodoRootListViewModel by viewModels()
-	private val todoListViewModel: TodoListUserViewModel by viewModels<TodoListViewModel>()
+	private val todoListViewModel: TodoListViewModel by viewModels()
 
 	private val menuProvider by lazy {
 		TodoRootListMenuProvide(
 			findNavController(),
-			TodoRootListScreenFragmentDirections.actionListToPreferences(),
-			TodoRootListScreenFragmentDirections.actionRootToArchive()
+			TodoRootListScreenFragmentDirections.actionListToPreferences()
 		)
 	}
 
@@ -52,7 +50,7 @@ class TodoRootListScreenFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
-		view = FragmentScreenTodoRootListBinding.inflate(inflater, container, false)
+		view = FragmentTodoRootBinding.inflate(inflater, container, false)
 
 		return view.root
 	}
@@ -66,7 +64,7 @@ class TodoRootListScreenFragment : Fragment() {
 			menuProvider = menuProvider
 		)
 
-		setActivityFab {
+		setActivityFabOnClickListener {
 			viewModel.createNewPlan()
 		}
 
@@ -87,7 +85,7 @@ class TodoRootListScreenFragment : Fragment() {
 			}
 		}
 
-		observe(todoListViewModel.elementClick) { todoElement ->
+		observe(todoListViewModel.onElementClick) { todoElement ->
 			Log.d(
 				this@TodoRootListScreenFragment.hashLogTag,
 				"onElementClick.collectLatest { $todoElement }"
@@ -95,35 +93,20 @@ class TodoRootListScreenFragment : Fragment() {
 			navigateToDetailScreen(todoElement)
 		}
 
-		observe(todoListViewModel.planProgressRequest) { progressRequest ->
+		observe(todoListViewModel.onPlanProgressRequest) { progressRequest ->
 			Log.d(
 				this@TodoRootListScreenFragment.hashLogTag,
 				"onPlanProgressRequest.collectLatest { $progressRequest }"
 			)
-			viewModel.computePlanProgress(progressRequest.plan, progressRequest.callback)
+			viewModel.planProgressRequest(progressRequest.plan, progressRequest.callback)
 		}
 
-		observe(todoListViewModel.deleteTodo) { deleteRequest ->
+		observe(todoListViewModel.onDeleteTodo) { deleteRequest ->
 			Log.d(
 				this@TodoRootListScreenFragment.hashLogTag,
 				"onDeleteTodo.collectLatest { $deleteRequest }"
 			)
 			viewModel.deleteTodo(deleteRequest.todo)
-		}
-
-		observe(todoListViewModel.todoItemCreateContextMenu) { createMenuRequest ->
-			createMenuRequest.contextMenu.add(
-				Menu.NONE,
-				1,
-				0,
-				R.string.to_archive
-			).apply {
-				setOnMenuItemClickListener {
-					viewModel.archiveTodo(createMenuRequest.todo)
-					todoListViewModel.removeTodoView(createMenuRequest.todo)
-					true
-				}
-			}
 		}
 	}
 
@@ -151,7 +134,7 @@ class TodoRootListScreenFragment : Fragment() {
 
 	private fun showMessageFromType(type: RepositoryResult.Type): Boolean {
 		return when(type) {
-			is RepositoryResult.Type.SuccessLocal -> { true }
+			is RepositoryResult.Type.Success -> { true }
 			is RepositoryResult.Type.AlreadyExists -> {
 				Toast.makeText(
 					requireContext(),

@@ -8,9 +8,9 @@ import android.widget.TextView
 import kanti.fillingprogressview.FillingProgressView
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.common.toPlan
 
-open class PlanViewHolder(
+class PlanViewHolder(
 	todo: Todo,
 	layoutInflater: LayoutInflater,
 	root: ViewGroup? = RootDefault,
@@ -20,7 +20,7 @@ open class PlanViewHolder(
 	override val type: Todo.Type = Todo.Type.PLAN
 
 	override fun onBindData(view: View, todo: Todo) {
-		val plan = todo as Plan
+		val plan = todo.toPlan
 		view.findViewById<TextView>(R.id.textViewTodoItemPlanTitle).apply {
 			text = plan.title
 		}
