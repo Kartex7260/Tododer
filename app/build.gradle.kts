@@ -97,6 +97,9 @@ dependencies {
 	implementation("androidx.room:room-runtime:$roomVersion")
 	implementation("androidx.room:room-ktx:$roomVersion")
 	ksp("androidx.room:room-compiler:$roomVersion")
+
+	implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
+	implementation(files("libs/kanti.sl-ktx.jar"))
 }
 
 tasks.withType<Test> {
