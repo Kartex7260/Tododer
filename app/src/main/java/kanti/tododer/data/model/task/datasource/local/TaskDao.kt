@@ -9,6 +9,9 @@ import androidx.room.Query
 @Dao
 interface TaskDao {
 
+	@Query("SELECT * FROM task")
+	suspend fun getAll(): List<TaskEntity>
+
 	@Query("SELECT * FROM task WHERE parent_id = :parentId")
 	suspend fun getChildren(parentId: String): List<TaskEntity>
 
