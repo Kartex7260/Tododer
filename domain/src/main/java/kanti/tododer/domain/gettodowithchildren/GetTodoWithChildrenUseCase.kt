@@ -2,7 +2,6 @@ package kanti.tododer.domain.gettodowithchildren
 
 import kanti.tododer.data.model.common.result.GetRepositoryResult
 import kanti.tododer.data.model.common.fullid.FullId
-import kanti.tododer.data.model.common.Todo
 import kanti.tododer.domain.common.TodoWithChildren
 import javax.inject.Inject
 

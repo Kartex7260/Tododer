@@ -1,11 +1,11 @@
 package kanti.tododer.domain.removewithchildren
 
 import kanti.tododer.data.model.common.result.asSuccess
-import kanti.tododer.data.task.TaskRepository
+import kanti.tododer.data.model.task.TaskRepository
 import javax.inject.Inject
 
 class RemoveTaskWithChildrenUseCase @Inject constructor(
-	private val taskRepository: kanti.tododer.data.task.TaskRepository
+	private val taskRepository: TaskRepository
 ) {
 
 	suspend operator fun invoke(id: Int): Boolean {

@@ -1,7 +1,6 @@
 package kanti.tododer.data.model.plan
 
 import kanti.tododer.common.Const
-import kanti.tododer.data.model.common.result.GetRepositoryResult
 
 suspend fun PlanRepository.getFromRoot(): Result<List<Plan>> {
 	return getChildren(Const.ROOT_PARENT_ID)

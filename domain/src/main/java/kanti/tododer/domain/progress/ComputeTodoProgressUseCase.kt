@@ -3,10 +3,10 @@ package kanti.tododer.domain.progress
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.asPlan
-import kanti.tododer.data.task.Task
-import kanti.tododer.data.task.asTask
-import kanti.tododer.data.progress.TodoProgressRepository
-import kanti.tododer.data.progress.TodoProgress
+import kanti.tododer.data.model.progress.TodoProgress
+import kanti.tododer.data.model.progress.TodoProgressRepository
+import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.model.task.asTask
 import kanti.tododer.domain.gettodochildren.GetTodoChildrenUseCase
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class ComputeTodoProgressUseCase @Inject constructor(
 	private val getTodoChildrenUseCase: GetTodoChildrenUseCase
 ) {
 
-	suspend operator fun invoke(todo: kanti.tododer.data.model.common.Todo): Float {
+	suspend operator fun invoke(todo: Todo): Float {
 		return when(todo.type) {
 			kanti.tododer.data.model.common.Todo.Type.TASK -> {
 				computeTask(todo.asTask)
@@ -26,14 +26,14 @@ class ComputeTodoProgressUseCase @Inject constructor(
 		}
 	}
 
-	private suspend fun computeTask(task: kanti.tododer.data.task.Task): Float {
+	private suspend fun computeTask(task: Task): Float {
 		if (task.done)
 			return 1f
 
 		return computeChildren(task)
 	}
 
-	private suspend fun computePlan(plan: kanti.tododer.data.model.plan.Plan): Float {
+	private suspend fun computePlan(plan: Plan): Float {
 		val progress = computeChildren(plan)
 		todoProgressRepository.insert(
 			TodoProgress(
@@ -44,7 +44,7 @@ class ComputeTodoProgressUseCase @Inject constructor(
 		return progress
 	}
 
-	private suspend fun computeChildren(todo: kanti.tododer.data.model.common.Todo): Float {
+	private suspend fun computeChildren(todo: Todo): Float {
 		val children = getTodoChildrenUseCase(todo)
 		val successChildren = children.getOrDefault(listOf())
 		if (successChildren.isEmpty())

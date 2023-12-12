@@ -2,15 +2,15 @@ package kanti.tododer.domain.gettodochildren
 
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.PlanRepository
-import kanti.tododer.data.task.TaskRepository
+import kanti.tododer.data.model.task.TaskRepository
 import javax.inject.Inject
 
 class GetPlanChildrenUseCase @Inject constructor(
-	private val taskRepository: kanti.tododer.data.task.TaskRepository,
-	private val planRepository: kanti.tododer.data.model.plan.PlanRepository
+	private val taskRepository: TaskRepository,
+	private val planRepository: PlanRepository
 ) {
 
-	suspend operator fun invoke(todo: kanti.tododer.data.model.common.Todo): Result<List<kanti.tododer.data.model.common.Todo>> {
+	suspend operator fun invoke(todo: Todo): Result<List<Todo>> {
 		val childrenPlanResult = planRepository.getChildren(todo.fullId)
 		val childrenTaskResult = taskRepository.getChildren(todo.fullId)
 		if (childrenPlanResult.isFailure)

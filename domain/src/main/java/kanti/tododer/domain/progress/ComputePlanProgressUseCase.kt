@@ -1,13 +1,9 @@
 package kanti.tododer.domain.progress
 
-import androidx.lifecycle.MutableLiveData
 import kanti.tododer.data.model.common.result.GetRepositoryResult
 import kanti.tododer.data.model.common.result.asSuccess
-import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.progress.TodoProgress
-import kanti.tododer.data.progress.TodoProgressRepository
+import kanti.tododer.data.model.progress.TodoProgressRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class ComputePlanProgressUseCase @Inject constructor(

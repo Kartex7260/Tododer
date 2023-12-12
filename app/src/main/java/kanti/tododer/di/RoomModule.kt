@@ -24,7 +24,7 @@ object RoomModule {
 		return Room.databaseBuilder(
 			context = context,
 			klass = TododerDatabase::class.java,
-			name = Const.DATABASE_NAME
+			name = kanti.tododer.common.Const.DATABASE_NAME
 		).build()
 	}
 

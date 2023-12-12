@@ -53,7 +53,7 @@ class TodoDetailScreenFragment : Fragment() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		requireArguments().apply {
-			val planFullId = getString(Const.NAVIGATION_ARGUMENT_FULL_ID) as String
+			val planFullId = getString(kanti.tododer.common.Const.NAVIGATION_ARGUMENT_FULL_ID) as String
 			viewModel.showTodo(planFullId)
 		}
 	}

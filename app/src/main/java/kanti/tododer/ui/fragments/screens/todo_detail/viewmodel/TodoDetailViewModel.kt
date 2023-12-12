@@ -32,10 +32,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoDetailViewModel @Inject constructor(
-	private val getTaskWithChildren: GetTaskWithChildrenUseCase,
-	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
-	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
-	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase,
+	private val getTaskWithChildren: kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase,
+	private val getPlanWithChildren: kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase,
+	private val computePlanProgressUseCase: kanti.tododer.domain.progress.ComputePlanProgressUseCase,
+	private val removeTodoWithChildrenUseCase: kanti.tododer.domain.removewithchildren.RemoveTodoWithChildrenUseCase,
 	private val taskRepository: kanti.tododer.data.task.TaskRepository,
 	private val planRepository: kanti.tododer.data.model.plan.PlanRepository
 ) : ViewModel() {

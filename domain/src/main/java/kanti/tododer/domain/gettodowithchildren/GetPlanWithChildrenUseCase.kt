@@ -9,7 +9,7 @@ import kanti.tododer.domain.gettodochildren.GetPlanChildrenUseCase
 import javax.inject.Inject
 
 class GetPlanWithChildrenUseCase @Inject constructor(
-	private val planRepository: kanti.tododer.data.model.plan.PlanRepository,
+	private val planRepository: PlanRepository,
 	private val getPlanChildrenUseCase: GetPlanChildrenUseCase
 ) {
 

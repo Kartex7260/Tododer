@@ -23,8 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoRootListViewModel @Inject constructor(
 	private val planRepository: kanti.tododer.data.model.plan.PlanRepository,
-	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
-	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase
+	private val computePlanProgressUseCase: kanti.tododer.domain.progress.ComputePlanProgressUseCase,
+	private val removeTodoWithChildrenUseCase: kanti.tododer.domain.removewithchildren.RemoveTodoWithChildrenUseCase
 ) : ViewModel() {
 
 	private val _plansLiveData = MutableLiveData<ResultUiState<List<kanti.tododer.data.model.plan.Plan>>>()

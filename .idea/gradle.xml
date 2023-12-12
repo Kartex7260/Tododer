@@ -12,10 +12,12 @@
             <option value="$PROJECT_DIR$/FillingProgressView" />
             <option value="$PROJECT_DIR$/LifecycleLogger" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/data/plan" />
             <option value="$PROJECT_DIR$/data/progress" />
             <option value="$PROJECT_DIR$/data/task" />
+            <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/room" />
             <option value="$PROJECT_DIR$/room/plan" />
             <option value="$PROJECT_DIR$/room/progress" />

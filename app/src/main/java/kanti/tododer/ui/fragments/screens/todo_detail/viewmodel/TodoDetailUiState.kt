@@ -32,7 +32,7 @@ sealed class TodoDetailUiState {
 
 }
 
-val GetRepositoryResult<TodoWithChildren>.toTodoDetailUiState: TodoDetailUiState get() {
+val GetRepositoryResult<kanti.tododer.domain.common.TodoWithChildren>.toTodoDetailUiState: TodoDetailUiState get() {
 	return when (this) {
 		is GetRepositoryResult.Success -> {
 			TodoDetailUiState.Success(value.todo, value.childTasks)
