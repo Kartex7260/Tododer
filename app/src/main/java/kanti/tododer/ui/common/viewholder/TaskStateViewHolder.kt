@@ -6,17 +6,17 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import com.google.android.material.checkbox.MaterialCheckBox
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.task.asTask
+import kanti.tododer.data.task.asTask
 
 class TaskStateViewHolder(
-	todo: Todo,
+	todo: kanti.tododer.data.model.common.Todo,
 	private val layoutInflater: LayoutInflater,
 	root: ViewGroup? = RootDefault,
 	attachToRoot: Boolean = AttachToRootDefault
 ) : TodoViewHolder(todo, layoutInflater, NonResource, root, attachToRoot),
 	TaskStateViewOwner {
 
-	override val type: Todo.Type = Todo.Type.TASK
+	override val type: kanti.tododer.data.model.common.Todo.Type = kanti.tododer.data.model.common.Todo.Type.TASK
 
 	override val stateView: MaterialCheckBox
 		get() = view as MaterialCheckBox
@@ -29,7 +29,7 @@ class TaskStateViewHolder(
 		}
 	}
 
-	override fun onBindData(view: View, todo: Todo) {
+	override fun onBindData(view: View, todo: kanti.tododer.data.model.common.Todo) {
 		val task = todo.asTask
 
 		val checkBox = view as CheckBox

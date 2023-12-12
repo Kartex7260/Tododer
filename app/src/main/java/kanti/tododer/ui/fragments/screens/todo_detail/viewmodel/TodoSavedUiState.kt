@@ -5,7 +5,7 @@ import kanti.tododer.data.model.common.Todo
 sealed class TodoSavedUiState {
 
 	class Success(
-		val todo: Todo
+		val todo: kanti.tododer.data.model.common.Todo
 	) : TodoSavedUiState()
 
 	data object NoTodoInstalled : TodoSavedUiState()
@@ -31,7 +31,7 @@ val TodoSavedUiState.asFail: TodoSavedUiState.Fail? get() {
 	return this
 }
 
-val Result<Todo>.toTodoSavedUiState: TodoSavedUiState get() {
+val Result<kanti.tododer.data.model.common.Todo>.toTodoSavedUiState: TodoSavedUiState get() {
 	return if (isSuccess) {
 		TodoSavedUiState.Success(getOrThrow())
 	} else {

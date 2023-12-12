@@ -5,6 +5,6 @@ import kanti.tododer.data.model.plan.Plan
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 data class PlanProgressRequest(
-	val plan: Plan,
+	val plan: kanti.tododer.data.model.plan.Plan,
 	val callback: MutableSharedFlow<GetRepositoryResult<Float>>
 )

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.result.GetRepositoryResult
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.task.Task
 import kanti.tododer.ui.fragments.components.common.PlanProgressRequest
 import kanti.tododer.ui.fragments.components.common.SaveTodoDataRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +20,7 @@ import kotlin.IllegalStateException
 class TodoDataViewModel : ViewModel() {
 
 	private var todoDataSaveObserver: TodoDataSaveLifecycleObserver? = null
-	private var currentTodo: Todo? = null
+	private var currentTodo: kanti.tododer.data.model.common.Todo? = null
 		set(value) {
 			todoDataSaveObserver?.todo = value
 			field = value
@@ -65,14 +65,14 @@ class TodoDataViewModel : ViewModel() {
 		}
 	}
 
-	fun sendTodo(todoElement: Todo? = null) {
+	fun sendTodo(todoElement: kanti.tododer.data.model.common.Todo? = null) {
 		currentTodo = todoElement
 		_todoElement.value = TodoDataUiState(
 			todoElement
 		)
 	}
 
-	fun taskIsDone(task: Task, done: Boolean) {
+	fun taskIsDone(task: kanti.tododer.data.task.Task, done: Boolean) {
 		viewModelScope.launch {
 			_taskIsDone.emit(
 				SaveTodoDataRequest(task, done)
@@ -80,7 +80,7 @@ class TodoDataViewModel : ViewModel() {
 		}
 	}
 
-	fun planProgressRequest(plan: Plan): SharedFlow<GetRepositoryResult<Float>> {
+	fun planProgressRequest(plan: kanti.tododer.data.model.plan.Plan): SharedFlow<GetRepositoryResult<Float>> {
 		val callback = MutableSharedFlow<GetRepositoryResult<Float>>()
 		viewModelScope.launch {
 			_planProgressRequest.emit(PlanProgressRequest(

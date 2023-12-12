@@ -4,10 +4,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kanti.tododer.data.model.task.TaskRepository
-import kanti.tododer.data.model.task.TaskRepositoryImpl
-import kanti.tododer.data.model.task.datasource.local.TaskLocalDataSource
-import kanti.tododer.data.model.task.datasource.local.TaskRoomDataSource
+import kanti.tododer.data.task.TaskRepository
+import kanti.tododer.data.task.TaskRepositoryImpl
+import kanti.tododer.data.task.datasource.local.TaskLocalDataSource
+import kanti.tododer.data.task.datasource.local.TaskRoomDataSource
 import javax.inject.Singleton
 
 @Module
@@ -16,10 +16,10 @@ interface TaskModule {
 
 	@Binds
 	@Singleton
-	fun bindTaskRepository(repository: TaskRepositoryImpl): TaskRepository
+	fun bindTaskRepository(repository: kanti.tododer.data.task.TaskRepositoryImpl): kanti.tododer.data.task.TaskRepository
 
 	@Binds
 	@Singleton
-	fun bindTaskRoomDataSource(dataSource: TaskRoomDataSource): TaskLocalDataSource
+	fun bindTaskRoomDataSource(dataSource: kanti.tododer.data.task.datasource.local.TaskRoomDataSource): kanti.tododer.data.task.datasource.local.TaskLocalDataSource
 
 }

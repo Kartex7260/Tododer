@@ -69,9 +69,10 @@ dependencies {
 
 	val hiltVersion = "2.48.1"
 	val roomVersion = "2.6.1"
+	val coroutinesVersion = "1.7.3"
 	val lifecycleVersion = "2.6.2"
 	val navigationVersion = "2.7.5"
-	val coroutinesVersion = "1.7.3"
+
 
 //	Tests
 	testImplementation("junit:junit:4.13.2")

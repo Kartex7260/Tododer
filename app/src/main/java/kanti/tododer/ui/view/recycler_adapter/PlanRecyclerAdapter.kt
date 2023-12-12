@@ -9,8 +9,8 @@ import kanti.tododer.R
 import kanti.tododer.data.model.plan.Plan
 
 class PlanRecyclerAdapter(
-	private val plans: List<Plan>,
-	private val onItemClick: (Plan) -> Unit
+	private val plans: List<kanti.tododer.data.model.plan.Plan>,
+	private val onItemClick: (kanti.tododer.data.model.plan.Plan) -> Unit
 ) : RecyclerView.Adapter<PlanRecyclerAdapter.PlanViewHolder>() {
 
 	inner class PlanViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -18,7 +18,7 @@ class PlanRecyclerAdapter(
 		private val textViewTitle = view.findViewById<TextView>(R.id.textViewTodoItemPlanTitle)
 		private val textViewRemark = view.findViewById<TextView>(R.id.textViewTodoItemPlanRemark)
 
-		fun showPlan(plan: Plan) {
+		fun showPlan(plan: kanti.tododer.data.model.plan.Plan) {
 			itemView.setOnClickListener { onItemClick(plan) }
 
 			textViewTitle.text = plan.title

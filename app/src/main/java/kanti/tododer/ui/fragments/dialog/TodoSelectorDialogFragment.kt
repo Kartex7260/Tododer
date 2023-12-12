@@ -10,7 +10,7 @@ import kanti.tododer.data.model.common.Todo
 class TodoSelectorDialogFragment : DialogFragment() {
 
 	fun interface TodoSelectListener {
-		fun select(type: Todo.Type)
+		fun select(type: kanti.tododer.data.model.common.Todo.Type)
 	}
 
 	private var todoSelectListener: TodoSelectListener? = null
@@ -24,8 +24,8 @@ class TodoSelectorDialogFragment : DialogFragment() {
 			AlertDialog.Builder(this).apply {
 				setItems(R.array.todo_types) { dialogInterface, which ->
 					when (which) {
-						0 -> todoSelectListener?.select(Todo.Type.PLAN)
-						1 -> todoSelectListener?.select(Todo.Type.TASK)
+						0 -> todoSelectListener?.select(kanti.tododer.data.model.common.Todo.Type.PLAN)
+						1 -> todoSelectListener?.select(kanti.tododer.data.model.common.Todo.Type.TASK)
 					}
 					dialogInterface.cancel()
 				}

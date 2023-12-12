@@ -11,13 +11,13 @@ import kanti.tododer.data.model.common.result.GetRepositoryResult
 import kanti.tododer.data.model.common.result.asSuccess
 
 class PlanStateViewHolder(
-	todo: Todo,
+	todo: kanti.tododer.data.model.common.Todo,
 	private val layoutInflater: LayoutInflater,
 	root: ViewGroup? = RootDefault,
 	attachToRoot: Boolean = AttachToRootDefault
 ) : TodoViewHolder(todo, layoutInflater, NonResource, root, attachToRoot) {
 
-	override val type: Todo.Type = Todo.Type.PLAN
+	override val type: kanti.tododer.data.model.common.Todo.Type = kanti.tododer.data.model.common.Todo.Type.PLAN
 
 	override fun createView(): View {
 		return FillingProgressView(layoutInflater.context).apply {
@@ -29,7 +29,7 @@ class PlanStateViewHolder(
 		}
 	}
 
-	override fun onBindData(view: View, todo: Todo) {
+	override fun onBindData(view: View, todo: kanti.tododer.data.model.common.Todo) {
 		val progressView = view as FillingProgressView
 
 		event(EVENT_PROGRESS_REQUEST, todo) { progress ->

@@ -18,8 +18,8 @@ import kanti.tododer.ui.fragments.components.todo_list.viewmodel.TodoListViewMod
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.asPlan
-import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.task.asTask
+import kanti.tododer.data.task.Task
+import kanti.tododer.data.task.asTask
 import kanti.tododer.databinding.FragmentTodoListBinding
 import kanti.tododer.ui.common.viewholder.ItemListTodoViewHolderFactory
 import kanti.tododer.ui.common.viewholder.PlanViewHolder
@@ -96,12 +96,12 @@ class TodoListFragment : Fragment() {
 		Log.d(hashLogTag, "onDestroyView(): unsubscribe from viewModel.todoListLiveData")
 	}
 
-	private fun getViewHolder(todo: Todo): TodoViewHolder {
+	private fun getViewHolder(todo: kanti.tododer.data.model.common.Todo): TodoViewHolder {
 		fun log(mes: String) = Log.d(hashLogTag, "getViewHolder(Todo = $todo): $mes")
 
 		val viewHolder = viewHolderManager.getViewHolder(todo)
 		val eventListener = object : TodoEventListener {
-			override fun onEvent(type: Int, todo: Todo, value: Any?, callback: TodoEventCallback?) {
+			override fun onEvent(type: Int, todo: kanti.tododer.data.model.common.Todo, value: Any?, callback: TodoEventCallback?) {
 				when (type) {
 					TodoViewHolder.EVENT_ON_CLICK -> {
 						log("viewHolder.setEventListenerIfNull=${hashCode()} {\n" +
@@ -120,8 +120,8 @@ class TodoListFragment : Fragment() {
 					}
 					else -> {
 						when (todo.type) {
-							Todo.Type.TASK -> taskEvents(type, todo.asTask, value, callback)
-							Todo.Type.PLAN -> planEvents(type, todo.asPlan, value, callback)
+							kanti.tododer.data.model.common.Todo.Type.TASK -> taskEvents(type, todo.asTask, value, callback)
+							kanti.tododer.data.model.common.Todo.Type.PLAN -> planEvents(type, todo.asPlan, value, callback)
 						}
 					}
 				}
@@ -132,7 +132,7 @@ class TodoListFragment : Fragment() {
 		return viewHolder
 	}
 
-	private fun taskEvents(type: Int, task: Task, value: Any?, callback: TodoEventCallback?) {
+	private fun taskEvents(type: Int, task: kanti.tododer.data.task.Task, value: Any?, callback: TodoEventCallback?) {
 		fun log(mes: String) = Log.d(hashLogTag, "taskEvents(type = $type, " +
 				"Plan = $task, value = $value, callback = $callback): $mes")
 
@@ -145,7 +145,7 @@ class TodoListFragment : Fragment() {
 		}
 	}
 
-	private fun planEvents(type: Int, plan: Plan, value: Any?, callback: TodoEventCallback?) {
+	private fun planEvents(type: Int, plan: kanti.tododer.data.model.plan.Plan, value: Any?, callback: TodoEventCallback?) {
 		fun log(mes: String) = Log.d(hashLogTag, "planEvents(type = $type, " +
 				"Plan = $plan, value = $value, callback = $callback): $mes")
 
@@ -158,7 +158,7 @@ class TodoListFragment : Fragment() {
 		}
 	}
 
-	private fun eventPlanProgressRequest(plan: Plan, callback: TodoEventCallback?) {
+	private fun eventPlanProgressRequest(plan: kanti.tododer.data.model.plan.Plan, callback: TodoEventCallback?) {
 		val callbackFlow = viewModel.progressRequest(plan)
 		observe(callbackFlow) { progress ->
 			callback?.callback(progress)

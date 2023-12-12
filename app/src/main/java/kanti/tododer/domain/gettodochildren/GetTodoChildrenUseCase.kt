@@ -9,10 +9,10 @@ class GetTodoChildrenUseCase @Inject constructor(
 	private val getTaskChildrenUseCase: GetTaskChildrenUseCase
 ) {
 
-	suspend operator fun invoke(todo: Todo): Result<List<Todo>> {
+	suspend operator fun invoke(todo: kanti.tododer.data.model.common.Todo): Result<List<kanti.tododer.data.model.common.Todo>> {
 		return when(todo.type) {
-			Todo.Type.TASK -> getTaskChildrenUseCase(todo)
-			Todo.Type.PLAN -> getPlanChildrenUseCase(todo)
+			kanti.tododer.data.model.common.Todo.Type.TASK -> getTaskChildrenUseCase(todo)
+			kanti.tododer.data.model.common.Todo.Type.PLAN -> getPlanChildrenUseCase(todo)
 		}
 	}
 

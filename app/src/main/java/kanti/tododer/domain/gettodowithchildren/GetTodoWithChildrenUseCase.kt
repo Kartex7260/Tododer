@@ -13,8 +13,8 @@ class GetTodoWithChildrenUseCase @Inject constructor(
 
 	suspend operator fun invoke(fullId: FullId): GetRepositoryResult<TodoWithChildren> {
 		return when (fullId.type) {
-			Todo.Type.PLAN -> getPlanWithChildrenUseCase(fullId.id)
-			Todo.Type.TASK -> getTaskWithChildrenUseCase(fullId.id)
+			kanti.tododer.data.model.common.Todo.Type.PLAN -> getPlanWithChildrenUseCase(fullId.id)
+			kanti.tododer.data.model.common.Todo.Type.TASK -> getTaskWithChildrenUseCase(fullId.id)
 		}
 	}
 

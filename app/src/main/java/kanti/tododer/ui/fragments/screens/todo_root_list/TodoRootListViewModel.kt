@@ -22,22 +22,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoRootListViewModel @Inject constructor(
-	private val planRepository: PlanRepository,
+	private val planRepository: kanti.tododer.data.model.plan.PlanRepository,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase
 ) : ViewModel() {
 
-	private val _plansLiveData = MutableLiveData<ResultUiState<List<Plan>>>()
-	val plansLiveData: LiveData<ResultUiState<List<Plan>>> = _plansLiveData
+	private val _plansLiveData = MutableLiveData<ResultUiState<List<kanti.tododer.data.model.plan.Plan>>>()
+	val plansLiveData: LiveData<ResultUiState<List<kanti.tododer.data.model.plan.Plan>>> = _plansLiveData
 
-	private val _newPlanCreated = MutableSharedFlow<ResultUiState<Plan>>()
+	private val _newPlanCreated = MutableSharedFlow<ResultUiState<kanti.tododer.data.model.plan.Plan>>()
 	val newPlanCreated = _newPlanCreated.asSharedFlow()
 
 	init {
 		getRootPlans()
 	}
 
-	fun deleteTodo(todo: Todo) {
+	fun deleteTodo(todo: kanti.tododer.data.model.common.Todo) {
 		viewModelScope.launch {
 			removeTodoWithChildrenUseCase(todo)
 		}
@@ -53,7 +53,7 @@ class TodoRootListViewModel @Inject constructor(
 	}
 
 	fun planProgressRequest(
-		plan: Plan,
+		plan: kanti.tododer.data.model.plan.Plan,
 		callback: MutableSharedFlow<GetRepositoryResult<Float>>
 	) {
 		viewModelScope.launch {

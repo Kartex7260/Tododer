@@ -4,6 +4,6 @@ import android.view.ContextMenu
 import kanti.tododer.data.model.common.Todo
 
 data class TodoItemCreateContextMenuRequest(
-	val todo: Todo,
+	val todo: kanti.tododer.data.model.common.Todo,
 	val contextMenu: ContextMenu
 )

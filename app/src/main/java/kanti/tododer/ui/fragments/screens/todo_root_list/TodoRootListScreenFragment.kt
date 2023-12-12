@@ -140,11 +140,11 @@ class TodoRootListScreenFragment : Fragment() {
 		}
 	}
 
-	private fun showData(plans: List<Plan>) {
+	private fun showData(plans: List<kanti.tododer.data.model.plan.Plan>) {
 		todoListViewModel.sendTodoList(plans)
 	}
 
-	private fun navigateToDetailScreen(todoElement: Todo) {
+	private fun navigateToDetailScreen(todoElement: kanti.tododer.data.model.common.Todo) {
 		val navDirections = TodoRootListScreenFragmentDirections.actionListToDetail(todoElement.fullId)
 		findNavController().navigate(navDirections)
 	}

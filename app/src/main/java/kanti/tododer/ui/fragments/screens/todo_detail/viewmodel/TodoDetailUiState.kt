@@ -7,8 +7,8 @@ import kanti.tododer.domain.common.TodoWithChildren
 sealed class TodoDetailUiState {
 
 	class Success(
-		val todo: Todo,
-		val todoChildren: List<Todo> = listOf(),
+		val todo: kanti.tododer.data.model.common.Todo,
+		val todoChildren: List<kanti.tododer.data.model.common.Todo> = listOf(),
 	) : TodoDetailUiState()
 
 	class NotFound(

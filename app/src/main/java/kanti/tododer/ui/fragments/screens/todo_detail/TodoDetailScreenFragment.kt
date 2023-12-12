@@ -17,7 +17,7 @@ import kanti.tododer.R
 import kanti.tododer.common.Const
 import kanti.tododer.common.hashLogTag
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.task.asTask
+import kanti.tododer.data.task.asTask
 import kanti.tododer.databinding.FragmentTodoDetailBinding
 import kanti.tododer.ui.common.fabowner.setActivityFabOnClickListener
 import kanti.tododer.ui.common.toolbarowner.requireActivityToolbar
@@ -92,15 +92,15 @@ class TodoDetailScreenFragment : Fragment() {
 		setActivityFabOnClickListener {
 			viewModel.currentTodoType?.apply {
 				when (this) {
-					Todo.Type.TASK -> {
+					kanti.tododer.data.model.common.Todo.Type.TASK -> {
 						viewModel.createNewTask()
 					}
-					Todo.Type.PLAN -> {
+					kanti.tododer.data.model.common.Todo.Type.PLAN -> {
 						val todoSelectorDialog = TodoSelectorDialogFragment()
 						todoSelectorDialog.setTodoSelectListener { type ->
 							when (type) {
-								Todo.Type.TASK -> viewModel.createNewTask()
-								Todo.Type.PLAN -> viewModel.createNewPlan()
+								kanti.tododer.data.model.common.Todo.Type.TASK -> viewModel.createNewTask()
+								kanti.tododer.data.model.common.Todo.Type.PLAN -> viewModel.createNewPlan()
 							}
 						}
 						todoSelectorDialog.show(childFragmentManager, "todo_select")
@@ -134,8 +134,8 @@ class TodoDetailScreenFragment : Fragment() {
 				is TodoDetailUiState.Success -> {
 					requireActivityToolbar().apply {
 						title = when (uiState.todo.type) {
-							Todo.Type.TASK -> getString(R.string.task)
-							Todo.Type.PLAN -> getString(R.string.plan)
+							kanti.tododer.data.model.common.Todo.Type.TASK -> getString(R.string.task)
+							kanti.tododer.data.model.common.Todo.Type.PLAN -> getString(R.string.plan)
 						}
 					}
 					Log.d(

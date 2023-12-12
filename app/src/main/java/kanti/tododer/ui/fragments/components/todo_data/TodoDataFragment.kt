@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.task.Task
 import kanti.tododer.databinding.FragmentTodoDataBinding
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.asPlan
-import kanti.tododer.data.model.task.asTask
+import kanti.tododer.data.task.asTask
 import kanti.tododer.ui.common.viewholder.PlanStateViewHolder
 import kanti.tododer.ui.common.viewholder.TaskStateViewHolder
 import kanti.tododer.ui.common.viewholder.TaskStateViewOwner
@@ -83,7 +83,7 @@ class TodoDataFragment : Fragment() {
 					if (viewHolder !is TaskStateViewOwner)
 						return@setTodoDataSaveObserver
 					when (viewHolder.todo.type) {
-						Todo.Type.TASK -> {
+						kanti.tododer.data.model.common.Todo.Type.TASK -> {
 							viewModel.taskIsDone(
 								viewHolder.todo.asTask,
 								viewHolder.stateView.isChecked
@@ -118,19 +118,19 @@ class TodoDataFragment : Fragment() {
 		editTextTodoDetailRemark.addTextChangedListener()
 	}
 
-	private fun showData(todoElement: Todo?) {
+	private fun showData(todoElement: kanti.tododer.data.model.common.Todo?) {
 		if (todoElement == null) {
 			clearEditText()
 			return
 		}
 
 		when (todoElement.type) {
-			Todo.Type.TASK -> showTask(todoElement.asTask)
-			Todo.Type.PLAN -> showPlan(todoElement.asPlan)
+			kanti.tododer.data.model.common.Todo.Type.TASK -> showTask(todoElement.asTask)
+			kanti.tododer.data.model.common.Todo.Type.PLAN -> showPlan(todoElement.asPlan)
 		}
 	}
 
-	private fun showPlan(plan: Plan) {
+	private fun showPlan(plan: kanti.tododer.data.model.plan.Plan) {
 		showBasicData(plan.title, plan.remark)
 
 		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(plan, setCurrent = true)
@@ -148,7 +148,7 @@ class TodoDataFragment : Fragment() {
 		showTodoDataState(todoStateViewHolder)
 	}
 
-	private fun showTask(task: Task) {
+	private fun showTask(task: kanti.tododer.data.task.Task) {
 		showBasicData(task.title, task.remark)
 
 		val todoStateViewHolder = todoStateViewHolderManager.getViewHolder(task, setCurrent = true)

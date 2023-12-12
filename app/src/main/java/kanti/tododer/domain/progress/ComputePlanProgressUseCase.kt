@@ -18,7 +18,7 @@ class ComputePlanProgressUseCase @Inject constructor(
 	private val defProgressValue: Float = 0f
 
 	suspend operator fun invoke(
-		plan: Plan,
+		plan: kanti.tododer.data.model.plan.Plan,
 		callback: MutableSharedFlow<GetRepositoryResult<Float>>
 	) {
 		sendCachedData(plan, callback)
@@ -29,7 +29,7 @@ class ComputePlanProgressUseCase @Inject constructor(
 	}
 
 	private suspend fun sendCachedData(
-		plan: Plan,
+		plan: kanti.tododer.data.model.plan.Plan,
 		callback: MutableSharedFlow<GetRepositoryResult<Float>>
 	) {
 		val repRes = planProgressRepository.getPlanProgress(plan.fullId)

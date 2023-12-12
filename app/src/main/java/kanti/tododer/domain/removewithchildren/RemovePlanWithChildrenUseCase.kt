@@ -2,14 +2,14 @@ package kanti.tododer.domain.removewithchildren
 
 import kanti.tododer.data.model.common.result.asSuccess
 import kanti.tododer.data.model.plan.PlanRepository
-import kanti.tododer.data.model.task.TaskRepository
+import kanti.tododer.data.task.TaskRepository
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RemovePlanWithChildrenUseCase @Inject constructor(
-	private val planRepository: PlanRepository,
-	private val taskRepository: TaskRepository
+	private val planRepository: kanti.tododer.data.model.plan.PlanRepository,
+	private val taskRepository: kanti.tododer.data.task.TaskRepository
 ) {
 
 	suspend operator fun invoke(id: Int): Boolean {

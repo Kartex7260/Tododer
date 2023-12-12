@@ -10,12 +10,12 @@ import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.asPlan
-import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.task.asTask
+import kanti.tododer.data.task.Task
+import kanti.tododer.data.task.asTask
 import kotlin.IllegalArgumentException
 
 abstract class TodoViewHolder(
-	todo: Todo,
+	todo: kanti.tododer.data.model.common.Todo,
 	private val layoutInflater: LayoutInflater,
 	@LayoutRes private val resource: Int,
 	private val root: ViewGroup? = RootDefault,
@@ -26,8 +26,8 @@ abstract class TodoViewHolder(
 	var eventListener: TodoEventListener? = null
 		private set
 
-	private var _todo: Todo
-	var todo: Todo
+	private var _todo: kanti.tododer.data.model.common.Todo
+	var todo: kanti.tododer.data.model.common.Todo
 		get() = _todo
 		set(value) {
 			checkType(value.type)
@@ -39,15 +39,15 @@ abstract class TodoViewHolder(
 	val fullId: String
 		get() = todo.fullId
 
-	abstract val type: Todo.Type
+	abstract val type: kanti.tododer.data.model.common.Todo.Type
 
 	init {
 		_todo = todo
 	}
 
-	abstract fun onBindData(view: View, todo: Todo)
+	abstract fun onBindData(view: View, todo: kanti.tododer.data.model.common.Todo)
 
-	private fun bindData(view: View, todo: Todo) {
+	private fun bindData(view: View, todo: kanti.tododer.data.model.common.Todo) {
 		checkType(todo.type)
 		onBindData(view, todo)
 	}
@@ -65,7 +65,7 @@ abstract class TodoViewHolder(
 			return _view!!
 		}
 
-	protected fun event(type: Int, todo: Todo, value: Any? = null, callback: TodoEventCallback? = null) {
+	protected fun event(type: Int, todo: kanti.tododer.data.model.common.Todo, value: Any? = null, callback: TodoEventCallback? = null) {
 		eventListener?.onEvent(type, todo, value, callback)
 	}
 
@@ -110,7 +110,7 @@ abstract class TodoViewHolder(
 		}
 	}
 
-	private fun checkType(type: Todo.Type) {
+	private fun checkType(type: kanti.tododer.data.model.common.Todo.Type) {
 		if (type != this.type)
 			throw IllegalArgumentException("Todo element type error. " +
 					"Expected: ${this.type}, actual: $type")
@@ -119,14 +119,14 @@ abstract class TodoViewHolder(
 	interface Factory {
 
 		fun createTaskViewHolder(
-			todo: Task,
+			todo: kanti.tododer.data.task.Task,
 			layoutInflater: LayoutInflater,
 			root: ViewGroup? = RootDefault,
 			attachToRoot: Boolean = AttachToRootDefault
 		): TodoViewHolder
 
 		fun createPlanViewHolder(
-			todo: Plan,
+			todo: kanti.tododer.data.model.plan.Plan,
 			layoutInflater: LayoutInflater,
 			root: ViewGroup? = RootDefault,
 			attachToRoot: Boolean = AttachToRootDefault
@@ -151,13 +151,13 @@ abstract class TodoViewHolder(
 
 		fun newInstance(
 			todoViewHolderFactory: Factory,
-			todo: Todo,
+			todo: kanti.tododer.data.model.common.Todo,
 			layoutInflater: LayoutInflater,
 			root: ViewGroup? = null,
 			attachToRoot: Boolean = false
 		): TodoViewHolder {
 			return when (todo.type) {
-				Todo.Type.TASK -> {
+				kanti.tododer.data.model.common.Todo.Type.TASK -> {
 					todoViewHolderFactory.createTaskViewHolder(
 						todo.asTask,
 						layoutInflater,
@@ -165,7 +165,7 @@ abstract class TodoViewHolder(
 						attachToRoot
 					)
 				}
-				Todo.Type.PLAN -> {
+				kanti.tododer.data.model.common.Todo.Type.PLAN -> {
 					todoViewHolderFactory.createPlanViewHolder(
 						todo.asPlan,
 						layoutInflater,

@@ -14,9 +14,9 @@ import kanti.tododer.data.model.common.result.asSuccess
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.toPlan
-import kanti.tododer.data.model.task.TaskRepository
-import kanti.tododer.data.model.task.Task
-import kanti.tododer.data.model.task.toTask
+import kanti.tododer.data.task.TaskRepository
+import kanti.tododer.data.task.Task
+import kanti.tododer.data.task.toTask
 import kanti.tododer.domain.gettodowithchildren.GetPlanWithChildrenUseCase
 import kanti.tododer.domain.progress.ComputePlanProgressUseCase
 import kanti.tododer.domain.gettodowithchildren.GetTaskWithChildrenUseCase
@@ -36,8 +36,8 @@ class TodoDetailViewModel @Inject constructor(
 	private val getPlanWithChildren: GetPlanWithChildrenUseCase,
 	private val computePlanProgressUseCase: ComputePlanProgressUseCase,
 	private val removeTodoWithChildrenUseCase: RemoveTodoWithChildrenUseCase,
-	private val taskRepository: TaskRepository,
-	private val planRepository: PlanRepository
+	private val taskRepository: kanti.tododer.data.task.TaskRepository,
+	private val planRepository: kanti.tododer.data.model.plan.PlanRepository
 ) : ViewModel() {
 
 	private val stack = Stack<FullId>()
@@ -49,20 +49,20 @@ class TodoDetailViewModel @Inject constructor(
 	private val _newTodoCreated = MutableSharedFlow<TodoSavedUiState>()
 	val newTodoCreated = _newTodoCreated.asSharedFlow()
 
-	val currentTodoType: Todo.Type? get() {
+	val currentTodoType: kanti.tododer.data.model.common.Todo.Type? get() {
 		return currentFullId?.type
 	}
 
-	fun saveTitle(todo: Todo, title: String) {
+	fun saveTitle(todo: kanti.tododer.data.model.common.Todo, title: String) {
 		viewModelScope.launch {
 			val fullId = todo.asFullId
 			when (fullId.type) {
-				Todo.Type.TASK -> saveTask(fullId.id) {
+				kanti.tododer.data.model.common.Todo.Type.TASK -> saveTask(fullId.id) {
 					toTask(
 						title = title
 					)
 				}
-				Todo.Type.PLAN -> savePlan(fullId.id) {
+				kanti.tododer.data.model.common.Todo.Type.PLAN -> savePlan(fullId.id) {
 					toPlan(
 						title = title
 					)
@@ -71,16 +71,16 @@ class TodoDetailViewModel @Inject constructor(
 		}
 	}
 
-	fun saveRemark(todo: Todo, remark: String) {
+	fun saveRemark(todo: kanti.tododer.data.model.common.Todo, remark: String) {
 		viewModelScope.launch {
 			val fullId = todo.asFullId
 			when (fullId.type) {
-				Todo.Type.TASK -> saveTask(fullId.id) {
+				kanti.tododer.data.model.common.Todo.Type.TASK -> saveTask(fullId.id) {
 					toTask(
 						remark = remark
 					)
 				}
-				Todo.Type.PLAN -> savePlan(fullId.id) {
+				kanti.tododer.data.model.common.Todo.Type.PLAN -> savePlan(fullId.id) {
 					toPlan(
 						remark = remark
 					)
@@ -98,7 +98,7 @@ class TodoDetailViewModel @Inject constructor(
 		pop()
 	}
 
-	fun deleteTodo(todo: Todo) {
+	fun deleteTodo(todo: kanti.tododer.data.model.common.Todo) {
 		viewModelScope.launch {
 			removeTodoWithChildrenUseCase(todo)
 		}
@@ -113,7 +113,7 @@ class TodoDetailViewModel @Inject constructor(
 			}
 
 			val planFromDB = planRepository.insert(
-				Plan(
+				kanti.tododer.data.model.plan.Plan(
 					parentId = currentFullId!!.fullId
 				)
 			)
@@ -130,7 +130,7 @@ class TodoDetailViewModel @Inject constructor(
 			}
 
 			val taskFromDB = taskRepository.insert(
-				Task(
+				kanti.tododer.data.task.Task(
 					parentId = currentFullId!!.fullId
 				)
 			)
@@ -138,13 +138,13 @@ class TodoDetailViewModel @Inject constructor(
 		}
 	}
 
-	fun taskIsDone(task: Task, isDone: Boolean) {
+	fun taskIsDone(task: kanti.tododer.data.task.Task, isDone: Boolean) {
 		viewModelScope.launch {
 			taskRepository.insert(task.toTask(done = isDone))
 		}
 	}
 
-	fun planProgressRequest(plan: Plan, callback: MutableSharedFlow<GetRepositoryResult<Float>>) {
+	fun planProgressRequest(plan: kanti.tododer.data.model.plan.Plan, callback: MutableSharedFlow<GetRepositoryResult<Float>>) {
 		viewModelScope.launch {
 			computePlanProgressUseCase(plan, callback)
 		}
@@ -183,7 +183,7 @@ class TodoDetailViewModel @Inject constructor(
 		}
 	}
 
-	fun showTodo(todo: Todo) {
+	fun showTodo(todo: kanti.tododer.data.model.common.Todo) {
 		_todoDetail.value = TodoDetailUiState.Process
 		viewModelScope.launch {
 			val fullId = todo.asFullId
@@ -215,8 +215,8 @@ class TodoDetailViewModel @Inject constructor(
 
 	private suspend fun showTodo(fullId: FullId): Boolean {
 		val uiState = when (fullId.type) {
-			Todo.Type.PLAN -> getPlan(fullId.id)
-			Todo.Type.TASK -> getTask(fullId.id)
+			kanti.tododer.data.model.common.Todo.Type.PLAN -> getPlan(fullId.id)
+			kanti.tododer.data.model.common.Todo.Type.TASK -> getTask(fullId.id)
 		}
 		Log.d(logTag, "showTodo(FullId = \"$fullId\"): get uiState=$uiState")
 		_todoDetail.value = uiState
@@ -235,12 +235,12 @@ class TodoDetailViewModel @Inject constructor(
 		return repositoryResult.toTodoDetailUiState
 	}
 
-	private suspend fun saveTask(id: Int, body: Task.() -> Task) {
+	private suspend fun saveTask(id: Int, body: kanti.tododer.data.task.Task.() -> kanti.tododer.data.task.Task) {
 		val task = taskRepository.getTask(id).asSuccess?.value ?: return
 		taskRepository.insert(task.body())
 	}
 
-	private suspend fun savePlan(id: Int, body: Plan.() -> Plan) {
+	private suspend fun savePlan(id: Int, body: kanti.tododer.data.model.plan.Plan.() -> kanti.tododer.data.model.plan.Plan) {
 		val plan = planRepository.getPlan(id).asSuccess?.value ?: return
 		planRepository.insert(plan.body())
 	}

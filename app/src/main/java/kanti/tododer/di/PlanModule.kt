@@ -16,10 +16,10 @@ interface PlanModule {
 
 	@Binds
 	@Singleton
-	fun bindPlanRepository(repository: PlanRepositoryImpl): PlanRepository
+	fun bindPlanRepository(repository: kanti.tododer.data.model.plan.PlanRepositoryImpl): kanti.tododer.data.model.plan.PlanRepository
 
 	@Binds
 	@Singleton
-	fun bindPlanRoomDataSource(dataSource: PlanRoomDataSourceImpl): PlanLocalDataSource
+	fun bindPlanRoomDataSource(dataSource: kanti.tododer.data.model.plan.datasource.local.PlanRoomDataSourceImpl): kanti.tododer.data.model.plan.datasource.local.PlanLocalDataSource
 
 }

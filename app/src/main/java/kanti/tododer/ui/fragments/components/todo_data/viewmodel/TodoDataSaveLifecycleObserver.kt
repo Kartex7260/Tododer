@@ -9,7 +9,7 @@ class TodoDataSaveLifecycleObserver(
 	private val todoSavable: TodoSavable,
 ) : DefaultLifecycleObserver {
 
-	var todo: Todo? = null
+	var todo: kanti.tododer.data.model.common.Todo? = null
 
 	init {
 		lifecycleOwner.lifecycle.addObserver(this)
@@ -28,7 +28,7 @@ class TodoDataSaveLifecycleObserver(
 }
 
 fun interface TodoSavable {
-	fun onSave(todo: Todo, type: Type)
+	fun onSave(todo: kanti.tododer.data.model.common.Todo, type: Type)
 
 	enum class Type {
 		TITLE,

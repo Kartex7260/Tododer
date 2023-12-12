@@ -13,15 +13,15 @@ import kanti.tododer.data.model.common.result.asSuccess
 import kanti.tododer.data.model.plan.asPlan
 
 class PlanViewHolder(
-	todo: Todo,
+	todo: kanti.tododer.data.model.common.Todo,
 	layoutInflater: LayoutInflater,
 	root: ViewGroup? = RootDefault,
 	attachToRoot: Boolean = AttachToRootDefault
 ) : TodoViewHolder(todo, layoutInflater, R.layout.view_plan_list_item, root, attachToRoot) {
 
-	override val type: Todo.Type = Todo.Type.PLAN
+	override val type: kanti.tododer.data.model.common.Todo.Type = kanti.tododer.data.model.common.Todo.Type.PLAN
 
-	override fun onBindData(view: View, todo: Todo) {
+	override fun onBindData(view: View, todo: kanti.tododer.data.model.common.Todo) {
 		val plan = todo.asPlan
 		view.findViewById<TextView>(R.id.textViewTodoItemPlanTitle).apply {
 			text = plan.title

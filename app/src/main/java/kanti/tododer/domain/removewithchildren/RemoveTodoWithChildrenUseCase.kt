@@ -8,10 +8,10 @@ class RemoveTodoWithChildrenUseCase @Inject constructor(
 	private val removeTaskWithChildrenUseCase: RemoveTaskWithChildrenUseCase
 ) {
 
-	suspend operator fun invoke(todo: Todo): Boolean {
+	suspend operator fun invoke(todo: kanti.tododer.data.model.common.Todo): Boolean {
 		return when (todo.type) {
-			Todo.Type.PLAN -> removePlanWithChildrenUseCase(todo.id)
-			Todo.Type.TASK -> removeTaskWithChildrenUseCase(todo.id)
+			kanti.tododer.data.model.common.Todo.Type.PLAN -> removePlanWithChildrenUseCase(todo.id)
+			kanti.tododer.data.model.common.Todo.Type.TASK -> removeTaskWithChildrenUseCase(todo.id)
 		}
 	}
 

@@ -8,18 +8,18 @@ import android.widget.ImageButton
 import android.widget.TextView
 import kanti.tododer.R
 import kanti.tododer.data.model.common.Todo
-import kanti.tododer.data.model.task.asTask
+import kanti.tododer.data.task.asTask
 
 class TaskViewHolder(
-	todo: Todo,
+	todo: kanti.tododer.data.model.common.Todo,
 	layoutInflater: LayoutInflater,
 	root: ViewGroup? = RootDefault,
 	attachToRoot: Boolean = AttachToRootDefault
 ) : TodoViewHolder(todo, layoutInflater, R.layout.view_task_list_item, root, attachToRoot) {
 
-	override val type: Todo.Type = Todo.Type.TASK
+	override val type: kanti.tododer.data.model.common.Todo.Type = kanti.tododer.data.model.common.Todo.Type.TASK
 
-	override fun onBindData(view: View, todo: Todo) {
+	override fun onBindData(view: View, todo: kanti.tododer.data.model.common.Todo) {
 		val task = todo.asTask
 
 		view.findViewById<TextView>(R.id.textViewTodoItemTaskTitle).apply {

@@ -3,7 +3,7 @@ package kanti.tododer.ui.fragments.components.todo_list.viewmodel
 import android.view.ContextMenu
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kanti.tododer.data.model.task.Task
+import kanti.tododer.data.task.Task
 import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.common.result.GetRepositoryResult
 import kanti.tododer.data.model.plan.Plan
@@ -18,10 +18,10 @@ import kotlinx.coroutines.launch
 
 class TodoListViewModel : ViewModel() {
 
-	private val _todoListLiveData = MutableStateFlow<List<Todo>>(listOf())
+	private val _todoListLiveData = MutableStateFlow<List<kanti.tododer.data.model.common.Todo>>(listOf())
 	val todoList = _todoListLiveData.asStateFlow()
 
-	private val _elementClick = MutableSharedFlow<Todo>()
+	private val _elementClick = MutableSharedFlow<kanti.tododer.data.model.common.Todo>()
 	val onElementClick = _elementClick.asSharedFlow()
 
 	private val _taskIsDone = MutableSharedFlow<SaveTodoDataRequest<Boolean>>()
@@ -36,7 +36,7 @@ class TodoListViewModel : ViewModel() {
 	private val _todoItemCreateContextMenu = MutableSharedFlow<TodoItemCreateContextMenuRequest>()
 	val onTodoItemCreateContextMenu = _todoItemCreateContextMenu.asSharedFlow()
 
-	fun deleteTodo(todo: Todo) {
+	fun deleteTodo(todo: kanti.tododer.data.model.common.Todo) {
 		viewModelScope.launch {
 			_deleteTodo.emit(
 				DeleteTodoRequest(
@@ -46,17 +46,17 @@ class TodoListViewModel : ViewModel() {
 		}
 	}
 
-	fun sendTodoList(list: List<Todo> = listOf()) {
+	fun sendTodoList(list: List<kanti.tododer.data.model.common.Todo> = listOf()) {
 		_todoListLiveData.value = list
 	}
 
-	fun elementClick(todo: Todo) {
+	fun elementClick(todo: kanti.tododer.data.model.common.Todo) {
 		viewModelScope.launch {
 			_elementClick.emit(todo)
 		}
 	}
 
-	fun taskIsDone(task: Task, done: Boolean) {
+	fun taskIsDone(task: kanti.tododer.data.task.Task, done: Boolean) {
 		viewModelScope.launch {
 			_taskIsDone.emit(
 				SaveTodoDataRequest(task, done)
@@ -64,7 +64,7 @@ class TodoListViewModel : ViewModel() {
 		}
 	}
 
-	fun progressRequest(plan: Plan): SharedFlow<GetRepositoryResult<Float>> {
+	fun progressRequest(plan: kanti.tododer.data.model.plan.Plan): SharedFlow<GetRepositoryResult<Float>> {
 		val callback = MutableSharedFlow<GetRepositoryResult<Float>>()
 		viewModelScope.launch {
 			_planProgressRequest.emit(
@@ -77,7 +77,7 @@ class TodoListViewModel : ViewModel() {
 		return callback
 	}
 
-	fun todoItemCreateContextMenu(todo: Todo, menu: ContextMenu) {
+	fun todoItemCreateContextMenu(todo: kanti.tododer.data.model.common.Todo, menu: ContextMenu) {
 		viewModelScope.launch {
 			_todoItemCreateContextMenu.emit(
 				TodoItemCreateContextMenuRequest(
