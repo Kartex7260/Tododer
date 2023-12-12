@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-	namespace = "com.example.task"
+	namespace = "kanti.tododer"
 	compileSdk = 34
 
 	defaultConfig {

@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-	namespace = "com.example.progress"
+	namespace = "kanti.tododer"
 	compileSdk = 34
 
 	defaultConfig {

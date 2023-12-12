@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-	namespace = "com.example.plan"
+	namespace = "kanti.tododer"
 	compileSdk = 34
 
 	defaultConfig {
