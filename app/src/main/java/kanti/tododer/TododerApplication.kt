@@ -15,7 +15,7 @@ class TododerApplication : Application() {
 
 	override fun onCreate() {
 		super.onCreate()
-		kanti.tododer.common.Const.init(this)
+		Const.init(this)
 		DynamicColors.applyToActivitiesIfAvailable(
 			this,
 			DynamicColorsOptions.Builder()

@@ -1,4 +1,4 @@
-package kanti.tododer.room
+package kanti.tododer.data.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

@@ -67,6 +67,8 @@ dependencies {
 	implementation(project(mapOf("path" to ":LifecycleLogger")))
 	implementation(project(mapOf("path" to ":FillingProgressView")))
 
+	implementation(project(":core"))
+
 	val hiltVersion = "2.48.1"
 	val roomVersion = "2.6.1"
 	val coroutinesVersion = "1.7.3"
@@ -109,7 +111,7 @@ dependencies {
 	ksp("androidx.room:room-compiler:$roomVersion")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.21")
-	implementation(files("libs/kanti.sl-ktx.jar"))
+	implementation(files("../libs/kanti.sl-ktx.jar"))
 
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 }
