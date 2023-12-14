@@ -16,12 +16,9 @@
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/data/plan" />
             <option value="$PROJECT_DIR$/data/progress" />
-            <option value="$PROJECT_DIR$/data/task" />
-            <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/room" />
             <option value="$PROJECT_DIR$/room/plan" />
             <option value="$PROJECT_DIR$/room/progress" />
-            <option value="$PROJECT_DIR$/room/task" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

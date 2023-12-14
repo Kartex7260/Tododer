@@ -3,34 +3,35 @@ package kanti.tododer.data.model.plan
 import kanti.tododer.data.model.common.result.GetRepositoryResult
 import kanti.tododer.data.model.common.result.asRepositoryResult
 import kanti.tododer.data.model.plan.datasource.local.PlanLocalDataSource
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PlanRepositoryImpl @Inject constructor(
-	private val planLocal: PlanLocalDataSource
+	private val localDataSource: PlanLocalDataSource
 ) : PlanRepository {
 
-	override suspend fun getPlan(id: Int): GetRepositoryResult<Plan> {
-		return planLocal.getPlan(id).asRepositoryResult
+	override val standardPlans: Flow<List<Plan>>
+		get() = localDataSource.standardPlans
+	override val archivedPlans: Flow<List<Plan>>
+		get() = localDataSource.archivedPlans
+
+	override suspend fun insert(vararg plan: Plan) {
+		localDataSource.insert(*plan)
 	}
 
-	override suspend fun getChildren(fid: String): Result<List<Plan>> {
-		return planLocal.getChildren(fid)
+	override suspend fun update(vararg plan: Plan) {
+		localDataSource.update(*plan)
 	}
 
-	override suspend fun insert(plan: Plan): Result<Plan> {
-		return planLocal.insert(plan)
+	override suspend fun delete(vararg plan: Plan) {
+		localDataSource.delete(*plan)
 	}
 
-	override suspend fun insert(vararg plan: Plan): Result<Unit> {
-		return planLocal.insert(*plan)
+	override suspend fun isEmpty(): Boolean {
+		return localDataSource.isEmpty()
 	}
 
-	override suspend fun delete(vararg plan: Plan): Result<Unit> {
-		return planLocal.delete(*plan)
+	override suspend fun clear() {
+		localDataSource.clear()
 	}
-
-	override suspend fun deleteAll(): Result<Unit> {
-		return planLocal.deleteAll()
-	}
-
 }

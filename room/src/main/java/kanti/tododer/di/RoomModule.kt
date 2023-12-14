@@ -7,9 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kanti.tododer.data.model.plan.datasource.local.PlanDao
 import kanti.tododer.data.model.progress.datasource.TodoProgressDao
-import kanti.tododer.data.model.task.datasource.local.TaskDao
 import kanti.tododer.data.room.TododerDatabase
 import javax.inject.Singleton
 
@@ -25,18 +23,6 @@ object RoomModule {
 			klass = TododerDatabase::class.java,
 			name = kanti.tododer.common.Const.DATABASE_NAME
 		).build()
-	}
-
-	@Provides
-	@Singleton
-	fun providePlanDao(room: TododerDatabase): PlanDao {
-		return room.planDao()
-	}
-
-	@Provides
-	@Singleton
-	fun provideTaskDao(room: TododerDatabase): TaskDao {
-		return room.taskDao()
 	}
 
 	@Provides

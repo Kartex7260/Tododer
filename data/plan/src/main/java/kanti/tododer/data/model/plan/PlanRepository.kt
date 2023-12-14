@@ -1,6 +1,7 @@
 package kanti.tododer.data.model.plan
 
 import kanti.tododer.data.model.common.result.GetRepositoryResult
+import kotlinx.coroutines.flow.Flow
 
 interface PlanRepository {
 
@@ -8,9 +9,9 @@ interface PlanRepository {
 
 	val archivedPlans: Flow<List<Plan>>
 
-	suspend fun insert(plan: Plan): Result<Plan>
+	suspend fun insert(vararg plan: Plan)
 
-	suspend fun insert(vararg plan: Plan): Result<Unit>
+	suspend fun update(vararg plan: Plan)
 
 	suspend fun delete(vararg plan: Plan)
 

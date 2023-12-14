@@ -17,6 +17,9 @@ sealed class GetLocalResult<T> {
 		val message: String = message ?: "[Not message]"
 	}
 
+	override fun toString(): String {
+		return "RepositoryResult.${javaClass.simpleName}"
+	}
 }
 
 val <T> GetLocalResult<T>.isSuccess: Boolean

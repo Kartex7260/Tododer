@@ -1,41 +1,43 @@
-package kanti.tododer.data.model.plan.datasource.local
+package kanti.tododer.data.room.plan
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import kanti.tododer.data.model.common.Todo
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.PlanType
 
-@Entity(tableName = "plan")
+@Entity(tableName = "plans")
 data class PlanEntity(
 	@PrimaryKey(autoGenerate = true) override val id: Int = 0,
-	@ColumnInfo(name = "parent_id") override val parentId: String = "",
 	override val title: String = "",
-	override val remark: String = ""
+	override val archived: Boolean = false,
+	@ColumnInfo(name = "type") val typeString: String = PlanType.DefaultValue.toString()
 ) : Plan {
-	@Ignore
-	override val type: Todo.Type = Todo.Type.PLAN
+
+	@get:Ignore
+	override val type: PlanType
+		get() = PlanType.valueOf(typeString)
 }
 
 fun Plan.toPlanEntity(
 	id: Int = this.id,
-	parentId: String = this.parentId,
 	title: String = this.title,
-	remark: String = this.remark
+	archived: Boolean = this.archived,
+	type: PlanType = this.type
 ): PlanEntity {
 	if (
 		this is PlanEntity &&
 		id == this.id &&
-		parentId == this.parentId &&
 		title == this.title &&
-		remark == this.remark
+		archived == this.archived &&
+		type == this.type
 	)
 		return this
 	return PlanEntity(
 		id = id,
-		parentId = parentId,
 		title = title,
-		remark = remark
+		archived = archived,
+		typeString = type.toString()
 	)
 }

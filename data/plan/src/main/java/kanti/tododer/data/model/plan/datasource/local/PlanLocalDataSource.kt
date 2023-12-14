@@ -2,6 +2,7 @@ package kanti.tododer.data.model.plan.datasource.local
 
 import kanti.tododer.data.model.common.result.GetLocalResult
 import kanti.tododer.data.model.plan.Plan
+import kotlinx.coroutines.flow.Flow
 
 interface PlanLocalDataSource {
 
@@ -9,9 +10,9 @@ interface PlanLocalDataSource {
 
 	val archivedPlans: Flow<List<Plan>>
 
-	suspend fun insert(plan: Plan): Result<Plan>
+	suspend fun insert(vararg plan: Plan)
 
-	suspend fun insert(vararg plan: Plan): Result<Unit>
+	suspend fun update(vararg plan: Plan)
 
 	suspend fun delete(vararg plan: Plan)
 

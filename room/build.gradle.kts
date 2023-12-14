@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-	namespace = "kanti.tododer"
+	namespace = "kanti.tododer.room"
 	compileSdk = 34
 
 	defaultConfig {
@@ -39,7 +39,6 @@ dependencies {
 
 	implementation(project(":core"))
 	implementation(project(":room:plan"))
-	implementation(project(":room:task"))
 	implementation(project(":room:progress"))
 
 	implementation("androidx.room:room-runtime:2.6.1")
