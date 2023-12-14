@@ -1,13 +1,13 @@
 plugins {
 	id("com.android.library")
 	id("org.jetbrains.kotlin.android")
-	id("com.google.devtools.ksp")
 	id("org.jetbrains.kotlin.kapt")
 	id("com.google.dagger.hilt.android")
+	id("com.google.devtools.ksp")
 }
 
 android {
-	namespace = "kanti.tododer.room"
+	namespace = "kanti.tododer.data.room.todo"
 	compileSdk = 34
 
 	defaultConfig {
@@ -20,10 +20,7 @@ android {
 	buildTypes {
 		release {
 			isMinifyEnabled = false
-			proguardFiles(
-				getDefaultProguardFile("proguard-android-optimize.txt"),
-				"proguard-rules.pro"
-			)
+			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 	}
 	compileOptions {
@@ -37,10 +34,8 @@ android {
 
 dependencies {
 
-	implementation(project(":core"))
-	implementation(project(":room:plan"))
-	implementation(project(":room:progress"))
-	implementation(project(":room:todo"))
+	implementation(project(":data"))
+	implementation(project(":data:todo"))
 
 	implementation("androidx.room:room-runtime:2.6.1")
 	implementation("androidx.room:room-ktx:2.6.1")

@@ -10,7 +10,7 @@ interface TodoRepository {
 
 	suspend fun insert(todo: Todo): Todo
 
-	suspend fun update(vararg todo: Todo)
+	suspend fun update(todos: List<Todo>)
 
-	suspend fun delete(vararg todo: Todo)
+	suspend fun delete(todos: List<Todo>)
 }

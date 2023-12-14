@@ -20,11 +20,11 @@ class TodoRepositoryImpl @Inject constructor(
 		return localDataSource.insert(todo)
 	}
 
-	override suspend fun update(vararg todo: Todo) {
-		localDataSource.update(*todo)
+	override suspend fun update(todos: List<Todo>) {
+		localDataSource.update(todos)
 	}
 
-	override suspend fun delete(vararg todo: Todo) {
-		localDataSource.delete(*todo)
+	override suspend fun delete(todos: List<Todo>) {
+		localDataSource.delete(todos)
 	}
 }
