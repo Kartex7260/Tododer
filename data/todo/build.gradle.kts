@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-	namespace = "kanti.tododer.data.model.plan"
+	namespace = "kanti.tododer.data.model.todo"
 	compileSdk = 34
 
 	defaultConfig {
@@ -19,10 +19,7 @@ android {
 	buildTypes {
 		release {
 			isMinifyEnabled = false
-			proguardFiles(
-				getDefaultProguardFile("proguard-android-optimize.txt"),
-				"proguard-rules.pro"
-			)
+			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 	}
 	compileOptions {
@@ -37,7 +34,6 @@ android {
 dependencies {
 
 	implementation(project(":data"))
-	implementation(project(":core"))
 
 	implementation("com.google.dagger:hilt-android:2.48.1")
 	kapt("com.google.dagger:hilt-android-compiler:2.48.1")
