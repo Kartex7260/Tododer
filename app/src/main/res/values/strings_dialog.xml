@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <!--  TodoSelectorDialogFragment  -->
-    <string name="todo_selector_dialog_negative_button">Cancel</string>
-</resources>
