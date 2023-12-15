@@ -17,7 +17,10 @@ interface TodoDao {
 	suspend fun deleteChildren(parentId: String)
 
 	@Query("SELECT * FROM todos WHERE rowId = :rowId LIMIT 1")
-	suspend fun getByRowId(rowId: Long): TodoEntity
+	suspend fun getByRowId(rowId: Long): TodoEntity?
+
+	@Query("SELECT * FROM todos WHERE id = :id LIMIT 1")
+	suspend fun getTodo(id: Int): TodoEntity?
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	suspend fun insert(todo: TodoEntity): Long

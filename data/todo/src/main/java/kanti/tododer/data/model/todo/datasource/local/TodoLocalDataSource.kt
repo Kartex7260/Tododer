@@ -11,6 +11,8 @@ interface TodoLocalDataSource {
 
 	suspend fun insert(todo: Todo): Todo
 
+	suspend fun update(todo: Todo): Todo
+
 	suspend fun update(todos: List<Todo>)
 
 	suspend fun delete(todos: List<Todo>)

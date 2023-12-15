@@ -3,6 +3,7 @@ package kanti.tododer.data.room.todo
 import kanti.tododer.data.model.ParentId
 import kanti.tododer.data.model.todo.Todo
 import kanti.tododer.data.model.todo.datasource.local.TodoLocalDataSource
+import kanti.tododer.data.model.todo.toTodo
 import javax.inject.Inject
 
 class TodoRoomDataSource @Inject constructor(
@@ -10,7 +11,7 @@ class TodoRoomDataSource @Inject constructor(
 ) : TodoLocalDataSource {
 
 	override suspend fun getChildren(parentId: ParentId): List<Todo> {
-		return todoDao.getChildren(parentId.toString())
+		return todoDao.getChildren(parentId.toString()).map { it.toTodo() }
 	}
 
 	override suspend fun deleteChildren(parentId: ParentId) {
@@ -22,6 +23,14 @@ class TodoRoomDataSource @Inject constructor(
 		if (rowId == -1L)
 			throw IllegalArgumentException("Todo already exist (id = ${todo.id})")
 		return todoDao.getByRowId(rowId)
+			?: throw IllegalStateException("Not found todo by rowId ($rowId)")
+	}
+
+	override suspend fun update(todo: Todo): Todo {
+		val id = todo.id
+		todoDao.update(listOf(todo.toTodoEntity()))
+		return todoDao.getTodo(id)
+			?: throw IllegalStateException("Not found todo by id ($id)")
 	}
 
 	override suspend fun update(todos: List<Todo>) {

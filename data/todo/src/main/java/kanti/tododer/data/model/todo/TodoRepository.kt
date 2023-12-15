@@ -8,7 +8,17 @@ interface TodoRepository {
 
 	suspend fun deleteChildren(parentId: ParentId)
 
-	suspend fun insert(todo: Todo): Todo
+	suspend fun create(
+		parentId: ParentId,
+		title: String,
+		remark: String
+	): Todo
+
+	suspend fun updateTitle(todo: Todo, title: String): Todo
+
+	suspend fun updateRemark(todo: Todo, remark: String): Todo
+
+	suspend fun changeDone(todo: Todo): Todo
 
 	suspend fun update(todos: List<Todo>)
 
