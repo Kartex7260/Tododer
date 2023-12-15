@@ -3,6 +3,7 @@ package kanti.tododer.data.room.plan
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
@@ -13,14 +14,20 @@ interface PlanDao {
 	@Query("SELECT * FROM plans WHERE archived = :archived")
 	fun getAll(archived: Boolean): Flow<List<PlanEntity>>
 
-	@Insert
-	suspend fun insert(vararg plan: PlanEntity)
+	@Query("SELECT * FROM plans WHERE rowId = :rowId LIMIT 1")
+	suspend fun getByRowId(rowId: Long): PlanEntity?
 
-	@Update
-	suspend fun update(vararg plan: PlanEntity)
+	@Query("SELECT * FROM plans WHERE id = :id LIMIT 1")
+	suspend fun getPlan(id: Int): PlanEntity?
+
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	suspend fun insert(plan: PlanEntity): Long
+
+	@Update(onConflict = OnConflictStrategy.REPLACE)
+	suspend fun update(plans: List<PlanEntity>)
 
 	@Delete
-	suspend fun delete(vararg plan: PlanEntity)
+	suspend fun delete(plans: List<PlanEntity>)
 
 	@Query("SELECT Count(*) FROM plans")
 	suspend fun count(): Int

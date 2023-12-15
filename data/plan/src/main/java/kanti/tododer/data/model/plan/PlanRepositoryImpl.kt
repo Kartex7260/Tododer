@@ -1,7 +1,5 @@
 package kanti.tododer.data.model.plan
 
-import kanti.tododer.data.model.common.result.GetRepositoryResult
-import kanti.tododer.data.model.common.result.asRepositoryResult
 import kanti.tododer.data.model.plan.datasource.local.PlanLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -15,16 +13,35 @@ class PlanRepositoryImpl @Inject constructor(
 	override val archivedPlans: Flow<List<Plan>>
 		get() = localDataSource.archivedPlans
 
-	override suspend fun insert(vararg plan: Plan) {
-		localDataSource.insert(*plan)
+	override suspend fun create(title: String): Plan {
+		val plan = Plan(title = title)
+		return localDataSource.insert(plan)
 	}
 
-	override suspend fun update(vararg plan: Plan) {
-		localDataSource.update(*plan)
+	override suspend fun updateTitle(plan: Plan, title: String): Plan {
+		return localDataSource.update(plan.toPlan(
+			title = title
+		))
 	}
 
-	override suspend fun delete(vararg plan: Plan) {
-		localDataSource.delete(*plan)
+	override suspend fun archive(plans: List<Plan>) {
+		localDataSource.update(
+			plans.map { it.toPlan(archived = true) }
+		)
+	}
+
+	override suspend fun unarchive(plans: List<Plan>) {
+		localDataSource.update(
+			plans.map { it.toPlan(archived = false) }
+		)
+	}
+
+	override suspend fun delete(plans: List<Plan>) {
+		localDataSource.delete(plans)
+	}
+
+	override suspend fun init() {
+		localDataSource.init()
 	}
 
 	override suspend fun isEmpty(): Boolean {
