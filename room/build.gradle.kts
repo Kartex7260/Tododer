@@ -1,10 +1,13 @@
 plugins {
 	id("com.android.library")
 	id("org.jetbrains.kotlin.android")
+	id("com.google.devtools.ksp")
+	id("org.jetbrains.kotlin.kapt")
+	id("com.google.dagger.hilt.android")
 }
 
 android {
-	namespace = "kanti.tododer.data.model.todo"
+	namespace = "kanti.tododer.data.room"
 	compileSdk = 34
 
 	defaultConfig {
@@ -31,4 +34,9 @@ android {
 
 dependencies {
 
+	implementation("androidx.room:room-ktx:2.6.1")
+	ksp("androidx.room:room-compiler:2.6.1")
+
+	implementation("com.google.dagger:hilt-android:2.48.1")
+	kapt("com.google.dagger:hilt-android-compiler:2.48.1")
 }
