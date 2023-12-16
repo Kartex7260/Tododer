@@ -16,6 +16,8 @@
             <option value="$PROJECT_DIR$/data/plan/api" />
             <option value="$PROJECT_DIR$/data/todo" />
             <option value="$PROJECT_DIR$/data/todo/api" />
+            <option value="$PROJECT_DIR$/data/todo/impl" />
+            <option value="$PROJECT_DIR$/data/todo/impl/room" />
             <option value="$PROJECT_DIR$/room" />
           </set>
         </option>

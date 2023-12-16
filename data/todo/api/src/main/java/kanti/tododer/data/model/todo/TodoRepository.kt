@@ -6,8 +6,6 @@ interface TodoRepository {
 
 	suspend fun getChildren(parentId: ParentId): List<Todo>
 
-	suspend fun deleteChildren(parentId: ParentId)
-
 	suspend fun create(
 		parentId: ParentId,
 		title: String,
