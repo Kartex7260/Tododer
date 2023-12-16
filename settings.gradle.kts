@@ -15,8 +15,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Tododer"
 include(":app")
-include(":LifecycleLogger")
-include(":FillingProgressView")
 include(":data")
 include(":data:plan")
 include(":room")
