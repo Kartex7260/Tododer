@@ -17,8 +17,5 @@ rootProject.name = "Tododer"
 include(":app")
 include(":data")
 include(":data:plan")
-include(":room")
-include(":room:plan")
 include(":core")
 include(":data:todo")
-include(":room:todo")
