@@ -7,7 +7,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kanti.tododer.data.model.progress.datasource.TodoProgressDao
 import kanti.tododer.data.room.TododerDatabase
 import javax.inject.Singleton
 
@@ -23,12 +22,6 @@ object RoomModule {
 			klass = TododerDatabase::class.java,
 			name = kanti.tododer.common.Const.DATABASE_NAME
 		).build()
-	}
-
-	@Provides
-	@Singleton
-	fun providePlanProgressDao(room: TododerDatabase): TodoProgressDao {
-		return room.planProgressDao()
 	}
 
 }

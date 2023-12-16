@@ -39,7 +39,6 @@ dependencies {
 
 	implementation(project(":core"))
 	implementation(project(":room:plan"))
-	implementation(project(":room:progress"))
 	implementation(project(":room:todo"))
 
 	implementation("androidx.room:room-runtime:2.6.1")

@@ -39,7 +39,6 @@ dependencies {
 
 	implementation(project(":data"))
 	implementation(project(":data:plan"))
-	implementation(project(":room"))
 
 	implementation("androidx.room:room-runtime:2.6.1")
 	implementation("androidx.room:room-ktx:2.6.1")
@@ -50,4 +49,9 @@ dependencies {
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.21")
 	implementation(files("libs/kanti.sl-ktx.jar"))
+
+	androidTestImplementation(project(":room"))
+	androidTestImplementation("androidx.test:core-ktx:1.5.0")
+	androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
+	androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 }
