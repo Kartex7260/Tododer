@@ -11,7 +11,9 @@ class BasePlanDaoFiller @Inject constructor(
 		planDao.insert(
 			PlanEntity(
 				typeString = PlanType.All.toString()
-			),
+			)
+		)
+		planDao.insert(
 			PlanEntity(
 				typeString = PlanType.Default.toString()
 			)
