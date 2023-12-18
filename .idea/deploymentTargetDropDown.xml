@@ -2,29 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="PlanDaoTest">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\kiril\.android\avd\Pixel_7_Pro_API_34.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2023-12-18T13:01:27.304971200Z" />
-        </State>
-      </entry>
       <entry key="app">
-        <State />
-      </entry>
-      <entry key="getAll()">
-        <State />
-      </entry>
-      <entry key="getArchived()">
         <State />
       </entry>
     </value>
