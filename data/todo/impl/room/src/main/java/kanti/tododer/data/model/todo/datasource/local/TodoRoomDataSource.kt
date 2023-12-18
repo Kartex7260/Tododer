@@ -5,7 +5,7 @@ import kanti.tododer.data.model.todo.Todo
 import kanti.tododer.data.room.todo.TodoDao
 import javax.inject.Inject
 
-class TodoRoomLocalDataSource @Inject constructor(
+class TodoRoomDataSource @Inject constructor(
 	private val todoDao: TodoDao
 ) : TodoLocalDataSource {
 
