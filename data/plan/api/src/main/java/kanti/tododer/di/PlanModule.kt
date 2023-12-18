@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.PlanRepositoryImpl
+import kanti.tododer.data.model.plan.datasource.local.DefaultPlanInitializer
+import kanti.tododer.data.model.plan.datasource.local.PlanInitializer
 import javax.inject.Singleton
 
 @Module
@@ -15,5 +17,9 @@ interface PlanModule {
 	@Binds
 	@Singleton
 	fun bindPlanRepository(repository: PlanRepositoryImpl): PlanRepository
+
+	@Binds
+	@Singleton
+	fun bindDefaultPlanInitializer(initializer: DefaultPlanInitializer): PlanInitializer
 
 }
