@@ -28,7 +28,7 @@ class PlanRoomDataSource @Inject constructor(
 		val id = plan.id
 		planDao.update(listOf(plan.toPlanEntity()))
 		return planDao.getPlan(id)?.toPlan()
-			?:throw IllegalStateException("Not found plan by id=$id")
+			?:throw IllegalArgumentException("Not found plan by id=$id")
 	}
 
 	override suspend fun update(plans: List<Plan>) {
