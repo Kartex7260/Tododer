@@ -26,5 +26,5 @@ data class ParentId(
 
 enum class ParentType {
 	Plan,
-	Task
+	Todo
 }

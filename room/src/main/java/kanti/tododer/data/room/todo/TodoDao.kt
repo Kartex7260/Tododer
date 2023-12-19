@@ -10,6 +10,9 @@ import androidx.room.Update
 @Dao
 interface TodoDao {
 
+	@Query("SELECT * FROM todos")
+	suspend fun getAll(): List<TodoEntity>
+
 	@Query("SELECT * FROM todos WHERE parent_id = :parentId")
 	suspend fun getChildren(parentId: String): List<TodoEntity>
 
@@ -30,4 +33,7 @@ interface TodoDao {
 
 	@Delete
 	suspend fun delete(todos: List<TodoEntity>)
+
+	@Query("DELETE FROM todos")
+	suspend fun deleteAll()
 }
