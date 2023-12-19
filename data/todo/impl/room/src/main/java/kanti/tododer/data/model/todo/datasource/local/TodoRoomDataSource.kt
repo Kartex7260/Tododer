@@ -25,7 +25,7 @@ class TodoRoomDataSource @Inject constructor(
 		val id = todo.id
 		todoDao.update(listOf(todo.toTodoEntity()))
 		return todoDao.getTodo(id)?.toTodo()
-			?: throw IllegalStateException("Not found todo by id=$id")
+			?: throw IllegalArgumentException("Not found todo by id=$id")
 	}
 
 	override suspend fun update(todos: List<Todo>) {
