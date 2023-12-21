@@ -14,6 +14,8 @@ class TodoDaoTest {
 	private val db: TododerDatabase
 	private val todoDao: TodoDao
 
+	private val stateNormal = "TodoState:fullClassName=STRING-kanti.tododer.data.model.todo.TodoState.Normal"
+
 	init {
 		val context = ApplicationProvider.getApplicationContext<Context>()
 		db = Room.inMemoryDatabaseBuilder(context, TododerDatabase::class.java).build()
@@ -29,30 +31,34 @@ class TodoDaoTest {
 	fun getChildren() = runTest {
 		todoDao.insert(
 			TodoEntity(
-				id = 1
+				id = 1,
+				state = stateNormal
 			)
 		)
 		todoDao.insert(
 			TodoEntity(
 				id = 2,
-				parentId = "Todo-1"
+				parentId = "Todo-1",
+				state = stateNormal
 			)
 		)
 		todoDao.insert(
 			TodoEntity(
 				id = 3,
-				parentId = "Todo-1"
+				parentId = "Todo-1",
+				state = stateNormal
 			)
 		)
 		todoDao.insert(
 			TodoEntity(
 				id = 4,
-				parentId = "Todo-3"
+				parentId = "Todo-3",
+				state = stateNormal
 			)
 		)
 		val expected = arrayOf(
-			TodoEntity(id = 2, parentId = "Todo-1"),
-			TodoEntity(id = 3, parentId = "Todo-1")
+			TodoEntity(id = 2, parentId = "Todo-1", state = stateNormal),
+			TodoEntity(id = 3, parentId = "Todo-1", state = stateNormal)
 		)
 
 		val children = todoDao.getChildren(parentId = "Todo-1")
@@ -63,33 +69,37 @@ class TodoDaoTest {
 	fun deleteChildren() = runTest {
 		todoDao.insert(
 			TodoEntity(
-				id = 1
+				id = 1,
+				state = stateNormal
 			)
 		)
 		todoDao.insert(
 			TodoEntity(
 				id = 2,
-				parentId = "Todo-1"
+				parentId = "Todo-1",
+				state = stateNormal
 			)
 		)
 		todoDao.insert(
 			TodoEntity(
 				id = 3,
-				parentId = "Todo-1"
+				parentId = "Todo-1",
+				state = stateNormal
 			)
 		)
 		todoDao.insert(
 			TodoEntity(
 				id = 4,
-				parentId = "Todo-3"
+				parentId = "Todo-3",
+				state = stateNormal
 			)
 		)
 		val expected = arrayOf(
-			TodoEntity(id = 1),
-			TodoEntity(id = 4, parentId = "Todo-3")
+			TodoEntity(id = 1, state = stateNormal),
+			TodoEntity(id = 4, parentId = "Todo-3", state = stateNormal)
 		)
 
-		val children = todoDao.deleteChildren(parentId = "Todo-1")
+		todoDao.deleteChildren(parentId = "Todo-1")
 		assertArrayEquals(expected, todoDao.getAll().toTypedArray())
 	}
 
@@ -101,10 +111,10 @@ class TodoDaoTest {
 
 	@Test
 	fun getByRowId() = runTest {
-		val rowId = todoDao.insert(TodoEntity(id = 1))
+		val rowId = todoDao.insert(TodoEntity(id = 1, state = stateNormal))
 		val todo = todoDao.getByRowId(rowId)
 		assertEquals(
-			TodoEntity(id = 1),
+			TodoEntity(id = 1, state = stateNormal),
 			todo
 		)
 	}
@@ -117,10 +127,10 @@ class TodoDaoTest {
 
 	@Test
 	fun getTodo() = runTest {
-		todoDao.insert(TodoEntity(id = 1))
+		todoDao.insert(TodoEntity(id = 1, state = stateNormal))
 		val todo = todoDao.getTodo(1)
 		assertEquals(
-			TodoEntity(id = 1),
+			TodoEntity(id = 1, state = stateNormal),
 			todo
 		)
 	}

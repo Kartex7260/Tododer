@@ -9,6 +9,7 @@ interface Todo {
 	val title: String
 	val remark: String
 	val done: Boolean
+	val state: TodoState
 }
 
 private data class TodoImpl(
@@ -16,7 +17,8 @@ private data class TodoImpl(
 	override val parentId: ParentId,
 	override val title: String,
 	override val remark: String,
-	override val done: Boolean
+	override val done: Boolean,
+	override val state: TodoState
 ) : Todo
 
 fun Todo(
@@ -24,14 +26,16 @@ fun Todo(
 	parentId: ParentId,
 	title: String = "",
 	remark: String = "",
-	done: Boolean = false
+	done: Boolean = false,
+	state: TodoState = TodoState.Normal
 ): Todo {
 	return TodoImpl(
 		id = id,
 		parentId = parentId,
 		title = title,
 		remark = remark,
-		done = done
+		done = done,
+		state = state
 	)
 }
 
@@ -40,7 +44,8 @@ fun Todo.toTodo(
 	parentId: ParentId = this.parentId,
 	title: String = this.title,
 	remark: String = this.remark,
-	done: Boolean = this.done
+	done: Boolean = this.done,
+	state: TodoState = this.state
 ): Todo {
 	if (
 		this is TodoImpl &&
@@ -48,7 +53,8 @@ fun Todo.toTodo(
 		parentId == this.parentId &&
 		title == this.title &&
 		remark == this.remark &&
-		done == this.done
+		done == this.done &&
+		state == this.state
 	)
 		return this
 	return Todo(
@@ -56,6 +62,7 @@ fun Todo.toTodo(
 		parentId = parentId,
 		title = title,
 		remark = remark,
-		done = done
+		done = done,
+		state = state
 	)
 }

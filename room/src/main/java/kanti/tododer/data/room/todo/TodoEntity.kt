@@ -10,5 +10,6 @@ data class TodoEntity(
 	@ColumnInfo(name = "parent_id") val parentId: String = "",
 	val title: String = "",
 	val remark: String = "",
-	val done: Boolean = false
+	val done: Boolean = false,
+	val state: String = ""
 )
