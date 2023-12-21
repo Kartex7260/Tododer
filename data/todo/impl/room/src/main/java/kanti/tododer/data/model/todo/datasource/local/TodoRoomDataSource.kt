@@ -3,6 +3,7 @@ package kanti.tododer.data.model.todo.datasource.local
 import kanti.sl.StateLanguage
 import kanti.tododer.data.model.ParentId
 import kanti.tododer.data.model.todo.Todo
+import kanti.tododer.data.model.todo.TodoState
 import kanti.tododer.data.room.todo.TodoDao
 import javax.inject.Inject
 
@@ -11,8 +12,8 @@ class TodoRoomDataSource @Inject constructor(
 	private val sl: StateLanguage
 ) : TodoLocalDataSource {
 
-	override suspend fun getChildren(parentId: ParentId): List<Todo> {
-		return todoDao.getChildren(parentId.toString()).map { it.toTodo(sl) }
+	override suspend fun getChildren(parentId: ParentId, state: TodoState): List<Todo> {
+		return todoDao.getChildren(parentId.toString(), state.name).map { it.toTodo(sl) }
 	}
 
 	override suspend fun insert(todo: Todo): Todo {

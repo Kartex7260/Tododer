@@ -1,6 +1,8 @@
 package kanti.tododer.data.model.todo
 
-sealed class TodoState {
+sealed class TodoState(
+	val name: String
+) {
 
-	data object Normal : TodoState()
+	data object Normal : TodoState("TodoState.Normal")
 }

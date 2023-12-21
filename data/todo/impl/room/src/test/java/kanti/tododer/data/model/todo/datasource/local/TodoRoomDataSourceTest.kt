@@ -44,7 +44,7 @@ class TodoRoomDataSourceTest {
 			Todo(id = 3, parentId = ParentId(1, ParentType.Todo))
 		)
 
-		val children = dataSource.getChildren(ParentId(1, ParentType.Todo))
+		val children = dataSource.getChildren(ParentId(1, ParentType.Todo), TodoState.Normal)
 		assertArrayEquals(expected, children.toTypedArray())
 	}
 

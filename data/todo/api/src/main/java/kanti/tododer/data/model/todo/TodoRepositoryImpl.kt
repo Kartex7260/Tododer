@@ -9,7 +9,7 @@ class TodoRepositoryImpl @Inject constructor(
 ) : TodoRepository {
 
 	override suspend fun getChildren(parentId: ParentId): List<Todo> {
-		return localDataSource.getChildren(parentId)
+		return localDataSource.getChildren(parentId, TodoState.Normal)
 	}
 
 	override suspend fun create(

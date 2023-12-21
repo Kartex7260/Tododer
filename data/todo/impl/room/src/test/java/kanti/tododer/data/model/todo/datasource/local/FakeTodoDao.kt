@@ -1,5 +1,6 @@
 package kanti.tododer.data.model.todo.datasource.local
 
+import kanti.tododer.data.model.todo.TodoState
 import kanti.tododer.data.room.todo.TodoDao
 import kanti.tododer.data.room.todo.TodoEntity
 
@@ -11,8 +12,11 @@ class FakeTodoDao(
 		return todos.values.toList()
 	}
 
-	override suspend fun getChildren(parentId: String): List<TodoEntity> {
-		return todos.values.filter { it.parentId == parentId }
+	override suspend fun getChildren(parentId: String, state: String): List<TodoEntity> {
+		return todos.values.filter {
+			it.parentId == parentId &&
+					it.state.contains(state)
+		}
 	}
 
 	override suspend fun deleteChildren(parentId: String) {
