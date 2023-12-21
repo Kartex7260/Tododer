@@ -1,6 +1,7 @@
 package kanti.tododer.data.model.todo
 
 import kanti.tododer.data.model.ParentId
+import kanti.tododer.data.model.ParentType
 
 interface Todo {
 
@@ -65,4 +66,8 @@ fun Todo.toTodo(
 		done = done,
 		state = state
 	)
+}
+
+fun Todo.toParentId(): ParentId {
+	return ParentId(id, ParentType.Todo)
 }

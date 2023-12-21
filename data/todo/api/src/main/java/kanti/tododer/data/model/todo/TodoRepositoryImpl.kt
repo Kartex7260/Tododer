@@ -50,7 +50,7 @@ class TodoRepositoryImpl @Inject constructor(
 
 	override suspend fun delete(todos: List<Todo>) {
 		for (todo in todos) {
-			val children = getChildren(todo.parentId)
+			val children = getChildren(todo.toParentId())
 			delete(children)
 		}
 		localDataSource.delete(todos)
