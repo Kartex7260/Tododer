@@ -13,7 +13,7 @@ interface TodoDao {
 	@Query("SELECT * FROM todos")
 	suspend fun getAll(): List<TodoEntity>
 
-	@Query("SELECT * FROM todos WHERE parent_id = :parentId AND state LIKE :state")
+	@Query("SELECT * FROM todos WHERE parent_id = :parentId AND state LIKE '%' || :state || '%'")
 	suspend fun getChildren(parentId: String, state: String): List<TodoEntity>
 
 	@Query("DELETE FROM todos WHERE parent_id = :parentId")

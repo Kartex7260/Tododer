@@ -61,7 +61,7 @@ class TodoDaoTest {
 			TodoEntity(id = 3, parentId = "Todo-1", state = stateNormal)
 		)
 
-		val children = todoDao.getChildren(parentId = "Todo-1")
+		val children = todoDao.getChildren(parentId = "Todo-1", stateNormal)
 		assertArrayEquals(expected, children.toTypedArray())
 	}
 
