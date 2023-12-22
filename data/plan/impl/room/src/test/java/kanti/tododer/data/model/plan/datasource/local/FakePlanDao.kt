@@ -12,11 +12,11 @@ class FakePlanDao(
 
 	private val sharedFlow: MutableStateFlow<List<PlanEntity>> = MutableStateFlow(plans.values.toList())
 
-	override fun getAll(archived: Boolean): Flow<List<PlanEntity>> {
+	override fun getAll(state: String): Flow<List<PlanEntity>> {
 		sharedFlow.value = plans.values.toList()
 		return sharedFlow.map {
 			plans -> plans.filter {
-				it.archived == archived
+				it.state.contains(state)
 			}
 		}
 	}

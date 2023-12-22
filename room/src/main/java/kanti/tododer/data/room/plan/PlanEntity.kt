@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class PlanEntity(
 	@PrimaryKey(autoGenerate = true) val id: Int = 0,
 	val title: String = "",
-	val archived: Boolean = false,
+	val state: String = "",
 	val type: String = ""
 )

@@ -10,8 +10,6 @@ class PlanRepositoryImpl @Inject constructor(
 
 	override val standardPlans: Flow<List<Plan>>
 		get() = localDataSource.standardPlans
-	override val archivedPlans: Flow<List<Plan>>
-		get() = localDataSource.archivedPlans
 
 	override suspend fun create(title: String): Plan {
 		val plan = Plan(title = title)
@@ -22,18 +20,6 @@ class PlanRepositoryImpl @Inject constructor(
 		return localDataSource.update(plan.toPlan(
 			title = title
 		))
-	}
-
-	override suspend fun archive(plans: List<Plan>) {
-		localDataSource.update(
-			plans.map { it.toPlan(archived = true) }
-		)
-	}
-
-	override suspend fun unarchive(plans: List<Plan>) {
-		localDataSource.update(
-			plans.map { it.toPlan(archived = false) }
-		)
 	}
 
 	override suspend fun delete(plans: List<Plan>) {

@@ -1,23 +1,26 @@
 package kanti.tododer.data.model.plan.datasource.local
 
+import kanti.sl.StateLanguage
+import kanti.sl.deserialize
+import kanti.sl.serialize
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.data.room.plan.PlanEntity
 
-fun Plan.toPlanEntity(): PlanEntity {
+fun Plan.toPlanEntity(sl: StateLanguage): PlanEntity {
 	return PlanEntity(
 		id = id,
 		title = title,
-		archived = archived,
+		state = sl.serialize(state),
 		type = type.toString()
 	)
 }
 
-fun PlanEntity.toPlan(): Plan {
+fun PlanEntity.toPlan(sl: StateLanguage): Plan {
 	return Plan(
 		id = id,
 		title = title,
-		archived = archived,
+		state = sl.deserialize(state),
 		type = try {
 			PlanType.valueOf(type)
 		} catch (_: IllegalArgumentException) {

@@ -21,6 +21,8 @@ class PlanDaoTest {
 	private val db: TododerDatabase
 	private val planDao: PlanDao
 
+	private val stateNormal = "PlanState:fullClassName=STRING-kanti.tododer.data.model.plan.PlanState.Normal"
+
 	init {
 		val context = ApplicationProvider.getApplicationContext<Context>()
 		db = Room.inMemoryDatabaseBuilder(context, TododerDatabase::class.java).build()
@@ -33,77 +35,43 @@ class PlanDaoTest {
 	}
 
 	@Test
-	fun getArchived() = runTest {
+	fun getAllNormal() = runTest {
 		planDao.insert(PlanEntity(
 			id = 1,
-			archived = false
+			state = stateNormal
 		))
 		planDao.insert(PlanEntity(
 			id = 2,
-			archived = true
+			state = stateNormal
 		))
 		planDao.insert(PlanEntity(
 			id = 3,
-			archived = false
+			state = stateNormal
 		))
 		planDao.insert(PlanEntity(
 			id = 4,
-			archived = true
-		))
-		val expected = arrayOf(
-			PlanEntity(
-				id = 2,
-				archived = true
-			),
-			PlanEntity(
-				id = 4,
-				archived = true
-			)
-		)
-
-		val flow = planDao.getAll(true)
-		launch {
-			flow.collect {
-				Log.i(logTag, "Archived flow collect data")
-				assertArrayEquals(
-					expected,
-					it.toTypedArray()
-				)
-				cancel("Success")
-			}
-		}
-	}
-
-	@Test
-	fun getStandard() = runTest {
-		planDao.insert(PlanEntity(
-			id = 1,
-			archived = false
-		))
-		planDao.insert(PlanEntity(
-			id = 2,
-			archived = true
-		))
-		planDao.insert(PlanEntity(
-			id = 3,
-			archived = false
-		))
-		planDao.insert(PlanEntity(
-			id = 4,
-			archived = true
+			state = stateNormal
 		))
 		val expected = arrayOf(
 			PlanEntity(
 				id = 1,
-				archived = false
+				state = stateNormal
+			),
+			PlanEntity(
+				id = 2,
+				state = stateNormal
 			),
 			PlanEntity(
 				id = 3,
-				archived = false
+				state = stateNormal
+			),
+			PlanEntity(
+				id = 4,
+				state = stateNormal
 			)
 		)
 
-		val flow = planDao.getAll(false)
+		val flow = planDao.getAll("PlanState.Normal")
 		launch {
 			flow.collect {
 				Log.i(logTag, "Archived flow collect data")

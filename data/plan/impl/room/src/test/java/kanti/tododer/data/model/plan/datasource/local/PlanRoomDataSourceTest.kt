@@ -1,6 +1,9 @@
 package kanti.tododer.data.model.plan.datasource.local
 
+import kanti.sl.StateLanguage
+import kanti.sl.serialize
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.PlanState
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.data.room.plan.PlanEntity
 import kotlinx.coroutines.cancel
@@ -13,10 +16,14 @@ import org.junit.jupiter.api.Test
 
 class PlanRoomDataSourceTest {
 
+	private val sl = StateLanguage {  }
+	private val stateNormal = sl.serialize(PlanState.Normal as PlanState)
+
 	private val plans: MutableMap<Int, PlanEntity> = LinkedHashMap()
 	private val dataSource: PlanLocalDataSource = PlanRoomDataSource(
 		planDao = FakePlanDao(plans),
-		initializer = DefaultPlanInitializer()
+		initializer = DefaultPlanInitializer(),
+		sl = sl
 	)
 
 	@AfterEach
@@ -29,15 +36,17 @@ class PlanRoomDataSourceTest {
 	fun standardPlans() = runTest {
 		plans.putAll(
 			mapOf(
-				1 to PlanEntity(id = 1, archived = false, type = PlanType.All.toString()),
-				2 to PlanEntity(id = 2, archived = true, type = PlanType.Custom.toString()),
-				3 to PlanEntity(id = 3, archived = false, type = PlanType.Default.toString()),
-				4 to PlanEntity(id = 4, archived = true, type = PlanType.Custom.toString())
+				1 to PlanEntity(id = 1, state = stateNormal, type = PlanType.All.toString()),
+				2 to PlanEntity(id = 2, state = stateNormal, type = PlanType.Custom.toString()),
+				3 to PlanEntity(id = 3, state = stateNormal, type = PlanType.Default.toString()),
+				4 to PlanEntity(id = 4, state = stateNormal, type = PlanType.Custom.toString())
 			)
 		)
 		val expected = arrayOf(
-			Plan(id = 1, archived = false, type = PlanType.All),
-			Plan(id = 3, archived = false, type = PlanType.Default)
+			Plan(id = 1, state = PlanState.Normal, type = PlanType.All),
+			Plan(id = 2, state = PlanState.Normal, type = PlanType.Custom),
+			Plan(id = 3, state = PlanState.Normal, type = PlanType.Default),
+			Plan(id = 4, state = PlanState.Normal, type = PlanType.Custom)
 		)
 
 		launch {
@@ -52,39 +61,12 @@ class PlanRoomDataSourceTest {
 	}
 
 	@Test
-	@DisplayName("archivedPlans: Flow<List<Plan>>")
-	fun archivedPlans() = runTest {
-		plans.putAll(
-			mapOf(
-				1 to PlanEntity(id = 1, archived = false, type = PlanType.All.toString()),
-				2 to PlanEntity(id = 2, archived = true, type = PlanType.Custom.toString()),
-				3 to PlanEntity(id = 3, archived = false, type = PlanType.Default.toString()),
-				4 to PlanEntity(id = 4, archived = true, type = PlanType.Custom.toString())
-			)
-		)
-		val expected = arrayOf(
-			Plan(id = 2, archived = true, type = PlanType.Custom),
-			Plan(id = 4, archived = true, type = PlanType.Custom)
-		)
-
-		launch {
-			dataSource.archivedPlans.collect {
-				assertArrayEquals(
-					expected,
-					it.toTypedArray()
-				)
-				cancel("Success")
-			}
-		}
-	}
-
-	@Test
 	@DisplayName("insert(Plan) insert 1")
 	fun insert1() = runTest {
 	    plans.putAll(
 			mapOf(
-				1 to PlanEntity(id = 1, type = PlanType.Custom.toString()),
-				2 to PlanEntity(id = 2, type = PlanType.Custom.toString())
+				1 to PlanEntity(id = 1, state = stateNormal, type = PlanType.Custom.toString()),
+				2 to PlanEntity(id = 2, state = stateNormal, type = PlanType.Custom.toString())
 			)
 		)
 		val expected = Plan(id = 3, title = "Test")
@@ -101,8 +83,8 @@ class PlanRoomDataSourceTest {
 	fun insert2() = runTest {
 		plans.putAll(
 			mapOf(
-				1 to PlanEntity(id = 1, type = PlanType.Custom.toString()),
-				2 to PlanEntity(id = 2, type = PlanType.Custom.toString())
+				1 to PlanEntity(id = 1, state = stateNormal, type = PlanType.Custom.toString()),
+				2 to PlanEntity(id = 2, state = stateNormal, type = PlanType.Custom.toString())
 			)
 		)
 		val expected = Plan(id = 3, title = "Test")
@@ -119,8 +101,8 @@ class PlanRoomDataSourceTest {
 	fun insertErr() = runTest {
 		plans.putAll(
 			mapOf(
-				1 to PlanEntity(id = 1, type = PlanType.Custom.toString()),
-				2 to PlanEntity(id = 2, type = PlanType.Custom.toString())
+				1 to PlanEntity(id = 1, state = stateNormal, type = PlanType.Custom.toString()),
+				2 to PlanEntity(id = 2, state = stateNormal, type = PlanType.Custom.toString())
 			)
 		)
 
@@ -147,15 +129,15 @@ class PlanRoomDataSourceTest {
 	@DisplayName("update(Plan) update")
 	fun update() = runTest {
 	    plans.putAll(mapOf(
-			1 to PlanEntity(id = 1, title = "Test 1", type = PlanType.Custom.toString()),
-			2 to PlanEntity(id = 2, title = "Test 2", type = PlanType.Custom.toString()),
-			3 to PlanEntity(id = 3, title = "Test 3", type = PlanType.Custom.toString())
+			1 to PlanEntity(id = 1, state = stateNormal, title = "Test 1", type = PlanType.Custom.toString()),
+			2 to PlanEntity(id = 2, state = stateNormal, title = "Test 2", type = PlanType.Custom.toString()),
+			3 to PlanEntity(id = 3, state = stateNormal, title = "Test 3", type = PlanType.Custom.toString())
 		))
 		val expectedPlan = Plan(id = 2, title = "Updated")
 		val expectedArray = arrayOf(
-			PlanEntity(id = 1, title = "Test 1", type = PlanType.Custom.toString()),
-			PlanEntity(id = 2, title = "Updated", type = PlanType.Custom.toString()),
-			PlanEntity(id = 3, title = "Test 3", type = PlanType.Custom.toString())
+			PlanEntity(id = 1, state = stateNormal, title = "Test 1", type = PlanType.Custom.toString()),
+			PlanEntity(id = 2, state = stateNormal, title = "Updated", type = PlanType.Custom.toString()),
+			PlanEntity(id = 3, state = stateNormal, title = "Test 3", type = PlanType.Custom.toString())
 		)
 
 		val plan = dataSource.update(Plan(
@@ -186,16 +168,16 @@ class PlanRoomDataSourceTest {
 	@DisplayName("update(List<Plan>) update")
 	fun updateList() = runTest {
 	    plans.putAll(mapOf(
-			1 to PlanEntity(id = 1, title = "Test 1", type = PlanType.All.toString()),
-			2 to PlanEntity(id = 2, title = "Test 2", type = PlanType.Default.toString()),
-			3 to PlanEntity(id = 3, title = "Test 3", type = PlanType.Custom.toString()),
-			4 to PlanEntity(id = 4, title = "Test 4", type = PlanType.Custom.toString())
+			1 to PlanEntity(id = 1, state = stateNormal, title = "Test 1", type = PlanType.All.toString()),
+			2 to PlanEntity(id = 2, state = stateNormal, title = "Test 2", type = PlanType.Default.toString()),
+			3 to PlanEntity(id = 3, state = stateNormal, title = "Test 3", type = PlanType.Custom.toString()),
+			4 to PlanEntity(id = 4, state = stateNormal, title = "Test 4", type = PlanType.Custom.toString())
 		))
 		val expected = arrayOf(
-			PlanEntity(id = 1, title = "Test 1", type = PlanType.All.toString()),
-			PlanEntity(id = 2, title = "Updated 1", type = PlanType.Default.toString()),
-			PlanEntity(id = 3, title = "Test 3", type = PlanType.Custom.toString()),
-			PlanEntity(id = 4, title = "Updated 2", type = PlanType.Custom.toString())
+			PlanEntity(id = 1, state = stateNormal, title = "Test 1", type = PlanType.All.toString()),
+			PlanEntity(id = 2, state = stateNormal, title = "Updated 1", type = PlanType.Default.toString()),
+			PlanEntity(id = 3, state = stateNormal, title = "Test 3", type = PlanType.Custom.toString()),
+			PlanEntity(id = 4, state = stateNormal, title = "Updated 2", type = PlanType.Custom.toString())
 		)
 
 		dataSource.update(listOf(
@@ -211,14 +193,14 @@ class PlanRoomDataSourceTest {
 	@DisplayName("delete(List<Plan>) delete")
 	fun delete() = runTest {
 		plans.putAll(mapOf(
-			1 to PlanEntity(id = 1, title = "Test 1", type = PlanType.All.toString()),
-			2 to PlanEntity(id = 2, title = "Test 2", type = PlanType.Default.toString()),
-			3 to PlanEntity(id = 3, title = "Test 3", type = PlanType.Custom.toString()),
-			4 to PlanEntity(id = 4, title = "Test 4", type = PlanType.Custom.toString())
+			1 to PlanEntity(id = 1, state = stateNormal, title = "Test 1", type = PlanType.All.toString()),
+			2 to PlanEntity(id = 2, state = stateNormal, title = "Test 2", type = PlanType.Default.toString()),
+			3 to PlanEntity(id = 3, state = stateNormal, title = "Test 3", type = PlanType.Custom.toString()),
+			4 to PlanEntity(id = 4, state = stateNormal, title = "Test 4", type = PlanType.Custom.toString())
 		))
 		val expected = arrayOf(
-			PlanEntity(id = 1, title = "Test 1", type = PlanType.All.toString()),
-			PlanEntity(id = 2, title = "Test 2", type = PlanType.Default.toString())
+			PlanEntity(id = 1, state = stateNormal, title = "Test 1", type = PlanType.All.toString()),
+			PlanEntity(id = 2, state = stateNormal, title = "Test 2", type = PlanType.Default.toString())
 		)
 
 		dataSource.delete(listOf(
@@ -247,7 +229,7 @@ class PlanRoomDataSourceTest {
 	@Test
 	@DisplayName("isEmpty(): false")
 	fun isEmptyFalse() = runTest {
-		plans[1] = PlanEntity(id = 1, type = PlanType.All.toString())
+		plans[1] = PlanEntity(id = 1, state = stateNormal, type = PlanType.All.toString())
 	    val actual = dataSource.isEmpty()
 		assertFalse(actual)
 	}
@@ -256,10 +238,10 @@ class PlanRoomDataSourceTest {
 	@DisplayName("clear()")
 	fun clear() = runTest {
 		plans.putAll(mapOf(
-			1 to PlanEntity(id = 1, title = "Test 1", type = PlanType.All.toString()),
-			2 to PlanEntity(id = 2, title = "Test 2", type = PlanType.Default.toString()),
-			3 to PlanEntity(id = 3, title = "Test 3", type = PlanType.Custom.toString()),
-			4 to PlanEntity(id = 4, title = "Test 4", type = PlanType.Custom.toString())
+			1 to PlanEntity(id = 1, state = stateNormal, title = "Test 1", type = PlanType.All.toString()),
+			2 to PlanEntity(id = 2, state = stateNormal, title = "Test 2", type = PlanType.Default.toString()),
+			3 to PlanEntity(id = 3, state = stateNormal, title = "Test 3", type = PlanType.Custom.toString()),
+			4 to PlanEntity(id = 4, state = stateNormal, title = "Test 4", type = PlanType.Custom.toString())
 		))
 		dataSource.clear()
 

@@ -1,6 +1,7 @@
 package kanti.tododer.data.model.plan.datasource.local
 
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.PlanState
 import kanti.tododer.data.model.plan.toPlan
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,9 +15,7 @@ class FakePlanLocalDataSource(
 	private val stateFlow: MutableStateFlow<List<Plan>> = MutableStateFlow(plans.values.toList())
 
 	override val standardPlans: Flow<List<Plan>>
-		get() = stateFlow.map { plans -> plans.filter { !it.archived } }
-	override val archivedPlans: Flow<List<Plan>>
-		get() = stateFlow.map { plans -> plans.filter { it.archived } }
+		get() = stateFlow.map { plans -> plans.filter { it.state == PlanState.Normal } }
 
 	override suspend fun insert(plan: Plan): Plan {
 		val newPlan = if (plan.id == 0) {

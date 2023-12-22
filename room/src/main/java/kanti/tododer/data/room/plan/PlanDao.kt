@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PlanDao {
 
-	@Query("SELECT * FROM plans WHERE archived = :archived")
-	fun getAll(archived: Boolean): Flow<List<PlanEntity>>
+	@Query("SELECT * FROM plans WHERE state like '%' || :state || '%'")
+	fun getAll(state: String): Flow<List<PlanEntity>>
 
 	@Query("SELECT * FROM plans WHERE rowId = :rowId LIMIT 1")
 	suspend fun getByRowId(rowId: Long): PlanEntity?

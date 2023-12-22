@@ -51,32 +51,6 @@ class PlanRepositoryImplTest {
 	}
 
 	@Test
-	@DisplayName("archive(Plan)")
-	fun archive() = runTest {
-		val expectedArray = arrayOf(Plan(id = 1, archived = true))
-		plans[1] = Plan(id = 1, archived = false)
-
-		repository.archive(listOf(
-			Plan(id = 1, archived = false),
-			Plan(id = 2, archived = false)
-		))
-		assertArrayEquals(expectedArray, plans.values.toTypedArray())
-	}
-
-	@Test
-	@DisplayName("unarchive(Plan)")
-	fun unarchive() = runTest {
-		val expectedArray = arrayOf(Plan(id = 1, archived = false))
-		plans[1] = Plan(id = 1, archived = true)
-
-		repository.unarchive(listOf(
-			Plan(id = 1, archived = true),
-			Plan(id = 2, archived = true)
-		))
-		assertArrayEquals(expectedArray, plans.values.toTypedArray())
-	}
-
-	@Test
 	@DisplayName("delete(List<Plan>)")
 	fun delete() = runTest {
 	    plans.putAll(mapOf(

@@ -7,8 +7,6 @@ interface PlanLocalDataSource {
 
 	val standardPlans: Flow<List<Plan>>
 
-	val archivedPlans: Flow<List<Plan>>
-
 	suspend fun insert(plan: Plan): Plan
 
 	suspend fun update(plan: Plan): Plan

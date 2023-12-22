@@ -4,39 +4,29 @@ interface Plan {
 
 	val id: Int
 	val title: String
-	val archived: Boolean
+	val state: PlanState
 	val type: PlanType
 
-}
-
-enum class PlanType {
-	All,
-	Default,
-	Custom;
-
-	companion object {
-		val DefaultValue = Custom
-	}
 }
 
 private data class PlanImpl(
 	override val id: Int,
 	override val title: String,
-	override val archived: Boolean,
+	override val state: PlanState,
 	override val type: PlanType
 ) : Plan
 
 fun Plan(
 	id: Int = 0,
 	title: String = "",
-	archived: Boolean = false,
+	state: PlanState = PlanState.Normal,
 	type: PlanType = PlanType.DefaultValue,
 	apply: (Plan.() -> Unit)? = null
 ): Plan {
 	return PlanImpl(
 		id = id,
 		title = title,
-		archived = archived,
+		state = state,
 		type = type
 	).also { plan ->
 		apply?.invoke(plan)
@@ -46,14 +36,14 @@ fun Plan(
 fun Plan.toPlan(
 	id: Int = this.id,
 	title: String = this.title,
-	archived: Boolean = this.archived,
+	state: PlanState = this.state,
 	type: PlanType = this.type
 ): Plan {
 	if (
 		this is PlanImpl &&
 		id == this.id &&
 		title == this.title &&
-		archived == this.archived &&
+		state == this.state &&
 		type == this.type
 	) {
 		return this
@@ -61,7 +51,7 @@ fun Plan.toPlan(
 	return Plan(
 		id = id,
 		title = title,
-		archived = archived,
+		state = state,
 		type = type
 	)
 }
