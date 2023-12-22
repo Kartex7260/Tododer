@@ -25,34 +25,19 @@ class TodoRepositoryImpl @Inject constructor(
 		return localDataSource.insert(todo)
 	}
 
-	override suspend fun updateTitle(todo: Todo, title: String): Todo {
-		return localDataSource.update(todo.toTodo(
-			title = title
-		))
+	override suspend fun updateTitle(todoId: Int, title: String): Todo {
+		return localDataSource.updateTitle(todoId, title)
 	}
 
-	override suspend fun updateRemark(todo: Todo, remark: String): Todo {
-		return localDataSource.update(todo.toTodo(
-			remark = remark
-		))
+	override suspend fun updateRemark(todoId: Int, remark: String): Todo {
+		return localDataSource.updateRemark(todoId, remark)
 	}
 
-	override suspend fun changeDone(todo: Todo): Todo {
-		val reversedDone = !todo.done
-		return localDataSource.update(todo.toTodo(
-			done = reversedDone
-		))
+	override suspend fun changeDone(todoId: Int): Todo {
+		return localDataSource.changeDone(todoId)
 	}
 
-	override suspend fun update(todos: List<Todo>) {
-		localDataSource.update(todos)
-	}
-
-	override suspend fun delete(todos: List<Todo>) {
-		for (todo in todos) {
-			val children = getChildren(todo.toParentId())
-			delete(children)
-		}
-		localDataSource.delete(todos)
+	override suspend fun delete(todoIds: List<Int>) {
+		localDataSource.delete(todoIds)
 	}
 }

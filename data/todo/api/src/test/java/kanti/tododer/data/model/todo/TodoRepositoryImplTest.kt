@@ -80,10 +80,7 @@ class TodoRepositoryImplTest {
 	@DisplayName("updateTitle(Todo, String) error")
 	fun updateTitleError() = runTest {
 		try {
-			val todo = repository.updateTitle(Todo(
-				id = 1,
-				parentId = ParentId(1, ParentType.Plan)
-			), title = "Test")
+			val todo = repository.updateTitle(todoId = 1, title = "Test")
 			assertNull(todo)
 		} catch (th: Throwable) {
 			assertInstanceOf(IllegalArgumentException::class.java, th)
@@ -108,11 +105,7 @@ class TodoRepositoryImplTest {
 			1 to Todo(id = 1, parentId = ParentId(1, ParentType.Plan), title = "Test 1"),
 			2 to Todo(id = 2, parentId = ParentId(1, ParentType.Plan), title = "Test 2")
 		))
-		val todo = repository.updateTitle(Todo(
-			id = 2,
-			parentId = ParentId(1, ParentType.Plan),
-			title = "Test 2"
-		), title = "Updated 1")
+		val todo = repository.updateTitle(todoId = 2, title = "Updated 1")
 
 		assertEquals(expectedTodo, todo)
 		assertArrayEquals(expectedArray, todos.values.toTypedArray())
@@ -122,10 +115,7 @@ class TodoRepositoryImplTest {
 	@DisplayName("updateRemark(Todo, String) error")
 	fun updateRemarkError() = runTest {
 		try {
-			val todo = repository.updateRemark(Todo(
-				id = 1,
-				parentId = ParentId(1, ParentType.Plan)
-			), remark = "Test")
+			val todo = repository.updateRemark(todoId = 1, remark = "Test")
 			assertNull(todo)
 		} catch (th: Throwable) {
 			assertInstanceOf(IllegalArgumentException::class.java, th)
@@ -150,11 +140,7 @@ class TodoRepositoryImplTest {
 			1 to Todo(id = 1, parentId = ParentId(1, ParentType.Plan), remark = "Test 1"),
 			2 to Todo(id = 2, parentId = ParentId(1, ParentType.Plan), remark = "Test 2")
 		))
-		val todo = repository.updateRemark(Todo(
-			id = 2,
-			parentId = ParentId(1, ParentType.Plan),
-			remark = "Test 2"
-		), remark = "Updated 1")
+		val todo = repository.updateRemark(todoId = 2, remark = "Updated 1")
 
 		assertEquals(expectedTodo, todo)
 		assertArrayEquals(expectedArray, todos.values.toTypedArray())
@@ -164,10 +150,7 @@ class TodoRepositoryImplTest {
 	@DisplayName("changeDone(Todo) error")
 	fun changeDoneError() = runTest {
 		try {
-			val todo = repository.changeDone(Todo(
-				id = 1,
-				parentId = ParentId(1, ParentType.Plan)
-			))
+			val todo = repository.changeDone(todoId = 1)
 			assertNull(todo)
 		} catch (th: Throwable) {
 			assertInstanceOf(IllegalArgumentException::class.java, th)
@@ -197,46 +180,12 @@ class TodoRepositoryImplTest {
 			1 to Todo(id = 1, parentId = ParentId(1, ParentType.Plan), done = true),
 			2 to Todo(id = 2, parentId = ParentId(1, ParentType.Plan), done = false)
 		))
-		val todo1 = repository.changeDone(Todo(
-			id = 1,
-			parentId = ParentId(1, ParentType.Plan),
-			done = true
-		))
-		val todo2 = repository.changeDone(Todo(
-			id = 2,
-			parentId = ParentId(1, ParentType.Plan),
-			done = false
-		))
+		val todo1 = repository.changeDone(todoId = 1)
+		val todo2 = repository.changeDone(todoId = 2)
 
 		assertEquals(expectedTodo1, todo1)
 		assertEquals(expectedTodo2, todo2)
 		assertArrayEquals(expectedArray, todos.values.toTypedArray())
-	}
-
-	@Test
-	@DisplayName("update(List<Todo>)")
-	fun update() = runTest {
-		val expected = arrayOf(
-			Todo(id = 1, parentId = ParentId(1, ParentType.Plan), title = "Test 1"),
-			Todo(id = 2, parentId = ParentId(1, ParentType.Todo), title = "Updated 1"),
-			Todo(id = 3, parentId = ParentId(1, ParentType.Todo), title = "Test 3"),
-			Todo(id = 4, parentId = ParentId(3, ParentType.Todo), title = "Updated 2")
-		)
-		todos.putAll(mapOf(
-			1 to Todo(id = 1, parentId = ParentId(1, ParentType.Plan), title = "Test 1"),
-			2 to Todo(id = 2, parentId = ParentId(1, ParentType.Todo), title = "Test 2"),
-			3 to Todo(id = 3, parentId = ParentId(1, ParentType.Todo), title = "Test 3"),
-			4 to Todo(id = 4, parentId = ParentId(3, ParentType.Todo), title = "Test 4")
-		))
-
-		repository.update(
-			listOf(
-				Todo(id = 2, parentId = ParentId(1, ParentType.Todo), title = "Updated 1"),
-				Todo(id = 4, parentId = ParentId(3, ParentType.Todo), title = "Updated 2")
-			)
-		)
-
-		assertArrayEquals(expected, todos.values.toTypedArray())
 	}
 
 	@Test
@@ -252,12 +201,7 @@ class TodoRepositoryImplTest {
 			4 to Todo(id = 4, parentId = ParentId(3, ParentType.Todo))
 		))
 
-		repository.delete(
-			listOf(
-				Todo(id = 2, parentId = ParentId(1, ParentType.Todo)),
-				Todo(id = 3, parentId = ParentId(1, ParentType.Todo))
-			)
-		)
+		repository.delete(listOf(2, 3))
 
 		assertArrayEquals(expected, todos.values.toTypedArray())
 	}

@@ -1,15 +1,20 @@
 package kanti.tododer.data.model.todo.datasource.local
 
-import kanti.tododer.data.model.todo.TodoState
 import kanti.tododer.data.room.todo.TodoDao
 import kanti.tododer.data.room.todo.TodoEntity
 
 class FakeTodoDao(
-	val todos: MutableMap<Int, TodoEntity> = LinkedHashMap()
+	private val todos: MutableMap<Int, TodoEntity> = LinkedHashMap()
 ) : TodoDao {
 
 	override suspend fun getAll(): List<TodoEntity> {
 		return todos.values.toList()
+	}
+
+	override suspend fun getAllChildren(parentId: String): List<TodoEntity> {
+		return todos.values.filter {
+			it.parentId == parentId
+		}
 	}
 
 	override suspend fun getChildren(parentId: String, state: String): List<TodoEntity> {
@@ -43,21 +48,31 @@ class FakeTodoDao(
 		return todos[rowId.toInt()]
 	}
 
-	override suspend fun update(todos: List<TodoEntity>) {
-		for (todo in todos) {
-			if (this.todos.containsKey(todo.id)) {
-				this.todos[todo.id] = todo
-			}
-		}
+	override suspend fun updateTitle(todoId: Int, title: String) {
+		val todo = todos[todoId] ?: return
+		val newTodo = todo.copy(title = title)
+		todos[todoId] = newTodo
+	}
+
+	override suspend fun updateRemark(todoId: Int, remark: String) {
+		val todo = todos[todoId] ?: return
+		val newTodo = todo.copy(remark = remark)
+		todos[todoId] = newTodo
+	}
+
+	override suspend fun changeDone(todoId: Int) {
+		val todo = todos[todoId] ?: return
+		val newTodo = todo.copy(done = !todo.done)
+		todos[todoId] = newTodo
 	}
 
 	override suspend fun getTodo(id: Int): TodoEntity? {
 		return todos[id]
 	}
 
-	override suspend fun delete(todos: List<TodoEntity>) {
-		for (todo in todos) {
-			this.todos.remove(todo.id)
+	override suspend fun delete(todoIds: List<Int>) {
+		for (todoId in todoIds) {
+			todos.remove(todoId)
 		}
 	}
 

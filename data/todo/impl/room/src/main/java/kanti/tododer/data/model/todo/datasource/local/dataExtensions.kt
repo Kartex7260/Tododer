@@ -4,6 +4,7 @@ import kanti.sl.StateLanguage
 import kanti.sl.deserialize
 import kanti.sl.serialize
 import kanti.tododer.data.model.ParentId
+import kanti.tododer.data.model.ParentType
 import kanti.tododer.data.model.todo.Todo
 import kanti.tododer.data.room.todo.TodoEntity
 
@@ -27,4 +28,8 @@ fun TodoEntity.toTodo(sl: StateLanguage): Todo {
 		done = done,
 		state = sl.deserialize(state)
 	)
+}
+
+fun TodoEntity.toParentId(): ParentId {
+	return ParentId(id, ParentType.Todo)
 }

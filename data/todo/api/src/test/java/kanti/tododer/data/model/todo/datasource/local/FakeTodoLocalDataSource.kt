@@ -3,11 +3,18 @@ package kanti.tododer.data.model.todo.datasource.local
 import kanti.tododer.data.model.ParentId
 import kanti.tododer.data.model.todo.Todo
 import kanti.tododer.data.model.todo.TodoState
+import kanti.tododer.data.model.todo.toParentId
 import kanti.tododer.data.model.todo.toTodo
 
 class FakeTodoLocalDataSource(
 	private val todos: MutableMap<Int, Todo> = LinkedHashMap()
 ) : TodoLocalDataSource {
+
+	override suspend fun getAllChildren(parentId: ParentId): List<Todo> {
+		return todos.values.filter {
+			it.parentId == parentId
+		}
+	}
 
 	override suspend fun getChildren(parentId: ParentId, state: TodoState): List<Todo> {
 		return todos.values.filter {
@@ -28,24 +35,38 @@ class FakeTodoLocalDataSource(
 		return newTodo
 	}
 
-	override suspend fun update(todo: Todo): Todo {
-		if (!todos.containsKey(todo.id))
-			throw IllegalArgumentException("Not found todo by id=${todo.id}")
-		todos[todo.id] = todo
-		return todo
+	override suspend fun updateTitle(todoId: Int, title: String): Todo {
+		val todo = requireTodo(todoId)
+		val newTodo = todo.toTodo(title = title)
+		todos[todoId] = newTodo
+		return newTodo
 	}
 
-	override suspend fun update(todos: List<Todo>) {
-		for (todo in todos) {
-			if (!this.todos.containsKey(todo.id))
-				continue
-			this.todos[todo.id] = todo
+	override suspend fun updateRemark(todoId: Int, remark: String): Todo {
+		val todo = requireTodo(todoId)
+		val newTodo = todo.toTodo(remark = remark)
+		todos[todoId] = newTodo
+		return newTodo
+	}
+
+	override suspend fun changeDone(todoId: Int): Todo {
+		val todo = requireTodo(todoId)
+		val newTodo = todo.toTodo(done = !todo.done)
+		todos[todoId] = newTodo
+		return newTodo
+	}
+
+	override suspend fun delete(todoIds: List<Int>) {
+		for (todoId in todoIds) {
+			val todo = todos.remove(todoId)
+			todo?.apply {
+				val children = getAllChildren(toParentId())
+				delete(children.map { it.id })
+			}
 		}
 	}
 
-	override suspend fun delete(todos: List<Todo>) {
-		for (todo in todos) {
-			this.todos.remove(todo.id)
-		}
+	private fun requireTodo(todoId: Int): Todo {
+		return todos[todoId] ?: throw IllegalArgumentException("Not found todo by id=$todoId")
 	}
 }

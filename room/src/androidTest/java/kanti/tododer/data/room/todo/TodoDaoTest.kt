@@ -28,6 +28,44 @@ class TodoDaoTest {
 	}
 
 	@Test
+	fun getAllChildren() = runTest {
+		todoDao.insert(
+			TodoEntity(
+				id = 1,
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 2,
+				parentId = "Todo-1",
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 3,
+				parentId = "Todo-1",
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 4,
+				parentId = "Todo-3",
+				state = stateNormal
+			)
+		)
+		val expected = arrayOf(
+			TodoEntity(id = 2, parentId = "Todo-1", state = stateNormal),
+			TodoEntity(id = 3, parentId = "Todo-1", state = stateNormal)
+		)
+
+		val children = todoDao.getChildren(parentId = "Todo-1", stateNormal)
+		assertArrayEquals(expected, children.toTypedArray())
+	}
+
+	@Test
 	fun getChildren() = runTest {
 		todoDao.insert(
 			TodoEntity(
@@ -120,6 +158,109 @@ class TodoDaoTest {
 	}
 
 	@Test
+	fun updateTitle() = runTest {
+		val expectedArray = arrayOf(
+			TodoEntity(
+				id = 1,
+				title = "Updated 1",
+				state = stateNormal
+			),
+			TodoEntity(
+				id = 2,
+				title = "Test 2",
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 1,
+				title = "Test 1",
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 2,
+				title = "Test 2",
+				state = stateNormal
+			)
+		)
+
+		todoDao.updateTitle(1, "Updated 1")
+
+		assertArrayEquals(expectedArray, todoDao.getAll().toTypedArray())
+	}
+
+	@Test
+	fun updateRemark() = runTest {
+		val expectedArray = arrayOf(
+			TodoEntity(
+				id = 1,
+				remark = "Updated 1",
+				state = stateNormal
+			),
+			TodoEntity(
+				id = 2,
+				remark = "Test 2",
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 1,
+				remark = "Test 1",
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 2,
+				remark = "Test 2",
+				state = stateNormal
+			)
+		)
+
+		todoDao.updateRemark(1, "Updated 1")
+
+		assertArrayEquals(expectedArray, todoDao.getAll().toTypedArray())
+	}
+
+	@Test
+	fun changeDone() = runTest {
+		val expectedArray = arrayOf(
+			TodoEntity(
+				id = 1,
+				done = false,
+				state = stateNormal
+			),
+			TodoEntity(
+				id = 2,
+				done = true,
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 1,
+				done = true,
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 2,
+				done = false,
+				state = stateNormal
+			)
+		)
+
+		todoDao.changeDone(1)
+		todoDao.changeDone(2)
+
+		assertArrayEquals(expectedArray, todoDao.getAll().toTypedArray())
+	}
+
+	@Test
 	fun getTodoNull() = runTest {
 		val todo = todoDao.getTodo(133)
 		assertNull(todo)
@@ -133,5 +274,40 @@ class TodoDaoTest {
 			TodoEntity(id = 1, state = stateNormal),
 			todo
 		)
+	}
+
+	@Test
+	fun deleteList() = runTest {
+		todoDao.insert(
+			TodoEntity(
+				id = 1,
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 2,
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 3,
+				state = stateNormal
+			)
+		)
+		todoDao.insert(
+			TodoEntity(
+				id = 4,
+				state = stateNormal
+			)
+		)
+		val expected = arrayOf(
+			TodoEntity(id = 1, state = stateNormal),
+			TodoEntity(id = 3, state = stateNormal)
+		)
+
+		todoDao.delete(listOf(2, 4))
+		assertArrayEquals(expected, todoDao.getAll().toTypedArray())
 	}
 }

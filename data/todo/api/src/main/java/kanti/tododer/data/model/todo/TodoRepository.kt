@@ -12,13 +12,11 @@ interface TodoRepository {
 		remark: String
 	): Todo
 
-	suspend fun updateTitle(todo: Todo, title: String): Todo
+	suspend fun updateTitle(todoId: Int, title: String): Todo
 
-	suspend fun updateRemark(todo: Todo, remark: String): Todo
+	suspend fun updateRemark(todoId: Int, remark: String): Todo
 
-	suspend fun changeDone(todo: Todo): Todo
+	suspend fun changeDone(todoId: Int): Todo
 
-	suspend fun update(todos: List<Todo>)
-
-	suspend fun delete(todos: List<Todo>)
+	suspend fun delete(todoIds: List<Int>)
 }
