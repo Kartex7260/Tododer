@@ -16,14 +16,12 @@ class PlanRepositoryImpl @Inject constructor(
 		return localDataSource.insert(plan)
 	}
 
-	override suspend fun updateTitle(plan: Plan, title: String): Plan {
-		return localDataSource.update(plan.toPlan(
-			title = title
-		))
+	override suspend fun updateTitle(planId: Int, title: String): Plan {
+		return localDataSource.updateTitle(planId, title)
 	}
 
-	override suspend fun delete(plans: List<Plan>) {
-		localDataSource.delete(plans)
+	override suspend fun delete(planIds: List<Int>) {
+		localDataSource.delete(planIds)
 	}
 
 	override suspend fun init() {

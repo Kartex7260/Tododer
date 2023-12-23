@@ -30,24 +30,16 @@ class FakePlanLocalDataSource(
 		return newPlan
 	}
 
-	override suspend fun update(plan: Plan): Plan {
-		if (!plans.containsKey(plan.id))
-			throw IllegalArgumentException("Not found plan by id=${plan.id}")
-		plans[plan.id] = plan
-		return plan
+	override suspend fun updateTitle(planId: Int, title: String): Plan {
+		val plan = requirePlan(planId)
+		val newPlan = plan.toPlan(title = title)
+		plans[planId] = newPlan
+		return newPlan
 	}
 
-	override suspend fun update(plans: List<Plan>) {
-		for (plan in plans) {
-			if (!this.plans.containsKey(plan.id))
-				continue
-			this.plans[plan.id] = plan
-		}
-	}
-
-	override suspend fun delete(plans: List<Plan>) {
-		for (plan in plans) {
-			this.plans.remove(plan.id)
+	override suspend fun delete(planIds: List<Int>) {
+		for (planId in planIds) {
+			plans.remove(planId)
 		}
 	}
 
@@ -63,5 +55,9 @@ class FakePlanLocalDataSource(
 	override suspend fun clear() {
 		plans.clear()
 		init()
+	}
+
+	private fun requirePlan(planId: Int): Plan {
+		return plans[planId] ?: throw IllegalArgumentException("Not found plan by id=$planId")
 	}
 }

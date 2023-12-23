@@ -7,10 +7,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 class FakePlanDao(
-	val plans: MutableMap<Int, PlanEntity> = LinkedHashMap()
+	private val plans: MutableMap<Int, PlanEntity> = LinkedHashMap()
 ) : PlanDao {
 
 	private val sharedFlow: MutableStateFlow<List<PlanEntity>> = MutableStateFlow(plans.values.toList())
+
+	override fun getAll(): List<PlanEntity> {
+		return plans.values.toList()
+	}
 
 	override fun getAll(state: String): Flow<List<PlanEntity>> {
 		sharedFlow.value = plans.values.toList()
@@ -43,18 +47,18 @@ class FakePlanDao(
 		return newPlan.id.toLong()
 	}
 
-	override suspend fun update(plans: List<PlanEntity>) {
-		for (plan in plans) {
-			if (this.plans.containsKey(plan.id)) {
-				this.plans[plan.id] = plan
-			}
-		}
+	override suspend fun updateTitle(planId: Int, title: String) {
+		val plan = plans[planId] ?: return
+		val newPlan = plan.copy(title = title)
+		plans[planId] = newPlan
+		sharedFlow.value = plans.values.toList()
 	}
 
-	override suspend fun delete(plans: List<PlanEntity>) {
-		for (plan in plans) {
-			this.plans.remove(plan.id)
+	override suspend fun delete(planIds: List<Int>) {
+		for (planId in planIds) {
+			plans.remove(planId)
 		}
+		sharedFlow.value = plans.values.toList()
 	}
 
 	override suspend fun count(): Int {

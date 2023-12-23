@@ -141,6 +141,30 @@ class PlanDaoTest {
 	}
 
 	@Test
+	fun updateTitle1() = runTest {
+		val expectedArray = arrayOf(
+			PlanEntity(id = 1, state = stateNormal, title = "Test 1")
+		)
+
+		planDao.insert(PlanEntity(id = 1, state = stateNormal, title = "Test 1"))
+		planDao.updateTitle(4, "Updated")
+
+		assertArrayEquals(expectedArray, planDao.getAll().toTypedArray())
+	}
+
+	@Test
+	fun updateTitle2() = runTest {
+		val expectedArray = arrayOf(
+			PlanEntity(id = 1, state = stateNormal, title = "Updated")
+		)
+
+		planDao.insert(PlanEntity(id = 1, state = stateNormal, title = "Test 1"))
+		planDao.updateTitle(1, "Updated")
+
+		assertArrayEquals(expectedArray, planDao.getAll().toTypedArray())
+	}
+
+	@Test
 	fun count0() = runTest {
 		val count = planDao.count()
 		val expected = 0

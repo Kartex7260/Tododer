@@ -44,7 +44,7 @@ class PlanRepositoryImplTest {
 			1 to Plan(id = 1, title = "Test 1")
 		))
 
-		val plan = repository.updateTitle(Plan(id = 1), title = "Updated")
+		val plan = repository.updateTitle(1, title = "Updated")
 
 		assertEquals(expectedPlan, plan)
 		assertArrayEquals(expectedArray, plans.values.toTypedArray())
@@ -60,7 +60,7 @@ class PlanRepositoryImplTest {
 		))
 		val expectedArray = arrayOf(Plan(id = 2))
 
-		repository.delete(listOf(Plan(id = 1), Plan(id = 3), Plan(id = 4)))
+		repository.delete(listOf(1, 3, 4))
 		assertArrayEquals(expectedArray, plans.values.toTypedArray())
 	}
 

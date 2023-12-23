@@ -9,11 +9,9 @@ interface PlanLocalDataSource {
 
 	suspend fun insert(plan: Plan): Plan
 
-	suspend fun update(plan: Plan): Plan
+	suspend fun updateTitle(planId: Int, title: String): Plan
 
-	suspend fun update(plans: List<Plan>)
-
-	suspend fun delete(plans: List<Plan>)
+	suspend fun delete(planIds: List<Int>)
 
 	suspend fun init()
 

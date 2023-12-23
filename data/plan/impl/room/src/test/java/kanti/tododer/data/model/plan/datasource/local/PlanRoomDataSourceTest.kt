@@ -116,9 +116,9 @@ class PlanRoomDataSourceTest {
 
 	@Test
 	@DisplayName("update(Plan) update error")
-	fun updateError() = runTest {
+	fun updateTitleError() = runTest {
 	    try {
-			val plan = dataSource.update(Plan(id = 23))
+			val plan = dataSource.updateTitle(1, "Updated 1")
 			assertNull(plan)
 		} catch (th: Throwable) {
 			assertInstanceOf(IllegalArgumentException::class.java, th)
@@ -127,7 +127,7 @@ class PlanRoomDataSourceTest {
 
 	@Test
 	@DisplayName("update(Plan) update")
-	fun update() = runTest {
+	fun updateTitle() = runTest {
 	    plans.putAll(mapOf(
 			1 to PlanEntity(id = 1, state = stateNormal, title = "Test 1", type = PlanType.Custom.toString()),
 			2 to PlanEntity(id = 2, state = stateNormal, title = "Test 2", type = PlanType.Custom.toString()),
@@ -140,53 +140,12 @@ class PlanRoomDataSourceTest {
 			PlanEntity(id = 3, state = stateNormal, title = "Test 3", type = PlanType.Custom.toString())
 		)
 
-		val plan = dataSource.update(Plan(
-			id = 2,
-			title = "Updated"
-		))
+		val plan = dataSource.updateTitle(2, "Updated")
 		assertEquals(expectedPlan, plan)
 		assertArrayEquals(
 			expectedArray,
 			plans.values.toTypedArray()
 		)
-	}
-
-	@Test
-	@DisplayName("update(List<Plan>) update empty")
-	fun updateListEmpty() = runTest {
-		val expected = arrayOf<PlanEntity>()
-	    dataSource.update(listOf(
-			Plan(id = 1),
-			Plan(id = 2),
-			Plan(id = 3)
-		))
-
-		assertArrayEquals(expected, plans.values.toTypedArray())
-	}
-
-	@Test
-	@DisplayName("update(List<Plan>) update")
-	fun updateList() = runTest {
-	    plans.putAll(mapOf(
-			1 to PlanEntity(id = 1, state = stateNormal, title = "Test 1", type = PlanType.All.toString()),
-			2 to PlanEntity(id = 2, state = stateNormal, title = "Test 2", type = PlanType.Default.toString()),
-			3 to PlanEntity(id = 3, state = stateNormal, title = "Test 3", type = PlanType.Custom.toString()),
-			4 to PlanEntity(id = 4, state = stateNormal, title = "Test 4", type = PlanType.Custom.toString())
-		))
-		val expected = arrayOf(
-			PlanEntity(id = 1, state = stateNormal, title = "Test 1", type = PlanType.All.toString()),
-			PlanEntity(id = 2, state = stateNormal, title = "Updated 1", type = PlanType.Default.toString()),
-			PlanEntity(id = 3, state = stateNormal, title = "Test 3", type = PlanType.Custom.toString()),
-			PlanEntity(id = 4, state = stateNormal, title = "Updated 2", type = PlanType.Custom.toString())
-		)
-
-		dataSource.update(listOf(
-			Plan(id = 2, title = "Updated 1", type = PlanType.Default),
-			Plan(id = 4, title = "Updated 2"),
-			Plan(id = 5, title = "Updated 3")
-		))
-
-		assertArrayEquals(expected, plans.values.toTypedArray())
 	}
 
 	@Test
@@ -203,11 +162,7 @@ class PlanRoomDataSourceTest {
 			PlanEntity(id = 2, state = stateNormal, title = "Test 2", type = PlanType.Default.toString())
 		)
 
-		dataSource.delete(listOf(
-			Plan(id = 3),
-			Plan(id = 4),
-			Plan(id = 5)
-		))
+		dataSource.delete(listOf(3, 4, 5))
 
 		assertArrayEquals(expected, plans.values.toTypedArray())
 	}

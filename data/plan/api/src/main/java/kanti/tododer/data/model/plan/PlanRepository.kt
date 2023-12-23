@@ -8,9 +8,9 @@ interface PlanRepository {
 
 	suspend fun create(title: String): Plan
 
-	suspend fun updateTitle(plan: Plan, title: String): Plan
+	suspend fun updateTitle(planId: Int, title: String): Plan
 
-	suspend fun delete(plans: List<Plan>)
+	suspend fun delete(planIds: List<Int>)
 
 	suspend fun init()
 

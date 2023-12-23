@@ -31,19 +31,14 @@ class PlanRoomDataSource @Inject constructor(
 			?: throw IllegalStateException("Not found plan by rowId=$rowId")
 	}
 
-	override suspend fun update(plan: Plan): Plan {
-		val id = plan.id
-		planDao.update(listOf(plan.toPlanEntity(sl)))
-		return planDao.getPlan(id)?.toPlan(sl)
-			?:throw IllegalArgumentException("Not found plan by id=$id")
+	override suspend fun updateTitle(planId: Int, title: String): Plan {
+		planDao.updateTitle(planId, title)
+		return planDao.getPlan(planId)?.toPlan(sl)
+			?:throw IllegalArgumentException("Not found plan by id=$planId")
 	}
 
-	override suspend fun update(plans: List<Plan>) {
-		planDao.update(plans.map { it.toPlanEntity(sl) })
-	}
-
-	override suspend fun delete(plans: List<Plan>) {
-		planDao.delete(plans.map { it.toPlanEntity(sl) })
+	override suspend fun delete(planIds: List<Int>) {
+		planDao.delete(planIds)
 	}
 
 	override suspend fun init() {
