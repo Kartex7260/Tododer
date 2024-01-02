@@ -1,12 +1,12 @@
 package kanti.tododer.data.model.todo
 
-import kanti.tododer.data.model.ParentId
-import kanti.tododer.data.model.ParentType
+import kanti.tododer.data.model.FullId
+import kanti.tododer.data.model.FullIdType
 
 interface Todo {
 
 	val id: Int
-	val parentId: ParentId
+	val parentId: FullId
 	val title: String
 	val remark: String
 	val done: Boolean
@@ -15,7 +15,7 @@ interface Todo {
 
 private data class TodoImpl(
 	override val id: Int,
-	override val parentId: ParentId,
+	override val parentId: FullId,
 	override val title: String,
 	override val remark: String,
 	override val done: Boolean,
@@ -24,7 +24,7 @@ private data class TodoImpl(
 
 fun Todo(
 	id: Int = 0,
-	parentId: ParentId,
+	parentId: FullId,
 	title: String = "",
 	remark: String = "",
 	done: Boolean = false,
@@ -42,7 +42,7 @@ fun Todo(
 
 fun Todo.toTodo(
 	id: Int = this.id,
-	parentId: ParentId = this.parentId,
+	parentId: FullId = this.parentId,
 	title: String = this.title,
 	remark: String = this.remark,
 	done: Boolean = this.done,
@@ -68,6 +68,6 @@ fun Todo.toTodo(
 	)
 }
 
-fun Todo.toParentId(): ParentId {
-	return ParentId(id, ParentType.Todo)
+fun Todo.toFullId(): FullId {
+	return FullId(id, FullIdType.Todo)
 }

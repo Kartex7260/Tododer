@@ -1,24 +1,24 @@
 package kanti.tododer.data.model.todo.datasource.local
 
-import kanti.tododer.data.model.ParentId
+import kanti.tododer.data.model.FullId
 import kanti.tododer.data.model.todo.Todo
 import kanti.tododer.data.model.todo.TodoState
-import kanti.tododer.data.model.todo.toParentId
+import kanti.tododer.data.model.todo.toFullId
 import kanti.tododer.data.model.todo.toTodo
 
 class FakeTodoLocalDataSource(
 	private val todos: MutableMap<Int, Todo> = LinkedHashMap()
 ) : TodoLocalDataSource {
 
-	override suspend fun getAllChildren(parentId: ParentId): List<Todo> {
+	override suspend fun getAllChildren(fullId: FullId): List<Todo> {
 		return todos.values.filter {
-			it.parentId == parentId
+			it.parentId == fullId
 		}
 	}
 
-	override suspend fun getChildren(parentId: ParentId, state: TodoState): List<Todo> {
+	override suspend fun getChildren(fullId: FullId, state: TodoState): List<Todo> {
 		return todos.values.filter {
-			it.parentId == parentId && it.state == state
+			it.parentId == fullId && it.state == state
 		}
 	}
 
@@ -60,7 +60,7 @@ class FakeTodoLocalDataSource(
 		for (todoId in todoIds) {
 			val todo = todos.remove(todoId)
 			todo?.apply {
-				val children = getAllChildren(toParentId())
+				val children = getAllChildren(toFullId())
 				delete(children.map { it.id })
 			}
 		}

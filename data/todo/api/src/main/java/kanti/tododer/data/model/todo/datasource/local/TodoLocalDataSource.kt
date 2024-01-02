@@ -1,14 +1,14 @@
 package kanti.tododer.data.model.todo.datasource.local
 
-import kanti.tododer.data.model.ParentId
+import kanti.tododer.data.model.FullId
 import kanti.tododer.data.model.todo.Todo
 import kanti.tododer.data.model.todo.TodoState
 
 interface TodoLocalDataSource {
 
-	suspend fun getAllChildren(parentId: ParentId): List<Todo>
+	suspend fun getAllChildren(fullId: FullId): List<Todo>
 
-	suspend fun getChildren(parentId: ParentId, state: TodoState): List<Todo>
+	suspend fun getChildren(fullId: FullId, state: TodoState): List<Todo>
 
 	suspend fun insert(todo: Todo): Todo
 

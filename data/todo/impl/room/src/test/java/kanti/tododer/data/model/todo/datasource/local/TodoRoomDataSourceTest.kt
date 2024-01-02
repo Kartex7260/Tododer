@@ -2,8 +2,8 @@ package kanti.tododer.data.model.todo.datasource.local
 
 import kanti.sl.StateLanguage
 import kanti.sl.serialize
-import kanti.tododer.data.model.ParentId
-import kanti.tododer.data.model.ParentType
+import kanti.tododer.data.model.FullId
+import kanti.tododer.data.model.FullIdType
 import kanti.tododer.data.model.todo.Todo
 import kanti.tododer.data.model.todo.TodoState
 import kanti.tododer.data.room.todo.TodoEntity
@@ -40,11 +40,11 @@ class TodoRoomDataSourceTest {
 			4 to TodoEntity(id = 4, parentId = "Todo-2", state = stateNormal)
 		))
 		val expected = arrayOf(
-			Todo(id = 2, parentId = ParentId(1, ParentType.Todo)),
-			Todo(id = 3, parentId = ParentId(1, ParentType.Todo))
+			Todo(id = 2, parentId = FullId(1, FullIdType.Todo)),
+			Todo(id = 3, parentId = FullId(1, FullIdType.Todo))
 		)
 
-		val children = dataSource.getAllChildren(ParentId(1, ParentType.Todo))
+		val children = dataSource.getAllChildren(FullId(1, FullIdType.Todo))
 		assertArrayEquals(expected, children.toTypedArray())
 	}
 
@@ -58,11 +58,11 @@ class TodoRoomDataSourceTest {
 			4 to TodoEntity(id = 4, parentId = "Todo-2", state = stateNormal)
 		))
 		val expected = arrayOf(
-			Todo(id = 2, parentId = ParentId(1, ParentType.Todo)),
-			Todo(id = 3, parentId = ParentId(1, ParentType.Todo))
+			Todo(id = 2, parentId = FullId(1, FullIdType.Todo)),
+			Todo(id = 3, parentId = FullId(1, FullIdType.Todo))
 		)
 
-		val children = dataSource.getChildren(ParentId(1, ParentType.Todo), TodoState.Normal)
+		val children = dataSource.getChildren(FullId(1, FullIdType.Todo), TodoState.Normal)
 		assertArrayEquals(expected, children.toTypedArray())
 	}
 
@@ -71,7 +71,7 @@ class TodoRoomDataSourceTest {
 	fun insertError() = runTest {
 	    todos[1] = TodoEntity(id = 1, parentId = "Plan-1", state = stateNormal)
 		try {
-			val todo = dataSource.insert(Todo(id = 1, ParentId(1, ParentType.Plan)))
+			val todo = dataSource.insert(Todo(id = 1, FullId(1, FullIdType.Plan)))
 			assertNull(todo)
 		} catch (th: Throwable) {
 			assertInstanceOf(IllegalArgumentException::class.java, th)
@@ -81,12 +81,12 @@ class TodoRoomDataSourceTest {
 	@Test
 	@DisplayName("insert(Todo)")
 	fun insert() = runTest {
-	    val expectedTodo = Todo(id = 1, parentId = ParentId(1, ParentType.Plan))
+	    val expectedTodo = Todo(id = 1, parentId = FullId(1, FullIdType.Plan))
 		val expectedArray = arrayOf(
 			TodoEntity(id = 1, parentId = "Plan-1", state = stateNormal)
 		)
 
-		val todo = dataSource.insert(Todo(parentId = ParentId(1, ParentType.Plan)))
+		val todo = dataSource.insert(Todo(parentId = FullId(1, FullIdType.Plan)))
 		assertEquals(expectedTodo, todo)
 		assertArrayEquals(
 			expectedArray,
@@ -114,7 +114,7 @@ class TodoRoomDataSourceTest {
 			TodoEntity(id = 2, parentId = "Todo-1", state = stateNormal, title = "Updated 1"),
 			TodoEntity(id = 3, parentId = "Todo-1", state = stateNormal, title = "Test 3")
 		)
-		val expectedTodo = Todo(id = 2, parentId = ParentId(1, ParentType.Todo), title = "Updated 1")
+		val expectedTodo = Todo(id = 2, parentId = FullId(1, FullIdType.Todo), title = "Updated 1")
 
 		todos.putAll(mapOf(
 			1 to TodoEntity(id = 1, parentId = "Plan-1", state = stateNormal, title = "Test 1"),
@@ -148,7 +148,7 @@ class TodoRoomDataSourceTest {
 			TodoEntity(id = 2, parentId = "Todo-1", state = stateNormal, remark = "Updated 1"),
 			TodoEntity(id = 3, parentId = "Todo-1", state = stateNormal, remark = "Test 3")
 		)
-		val expectedTodo = Todo(id = 2, parentId = ParentId(1, ParentType.Todo), remark = "Updated 1")
+		val expectedTodo = Todo(id = 2, parentId = FullId(1, FullIdType.Todo), remark = "Updated 1")
 
 		todos.putAll(mapOf(
 			1 to TodoEntity(id = 1, parentId = "Plan-1", state = stateNormal, remark = "Test 1"),
@@ -181,8 +181,8 @@ class TodoRoomDataSourceTest {
 			TodoEntity(id = 1, parentId = "Plan-1", state = stateNormal, done = false),
 			TodoEntity(id = 2, parentId = "Todo-1", state = stateNormal, done = true)
 		)
-		val expectedTodo1 = Todo(id = 1, parentId = ParentId(1, ParentType.Plan), done = false)
-		val expectedTodo2 = Todo(id = 2, parentId = ParentId(1, ParentType.Todo), done = true)
+		val expectedTodo1 = Todo(id = 1, parentId = FullId(1, FullIdType.Plan), done = false)
+		val expectedTodo2 = Todo(id = 2, parentId = FullId(1, FullIdType.Todo), done = true)
 
 		todos.putAll(mapOf(
 			1 to TodoEntity(id = 1, parentId = "Plan-1", state = stateNormal, done = true),

@@ -1,13 +1,13 @@
 package kanti.tododer.data.model.todo
 
-import kanti.tododer.data.model.ParentId
+import kanti.tododer.data.model.FullId
 
 interface TodoRepository {
 
-	suspend fun getChildren(parentId: ParentId): List<Todo>
+	suspend fun getChildren(fullId: FullId): List<Todo>
 
 	suspend fun create(
-		parentId: ParentId,
+		fullId: FullId,
 		title: String,
 		remark: String
 	): Todo

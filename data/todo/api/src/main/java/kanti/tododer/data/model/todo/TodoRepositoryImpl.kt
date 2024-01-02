@@ -1,6 +1,6 @@
 package kanti.tododer.data.model.todo
 
-import kanti.tododer.data.model.ParentId
+import kanti.tododer.data.model.FullId
 import kanti.tododer.data.model.todo.datasource.local.TodoLocalDataSource
 import javax.inject.Inject
 
@@ -8,17 +8,17 @@ class TodoRepositoryImpl @Inject constructor(
 	private val localDataSource: TodoLocalDataSource
 ) : TodoRepository {
 
-	override suspend fun getChildren(parentId: ParentId): List<Todo> {
-		return localDataSource.getChildren(parentId, TodoState.Normal)
+	override suspend fun getChildren(fullId: FullId): List<Todo> {
+		return localDataSource.getChildren(fullId, TodoState.Normal)
 	}
 
 	override suspend fun create(
-		parentId: ParentId,
+		fullId: FullId,
 		title: String,
 		remark: String
 	): Todo {
 		val todo = Todo(
-			parentId = parentId,
+			parentId = fullId,
 			title = title,
 			remark = remark
 		)

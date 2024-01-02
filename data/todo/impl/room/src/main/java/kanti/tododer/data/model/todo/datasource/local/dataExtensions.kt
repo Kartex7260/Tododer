@@ -3,8 +3,8 @@ package kanti.tododer.data.model.todo.datasource.local
 import kanti.sl.StateLanguage
 import kanti.sl.deserialize
 import kanti.sl.serialize
-import kanti.tododer.data.model.ParentId
-import kanti.tododer.data.model.ParentType
+import kanti.tododer.data.model.FullId
+import kanti.tododer.data.model.FullIdType
 import kanti.tododer.data.model.todo.Todo
 import kanti.tododer.data.room.todo.TodoEntity
 
@@ -22,7 +22,7 @@ fun Todo.toTodoEntity(sl: StateLanguage): TodoEntity {
 fun TodoEntity.toTodo(sl: StateLanguage): Todo {
 	return Todo(
 		id = id,
-		parentId = ParentId.from(parentId),
+		parentId = FullId.from(parentId),
 		title = title,
 		remark = remark,
 		done = done,
@@ -30,6 +30,6 @@ fun TodoEntity.toTodo(sl: StateLanguage): Todo {
 	)
 }
 
-fun TodoEntity.toParentId(): ParentId {
-	return ParentId(id, ParentType.Todo)
+fun TodoEntity.toParentId(): FullId {
+	return FullId(id, FullIdType.Todo)
 }
