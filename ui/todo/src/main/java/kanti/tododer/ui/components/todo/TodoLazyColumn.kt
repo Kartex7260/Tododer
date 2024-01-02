@@ -24,6 +24,7 @@ fun TodoLazyColumn(
 	state: LazyListState = rememberLazyListState(),
 	contentPadding: PaddingValues = PaddingValues(all = 16.dp),
 	flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
+	userScrollEnabled: Boolean = true,
 	content: TodoListUiState = TodoListUiState(),
 	onClick: (todo: TodoUiState) -> Unit,
 	onDoneChanged: (isDone: Boolean, todo: TodoUiState) -> Unit,
@@ -33,7 +34,7 @@ fun TodoLazyColumn(
 	state = state,
 	contentPadding = contentPadding,
 	flingBehavior = flingBehavior,
-	userScrollEnabled = true
+	userScrollEnabled = userScrollEnabled
 ) {
 	items(
 		items = content.todos,
