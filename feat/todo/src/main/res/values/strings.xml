@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="plan_all">All tasks</string>
+    <string name="plan_default">Tasks</string>
+
+    <string name="nav_destination_todo">todo</string>
+    <string name="nav_destination_todos">todos</string>
+
+    <string name="nav_destination_todo_detail">todoChildren</string>
+    <string name="nav_destination_todo_detail_todo_id_param">todoId</string>
+</resources>
