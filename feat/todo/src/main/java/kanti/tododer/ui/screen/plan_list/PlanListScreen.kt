@@ -1,9 +1,6 @@
 package kanti.tododer.ui.screen.plan_list
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -21,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -33,6 +29,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.plan.PlanCard
+import kanti.tododer.ui.components.plan.PlanLazyColumn
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -102,66 +99,44 @@ fun PlanListScreen(
 			}
 		}
 	) { paddingValues ->
-		Column(
+		PlanLazyColumn(
 			modifier = Modifier
-				.padding(paddingValues)
-				.verticalScroll(rememberScrollState())
-		) {
-			PlanCard(
-				modifier = Modifier
-					.padding(
-						start = 16.dp,
-						end = 16.dp,
-						top = 16.dp
-					),
-				planUiState = planAll,
-				onClick = {
-					vm.setCurrentPlan(planAll.id)
-					navController.popBackStack()
-				}
-			) {}
+				.padding(paddingValues),
+			preContent = {
+				PlanCard(
+					planUiState = planAll,
+					onClick = {
+						vm.setCurrentPlan(planAll.id)
+						navController.popBackStack()
+					}
+				) {}
 
-			PlanCard(
-				modifier = Modifier
-					.padding(
-						start = 16.dp,
-						end = 16.dp,
-						top = 16.dp
-					),
-				planUiState = planDefault,
-				onClick = {
-					vm.setCurrentPlan(planDefault.id)
-					navController.popBackStack()
-				}
-			) {}
+				PlanCard(
+					modifier = Modifier
+						.padding(top = 16.dp),
+					planUiState = planDefault,
+					onClick = {
+						vm.setCurrentPlan(planDefault.id)
+						navController.popBackStack()
+					}
+				) {}
 
-			Divider(
-				modifier = Modifier
-					.padding(
-						top = 16.dp,
-						start = 32.dp,
-						end = 32.dp
-					)
-			)
-
-			for (plan in plans.plans) {
-				key(plan.id) {
-					PlanCard(
-						modifier = Modifier.
-							padding(
-								start = 16.dp,
-								end = 16.dp,
-								top = 16.dp
-							),
-						planUiState = plan,
-						onClick = {
-							vm.setCurrentPlan(plan.id)
-							navController.popBackStack()
-						}
-					) {}
-				}
+				Divider(
+					modifier = Modifier
+						.padding(
+							top = 16.dp,
+							bottom = 16.dp,
+							start = 16.dp,
+							end = 16.dp
+						)
+				)
+			},
+			content = plans,
+			onClick = { plan ->
+				vm.setCurrentPlan(plan.id)
+				navController.popBackStack()
 			}
-		}
+		)
 	}
 
 	if (showDialog) {
