@@ -1,5 +1,8 @@
 package kanti.tododer.data.model.plan
 
+import kanti.tododer.data.model.FullId
+import kanti.tododer.data.model.FullIdType
+
 interface Plan {
 
 	val id: Int
@@ -54,4 +57,8 @@ fun Plan.toPlan(
 		state = state,
 		type = type
 	)
+}
+
+fun Plan.toFullId(): FullId {
+	return FullId(id, FullIdType.Plan)
 }

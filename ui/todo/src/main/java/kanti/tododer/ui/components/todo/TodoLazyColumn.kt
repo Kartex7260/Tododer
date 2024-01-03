@@ -25,7 +25,7 @@ fun TodoLazyColumn(
 	contentPadding: PaddingValues = PaddingValues(all = 16.dp),
 	flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
 	userScrollEnabled: Boolean = true,
-	content: TodoListUiState = TodoListUiState(),
+	content: TodosUiState = TodosUiState(),
 	onClick: (todo: TodoUiState) -> Unit,
 	onDoneChanged: (isDone: Boolean, todo: TodoUiState) -> Unit,
 	endButton: (@Composable (todo: TodoUiState) -> Unit)? = null
@@ -62,7 +62,7 @@ private fun PreviewTodoLazyColumn() {
 	TodoLazyColumn(
 		modifier = Modifier
 			.fillMaxSize(),
-		content = TodoListUiState(listOf(
+		content = TodosUiState(listOf(
 			TodoUiState(0, "Hello", false),
 			TodoUiState(1, "Ok", true),
 			TodoUiState(2, "Foo", true)

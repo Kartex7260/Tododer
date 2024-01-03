@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app/phone" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/data/plan" />
@@ -20,7 +21,12 @@
             <option value="$PROJECT_DIR$/data/todo/api" />
             <option value="$PROJECT_DIR$/data/todo/impl" />
             <option value="$PROJECT_DIR$/data/todo/impl/room" />
+            <option value="$PROJECT_DIR$/feat" />
+            <option value="$PROJECT_DIR$/feat/todo" />
             <option value="$PROJECT_DIR$/room" />
+            <option value="$PROJECT_DIR$/ui" />
+            <option value="$PROJECT_DIR$/ui/plan" />
+            <option value="$PROJECT_DIR$/ui/todo" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
