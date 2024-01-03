@@ -35,8 +35,8 @@ import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModel
 @Composable
 private fun TodoListTopBar(
 	plan: Plan?,
+	navController: NavController,
 	scrollBehavior: TopAppBarScrollBehavior,
-	navigationIcon: (@Composable () -> Unit)? = null,
 	topBarActions: (@Composable () -> Unit)?
 ) {
 	val title = when (plan?.type) {
@@ -45,13 +45,20 @@ private fun TodoListTopBar(
 		PlanType.Custom -> plan.title
 		else -> ""
 	}
+	val plansRoute = stringResource(id = R.string.nav_destination_plans)
+	
 	CenterAlignedTopAppBar(
 		title = {
 			Text(text = title)
 		},
 		navigationIcon = {
-			if (navigationIcon != null) {
-				navigationIcon()
+			IconButton(onClick = {
+				navController.navigate(plansRoute)
+			}) {
+				Icon(
+					imageVector = Icons.Default.List,
+					contentDescription = null
+				)
 			}
 		},
 		actions = {
@@ -67,13 +74,12 @@ private fun TodoListTopBar(
 @Composable
 fun TodoListScreen(
 	navController: NavController,
-	navigationIcon: (@Composable () -> Unit)? = null,
 	topBarActions: (@Composable () -> Unit)? = null,
 	vm: TodoListViewModel = TodoListViewModel
 ) {
 	val todoListUiState by vm.currentPlan.collectAsState()
 	val (plan, children) = when (todoListUiState) {
-		is TodoListUiState.Empty -> Pair(null, null)
+		is TodoListUiState.Empty -> Pair(null, TodosUiState())
 		is TodoListUiState.Success -> {
 			Pair(
 				(todoListUiState as TodoListUiState.Success).plan,
@@ -81,7 +87,7 @@ fun TodoListScreen(
 			)
 		}
 		is TodoListUiState.Fail -> {
-			Pair(null, null)
+			Pair(null, TodosUiState())
 		}
 	}
 
@@ -99,7 +105,7 @@ fun TodoListScreen(
 			TodoListTopBar(
 				plan = plan,
 				scrollBehavior = scrollBehavior,
-				navigationIcon = navigationIcon,
+				navController = navController,
 				topBarActions = topBarActions
 			)
 		},
@@ -122,14 +128,16 @@ fun TodoListScreen(
 	) { paddingValues ->
 		TodoLazyColumn(
 			modifier = Modifier.padding(paddingValues),
-			content = children ?: TodosUiState(),
+			content = children,
 			onClick = {
 				navController.navigate(
 					route = "$todoChildrenRoute?" +
 							"$todoChildrenRouteTodoIdParam=${it.id}"
 				)
 			},
-			onDoneChanged = { _, _ -> }
+			onDoneChanged = { isDone, todo ->
+				vm.changeDone(todo.id, isDone)
+			}
 		)
 	}
 }
@@ -141,14 +149,6 @@ fun TodoListScreen(
 fun PreviewTodoListScreen() {
 	TodoListScreen(
 		navController = rememberNavController(),
-		navigationIcon = {
-			IconButton(onClick = {  }) {
-				Icon(
-					imageVector = Icons.Default.List,
-					contentDescription = null
-				)
-			}
-		},
 		vm = TodoListViewModel,
 		topBarActions = {
 			IconButton(onClick = {  }) {

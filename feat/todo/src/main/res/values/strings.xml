@@ -5,8 +5,11 @@
     <string name="plan_default">Tasks</string>
 
     <string name="nav_destination_todo">todo</string>
+
     <string name="nav_destination_todos">todos</string>
 
     <string name="nav_destination_todo_detail">todoChildren</string>
     <string name="nav_destination_todo_detail_todo_id_param">todoId</string>
+
+    <string name="nav_destination_plans">plans</string>
 </resources>

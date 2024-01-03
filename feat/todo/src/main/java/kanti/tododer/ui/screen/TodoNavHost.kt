@@ -25,7 +25,6 @@ fun NavGraphBuilder.addTodoNavGraph(
 		) {
 			TodoListScreen(
 				navController = navController,
-				navigationIcon = todoListNavigationIcon,
 				topBarActions = todoListTobBarActions
 			)
 		}
@@ -37,6 +36,11 @@ fun NavGraphBuilder.addTodoNavGraph(
 			arguments = listOf(
 				navArgument(todoDetailTodoIdParam) { nullable = true }
 			)
+		) {
+		}
+
+		composable(
+			route = context.getString(R.string.nav_destination_plans)
 		) {
 		}
 	}

@@ -12,6 +12,8 @@ interface TodoListViewModel {
 
 	val currentPlan: StateFlow<TodoListUiState>
 
+	fun changeDone(todoId: Int, isDone: Boolean)
+
 	companion object : TodoListViewModel {
 
 		private val _children = MutableStateFlow<TodoListUiState>(TodoListUiState.Success(
@@ -31,5 +33,8 @@ interface TodoListViewModel {
 			))
 		))
 		override val currentPlan = _children.asStateFlow()
+
+		override fun changeDone(todoId: Int, isDone: Boolean) {
+		}
 	}
 }
