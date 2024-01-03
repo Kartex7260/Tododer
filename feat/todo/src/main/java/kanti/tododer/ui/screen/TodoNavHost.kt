@@ -7,12 +7,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import kanti.tododer.ui.screen.todo_list.R
+import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.screen.plan_list.PlanListScreen
 import kanti.tododer.ui.screen.todo_list.TodoListScreen
 
 fun NavGraphBuilder.addTodoNavGraph(
 	navController: NavController,
-	todoListNavigationIcon: (@Composable () -> Unit)? = null,
 	todoListTobBarActions: (@Composable () -> Unit)? = null,
 	context: Context
 ) {
@@ -42,6 +42,10 @@ fun NavGraphBuilder.addTodoNavGraph(
 		composable(
 			route = context.getString(R.string.nav_destination_plans)
 		) {
+			PlanListScreen(
+				navController = navController,
+				topBarActions = todoListTobBarActions
+			)
 		}
 	}
 }

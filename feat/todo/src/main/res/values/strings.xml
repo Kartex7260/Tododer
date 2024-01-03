@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="plans">Plans</string>
+
     <string name="plan_all">All tasks</string>
     <string name="plan_default">Tasks</string>
 
@@ -12,4 +14,9 @@
     <string name="nav_destination_todo_detail_todo_id_param">todoId</string>
 
     <string name="nav_destination_plans">plans</string>
+
+    <string name="create_new_plan">Create a new plan</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="plan_name">Plan name</string>
 </resources>

@@ -26,5 +26,5 @@ fun TododerNavHost(
 
 @Composable
 private fun getStartDestination(): String {
-	return stringResource(id = kanti.tododer.ui.screen.todo_list.R.string.nav_destination_todo)
+	return stringResource(id = kanti.tododer.feat.todo.R.string.nav_destination_todo)
 }

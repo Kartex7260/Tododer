@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-	namespace = "kanti.tododer.ui.screen.todo_list"
+	namespace = "kanti.tododer.feat.todo"
 	compileSdk = 34
 
 	defaultConfig {
@@ -61,4 +61,5 @@ dependencies {
 	implementation(project(":data:todo:api"))
 	implementation(project(":data:plan:api"))
 	implementation(project(":ui:todo"))
+	implementation(project(":ui:plan"))
 }

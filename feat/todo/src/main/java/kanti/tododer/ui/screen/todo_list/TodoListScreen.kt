@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
+import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.todo.TodoLazyColumn
 import kanti.tododer.ui.components.todo.TodosUiState
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListUiState
