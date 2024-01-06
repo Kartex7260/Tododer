@@ -25,9 +25,9 @@ fun PlanLazyColumn(
 	contentPadding: PaddingValues = PaddingValues(all = 16.dp),
 	flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
 	userScrollEnabled: Boolean = true,
-	preContent: (@Composable () -> Unit)? = null,
+	preContent: @Composable () -> Unit = {},
 	content: PlansUiState = PlansUiState(),
-	postContent: (@Composable () -> Unit)? = null,
+	postContent: @Composable () -> Unit = {},
 	onClick: (plan: PlanUiState) -> Unit,
 	endButton: (@Composable (plan: PlanUiState) -> Unit)? = null
 ) = LazyColumn(
@@ -37,12 +37,9 @@ fun PlanLazyColumn(
 	flingBehavior = flingBehavior,
 	userScrollEnabled = userScrollEnabled
 ) {
-	if (preContent != null) {
-		item {
-			preContent()
-		}
+	item {
+		preContent()
 	}
-
 	items(
 		items = content.plans,
 		key = { it.id }
@@ -58,11 +55,8 @@ fun PlanLazyColumn(
 			}
 		}
 	}
-
-	if (postContent != null) {
-		item {
-			postContent()
-		}
+	item {
+		postContent()
 	}
 }
 

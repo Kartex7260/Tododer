@@ -6,5 +6,6 @@ import androidx.compose.runtime.Stable
 data class TodoUiState(
 	val id: Int,
 	val title: String,
+	val remark: String,
 	val isDone: Boolean
 )

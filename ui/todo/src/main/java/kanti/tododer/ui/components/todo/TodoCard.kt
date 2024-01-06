@@ -85,7 +85,12 @@ fun TodoCard(
 @Composable
 fun PreviewTodoCard() {
 	var todoUiState by remember {
-		mutableStateOf(TodoUiState(0, "State test", false))
+		mutableStateOf(TodoUiState(
+			id = 0,
+			title = "State test",
+			remark = "",
+			isDone = false
+		))
 	}
 	TodoCard(
 		modifier = Modifier

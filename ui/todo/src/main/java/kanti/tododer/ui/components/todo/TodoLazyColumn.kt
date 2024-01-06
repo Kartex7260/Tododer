@@ -25,10 +25,12 @@ fun TodoLazyColumn(
 	contentPadding: PaddingValues = PaddingValues(all = 16.dp),
 	flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
 	userScrollEnabled: Boolean = true,
+	preContent: @Composable () -> Unit = {},
 	content: TodosUiState = TodosUiState(),
+	postContent: @Composable () -> Unit = {},
 	onClick: (todo: TodoUiState) -> Unit,
 	onDoneChanged: (isDone: Boolean, todo: TodoUiState) -> Unit,
-	endButton: (@Composable (todo: TodoUiState) -> Unit)? = null
+	endButton: @Composable (todo: TodoUiState) -> Unit = {}
 ) = LazyColumn(
 	modifier = modifier,
 	state = state,
@@ -36,6 +38,9 @@ fun TodoLazyColumn(
 	flingBehavior = flingBehavior,
 	userScrollEnabled = userScrollEnabled
 ) {
+	item {
+		preContent()
+	}
 	items(
 		items = content.todos,
 		key = { it.id }
@@ -46,11 +51,10 @@ fun TodoLazyColumn(
 			onClick = { onClick(uiState) },
 			onDoneChange = { onDoneChanged(it, uiState) },
 			todoUiState = uiState
-		) {
-			if (endButton != null) {
-				endButton(uiState)
-			}
-		}
+		) { endButton(uiState) }
+	}
+	item {
+		postContent()
 	}
 }
 
@@ -63,9 +67,9 @@ private fun PreviewTodoLazyColumn() {
 		modifier = Modifier
 			.fillMaxSize(),
 		content = TodosUiState(listOf(
-			TodoUiState(0, "Hello", false),
-			TodoUiState(1, "Ok", true),
-			TodoUiState(2, "Foo", true)
+			TodoUiState(0, "Hello", "", false),
+			TodoUiState(1, "Ok", "", true),
+			TodoUiState(2, "Foo", "", true)
 		)),
 		onClick = {},
 		onDoneChanged = { _, _ ->  },
