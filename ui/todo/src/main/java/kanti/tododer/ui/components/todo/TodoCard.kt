@@ -1,6 +1,7 @@
 package kanti.tododer.ui.components.todo
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,9 +31,9 @@ import androidx.compose.ui.unit.dp
 fun TodoCard(
 	modifier: Modifier = Modifier,
 	todoUiState: TodoUiState,
-	onClick: () -> Unit,
-	onDoneChange: (Boolean) -> Unit,
-	endButton: (@Composable () -> Unit)? = null
+	onClick: () -> Unit = {},
+	onDoneChange: (Boolean) -> Unit = {},
+	action: @Composable () -> Unit = {}
 ) = OutlinedCard(
 	modifier = modifier
 		.clickable(onClick = onClick)
@@ -72,8 +73,8 @@ fun TodoCard(
 				modifier = Modifier.width(width = 16.dp)
 			)
 
-			if (endButton != null) {
-				endButton()
+			Box {
+				action()
 			}
 		}
 	}

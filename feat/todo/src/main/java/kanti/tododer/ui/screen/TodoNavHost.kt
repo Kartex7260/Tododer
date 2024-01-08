@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.screen.plan_list.PlanListScreen
+import kanti.tododer.ui.screen.todo_detail.TodoDetailScreen
 import kanti.tododer.ui.screen.todo_list.TodoListScreen
 
 fun NavGraphBuilder.addTodoNavGraph(
@@ -37,6 +38,10 @@ fun NavGraphBuilder.addTodoNavGraph(
 				navArgument(todoDetailTodoIdParam) { nullable = true }
 			)
 		) {
+			TodoDetailScreen(
+				navController = navController,
+				todoId = it.arguments?.getInt(todoDetailTodoIdParam) ?: 0
+			)
 		}
 
 		composable(

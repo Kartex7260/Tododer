@@ -1,13 +1,8 @@
 package kanti.tododer.ui.components.todo
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,9 +19,9 @@ import androidx.compose.ui.unit.dp
 fun TodoEditor(
 	modifier: Modifier = Modifier,
 	state: TodoUiState,
-	onTitleChanged: (title: String) -> Unit,
-	onRemarkChanged: (remark: String) -> Unit,
-	onDoneChanged: (isDone: Boolean) -> Unit,
+	onTitleChanged: (title: String) -> Unit = {},
+	onRemarkChanged: (remark: String) -> Unit = {},
+	onDoneChanged: (isDone: Boolean) -> Unit = {},
 //	onArchive: () -> Unit = {},
 	onDelete: () -> Unit = {}
 ) {
@@ -60,7 +54,7 @@ fun TodoEditor(
 			label = { Text(text = stringResource(id = R.string.remark)) }
 		)
 
-		Row(
+		TodoEditorControllers(
 			modifier = Modifier
 				.padding(
 					top = 12.dp,
@@ -68,27 +62,11 @@ fun TodoEditor(
 					end = 16.dp
 				)
 				.fillMaxWidth(),
-			horizontalArrangement = Arrangement.SpaceBetween
-		) {
-			Checkbox(
-				checked = state.isDone,
-				onCheckedChange = onDoneChanged
-			)
-			Row {
-//				IconButton(onClick = { onArchive() }) {
-//					Icon(
-//						painter = painterResource(id = R.drawable.outline_archive_24),
-//						contentDescription = null
-//					)
-//				}
-				IconButton(onClick = { onDelete() }) {
-					Icon(
-						painter = painterResource(id = R.drawable.outline_delete_24),
-						contentDescription = null
-					)
-				}
-			}
-		}
+			state = state,
+			onDoneChanged = onDoneChanged,
+//			onArchive = onArchive
+			onDelete = onDelete
+		)
 	}
 }
 

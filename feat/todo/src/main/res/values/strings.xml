@@ -19,4 +19,13 @@
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
     <string name="plan_name">Plan name</string>
+
+
+    <string name="delete">Delete</string>
+
+    <string name="delete_ask_1">Delete the</string>
+    <string name="delete_ask_2_todo">task</string>
+
+    <string name="deleted_1">The</string>
+    <string name="deleted_2_todo">task has been deleted</string>
 </resources>
