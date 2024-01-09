@@ -29,7 +29,7 @@ fun PlanLazyColumn(
 	content: PlansUiState = PlansUiState(),
 	postContent: @Composable () -> Unit = {},
 	onClick: (plan: PlanUiState) -> Unit,
-	endButton: (@Composable (plan: PlanUiState) -> Unit)? = null
+	action: (@Composable (plan: PlanUiState) -> Unit)? = null
 ) = LazyColumn(
 	modifier = modifier,
 	state = state,
@@ -50,8 +50,8 @@ fun PlanLazyColumn(
 			planUiState = uiState,
 			onClick = { onClick(uiState) }
 		) {
-			if (endButton != null) {
-				endButton(uiState)
+			if (action != null) {
+				action(uiState)
 			}
 		}
 	}
@@ -73,7 +73,7 @@ private fun PreviewPlanLazyColumn() {
 			PlanUiState(1, "Work", 1f),
 			PlanUiState(2, "Foo", 0.8f)
 		)),
-		endButton = {
+		action = {
 			IconButton(onClick = {  }) {
 				Icon(
 					imageVector = Icons.Default.MoreVert,

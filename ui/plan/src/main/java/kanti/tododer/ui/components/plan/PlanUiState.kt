@@ -4,7 +4,7 @@ import androidx.compose.runtime.Stable
 
 @Stable
 data class PlanUiState(
-	val id: Int,
-	val title: String,
-	val progress: Float
+	val id: Int = 0,
+	val title: String = "",
+	val progress: Float = 0f
 )

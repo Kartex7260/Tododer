@@ -38,7 +38,7 @@ private fun TodoListTopBar(
 	plan: Plan?,
 	navController: NavController,
 	scrollBehavior: TopAppBarScrollBehavior,
-	topBarActions: (@Composable () -> Unit)?
+	topBarActions: @Composable () -> Unit
 ) {
 	val title = when (plan?.type) {
 		PlanType.All -> stringResource(id = R.string.plan_all)
@@ -62,11 +62,7 @@ private fun TodoListTopBar(
 				)
 			}
 		},
-		actions = {
-			if (topBarActions != null) {
-				topBarActions()
-			}
-		},
+		actions = { topBarActions() },
 		scrollBehavior = scrollBehavior
 	)
 }
@@ -75,7 +71,7 @@ private fun TodoListTopBar(
 @Composable
 fun TodoListScreen(
 	navController: NavController,
-	topBarActions: (@Composable () -> Unit)? = null,
+	topBarActions: @Composable () -> Unit = {},
 	vm: TodoListViewModel = TodoListViewModel
 ) {
 	val todoListUiState by vm.currentPlan.collectAsState()

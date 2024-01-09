@@ -14,7 +14,7 @@ import kanti.tododer.ui.screen.todo_list.TodoListScreen
 
 fun NavGraphBuilder.addTodoNavGraph(
 	navController: NavController,
-	todoListTobBarActions: (@Composable () -> Unit)? = null,
+	todoListTobBarActions: @Composable () -> Unit = {},
 	context: Context
 ) {
 	navigation(

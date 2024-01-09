@@ -1,6 +1,7 @@
 package kanti.tododer.ui.components.plan
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +28,7 @@ fun PlanCard(
 	modifier: Modifier = Modifier,
 	planUiState: PlanUiState,
 	onClick: () -> Unit,
-	endButton: (@Composable () -> Unit)? = null
+	endButton: @Composable () -> Unit = {}
 ) = OutlinedCard(
 	modifier = modifier
 		.clickable { onClick() }
@@ -61,7 +62,7 @@ fun PlanCard(
 
 			Spacer(modifier = Modifier.width(width = 16.dp))
 
-			if (endButton != null) {
+			Box {
 				endButton()
 			}
 		}

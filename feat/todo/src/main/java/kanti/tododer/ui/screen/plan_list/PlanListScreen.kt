@@ -13,21 +13,30 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.components.menu.NormalPlanDropdownMenu
 import kanti.tododer.ui.components.plan.PlanCard
 import kanti.tododer.ui.components.plan.PlanLazyColumn
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
@@ -36,7 +45,8 @@ import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
 @Composable
 private fun PlanListTopBar(
 	navController: NavController,
-	topBarActions: (@Composable () -> Unit)?
+	topBarActions: @Composable () -> Unit,
+	scrollBehavior: TopAppBarScrollBehavior
 ) {
 	CenterAlignedTopAppBar(
 		title = {
@@ -51,25 +61,25 @@ private fun PlanListTopBar(
 			}
 		},
 		actions = {
-			if (topBarActions != null) {
-				topBarActions()
-			}
-		}
+			topBarActions()
+		},
+		scrollBehavior = scrollBehavior
 	)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlanListScreen(
 	navController: NavController = rememberNavController(),
-	topBarActions: (@Composable () -> Unit)? = null,
+	topBarActions: @Composable () -> Unit = {},
 	vm: PlanListViewModel = PlanListViewModel
 ) {
+	var showDialog by rememberSaveable { mutableStateOf(false) }
+	val snackbarHostState = remember { SnackbarHostState() }
+
 	val planAll by vm.planAll.collectAsState()
 	val planDefault by vm.planDefault.collectAsState()
 	val plans by vm.plans.collectAsState()
-	var showDialog by rememberSaveable {
-		mutableStateOf(false)
-	}
 
 	LaunchedEffect(key1 = vm) {
 		vm.newPlanCreated.collect {
@@ -77,13 +87,43 @@ fun PlanListScreen(
 		}
 	}
 
+	val deletedFragment1 = stringResource(id = R.string.deleted_1)
+	val deletedFragment2 = stringResource(id = R.string.deleted_2_plan)
+	val cancelStringRes = stringResource(id = R.string.cancel)
+	LaunchedEffect(key1 = vm) {
+		vm.planDeleted.collect { planTitle ->
+			val result = snackbarHostState.showSnackbar(
+				message = "$deletedFragment1 \"$planTitle\" $deletedFragment2",
+				actionLabel = cancelStringRes,
+				withDismissAction = true,
+				duration = SnackbarDuration.Short
+			)
+			when (result) {
+				SnackbarResult.ActionPerformed -> {
+					vm.undoDelete()
+				}
+				else -> {}
+			}
+		}
+	}
+
+	val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 	Scaffold(
+		modifier = Modifier
+			.nestedScroll(scrollBehavior.nestedScrollConnection),
+
 		topBar = {
 			PlanListTopBar(
 				navController = navController,
-				topBarActions = topBarActions
+				topBarActions = topBarActions,
+				scrollBehavior = scrollBehavior
 			)
 		},
+
+		snackbarHost = {
+			SnackbarHost(hostState = snackbarHostState)
+		},
+
 		floatingActionButton = {
 			FloatingActionButton(
 				onClick = {
@@ -109,7 +149,7 @@ fun PlanListScreen(
 						vm.setCurrentPlan(planAll.id)
 						navController.popBackStack()
 					}
-				) {}
+				)
 
 				PlanCard(
 					modifier = Modifier
@@ -119,7 +159,7 @@ fun PlanListScreen(
 						vm.setCurrentPlan(planDefault.id)
 						navController.popBackStack()
 					}
-				) {}
+				)
 
 				Divider(
 					modifier = Modifier
@@ -135,6 +175,21 @@ fun PlanListScreen(
 			onClick = { plan ->
 				vm.setCurrentPlan(plan.id)
 				navController.popBackStack()
+			},
+			action = { planUiState ->
+				var showDropdownMenu by remember {
+					mutableStateOf(false)
+				}
+				IconButton(onClick = { showDropdownMenu = true }) {
+					Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+				}
+				NormalPlanDropdownMenu(
+					expanded = showDropdownMenu,
+					onDismissRequest = { showDropdownMenu = false },
+					onDelete = {
+						vm.deletePlan(planUiState.id)
+					}
+				)
 			}
 		)
 	}
