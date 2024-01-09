@@ -54,7 +54,6 @@ import kanti.tododer.ui.components.todo.TodoCard
 import kanti.tododer.ui.components.todo.TodoEditor
 import kanti.tododer.ui.components.todo.TodoEditorControllers
 import kanti.tododer.ui.components.todo.TodoUiState
-import kanti.tododer.ui.screen.todo_detail.viewmodel.OnTodoDeletedUiState
 import kanti.tododer.ui.screen.todo_detail.viewmodel.TodoDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -136,7 +135,9 @@ fun TodoDetailScreen(
 	vm: TodoDetailViewModel = TodoDetailViewModel,
 	todoId: Int = 0
 ) {
-	vm.push(todoId)
+	LaunchedEffect(key1 = vm) {
+		vm.push(todoId)
+	}
 
 	LaunchedEffect(key1 = vm) {
 		vm.emptyStack.collect {
@@ -149,25 +150,18 @@ fun TodoDetailScreen(
 	val deletedFragment2 = stringResource(id = R.string.deleted_2_todo)
 	val cancelStringRes = stringResource(id = R.string.cancel)
 	LaunchedEffect(key1 = vm) {
-		vm.onDeleted.collect { uiState ->
-			when (uiState) {
-				is OnTodoDeletedUiState.HideMessage -> {
+		vm.onDeleted.collect { todoTitle ->
+			val result = snackBarHost.showSnackbar(
+				message = "$deletedFragment1 \"$todoTitle\" $deletedFragment2",
+				withDismissAction = true,
+				actionLabel = cancelStringRes,
+				duration = SnackbarDuration.Short
+			)
+			when (result) {
+				SnackbarResult.ActionPerformed -> {
+					vm.undoDelete()
 				}
-				is OnTodoDeletedUiState.ShowMessage -> {
-					val result = snackBarHost.showSnackbar(
-						message = "$deletedFragment1 \"${uiState.title}\"" +
-								" $deletedFragment2",
-						withDismissAction = true,
-						actionLabel = cancelStringRes,
-						duration = SnackbarDuration.Short
-					)
-					when (result) {
-						SnackbarResult.ActionPerformed -> {
-							vm.undoDelete()
-						}
-						else -> {}
-					}
-				}
+				else -> {}
 			}
 		}
 	}

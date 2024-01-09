@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
@@ -35,7 +36,9 @@ fun NavGraphBuilder.addTodoNavGraph(
 			route = "${context.getString(R.string.nav_destination_todo_detail)}?" +
 					"$todoDetailTodoIdParam={$todoDetailTodoIdParam}",
 			arguments = listOf(
-				navArgument(todoDetailTodoIdParam) { nullable = true }
+				navArgument(todoDetailTodoIdParam) {
+					type = NavType.IntType
+				}
 			)
 		) {
 			TodoDetailScreen(

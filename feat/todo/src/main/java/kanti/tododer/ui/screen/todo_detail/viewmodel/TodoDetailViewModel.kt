@@ -1,10 +1,10 @@
 package kanti.tododer.ui.screen.todo_detail.viewmodel
 
+import android.util.Log
 import kanti.tododer.ui.components.todo.TodoUiState
 import kanti.tododer.ui.components.todo.TodosUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -20,7 +20,7 @@ interface TodoDetailViewModel {
 	val todoDetail: StateFlow<TodoUiState>
 	val todoChildren: StateFlow<TodosUiState>
 
-	val onDeleted: SharedFlow<OnTodoDeletedUiState>
+	val onDeleted: SharedFlow<String>
 
 	fun createNewTodo()
 
@@ -44,6 +44,8 @@ interface TodoDetailViewModel {
 
 	companion object : TodoDetailViewModel {
 
+		private const val logTag = "TodoDetailViewModel"
+
 		private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
 		private const val maxPop = 3
@@ -55,8 +57,8 @@ interface TodoDetailViewModel {
 		private val _todoDetail = MutableStateFlow(TodoUiState(id = 1, title = "Parent todo", remark = "Test remark"))
 		override val todoDetail: StateFlow<TodoUiState> = _todoDetail.asStateFlow()
 
-		private val _todoDeleted = MutableSharedFlow<OnTodoDeletedUiState>()
-		override val onDeleted: SharedFlow<OnTodoDeletedUiState> = _todoDeleted.asSharedFlow()
+		private val _todoDeleted = MutableSharedFlow<String>()
+		override val onDeleted: SharedFlow<String> = _todoDeleted.asSharedFlow()
 		
 		private val _todoChildren = MutableStateFlow(TodosUiState(listOf(
 			TodoUiState(id = 2, title = "Test 1"),
@@ -75,33 +77,40 @@ interface TodoDetailViewModel {
 		override val todoChildren: StateFlow<TodosUiState> = _todoChildren.asStateFlow()
 
 		override fun createNewTodo() {
+			Log.d(logTag, "createNewTodo()")
 		}
 
 		override fun changeTitle(title: String) {
+			Log.d(logTag, "changeTitle(title: String = $title)")
 			_todoDetail.value = _todoDetail.value.copy(
 				title = title
 			)
 		}
 
 		override fun changeRemark(remark: String) {
+			Log.d(logTag, "changeRemark(remark: String = $remark)")
 			_todoDetail.value = _todoDetail.value.copy(
 				remark = remark
 			)
 		}
 
 		override fun changeDoneCurrent(isDone: Boolean) {
+			Log.d(logTag, "changeDoneCurrent(isDone: Boolean = $isDone)")
 			_todoDetail.value = _todoDetail.value.copy(
 				isDone = isDone
 			)
 		}
 
 		override fun changeDoneChild(todoId: Int, isDone: Boolean) {
+			Log.d(logTag, "changeDoneChild(todoId: Int = $todoId, isDone: Boolean = $isDone)")
 		}
 
 		override fun push(todoId: Int) {
+			Log.d(logTag, "push(todoId: Int = $todoId)")
 		}
 
 		override fun pop() {
+			Log.d(logTag, "pop()")
 			currentPop++
 			if (currentPop >= maxPop) {
 				coroutineScope.launch {
@@ -111,22 +120,21 @@ interface TodoDetailViewModel {
 		}
 
 		override fun deleteCurrent() {
+			Log.d(logTag, "deleteCurrent()")
 			coroutineScope.launch {
-				_todoDeleted.emit(OnTodoDeletedUiState.ShowMessage("Test delete"))
-				delay(5000L)
-				_todoDeleted.emit(OnTodoDeletedUiState.HideMessage)
+				_todoDeleted.emit("Current todo")
 			}
 		}
 
 		override fun deleteChild(todoId: Int) {
+			Log.d(logTag, "deleteChild(todoId: Int = $todoId)")
 			coroutineScope.launch {
-				_todoDeleted.emit(OnTodoDeletedUiState.ShowMessage("Test delete"))
-				delay(5000L)
-				_todoDeleted.emit(OnTodoDeletedUiState.HideMessage)
+				_todoDeleted.emit("Child todo")
 			}
 		}
 
 		override fun undoDelete() {
+			Log.d(logTag, "undoDelete()")
 		}
 	}
 }
