@@ -30,7 +30,7 @@ fun TodoLazyColumn(
 	postContent: @Composable () -> Unit = {},
 	onClick: (todo: TodoUiState) -> Unit,
 	onDoneChanged: (isDone: Boolean, todo: TodoUiState) -> Unit,
-	endButton: @Composable (todo: TodoUiState) -> Unit = {}
+	actions: @Composable (todo: TodoUiState) -> Unit = {}
 ) = LazyColumn(
 	modifier = modifier,
 	state = state,
@@ -51,7 +51,7 @@ fun TodoLazyColumn(
 			onClick = { onClick(uiState) },
 			onDoneChange = { onDoneChanged(it, uiState) },
 			todoUiState = uiState
-		) { endButton(uiState) }
+		) { actions(uiState) }
 	}
 	item {
 		postContent()
@@ -73,7 +73,7 @@ private fun PreviewTodoLazyColumn() {
 		)),
 		onClick = {},
 		onDoneChanged = { _, _ ->  },
-		endButton = {
+		actions = {
 			IconButton(onClick = {  }) {
 				Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
 			}

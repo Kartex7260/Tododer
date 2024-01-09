@@ -12,12 +12,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -27,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
 import kanti.tododer.ui.components.todo.TodoLazyColumn
 import kanti.tododer.ui.components.todo.TodosUiState
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListUiState
@@ -74,6 +83,10 @@ fun TodoListScreen(
 	topBarActions: @Composable () -> Unit = {},
 	vm: TodoListViewModel = TodoListViewModel
 ) {
+	val snackbarHostState = remember {
+		SnackbarHostState()
+	}
+
 	val todoListUiState by vm.currentPlan.collectAsState()
 	val (plan, children) = when (todoListUiState) {
 		is TodoListUiState.Empty -> Pair(null, TodosUiState())
@@ -85,6 +98,26 @@ fun TodoListScreen(
 		}
 		is TodoListUiState.Fail -> {
 			Pair(null, TodosUiState())
+		}
+	}
+
+	val deletedFragment1 = stringResource(id = R.string.deleted_1)
+	val deletedFragment2 = stringResource(id = R.string.deleted_2_todo)
+	val cancelStringRes = stringResource(id = R.string.cancel)
+	LaunchedEffect(key1 = vm) {
+		vm.todoDeleted.collect { todoTitle ->
+			val result = snackbarHostState.showSnackbar(
+				message = "$deletedFragment1 \"$todoTitle\" $deletedFragment2",
+				actionLabel = cancelStringRes,
+				withDismissAction = true,
+				duration = SnackbarDuration.Short
+			)
+			when (result) {
+				SnackbarResult.ActionPerformed -> {
+					vm.undoDelete()
+				}
+				else -> {}
+			}
 		}
 	}
 
@@ -106,6 +139,11 @@ fun TodoListScreen(
 				topBarActions = topBarActions
 			)
 		},
+
+		snackbarHost = {
+			SnackbarHost(hostState = snackbarHostState)
+		},
+
 		floatingActionButton = {
 			FloatingActionButton(
 				onClick = {
@@ -134,6 +172,24 @@ fun TodoListScreen(
 			},
 			onDoneChanged = { isDone, todo ->
 				vm.changeDone(todo.id, isDone)
+			},
+			actions = { todoUiState ->
+				var showDropdownMenu by remember {
+					mutableStateOf(false)
+				}
+				IconButton(onClick = { showDropdownMenu = true }) {
+					Icon(
+						imageVector = Icons.Default.MoreVert,
+						contentDescription = null
+					)
+				}
+				NormalTodoDropdownMenu(
+					expanded = showDropdownMenu,
+					onDismissRequest = { showDropdownMenu = false },
+					onDelete = {
+						vm.deleteTodo(todoUiState.id)
+					}
+				)
 			}
 		)
 	}
