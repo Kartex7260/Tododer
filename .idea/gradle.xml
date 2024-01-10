@@ -25,6 +25,8 @@
             <option value="$PROJECT_DIR$/data/todo/api" />
             <option value="$PROJECT_DIR$/data/todo/impl" />
             <option value="$PROJECT_DIR$/data/todo/impl/room" />
+            <option value="$PROJECT_DIR$/domain" />
+            <option value="$PROJECT_DIR$/domain/planDeleteBehaviour" />
             <option value="$PROJECT_DIR$/feat" />
             <option value="$PROJECT_DIR$/feat/todo" />
             <option value="$PROJECT_DIR$/room" />

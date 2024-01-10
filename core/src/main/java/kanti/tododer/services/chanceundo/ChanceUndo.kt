@@ -4,7 +4,5 @@ interface ChanceUndo<T> {
 
 	fun register(value: T)
 
-	fun unregister()
-
-	fun undo(): T?
+	fun unregister(): T?
 }

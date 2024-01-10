@@ -10,13 +10,9 @@ class ChanceUndoImpl<T> @Inject constructor() : ChanceUndo<T>{
 		this.value = value
 	}
 
-	override fun unregister() {
-		value = null
-	}
-
-	override fun undo(): T? {
-		val value = value
-		unregister()
+	override fun unregister(): T? {
+		val value = this.value
+		this.value = null
 		return value
 	}
 }

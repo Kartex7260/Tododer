@@ -2,6 +2,7 @@ package kanti.tododer.data.model.todo.datasource.local
 
 import kanti.sl.StateLanguage
 import kanti.tododer.data.model.FullId
+import kanti.tododer.data.model.FullIdType
 import kanti.tododer.data.model.todo.Todo
 import kanti.tododer.data.model.todo.TodoState
 import kanti.tododer.data.room.todo.TodoDao
@@ -45,8 +46,7 @@ class TodoRoomDataSource @Inject constructor(
 
 	override suspend fun delete(todoIds: List<Int>) {
 		for (todoId in todoIds) {
-			val todo = todoDao.getTodo(todoId) ?: continue
-			val children = getAllChildren(todo.toParentId())
+			val children = getAllChildren(FullId(todoId, FullIdType.Todo))
 			delete(children.map { it.id })
 		}
 		todoDao.delete(todoIds)

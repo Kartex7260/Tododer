@@ -1,15 +1,18 @@
 package kanti.tododer.ui.screen.plan_list.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kanti.tododer.data.model.plan.PlanRepository
+import kanti.tododer.domain.plandeletebehaviour.PlanDeleteBehaviour
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.plan.PlanData
 import kanti.tododer.ui.components.plan.PlansData
 import kanti.todoer.data.appdata.AppDataRepository
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PlanListViewModelImpl @Inject constructor(
 	private val planRepository: PlanRepository,
+	private val planDeleteBehaviour: PlanDeleteBehaviour,
 	private val appDataRepository: AppDataRepository,
 	@ApplicationContext private val appContext: Context
 ) : ViewModel(), PlanListViewModel {
@@ -75,13 +79,13 @@ class PlanListViewModelImpl @Inject constructor(
 	override val planDeleted: SharedFlow<String> = _planDeleted.asSharedFlow()
 
 	override fun setCurrentPlan(planId: Int) {
-		viewModelScope.launch {
+		viewModelScope.launch(NonCancellable) {
 			appDataRepository.setCurrentPlan(planId = planId)
 		}
 	}
 
 	override fun createPlanEndSetCurrent(title: String) {
-		viewModelScope.launch {
+		viewModelScope.launch(NonCancellable) {
 			val plan = planRepository.create(title)
 			appDataRepository.setCurrentPlan(plan.id)
 			_newPlanCreated.emit(Unit)
@@ -89,8 +93,8 @@ class PlanListViewModelImpl @Inject constructor(
 	}
 
 	override fun deletePlan(planId: Int) {
-		viewModelScope.launch {
-			val plans = planRepository.delete(listOf(planId))
+		viewModelScope.launch(NonCancellable) {
+			val plans = planDeleteBehaviour.delete(listOf(planId))
 			if (plans.isEmpty())
 				return@launch
 			_planDeleted.emit(plans[0].title)
@@ -98,14 +102,20 @@ class PlanListViewModelImpl @Inject constructor(
 	}
 
 	override fun undoDelete() {
-		viewModelScope.launch {
-			planRepository.undoDelete()
+		viewModelScope.launch(NonCancellable) {
+			planDeleteBehaviour.undoDelete()
 		}
 	}
 
 	override fun undoChanceRejected() {
-		viewModelScope.launch {
-			planRepository.undoChanceRejected()
+		Log.d("PlanListViewModelImpl", "undoChanceRejected()")
+		viewModelScope.launch(NonCancellable) {
+			planDeleteBehaviour.undoChanceRejected()
 		}
+	}
+
+	override fun onCleared() {
+		super.onCleared()
+		undoChanceRejected()
 	}
 }

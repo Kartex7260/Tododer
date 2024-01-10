@@ -16,7 +16,7 @@ interface PlanRepository {
 
 	suspend fun undoDelete()
 
-	suspend fun undoChanceRejected()
+	suspend fun undoChanceRejected(): List<Plan>?
 
 	suspend fun init()
 

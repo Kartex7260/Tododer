@@ -1,5 +1,6 @@
 package kanti.tododer.ui.screen.plan_list
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -13,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -42,11 +44,12 @@ import kanti.tododer.ui.components.plan.PlanCard
 import kanti.tododer.ui.components.plan.PlanLazyColumn
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModelImpl
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PlanListTopBar(
-	navController: NavController,
+	back: () -> Unit,
 	topBarActions: @Composable () -> Unit,
 	scrollBehavior: TopAppBarScrollBehavior
 ) {
@@ -55,7 +58,7 @@ private fun PlanListTopBar(
 			Text(text = stringResource(id = R.string.plans))
 		},
 		navigationIcon = {
-			IconButton(onClick = { navController.popBackStack() }) {
+			IconButton(onClick = { back() }) {
 				Icon(
 					imageVector = Icons.Default.ArrowBack,
 					contentDescription = null
@@ -76,6 +79,15 @@ fun PlanListScreen(
 	topBarActions: @Composable () -> Unit = {},
 	vm: PlanListViewModel = hiltViewModel<PlanListViewModelImpl>()
 ) {
+	val onBack = {
+		vm.undoChanceRejected()
+		navController.popBackStack()
+	}
+
+	BackHandler {
+		onBack()
+	}
+
 	var showDialog by rememberSaveable { mutableStateOf(false) }
 	val snackbarHostState = remember { SnackbarHostState() }
 
@@ -85,7 +97,7 @@ fun PlanListScreen(
 
 	LaunchedEffect(key1 = vm) {
 		vm.newPlanCreated.collect {
-			navController.popBackStack()
+			onBack()
 		}
 	}
 
@@ -93,7 +105,7 @@ fun PlanListScreen(
 	val deletedFragment2 = stringResource(id = R.string.deleted_2_plan)
 	val cancelStringRes = stringResource(id = R.string.cancel)
 	LaunchedEffect(key1 = vm) {
-		vm.planDeleted.collect { planTitle ->
+		vm.planDeleted.collectLatest { planTitle ->
 			val result = snackbarHostState.showSnackbar(
 				message = "$deletedFragment1 \"$planTitle\" $deletedFragment2",
 				actionLabel = cancelStringRes,
@@ -118,14 +130,16 @@ fun PlanListScreen(
 
 		topBar = {
 			PlanListTopBar(
-				navController = navController,
+				back = { onBack() },
 				topBarActions = topBarActions,
 				scrollBehavior = scrollBehavior
 			)
 		},
 
 		snackbarHost = {
-			SnackbarHost(hostState = snackbarHostState)
+			SnackbarHost(hostState = snackbarHostState) { snackbarData ->
+				Snackbar(snackbarData = snackbarData)
+			}
 		},
 
 		floatingActionButton = {
@@ -151,7 +165,7 @@ fun PlanListScreen(
 					planData = planAll,
 					onClick = {
 						vm.setCurrentPlan(planAll.id)
-						navController.popBackStack()
+						onBack()
 					}
 				)
 
@@ -161,7 +175,7 @@ fun PlanListScreen(
 					planData = planDefault,
 					onClick = {
 						vm.setCurrentPlan(planDefault.id)
-						navController.popBackStack()
+						onBack()
 					}
 				)
 
@@ -178,7 +192,7 @@ fun PlanListScreen(
 			content = plans,
 			onClick = { plan ->
 				vm.setCurrentPlan(plan.id)
-				navController.popBackStack()
+				onBack()
 			},
 			action = { planUiState ->
 				var showDropdownMenu by remember {

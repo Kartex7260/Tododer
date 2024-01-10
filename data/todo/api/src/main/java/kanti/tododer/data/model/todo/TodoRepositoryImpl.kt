@@ -12,6 +12,11 @@ class TodoRepositoryImpl @Inject constructor(
 		return localDataSource.getChildren(fullId, TodoState.Normal)
 	}
 
+	override suspend fun deleteChildren(fullId: FullId) {
+		val children = localDataSource.getAllChildren(fullId)
+		localDataSource.delete(children.map { it.id })
+	}
+
 	override suspend fun create(
 		fullId: FullId,
 		title: String,

@@ -75,6 +75,7 @@ dependencies {
 
 	implementation(project(":data:plan:api"))
 
+	implementation(project(":data"))
 	implementation(project(":feat:todo"))
 	implementation(project(":data:todo:impl:room"))
 	implementation(project(":data:plan:impl:room"))

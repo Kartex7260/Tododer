@@ -42,13 +42,13 @@ class PlanRepositoryImpl @Inject constructor(
 
 	override suspend fun undoDelete() {
 		val plans = chanceUndoMutex.withLock {
-			chanceUndo.undo() ?: return
+			chanceUndo.unregister() ?: return
 		}
 		localDataSource.insert(plans)
 	}
 
-	override suspend fun undoChanceRejected() {
-		chanceUndoMutex.withLock {
+	override suspend fun undoChanceRejected(): List<Plan>? {
+		return chanceUndoMutex.withLock {
 			chanceUndo.unregister()
 		}
 	}
