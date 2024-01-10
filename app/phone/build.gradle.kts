@@ -73,5 +73,10 @@ dependencies {
 
 	implementation(files("../../lib/fillingProgressBar-compose.aar"))
 
+	implementation(project(":data:plan:api"))
+
 	implementation(project(":feat:todo"))
+	implementation(project(":data:todo:impl:room"))
+	implementation(project(":data:plan:impl:room"))
+	implementation(project(":data:appData:impl:dataStore"))
 }

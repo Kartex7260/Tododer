@@ -13,6 +13,10 @@
             <option value="$PROJECT_DIR$/app/phone" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/data/appData" />
+            <option value="$PROJECT_DIR$/data/appData/api" />
+            <option value="$PROJECT_DIR$/data/appData/impl" />
+            <option value="$PROJECT_DIR$/data/appData/impl/dataStore" />
             <option value="$PROJECT_DIR$/data/plan" />
             <option value="$PROJECT_DIR$/data/plan/api" />
             <option value="$PROJECT_DIR$/data/plan/impl" />

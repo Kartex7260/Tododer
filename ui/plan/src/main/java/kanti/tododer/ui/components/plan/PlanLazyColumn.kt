@@ -26,10 +26,10 @@ fun PlanLazyColumn(
 	flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
 	userScrollEnabled: Boolean = true,
 	preContent: @Composable () -> Unit = {},
-	content: PlansUiState = PlansUiState(),
+	content: PlansData = PlansData(),
 	postContent: @Composable () -> Unit = {},
-	onClick: (plan: PlanUiState) -> Unit,
-	action: (@Composable (plan: PlanUiState) -> Unit)? = null
+	onClick: (plan: PlanData) -> Unit,
+	action: (@Composable (plan: PlanData) -> Unit)? = null
 ) = LazyColumn(
 	modifier = modifier,
 	state = state,
@@ -47,7 +47,7 @@ fun PlanLazyColumn(
 		PlanCard(
 			modifier = Modifier
 				.padding(bottom = 16.dp),
-			planUiState = uiState,
+			planData = uiState,
 			onClick = { onClick(uiState) }
 		) {
 			if (action != null) {
@@ -68,10 +68,10 @@ private fun PreviewPlanLazyColumn() {
 	PlanLazyColumn(
 		modifier = Modifier.fillMaxSize(),
 		onClick = {  },
-		content = PlansUiState(listOf(
-			PlanUiState(0, "Hi", 0.3f),
-			PlanUiState(1, "Work", 1f),
-			PlanUiState(2, "Foo", 0.8f)
+		content = PlansData(listOf(
+			PlanData(0, "Hi", 0.3f),
+			PlanData(1, "Work", 1f),
+			PlanData(2, "Foo", 0.8f)
 		)),
 		action = {
 			IconButton(onClick = {  }) {

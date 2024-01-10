@@ -33,6 +33,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
@@ -40,6 +41,7 @@ import kanti.tododer.ui.components.menu.NormalPlanDropdownMenu
 import kanti.tododer.ui.components.plan.PlanCard
 import kanti.tododer.ui.components.plan.PlanLazyColumn
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
+import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModelImpl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +74,7 @@ private fun PlanListTopBar(
 fun PlanListScreen(
 	navController: NavController = rememberNavController(),
 	topBarActions: @Composable () -> Unit = {},
-	vm: PlanListViewModel = PlanListViewModel
+	vm: PlanListViewModel = hiltViewModel<PlanListViewModelImpl>()
 ) {
 	var showDialog by rememberSaveable { mutableStateOf(false) }
 	val snackbarHostState = remember { SnackbarHostState() }
@@ -102,7 +104,9 @@ fun PlanListScreen(
 				SnackbarResult.ActionPerformed -> {
 					vm.undoDelete()
 				}
-				else -> {}
+				SnackbarResult.Dismissed -> {
+					vm.undoChanceRejected()
+				}
 			}
 		}
 	}
@@ -144,7 +148,7 @@ fun PlanListScreen(
 				.padding(paddingValues),
 			preContent = {
 				PlanCard(
-					planUiState = planAll,
+					planData = planAll,
 					onClick = {
 						vm.setCurrentPlan(planAll.id)
 						navController.popBackStack()
@@ -154,7 +158,7 @@ fun PlanListScreen(
 				PlanCard(
 					modifier = Modifier
 						.padding(top = 16.dp),
-					planUiState = planDefault,
+					planData = planDefault,
 					onClick = {
 						vm.setCurrentPlan(planDefault.id)
 						navController.popBackStack()

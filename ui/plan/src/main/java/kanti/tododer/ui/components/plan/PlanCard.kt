@@ -26,7 +26,7 @@ import knati.fillingprogressbar.FillingProgressBar
 @Composable
 fun PlanCard(
 	modifier: Modifier = Modifier,
-	planUiState: PlanUiState,
+	planData: PlanData,
 	onClick: () -> Unit,
 	endButton: @Composable () -> Unit = {}
 ) = OutlinedCard(
@@ -47,14 +47,14 @@ fun PlanCard(
 			modifier = Modifier.fillMaxWidth()
 		) {
 			FillingProgressBar(
-				progress = planUiState.progress
+				progress = planData.progress
 			)
 
 			Spacer(modifier = Modifier.width(width = 16.dp))
 
 			Text(
 				modifier = Modifier.weight(1f),
-				text = planUiState.title,
+				text = planData.title,
 				style = MaterialTheme.typography.titleLarge,
 				maxLines = 1,
 				overflow = TextOverflow.Ellipsis
@@ -77,7 +77,7 @@ private fun PreviewPlanCardAll() {
 	PlanCard(
 		modifier = Modifier
 			.padding(all = 16.dp),
-		planUiState = PlanUiState(
+		planData = PlanData(
 			id = -1,
 			title = "All",
 			progress = .35f
@@ -101,7 +101,7 @@ private fun PreviewPlanCardDefault() {
 	PlanCard(
 		modifier = Modifier
 			.padding(all = 16.dp),
-		planUiState = PlanUiState(
+		planData = PlanData(
 			id = -2,
 			title = "Default",
 			progress = .6f
@@ -125,7 +125,7 @@ private fun PreviewPlanCardCustom() {
 	PlanCard(
 		modifier = Modifier
 			.padding(all = 16.dp),
-		planUiState = PlanUiState(
+		planData = PlanData(
 			id = 1,
 			title = "This is a long text for testin plan card",
 			progress = 1.0f

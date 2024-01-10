@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-	namespace = "kanti.tododer.data.model.plan"
+	namespace = "com.example.datastore"
 	compileSdk = 34
 
 	defaultConfig {
@@ -33,16 +33,12 @@ android {
 
 dependencies {
 
-	implementation(project(":data"))
-	implementation(project(":core"))
+	implementation(project(":data:appData:api"))
+	implementation("androidx.datastore:datastore-preferences:1.0.0")
 
 	implementation("com.google.dagger:hilt-android:2.48.1")
 	kapt("com.google.dagger:hilt-android-compiler:2.48.1")
 
 	testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-}
-
-tasks.withType<Test> {
-	useJUnitPlatform()
 }
