@@ -1,6 +1,7 @@
 package kanti.tododer.data.model.plan.datasource.local
 
 import kanti.tododer.data.model.plan.Plan
+import kanti.tododer.data.model.plan.PlanType
 import kotlinx.coroutines.flow.Flow
 
 interface PlanLocalDataSource {
@@ -9,7 +10,13 @@ interface PlanLocalDataSource {
 	val defaultPlan: Flow<Plan>
 	val standardPlans: Flow<List<Plan>>
 
+	suspend fun getPlan(planId: Int): Plan?
+
+	suspend fun getPlanFromType(type: PlanType): Plan
+
 	suspend fun getPlans(plansId: List<Int>): List<Plan>
+
+	suspend fun getStandardPlans(): List<Plan>
 
 	suspend fun insert(plan: Plan): Plan
 
@@ -18,8 +25,6 @@ interface PlanLocalDataSource {
 	suspend fun updateTitle(planId: Int, title: String): Plan
 
 	suspend fun delete(planIds: List<Int>)
-
-	suspend fun init()
 
 	suspend fun isEmpty(): Boolean
 

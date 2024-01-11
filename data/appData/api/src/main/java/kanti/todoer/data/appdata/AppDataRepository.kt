@@ -7,4 +7,8 @@ interface AppDataRepository {
 	val currentPlanId: Flow<Int>
 
 	suspend fun setCurrentPlan(planId: Int)
+
+	suspend fun deleteCurrentPlan()
+
+	suspend fun deleteIfCurrent(planId: Int)
 }

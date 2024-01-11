@@ -16,10 +16,16 @@ interface PlanDao {
 	suspend fun getAll(plansId: List<Int>): List<PlanEntity>
 
 	@Query("SELECT * FROM plans WHERE state like '%' || :state || '%' AND type = :type")
-	fun getAll(state: String, type: String): Flow<List<PlanEntity>>
+	fun getAllPlansFlow(state: String, type: String): Flow<List<PlanEntity>>
+
+	@Query("SELECT * FROM plans WHERE state like '%' || :state || '%' AND type = :type")
+	suspend fun getAllPlans(state: String, type: String): List<PlanEntity>
 
 	@Query("SELECT * FROM plans WHERE type = :type LIMIT 1")
-	fun getFromType(type: String): Flow<PlanEntity?>
+	fun getFromTypeFlow(type: String): Flow<PlanEntity?>
+
+	@Query("SELECT * FROM plans WHERE type = :type LIMIT 1")
+	suspend fun getFromType(type: String): PlanEntity?
 
 	@Query("SELECT * FROM plans WHERE rowId = :rowId LIMIT 1")
 	suspend fun getByRowId(rowId: Long): PlanEntity?

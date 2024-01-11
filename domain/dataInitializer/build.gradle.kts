@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-	namespace = "kanti.todoer.data.appdata"
+	namespace = "kanti.tododer.domain.datainitializer"
 	compileSdk = 34
 
 	defaultConfig {
@@ -34,6 +34,7 @@ android {
 dependencies {
 
 	implementation(project(":core"))
+	implementation(project(":data:plan:api"))
 
 	implementation("com.google.dagger:hilt-android:2.48.1")
 	kapt("com.google.dagger:hilt-android-compiler:2.48.1")

@@ -1,8 +1,8 @@
 package kanti.tododer.ui.screen.todo_detail.viewmodel
 
 import android.util.Log
-import kanti.tododer.ui.components.todo.TodoUiState
-import kanti.tododer.ui.components.todo.TodosUiState
+import kanti.tododer.ui.components.todo.TodoData
+import kanti.tododer.ui.components.todo.TodosData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,8 +17,8 @@ interface TodoDetailViewModel {
 
 	val emptyStack: SharedFlow<Unit>
 
-	val todoDetail: StateFlow<TodoUiState>
-	val todoChildren: StateFlow<TodosUiState>
+	val todoDetail: StateFlow<TodoData>
+	val todoChildren: StateFlow<TodosData>
 
 	val onDeleted: SharedFlow<String>
 
@@ -54,27 +54,27 @@ interface TodoDetailViewModel {
 		private val _emptyStack = MutableSharedFlow<Unit>()
 		override val emptyStack: SharedFlow<Unit> = _emptyStack.asSharedFlow()
 
-		private val _todoDetail = MutableStateFlow(TodoUiState(id = 1, title = "Parent todo", remark = "Test remark"))
-		override val todoDetail: StateFlow<TodoUiState> = _todoDetail.asStateFlow()
+		private val _todoDetail = MutableStateFlow(TodoData(id = 1, title = "Parent todo", remark = "Test remark"))
+		override val todoDetail: StateFlow<TodoData> = _todoDetail.asStateFlow()
 
 		private val _todoDeleted = MutableSharedFlow<String>()
 		override val onDeleted: SharedFlow<String> = _todoDeleted.asSharedFlow()
 		
-		private val _todoChildren = MutableStateFlow(TodosUiState(listOf(
-			TodoUiState(id = 2, title = "Test 1"),
-			TodoUiState(id = 3, title = "Test 2"),
-			TodoUiState(id = 4, title = "Test 3"),
-			TodoUiState(id = 5, title = "Test 4"),
-			TodoUiState(id = 6, title = "Test 5"),
-			TodoUiState(id = 7, title = "Test 6"),
-			TodoUiState(id = 8, title = "Test 7"),
-			TodoUiState(id = 9, title = "Test 8"),
-			TodoUiState(id = 10, title = "Test 9"),
-			TodoUiState(id = 11, title = "Test 10"),
-			TodoUiState(id = 12, title = "Test 11"),
-			TodoUiState(id = 13, title = "Test 12"),
+		private val _todoChildren = MutableStateFlow(TodosData(listOf(
+			TodoData(id = 2, title = "Test 1"),
+			TodoData(id = 3, title = "Test 2"),
+			TodoData(id = 4, title = "Test 3"),
+			TodoData(id = 5, title = "Test 4"),
+			TodoData(id = 6, title = "Test 5"),
+			TodoData(id = 7, title = "Test 6"),
+			TodoData(id = 8, title = "Test 7"),
+			TodoData(id = 9, title = "Test 8"),
+			TodoData(id = 10, title = "Test 9"),
+			TodoData(id = 11, title = "Test 10"),
+			TodoData(id = 12, title = "Test 11"),
+			TodoData(id = 13, title = "Test 12"),
 		)))
-		override val todoChildren: StateFlow<TodosUiState> = _todoChildren.asStateFlow()
+		override val todoChildren: StateFlow<TodosData> = _todoChildren.asStateFlow()
 
 		override fun createNewTodo() {
 			Log.d(logTag, "createNewTodo()")

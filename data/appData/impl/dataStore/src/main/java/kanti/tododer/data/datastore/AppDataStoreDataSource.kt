@@ -18,13 +18,12 @@ class AppDataStoreDataSource @Inject constructor(
 ) : AppDataLocalDataSource {
 
 	private val _currentPlanIdKey = "currentPlanId"
-	private val currentPlanIdDefault = -1
 
 	private val currentPlanIdKey = intPreferencesKey(name = _currentPlanIdKey)
 
-	override val currentPlanId: Flow<Int>
+	override val currentPlanId: Flow<Int?>
 		get() = appContext.dataStore.data.map {  preferences ->
-			preferences[currentPlanIdKey] ?: currentPlanIdDefault
+			preferences[currentPlanIdKey]
 		}
 
 	override suspend fun setCurrentPlan(planId: Int?) {

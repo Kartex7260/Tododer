@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TodoEditor(
 	modifier: Modifier = Modifier,
-	state: TodoUiState,
+	state: TodoData,
 	onTitleChanged: (title: String) -> Unit = {},
 	onRemarkChanged: (remark: String) -> Unit = {},
 	onDoneChanged: (isDone: Boolean) -> Unit = {},
@@ -83,7 +83,7 @@ fun PreviewTodoEditor() {
 		mutableStateOf(false)
 	}
 	TodoEditor(
-		state = TodoUiState(
+		state = TodoData(
 			id = 1,
 			title = title,
 			remark = remark,

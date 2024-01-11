@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun TodoEditorControllers(
 	modifier: Modifier = Modifier,
-	state: TodoUiState,
+	state: TodoData,
 	onDoneChanged: (isDone: Boolean) -> Unit = {},
 //	onArchive: () -> Unit = {},
 	onDelete: () -> Unit = {}
@@ -57,7 +57,7 @@ fun PreviewTodoEditorControllers() {
 	TodoEditorControllers(
 		modifier = Modifier
 			.fillMaxWidth(),
-		state = TodoUiState(
+		state = TodoData(
 			id = 0,
 			isDone = isDone
 		),

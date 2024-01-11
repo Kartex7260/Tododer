@@ -53,7 +53,7 @@ import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
 import kanti.tododer.ui.components.todo.TodoCard
 import kanti.tododer.ui.components.todo.TodoEditor
 import kanti.tododer.ui.components.todo.TodoEditorControllers
-import kanti.tododer.ui.components.todo.TodoUiState
+import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.screen.todo_detail.viewmodel.TodoDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,7 +63,7 @@ fun TodoDetailTopBar(
 	title: String,
 	scrollBehavior: TopAppBarScrollBehavior,
 	editorSize: IntSize,
-	state: TodoUiState,
+	state: TodoData,
 	onDoneChange: (isDone: Boolean) -> Unit,
 //	onArchive: () -> Unit,
 	onDelete: () -> Unit
@@ -265,7 +265,7 @@ fun TodoDetailScreen(
 							start = 16.dp,
 							end = 16.dp
 						),
-					todoUiState = todoUiState,
+					todoData = todoUiState,
 					onDoneChange = { isDone ->
 						vm.changeDoneChild(todoUiState.id, isDone)
 					},

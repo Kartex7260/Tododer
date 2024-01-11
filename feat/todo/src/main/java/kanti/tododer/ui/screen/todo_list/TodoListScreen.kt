@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.data.model.plan.Plan
@@ -37,9 +38,10 @@ import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
 import kanti.tododer.ui.components.todo.TodoLazyColumn
-import kanti.tododer.ui.components.todo.TodosUiState
+import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListUiState
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModel
+import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModelImpl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,7 +83,7 @@ private fun TodoListTopBar(
 fun TodoListScreen(
 	navController: NavController,
 	topBarActions: @Composable () -> Unit = {},
-	vm: TodoListViewModel = TodoListViewModel
+	vm: TodoListViewModel = hiltViewModel<TodoListViewModelImpl>()
 ) {
 	val snackbarHostState = remember {
 		SnackbarHostState()
@@ -89,7 +91,7 @@ fun TodoListScreen(
 
 	val todoListUiState by vm.currentPlan.collectAsState()
 	val (plan, children) = when (todoListUiState) {
-		is TodoListUiState.Empty -> Pair(null, TodosUiState())
+		is TodoListUiState.Empty -> Pair(Plan(), TodosData())
 		is TodoListUiState.Success -> {
 			Pair(
 				(todoListUiState as TodoListUiState.Success).plan,
@@ -97,7 +99,7 @@ fun TodoListScreen(
 			)
 		}
 		is TodoListUiState.Fail -> {
-			Pair(null, TodosUiState())
+			Pair(Plan(), TodosData())
 		}
 	}
 

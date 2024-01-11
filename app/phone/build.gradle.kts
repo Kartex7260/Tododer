@@ -80,4 +80,5 @@ dependencies {
 	implementation(project(":data:todo:impl:room"))
 	implementation(project(":data:plan:impl:room"))
 	implementation(project(":data:appData:impl:dataStore"))
+	implementation(project(":domain:dataInitializer"))
 }

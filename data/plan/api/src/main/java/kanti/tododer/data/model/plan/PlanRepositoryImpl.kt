@@ -22,6 +22,26 @@ class PlanRepositoryImpl @Inject constructor(
 
 	private val chanceUndoMutex = Mutex()
 
+	override suspend fun getPlanOrDefault(planId: Int): Plan {
+		return localDataSource.getPlan(planId) ?: getDefaultPlan()
+	}
+
+	override suspend fun getStandardPlans(): List<Plan> {
+		return localDataSource.getStandardPlans()
+	}
+
+	override suspend fun getPlan(planId: Int): Plan? {
+		return localDataSource.getPlan(planId)
+	}
+
+	override suspend fun getDefaultPlan(): Plan {
+		return localDataSource.getPlanFromType(PlanType.Default)
+	}
+
+	override suspend fun insert(plans: List<Plan>) {
+		localDataSource.insert(plans)
+	}
+
 	override suspend fun create(title: String): Plan {
 		val plan = Plan(title = title)
 		return localDataSource.insert(plan)
@@ -51,10 +71,6 @@ class PlanRepositoryImpl @Inject constructor(
 		return chanceUndoMutex.withLock {
 			chanceUndo.unregister()
 		}
-	}
-
-	override suspend fun init() {
-		localDataSource.init()
 	}
 
 	override suspend fun isEmpty(): Boolean {

@@ -62,6 +62,7 @@ dependencies {
 	implementation(project(":data:plan:api"))
 	implementation(project(":data:appData:api"))
 	implementation(project(":domain:planDeleteBehaviour"))
+	implementation(project(":domain:getPlanChildren"))
 	implementation(project(":ui:todo"))
 	implementation(project(":ui:plan"))
 }

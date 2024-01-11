@@ -26,11 +26,11 @@ fun TodoLazyColumn(
 	flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
 	userScrollEnabled: Boolean = true,
 	preContent: @Composable () -> Unit = {},
-	content: TodosUiState = TodosUiState(),
+	content: TodosData = TodosData(),
 	postContent: @Composable () -> Unit = {},
-	onClick: (todo: TodoUiState) -> Unit,
-	onDoneChanged: (isDone: Boolean, todo: TodoUiState) -> Unit,
-	actions: @Composable (todo: TodoUiState) -> Unit = {}
+	onClick: (todo: TodoData) -> Unit,
+	onDoneChanged: (isDone: Boolean, todo: TodoData) -> Unit,
+	actions: @Composable (todo: TodoData) -> Unit = {}
 ) = LazyColumn(
 	modifier = modifier,
 	state = state,
@@ -50,7 +50,7 @@ fun TodoLazyColumn(
 				.padding(bottom = 16.dp),
 			onClick = { onClick(uiState) },
 			onDoneChange = { onDoneChanged(it, uiState) },
-			todoUiState = uiState
+			todoData = uiState
 		) { actions(uiState) }
 	}
 	item {
@@ -66,10 +66,10 @@ private fun PreviewTodoLazyColumn() {
 	TodoLazyColumn(
 		modifier = Modifier
 			.fillMaxSize(),
-		content = TodosUiState(listOf(
-			TodoUiState(0, "Hello", "", false),
-			TodoUiState(1, "Ok", "", true),
-			TodoUiState(2, "Foo", "", true)
+		content = TodosData(listOf(
+			TodoData(0, "Hello", "", false),
+			TodoData(1, "Ok", "", true),
+			TodoData(2, "Foo", "", true)
 		)),
 		onClick = {},
 		onDoneChanged = { _, _ ->  },

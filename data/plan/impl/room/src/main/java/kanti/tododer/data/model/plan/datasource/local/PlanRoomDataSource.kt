@@ -14,14 +14,13 @@ import javax.inject.Inject
 
 class PlanRoomDataSource @Inject constructor(
 	private val planDao: PlanDao,
-	private val initializer: PlanInitializer,
 	private val sl: StateLanguage
 ) : PlanLocalDataSource {
 
 	private val logTag = "PlanRoomDataSource"
 
 	override val planAll: Flow<Plan>
-		get() = planDao.getFromType(PlanType.All.name)
+		get() = planDao.getFromTypeFlow(PlanType.All.name)
 			.onEach {
 				if (it == null) {
 					Log.w(logTag, "Plan(ALl) not found!")
@@ -30,7 +29,7 @@ class PlanRoomDataSource @Inject constructor(
 			.filterNotNull()
 			.map { it.toPlan(sl) }
 	override val defaultPlan: Flow<Plan>
-		get() = planDao.getFromType(PlanType.Default.name)
+		get() = planDao.getFromTypeFlow(PlanType.Default.name)
 			.onEach {
 				if (it == null) {
 					Log.w(logTag, "Plan(Default) not found!")
@@ -39,11 +38,30 @@ class PlanRoomDataSource @Inject constructor(
 			.filterNotNull()
 			.map { it.toPlan(sl) }
 	override val standardPlans: Flow<List<Plan>>
-		get() = planDao.getAll(PlanState.Normal.name, PlanType.Custom.name).map { plans ->
+		get() = planDao.getAllPlansFlow(PlanState.Normal.name, PlanType.Custom.name).map { plans ->
 			plans.map {
 				it.toPlan(sl)
 			}
 		}
+
+	override suspend fun getPlan(planId: Int): Plan? {
+		return planDao.getPlan(planId)?.toPlan(sl)
+	}
+
+	override suspend fun getStandardPlans(): List<Plan> {
+		return planDao.getAllPlans(
+			state = PlanState.Normal.name,
+			type = PlanType.Custom.name
+		).map { it.toPlan(sl) }
+	}
+
+	override suspend fun getPlanFromType(type: PlanType): Plan {
+		return when (type) {
+			PlanType.Custom -> throw IllegalArgumentException("getPlanFromType for PlanType. All and Default only")
+			else -> planDao.getFromType(type.name)?.toPlan(sl)
+				?: throw IllegalStateException("Default data not initialized")
+		}
+	}
 
 	override suspend fun getPlans(plansId: List<Int>): List<Plan> {
 		return planDao.getAll(plansId).map { it.toPlan(sl) }
@@ -71,20 +89,11 @@ class PlanRoomDataSource @Inject constructor(
 		planDao.delete(planIds)
 	}
 
-	override suspend fun init() {
-		Log.d(logTag, "init()")
-		if (isEmpty()) {
-			Log.d(logTag, "db is empty")
-			initializer.initialize(this)
-		}
-	}
-
 	override suspend fun isEmpty(): Boolean {
 		return planDao.count() == 0
 	}
 
 	override suspend fun clear() {
 		planDao.deleteAll()
-		initializer.initialize(this)
 	}
 }

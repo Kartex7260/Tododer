@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TodoCard(
 	modifier: Modifier = Modifier,
-	todoUiState: TodoUiState,
+	todoData: TodoData,
 	onClick: () -> Unit = {},
 	onDoneChange: (Boolean) -> Unit = {},
 	action: @Composable () -> Unit = {}
@@ -53,7 +53,7 @@ fun TodoCard(
 				.fillMaxWidth()
 		) {
 			Checkbox(
-				checked = todoUiState.isDone,
+				checked = todoData.isDone,
 				onCheckedChange = onDoneChange
 			)
 
@@ -63,7 +63,7 @@ fun TodoCard(
 
 			Text(
 				modifier = Modifier.weight(1f),
-				text = todoUiState.title,
+				text = todoData.title,
 				style = MaterialTheme.typography.titleLarge,
 				maxLines = 1,
 				overflow = TextOverflow.Ellipsis
@@ -85,8 +85,8 @@ fun TodoCard(
 )
 @Composable
 fun PreviewTodoCard() {
-	var todoUiState by remember {
-		mutableStateOf(TodoUiState(
+	var todoData by remember {
+		mutableStateOf(TodoData(
 			id = 0,
 			title = "State test",
 			remark = "",
@@ -98,9 +98,9 @@ fun PreviewTodoCard() {
 			.fillMaxWidth()
 			.padding(16.dp),
 		onClick = {},
-		todoUiState = todoUiState,
+		todoData = todoData,
 		onDoneChange = { isDone ->
-			todoUiState = todoUiState.copy(isDone = isDone)
+			todoData = todoData.copy(isDone = isDone)
 		}
 	) {
 		IconButton(onClick = {  }) {

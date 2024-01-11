@@ -2,7 +2,7 @@ package kanti.tododer.ui.screen.todo_list.viewmodel
 
 import androidx.compose.runtime.Stable
 import kanti.tododer.data.model.plan.Plan
-import kanti.tododer.ui.components.todo.TodosUiState
+import kanti.tododer.ui.components.todo.TodosData
 
 sealed class TodoListUiState {
 
@@ -11,7 +11,7 @@ sealed class TodoListUiState {
 	@Stable
 	data class Success(
 		val plan: Plan,
-		val children: TodosUiState
+		val children: TodosData
 	) : TodoListUiState()
 
 	@Stable

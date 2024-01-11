@@ -3,6 +3,6 @@ package kanti.tododer.ui.components.todo
 import androidx.compose.runtime.Stable
 
 @Stable
-data class TodosUiState(
-	val todos: List<TodoUiState> = listOf()
+data class TodosData(
+	val todos: List<TodoData> = listOf()
 )

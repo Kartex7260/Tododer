@@ -45,18 +45,18 @@
       </entry>
       <entry key="app.phone">
         <State>
-          <targetSelectedWithDropDown>
+          <runningDeviceTargetSelectedWithDropDown>
             <Target>
-              <type value="QUICK_BOOT_TARGET" />
+              <type value="RUNNING_DEVICE_TARGET" />
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\kiril\.android\avd\Pixel_API_25_1.avd" />
+                  <value value="C:\Users\kiril\.android\avd\Pixel_7_Pro_API_34_1.avd" />
                 </Key>
               </deviceKey>
             </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-01-09T13:05:13.112376900Z" />
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-01-11T17:05:24.564385Z" />
         </State>
       </entry>
     </value>

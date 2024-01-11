@@ -1,6 +1,5 @@
 package kanti.tododer.data.model.plan
 
-import kanti.tododer.data.model.plan.datasource.local.DefaultPlanInitializer
 import kanti.tododer.data.model.plan.datasource.local.FakePlanLocalDataSource
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
