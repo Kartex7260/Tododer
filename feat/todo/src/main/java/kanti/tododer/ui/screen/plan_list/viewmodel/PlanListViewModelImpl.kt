@@ -93,6 +93,7 @@ class PlanListViewModelImpl @Inject constructor(
 	}
 
 	override fun deletePlan(planId: Int) {
+		undoChanceRejected()
 		viewModelScope.launch(NonCancellable) {
 			val plans = planDeleteBehaviour.delete(listOf(planId))
 			if (plans.isEmpty())
