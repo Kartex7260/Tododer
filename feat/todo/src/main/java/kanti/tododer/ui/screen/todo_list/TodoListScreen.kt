@@ -103,8 +103,8 @@ fun TodoListScreen(
 		}
 	}
 
-	val deletedFragment1 = stringResource(id = R.string.deleted_1)
-	val deletedFragment2 = stringResource(id = R.string.deleted_2_todo)
+	val deletedFragment1 = stringResource(id = R.string.deleted_solo_1)
+	val deletedFragment2 = stringResource(id = R.string.deleted_solo_2_todo)
 	val cancelStringRes = stringResource(id = R.string.cancel)
 	LaunchedEffect(key1 = vm) {
 		vm.todoDeleted.collect { todoTitle ->

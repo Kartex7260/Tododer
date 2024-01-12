@@ -1,13 +1,12 @@
 package kanti.tododer.ui.screen.plan_list.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kanti.tododer.data.model.plan.PlanRepository
-import kanti.tododer.domain.plandeletebehaviour.PlanDeleteBehaviour
+import kanti.tododer.domain.plandeletebehaviour.DeletePlan
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.plan.PlanData
 import kanti.tododer.ui.components.plan.PlansData
@@ -26,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PlanListViewModelImpl @Inject constructor(
 	private val planRepository: PlanRepository,
-	private val planDeleteBehaviour: PlanDeleteBehaviour,
+	private val deletePlan: DeletePlan,
 	private val appDataRepository: AppDataRepository,
 	@ApplicationContext private val appContext: Context
 ) : ViewModel(), PlanListViewModel {
@@ -75,9 +74,6 @@ class PlanListViewModelImpl @Inject constructor(
 			initialValue = PlansData()
 		)
 
-	private val _planDeleted = MutableSharedFlow<String>()
-	override val planDeleted: SharedFlow<String> = _planDeleted.asSharedFlow()
-
 	override fun setCurrentPlan(planId: Int) {
 		viewModelScope.launch(NonCancellable) {
 			appDataRepository.setCurrentPlan(planId = planId)
@@ -92,31 +88,9 @@ class PlanListViewModelImpl @Inject constructor(
 		}
 	}
 
-	override fun deletePlan(planId: Int) {
-		undoChanceRejected()
+	override fun deletePlans(planIds: List<Int>) {
 		viewModelScope.launch(NonCancellable) {
-			val plans = planDeleteBehaviour.delete(listOf(planId))
-			if (plans.isEmpty())
-				return@launch
-			_planDeleted.emit(plans[0].title)
+			deletePlan(planIds)
 		}
-	}
-
-	override fun undoDelete() {
-		viewModelScope.launch(NonCancellable) {
-			planDeleteBehaviour.undoDelete()
-		}
-	}
-
-	override fun undoChanceRejected() {
-		Log.d("PlanListViewModelImpl", "undoChanceRejected()")
-		viewModelScope.launch(NonCancellable) {
-			planDeleteBehaviour.undoChanceRejected()
-		}
-	}
-
-	override fun onCleared() {
-		super.onCleared()
-		undoChanceRejected()
 	}
 }

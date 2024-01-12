@@ -21,17 +21,11 @@ interface PlanListViewModel {
 	val planDefault: StateFlow<PlanData>
 	val plans: StateFlow<PlansData>
 
-	val planDeleted: SharedFlow<String>
-
 	fun setCurrentPlan(planId: Int)
 
 	fun createPlanEndSetCurrent(title: String)
 
-	fun deletePlan(planId: Int)
-
-	fun undoDelete()
-
-	fun undoChanceRejected()
+	fun deletePlans(planIds: List<Int>)
 
 	companion object : PlanListViewModel {
 
@@ -65,9 +59,6 @@ interface PlanListViewModel {
 		override val planDefault: StateFlow<PlanData> = _planDefault.asStateFlow()
 		override val plans: StateFlow<PlansData> = _plans.asStateFlow()
 
-		private val _planDeleted = MutableSharedFlow<String>()
-		override val planDeleted: SharedFlow<String> = _planDeleted.asSharedFlow()
-
 		override fun setCurrentPlan(planId: Int) {
 			Log.d(logTag, "setCurrentPlan(planId: Int = $planId)")
 		}
@@ -79,19 +70,8 @@ interface PlanListViewModel {
 			}
 		}
 
-		override fun deletePlan(planId: Int) {
-			Log.d(logTag, "deletePlan(planId: Int = $planId)")
-			coroutineScope.launch {
-				_planDeleted.emit("Test deleted")
-			}
-		}
-
-		override fun undoDelete() {
-			Log.d(logTag, "undoDelete()")
-		}
-
-		override fun undoChanceRejected() {
-			Log.d(logTag, "undoChanceRejected()")
+		override fun deletePlans(planIds: List<Int>) {
+			Log.d(logTag, "deletePlan(planId: Int = ${planIds.firstOrNull()})")
 		}
 	}
 }

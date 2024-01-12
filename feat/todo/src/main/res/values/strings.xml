@@ -26,7 +26,11 @@
     <string name="delete_ask_1">Delete the</string>
     <string name="delete_ask_2_todo">task</string>
 
-    <string name="deleted_1">The</string>
-    <string name="deleted_2_todo">task has been deleted</string>
-    <string name="deleted_2_plan">plan has been deleted</string>
+    <string name="deleted_solo_1">The</string>
+    <string name="deleted_solo_2_todo">task has been deleted</string>
+    <string name="deleted_solo_2_plan">plan has been deleted</string>
+    
+    <string name="deleted_multi_1">Deleted</string>
+    <string name="deleted_multi_2_todo">todos</string>
+    <string name="deleted_multi_2_plan">plans</string>
 </resources>

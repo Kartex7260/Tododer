@@ -20,11 +20,9 @@ object RoomModule {
 	@Provides
 	@Singleton
 	fun provideTododerDatabase(@ApplicationContext context: Context): TododerDatabase {
-		return Room.databaseBuilder(
-			context = context,
-			klass = TododerDatabase::class.java,
-			name = Const.DATABASE_NAME
-		).build()
+		return Room.databaseBuilder(context, TododerDatabase::class.java, Const.DATABASE_NAME)
+			.fallbackToDestructiveMigration()
+			.build()
 	}
 
 	@Provides
