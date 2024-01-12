@@ -1,6 +1,5 @@
 package kanti.tododer.ui.screen.plan_list
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -15,43 +14,37 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.menu.NormalPlanDropdownMenu
 import kanti.tododer.ui.components.plan.PlanCard
-import kanti.tododer.ui.components.plan.PlanData
 import kanti.tododer.ui.components.plan.PlanLazyColumn
-import kanti.tododer.ui.components.plan.PlansData
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModelImpl
-import kanti.tododer.ui.services.deleter.DeleteUndoManager
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,8 +79,6 @@ fun PlanListScreen(
 	topBarActions: @Composable () -> Unit = {},
 	vm: PlanListViewModel = hiltViewModel<PlanListViewModelImpl>()
 ) {
-	val coroutineScope = rememberCoroutineScope()
-
 	var showDialog by rememberSaveable { mutableStateOf(false) }
 	val snackbarHostState = remember { SnackbarHostState() }
 
@@ -97,74 +88,49 @@ fun PlanListScreen(
 	val deletedSoloFragment2 = stringResource(id = R.string.deleted_solo_2_plan)
 	val deletedMultiFragment1 = stringResource(id = R.string.deleted_multi_1)
 	val deletedMultiFragment2 = stringResource(id = R.string.deleted_multi_2_plan)
-	val deleteUndoManager = remember {
-		DeleteUndoManager<PlanData>(
-			snackbarHostState = snackbarHostState,
-			coroutineScope = coroutineScope,
-			toKey = { id },
-			toSnackbarMessage = {
-				if (size == 1) {
-					val plan = get(0)
+	LaunchedEffect(key1 = vm) {
+		vm.plansDeleted.collectLatest { plans ->
+			if (plans.isNotEmpty()) {
+				val message = if (plans.size == 1) {
+					val plan = plans[0]
 					"$deletedSoloFragment1 \"${plan.title}\" $deletedSoloFragment2"
 				} else {
-					"$deletedMultiFragment1 $size $deletedMultiFragment2"
+					"$deletedMultiFragment1 ${plans.size} $deletedMultiFragment2"
 				}
-			},
-			cancelLabel = cancelStringRes
-		) { plansData ->
-			vm.deletePlans(plansData.map { it.id })
-		}
-	}
 
-//	Окончательно удаление когда закрывается программа
-	val lifecycleOwner = LocalLifecycleOwner.current
-	DisposableEffect(key1 = deleteUndoManager) {
-		val lifecycleEventObserver = LifecycleEventObserver { _, event ->
-			when (event) {
-				Lifecycle.Event.ON_DESTROY -> {
-					coroutineScope.launch {
-						deleteUndoManager.cancelChanceReject()
+				val result = snackbarHostState.showSnackbar(
+					message = message,
+					actionLabel = cancelStringRes,
+					withDismissAction = true,
+					duration = SnackbarDuration.Short
+				)
+				when (result) {
+					SnackbarResult.ActionPerformed -> {
+						vm.cancelDelete()
+					}
+					SnackbarResult.Dismissed -> {
+						vm.cancelChanceReject()
 					}
 				}
-				else -> {}
 			}
-		}
-
-		lifecycleOwner.lifecycle.addObserver(lifecycleEventObserver)
-
-		onDispose {
-			lifecycleOwner.lifecycle.removeObserver(lifecycleEventObserver)
 		}
 	}
 
-	val onBack = {
-		coroutineScope.launch {
-			deleteUndoManager.cancelChanceReject()
+	LifecycleStartEffect {
+		onStopOrDispose {
+			vm.cancelChanceReject()
 		}
-		navController.popBackStack()
 	}
 
 	LaunchedEffect(key1 = vm) {
 		vm.newPlanCreated.collect {
-			onBack()
+			navController.popBackStack()
 		}
-	}
-
-	BackHandler {
-		onBack()
 	}
 
 	val planAll by vm.planAll.collectAsState()
 	val planDefault by vm.planDefault.collectAsState()
-	val plans by vm.plans
-		.combine(deleteUndoManager.deleted) { plansData, deleted ->
-			PlansData(
-				plans = plansData.plans.filter {
-					!deleted.containsKey(it.id)
-				}
-			)
-		}
-		.collectAsState(initial = PlansData())
+	val plans by vm.plans.collectAsState()
 
 	val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 	Scaffold(
@@ -173,7 +139,7 @@ fun PlanListScreen(
 
 		topBar = {
 			PlanListTopBar(
-				back = { onBack() },
+				back = { navController.popBackStack() },
 				topBarActions = topBarActions,
 				scrollBehavior = scrollBehavior
 			)
@@ -208,7 +174,7 @@ fun PlanListScreen(
 					planData = planAll,
 					onClick = {
 						vm.setCurrentPlan(planAll.id)
-						onBack()
+						navController.popBackStack()
 					}
 				)
 
@@ -218,7 +184,7 @@ fun PlanListScreen(
 					planData = planDefault,
 					onClick = {
 						vm.setCurrentPlan(planDefault.id)
-						onBack()
+						navController.popBackStack()
 					}
 				)
 
@@ -235,7 +201,7 @@ fun PlanListScreen(
 			content = plans,
 			onClick = { plan ->
 				vm.setCurrentPlan(plan.id)
-				onBack()
+				navController.popBackStack()
 			},
 			action = { planData ->
 				var showDropdownMenu by remember {
@@ -248,7 +214,7 @@ fun PlanListScreen(
 					expanded = showDropdownMenu,
 					onDismissRequest = { showDropdownMenu = false },
 					onDelete = {
-						deleteUndoManager.delete(listOf(planData))
+						vm.deletePlans(listOf(planData))
 					}
 				)
 			}
