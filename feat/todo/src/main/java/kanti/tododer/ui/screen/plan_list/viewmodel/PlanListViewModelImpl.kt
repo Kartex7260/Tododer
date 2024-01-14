@@ -93,7 +93,7 @@ class PlanListViewModelImpl @Inject constructor(
 
 	override val plansDeleted: SharedFlow<List<PlanData>> = deleteCancelManager.onDeleted
 
-	override fun setCurrentPlan(planId: Int) {
+	override fun setCurrentPlan(planId: Long) {
 		viewModelScope.launch(NonCancellable) {
 			appDataRepository.setCurrentPlan(planId = planId)
 		}
@@ -101,8 +101,8 @@ class PlanListViewModelImpl @Inject constructor(
 
 	override fun createPlanEndSetCurrent(title: String) {
 		viewModelScope.launch(NonCancellable) {
-			val plan = planRepository.create(title)
-			appDataRepository.setCurrentPlan(plan.id)
+			val planId = planRepository.create(title)
+			appDataRepository.setCurrentPlan(planId)
 			_newPlanCreated.emit(Unit)
 		}
 	}

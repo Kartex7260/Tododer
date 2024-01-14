@@ -5,7 +5,7 @@ import kanti.tododer.data.model.FullIdType
 
 interface Todo {
 
-	val id: Int
+	val id: Long
 	val parentId: FullId
 	val title: String
 	val remark: String
@@ -14,7 +14,7 @@ interface Todo {
 }
 
 private data class TodoImpl(
-	override val id: Int,
+	override val id: Long,
 	override val parentId: FullId,
 	override val title: String,
 	override val remark: String,
@@ -23,7 +23,7 @@ private data class TodoImpl(
 ) : Todo
 
 fun Todo(
-	id: Int = 0,
+	id: Long = 0,
 	parentId: FullId,
 	title: String = "",
 	remark: String = "",
@@ -41,7 +41,7 @@ fun Todo(
 }
 
 fun Todo.toTodo(
-	id: Int = this.id,
+	id: Long = this.id,
 	parentId: FullId = this.parentId,
 	title: String = this.title,
 	remark: String = this.remark,

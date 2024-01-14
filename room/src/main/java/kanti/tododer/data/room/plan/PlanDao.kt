@@ -13,7 +13,7 @@ interface PlanDao {
 	suspend fun getAll(): List<PlanEntity>
 
 	@Query("SELECT * FROM plans WHERE id IN (:plansId)")
-	suspend fun getAll(plansId: List<Int>): List<PlanEntity>
+	suspend fun getAll(plansId: List<Long>): List<PlanEntity>
 
 	@Query("SELECT * FROM plans WHERE state like '%' || :state || '%' AND type = :type")
 	fun getAllPlansFlow(state: String, type: String): Flow<List<PlanEntity>>
@@ -31,7 +31,7 @@ interface PlanDao {
 	suspend fun getByRowId(rowId: Long): PlanEntity?
 
 	@Query("SELECT * FROM plans WHERE id = :id LIMIT 1")
-	suspend fun getPlan(id: Int): PlanEntity?
+	suspend fun getPlan(id: Long): PlanEntity?
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	suspend fun insert(plan: PlanEntity): Long
@@ -41,13 +41,13 @@ interface PlanDao {
 
 	@Query("UPDATE plans SET title = :title WHERE rowId in " +
 			"(SELECT rowId FROM plans WHERE id = :planId LIMIT 1)")
-	suspend fun updateTitle(planId: Int, title: String)
+	suspend fun updateTitle(planId: Long, title: String)
 
 	@Query("DELETE FROM plans WHERE id in (:planIds)")
-	suspend fun delete(planIds: List<Int>)
+	suspend fun delete(planIds: List<Long>)
 
 	@Query("SELECT COUNT(*) FROM plans")
-	suspend fun count(): Int
+	suspend fun count(): Long
 
 	@Query("DELETE FROM plans")
 	suspend fun deleteAll()

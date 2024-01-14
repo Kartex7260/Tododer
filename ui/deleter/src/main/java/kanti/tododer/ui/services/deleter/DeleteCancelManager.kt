@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.asStateFlow
 
 @Stable
 class DeleteCancelManager<Value>(
-	val toKey: Value.() -> Int,
+	val toKey: Value.() -> Long,
 	private val onDelete: suspend (List<Value>) -> Unit = {}
 ) {
 
-	private val _deleted = MutableStateFlow<Map<Int, Value>>(mapOf())
-	val deletedValues: StateFlow<Map<Int, Value>> = _deleted.asStateFlow()
+	private val _deleted = MutableStateFlow<Map<Long, Value>>(mapOf())
+	val deletedValues: StateFlow<Map<Long, Value>> = _deleted.asStateFlow()
 
 	private val _onDeleted = MutableSharedFlow<List<Value>>()
 	val onDeleted = _onDeleted.asSharedFlow()
@@ -22,7 +22,7 @@ class DeleteCancelManager<Value>(
 	suspend fun delete(values: List<Value>) {
 		cancelChanceReject()
 
-		val deletedMap = HashMap<Int, Value>()
+		val deletedMap = HashMap<Long, Value>()
 		for (value in values) {
 			deletedMap[value.toKey()] = value
 		}

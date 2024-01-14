@@ -6,7 +6,7 @@ object Const {
 
 	object PlansIds {
 
-		const val ALL = -2
-		const val DEFAULT = -1
+		const val ALL: Long = -2
+		const val DEFAULT: Long = -1
 	}
 }

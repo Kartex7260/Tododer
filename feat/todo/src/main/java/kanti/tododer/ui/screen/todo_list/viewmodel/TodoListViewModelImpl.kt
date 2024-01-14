@@ -63,10 +63,10 @@ class TodoListViewModelImpl @Inject constructor(
 	override val todoDeleted: SharedFlow<String>
 		get() = MutableSharedFlow()
 
-	override fun changeDone(todoId: Int, isDone: Boolean) {
+	override fun changeDone(todoId: Long, isDone: Boolean) {
 	}
 
-	override fun deleteTodo(todoId: Int) {
+	override fun deleteTodo(todoId: Long) {
 	}
 
 	override fun undoDelete() {

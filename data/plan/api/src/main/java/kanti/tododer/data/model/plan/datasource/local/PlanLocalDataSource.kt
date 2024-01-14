@@ -10,21 +10,21 @@ interface PlanLocalDataSource {
 	val defaultPlan: Flow<Plan>
 	val standardPlans: Flow<List<Plan>>
 
-	suspend fun getPlan(planId: Int): Plan?
+	suspend fun getPlan(planId: Long): Plan?
 
 	suspend fun getPlanFromType(type: PlanType): Plan
 
-	suspend fun getPlans(plansId: List<Int>): List<Plan>
+	suspend fun getPlans(plansId: List<Long>): List<Plan>
 
 	suspend fun getStandardPlans(): List<Plan>
 
-	suspend fun insert(plan: Plan): Plan
+	suspend fun insert(plan: Plan): Long
 
 	suspend fun insert(plans: List<Plan>)
 
-	suspend fun updateTitle(planId: Int, title: String): Plan
+	suspend fun updateTitle(planId: Long, title: String)
 
-	suspend fun delete(planIds: List<Int>)
+	suspend fun delete(planIds: List<Long>)
 
 	suspend fun isEmpty(): Boolean
 

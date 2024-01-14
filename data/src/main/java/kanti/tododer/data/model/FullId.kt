@@ -1,7 +1,7 @@
 package kanti.tododer.data.model
 
 data class FullId(
-	val id: Int,
+	val id: Long,
 	val type: FullIdType
 ) {
 	override fun toString(): String {
@@ -17,7 +17,7 @@ data class FullId(
 			if (splitParts.size != 2)
 				throw IllegalArgumentException("Invalid line = $line")
 			return FullId(
-				id = splitParts[1].toInt(),
+				id = splitParts[1].toLong(),
 				type = FullIdType.valueOf(splitParts[0])
 			)
 		}

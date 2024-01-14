@@ -9,16 +9,16 @@ interface TodoRepository {
 	suspend fun deleteChildren(fullId: FullId)
 
 	suspend fun create(
-		fullId: FullId,
+		parentFullId: FullId,
 		title: String,
 		remark: String
-	): Todo
+	): Long
 
-	suspend fun updateTitle(todoId: Int, title: String): Todo
+	suspend fun updateTitle(todoId: Long, title: String)
 
-	suspend fun updateRemark(todoId: Int, remark: String): Todo
+	suspend fun updateRemark(todoId: Long, remark: String)
 
-	suspend fun changeDone(todoId: Int): Todo
+	suspend fun changeDone(todoId: Long)
 
-	suspend fun delete(todoIds: List<Int>)
+	suspend fun delete(todoIds: List<Long>)
 }

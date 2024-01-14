@@ -21,39 +21,30 @@ class TodoRoomDataSource @Inject constructor(
 		return todoDao.getChildren(fullId.toString(), state.name).map { it.toTodo(sl) }
 	}
 
-	override suspend fun insert(todo: Todo): Todo {
+	override suspend fun insert(todo: Todo): Long {
 		val rowId = todoDao.insert(todo.toTodoEntity(sl))
 		if (rowId == -1L)
 			throw IllegalArgumentException("Todo already exist (id = ${todo.id})")
-		return todoDao.getByRowId(rowId)?.toTodo(sl)
-			?: throw IllegalStateException("Not found todo by rowId=$rowId")
+		return rowId
 	}
 
-	override suspend fun updateTitle(todoId: Int, title: String): Todo {
+	override suspend fun updateTitle(todoId: Long, title: String) {
 		todoDao.updateTitle(todoId, title)
-		return requireTodo(todoId)
 	}
 
-	override suspend fun updateRemark(todoId: Int, remark: String): Todo {
+	override suspend fun updateRemark(todoId: Long, remark: String) {
 		todoDao.updateRemark(todoId, remark)
-		return requireTodo(todoId)
 	}
 
-	override suspend fun changeDone(todoId: Int): Todo {
+	override suspend fun changeDone(todoId: Long) {
 		todoDao.changeDone(todoId)
-		return requireTodo(todoId)
 	}
 
-	override suspend fun delete(todoIds: List<Int>) {
+	override suspend fun delete(todoIds: List<Long>) {
 		for (todoId in todoIds) {
 			val children = getAllChildren(FullId(todoId, FullIdType.Todo))
 			delete(children.map { it.id })
 		}
 		todoDao.delete(todoIds)
-	}
-
-	private suspend fun requireTodo(todoId: Int): Todo {
-		return todoDao.getTodo(todoId)?.toTodo(sl)
-			?: throw IllegalArgumentException("Not found todo by id=$todoId")
 	}
 }

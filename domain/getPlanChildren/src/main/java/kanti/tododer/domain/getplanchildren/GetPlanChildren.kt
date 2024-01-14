@@ -12,7 +12,7 @@ class GetPlanChildren @Inject constructor(
 	private val todoRepository: TodoRepository
 ) {
 
-	suspend operator fun invoke(planId: Int): List<Todo> {
+	suspend operator fun invoke(planId: Long): List<Todo> {
 		val plan = planRepository.getPlan(planId) ?: return listOf()
 		return when (plan.type) {
 			PlanType.All -> {

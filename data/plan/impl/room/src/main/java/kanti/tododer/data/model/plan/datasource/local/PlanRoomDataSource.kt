@@ -44,7 +44,7 @@ class PlanRoomDataSource @Inject constructor(
 			}
 		}
 
-	override suspend fun getPlan(planId: Int): Plan? {
+	override suspend fun getPlan(planId: Long): Plan? {
 		return planDao.getPlan(planId)?.toPlan(sl)
 	}
 
@@ -63,34 +63,31 @@ class PlanRoomDataSource @Inject constructor(
 		}
 	}
 
-	override suspend fun getPlans(plansId: List<Int>): List<Plan> {
+	override suspend fun getPlans(plansId: List<Long>): List<Plan> {
 		return planDao.getAll(plansId).map { it.toPlan(sl) }
 	}
 
-	override suspend fun insert(plan: Plan): Plan {
+	override suspend fun insert(plan: Plan): Long {
 		val rowId = planDao.insert(plan.toPlanEntity(sl))
 		if (rowId == -1L)
 			throw IllegalArgumentException("Plan(id = ${plan.id}) already exist!")
-		return planDao.getByRowId(rowId)?.toPlan(sl)
-			?: throw IllegalStateException("Not found plan by rowId=$rowId")
+		return rowId
 	}
 
 	override suspend fun insert(plans: List<Plan>) {
 		planDao.insert(plans.map { it.toPlanEntity(sl) })
 	}
 
-	override suspend fun updateTitle(planId: Int, title: String): Plan {
+	override suspend fun updateTitle(planId: Long, title: String) {
 		planDao.updateTitle(planId, title)
-		return planDao.getPlan(planId)?.toPlan(sl)
-			?:throw IllegalArgumentException("Not found plan by id=$planId")
 	}
 
-	override suspend fun delete(planIds: List<Int>) {
+	override suspend fun delete(planIds: List<Long>) {
 		planDao.delete(planIds)
 	}
 
 	override suspend fun isEmpty(): Boolean {
-		return planDao.count() == 0
+		return planDao.count() == 0L
 	}
 
 	override suspend fun clear() {

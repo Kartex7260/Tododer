@@ -18,31 +18,31 @@ class TodoRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun create(
-		fullId: FullId,
+		parentFullId: FullId,
 		title: String,
 		remark: String
-	): Todo {
+	): Long {
 		val todo = Todo(
-			parentId = fullId,
+			parentId = parentFullId,
 			title = title,
 			remark = remark
 		)
 		return localDataSource.insert(todo)
 	}
 
-	override suspend fun updateTitle(todoId: Int, title: String): Todo {
-		return localDataSource.updateTitle(todoId, title)
+	override suspend fun updateTitle(todoId: Long, title: String) {
+		localDataSource.updateTitle(todoId, title)
 	}
 
-	override suspend fun updateRemark(todoId: Int, remark: String): Todo {
-		return localDataSource.updateRemark(todoId, remark)
+	override suspend fun updateRemark(todoId: Long, remark: String) {
+		localDataSource.updateRemark(todoId, remark)
 	}
 
-	override suspend fun changeDone(todoId: Int): Todo {
-		return localDataSource.changeDone(todoId)
+	override suspend fun changeDone(todoId: Long) {
+		localDataSource.changeDone(todoId)
 	}
 
-	override suspend fun delete(todoIds: List<Int>) {
+	override suspend fun delete(todoIds: List<Long>) {
 		localDataSource.delete(todoIds)
 	}
 }

@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AppDataLocalDataSource {
 
-	val currentPlanId: Flow<Int?>
+	val currentPlanId: Flow<Long?>
 
-	suspend fun setCurrentPlan(planId: Int?)
+	suspend fun setCurrentPlan(planId: Long?)
 }

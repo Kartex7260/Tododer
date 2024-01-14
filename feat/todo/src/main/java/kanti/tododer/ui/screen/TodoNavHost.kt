@@ -37,13 +37,14 @@ fun NavGraphBuilder.addTodoNavGraph(
 					"$todoDetailTodoIdParam={$todoDetailTodoIdParam}",
 			arguments = listOf(
 				navArgument(todoDetailTodoIdParam) {
-					type = NavType.IntType
+					type = NavType.LongType
+					defaultValue = 0
 				}
 			)
 		) {
 			TodoDetailScreen(
 				navController = navController,
-				todoId = it.arguments?.getInt(todoDetailTodoIdParam) ?: 0
+				todoId = it.arguments?.getLong(todoDetailTodoIdParam) ?: 0
 			)
 		}
 

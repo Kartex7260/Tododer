@@ -30,15 +30,15 @@ interface TodoDetailViewModel {
 
 	fun changeDoneCurrent(isDone: Boolean)
 
-	fun changeDoneChild(todoId: Int, isDone: Boolean)
+	fun changeDoneChild(todoId: Long, isDone: Boolean)
 
 	fun deleteCurrent()
 
-	fun deleteChild(todoId: Int)
+	fun deleteChild(todoId: Long)
 
 	fun undoDelete()
 
-	fun push(todoId: Int)
+	fun push(todoId: Long)
 
 	fun pop()
 
@@ -101,11 +101,11 @@ interface TodoDetailViewModel {
 			)
 		}
 
-		override fun changeDoneChild(todoId: Int, isDone: Boolean) {
+		override fun changeDoneChild(todoId: Long, isDone: Boolean) {
 			Log.d(logTag, "changeDoneChild(todoId: Int = $todoId, isDone: Boolean = $isDone)")
 		}
 
-		override fun push(todoId: Int) {
+		override fun push(todoId: Long) {
 			Log.d(logTag, "push(todoId: Int = $todoId)")
 		}
 
@@ -126,7 +126,7 @@ interface TodoDetailViewModel {
 			}
 		}
 
-		override fun deleteChild(todoId: Int) {
+		override fun deleteChild(todoId: Long) {
 			Log.d(logTag, "deleteChild(todoId: Int = $todoId)")
 			coroutineScope.launch {
 				_todoDeleted.emit("Child todo")

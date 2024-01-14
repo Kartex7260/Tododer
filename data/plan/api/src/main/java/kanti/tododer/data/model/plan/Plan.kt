@@ -5,7 +5,7 @@ import kanti.tododer.data.model.FullIdType
 
 interface Plan {
 
-	val id: Int
+	val id: Long
 	val title: String
 	val state: PlanState
 	val type: PlanType
@@ -13,14 +13,14 @@ interface Plan {
 }
 
 private data class PlanImpl(
-	override val id: Int,
+	override val id: Long,
 	override val title: String,
 	override val state: PlanState,
 	override val type: PlanType
 ) : Plan
 
 fun Plan(
-	id: Int = 0,
+	id: Long = 0,
 	title: String = "",
 	state: PlanState = PlanState.Normal,
 	type: PlanType = PlanType.DefaultValue,
@@ -37,7 +37,7 @@ fun Plan(
 }
 
 fun Plan.toPlan(
-	id: Int = this.id,
+	id: Long = this.id,
 	title: String = this.title,
 	state: PlanState = this.state,
 	type: PlanType = this.type

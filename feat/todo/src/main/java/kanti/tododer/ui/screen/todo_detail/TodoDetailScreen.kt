@@ -133,7 +133,7 @@ fun TodoDetailTopBar(
 fun TodoDetailScreen(
 	navController: NavController = rememberNavController(),
 	vm: TodoDetailViewModel = TodoDetailViewModel,
-	todoId: Int = 0
+	todoId: Long = 0
 ) {
 	LaunchedEffect(key1 = vm) {
 		vm.push(todoId)

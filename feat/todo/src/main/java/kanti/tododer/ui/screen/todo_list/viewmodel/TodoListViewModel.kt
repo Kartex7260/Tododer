@@ -21,9 +21,9 @@ interface TodoListViewModel {
 
 	val todoDeleted: SharedFlow<String>
 
-	fun changeDone(todoId: Int, isDone: Boolean)
+	fun changeDone(todoId: Long, isDone: Boolean)
 
-	fun deleteTodo(todoId: Int)
+	fun deleteTodo(todoId: Long)
 
 	fun undoDelete()
 
@@ -54,11 +54,11 @@ interface TodoListViewModel {
 		private val _todoDeleted = MutableSharedFlow<String>()
 		override val todoDeleted: SharedFlow<String> = _todoDeleted.asSharedFlow()
 
-		override fun changeDone(todoId: Int, isDone: Boolean) {
+		override fun changeDone(todoId: Long, isDone: Boolean) {
 			Log.d(logTag, "changeDone(todoId: Int = $todoId, isDone: Boolean = $isDone)")
 		}
 
-		override fun deleteTodo(todoId: Int) {
+		override fun deleteTodo(todoId: Long) {
 			Log.d(logTag, "deleteTodo(todoId: Int = $todoId)")
 			coroutineScope.launch {
 				_todoDeleted.emit("Test todo")

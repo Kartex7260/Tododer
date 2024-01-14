@@ -23,7 +23,7 @@ interface PlanListViewModel {
 
 	val plansDeleted: SharedFlow<List<PlanData>>
 
-	fun setCurrentPlan(planId: Int)
+	fun setCurrentPlan(planId: Long)
 
 	fun createPlanEndSetCurrent(title: String)
 
@@ -68,7 +68,7 @@ interface PlanListViewModel {
 		private val _plansDeleted = MutableSharedFlow<List<PlanData>>()
 		override val plansDeleted: SharedFlow<List<PlanData>> = _plansDeleted.asSharedFlow()
 
-		override fun setCurrentPlan(planId: Int) {
+		override fun setCurrentPlan(planId: Long) {
 			Log.d(logTag, "setCurrentPlan(planId: Int = $planId)")
 		}
 

@@ -12,10 +12,10 @@ class AppDataRepositoryImpl @Inject constructor(
 	private val localDataSource: AppDataLocalDataSource
 ) : AppDataRepository {
 
-	private var _currentPlanId: Int? = null
+	private var _currentPlanId: Long? = null
 	private val mutex = Mutex()
 
-	override val currentPlanId: Flow<Int> = localDataSource.currentPlanId
+	override val currentPlanId: Flow<Long> = localDataSource.currentPlanId
 		.onEach {
 			if (it == null) {
 				setCurrentPlan(Const.PlansIds.DEFAULT)
@@ -26,7 +26,7 @@ class AppDataRepositoryImpl @Inject constructor(
 		}
 		.filterNotNull()
 
-	override suspend fun setCurrentPlan(planId: Int) {
+	override suspend fun setCurrentPlan(planId: Long) {
 		localDataSource.setCurrentPlan(planId)
 	}
 
@@ -34,7 +34,7 @@ class AppDataRepositoryImpl @Inject constructor(
 		localDataSource.setCurrentPlan(null)
 	}
 
-	override suspend fun deleteIfCurrent(planId: Int) {
+	override suspend fun deleteIfCurrent(planId: Long) {
 		return mutex.withLock {
 			_currentPlanId?.also {
 				if (it == planId) {

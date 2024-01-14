@@ -14,15 +14,15 @@ interface PlanRepository {
 
 	suspend fun getStandardPlans(): List<Plan>
 
-	suspend fun getPlanOrDefault(planId: Int): Plan
+	suspend fun getPlanOrDefault(planId: Long): Plan
 
-	suspend fun getPlan(planId: Int): Plan?
+	suspend fun getPlan(planId: Long): Plan?
 
-	suspend fun create(title: String): Plan
+	suspend fun create(title: String): Long
 
-	suspend fun updateTitle(planId: Int, title: String): Plan
+	suspend fun updateTitle(planId: Long, title: String)
 
-	suspend fun delete(planIds: List<Int>): List<Plan>
+	suspend fun delete(planIds: List<Long>): List<Plan>
 
 	suspend fun undoDelete()
 

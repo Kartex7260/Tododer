@@ -2,7 +2,7 @@ package kanti.tododer.data.datastore
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kanti.todoer.data.appdata.AppDataLocalDataSource
@@ -19,14 +19,14 @@ class AppDataStoreDataSource @Inject constructor(
 
 	private val _currentPlanIdKey = "currentPlanId"
 
-	private val currentPlanIdKey = intPreferencesKey(name = _currentPlanIdKey)
+	private val currentPlanIdKey = longPreferencesKey(name = _currentPlanIdKey)
 
-	override val currentPlanId: Flow<Int?>
+	override val currentPlanId: Flow<Long?>
 		get() = appContext.dataStore.data.map {  preferences ->
 			preferences[currentPlanIdKey]
 		}
 
-	override suspend fun setCurrentPlan(planId: Int?) {
+	override suspend fun setCurrentPlan(planId: Long?) {
 		appContext.dataStore.edit { preferences ->
 			if (planId != null) {
 				preferences[currentPlanIdKey] = planId

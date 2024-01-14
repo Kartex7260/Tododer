@@ -4,7 +4,7 @@ import androidx.compose.runtime.Stable
 
 @Stable
 data class PlanData(
-	val id: Int = 0,
+	val id: Long = 0,
 	val title: String = "",
 	val progress: Float = 0f
 )

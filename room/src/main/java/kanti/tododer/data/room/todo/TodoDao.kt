@@ -28,21 +28,21 @@ interface TodoDao {
 
 	@Query("UPDATE todos SET title = :title WHERE rowId IN" +
 			"(SELECT rowId FROM todos WHERE id = :todoId LIMIT 1)")
-	suspend fun updateTitle(todoId: Int, title: String)
+	suspend fun updateTitle(todoId: Long, title: String)
 
 	@Query("UPDATE todos SET remark = :remark WHERE rowId IN" +
 			"(SELECT rowId FROM todos WHERE id = :todoId LIMIT 1)")
-	suspend fun updateRemark(todoId: Int, remark: String)
+	suspend fun updateRemark(todoId: Long, remark: String)
 
 	@Query("UPDATE todos SET done = NOT done WHERE rowId IN " +
 			"(SELECT rowId FROM todos WHERE id = :todoId LIMIT 1)")
-	suspend fun changeDone(todoId: Int)
+	suspend fun changeDone(todoId: Long)
 
 	@Query("SELECT * FROM todos WHERE id = :id LIMIT 1")
-	suspend fun getTodo(id: Int): TodoEntity?
+	suspend fun getTodo(id: Long): TodoEntity?
 
 	@Query("DELETE FROM todos WHERE id IN(:todoIds)")
-	suspend fun delete(todoIds: List<Int>)
+	suspend fun delete(todoIds: List<Long>)
 
 	@Query("DELETE FROM todos")
 	suspend fun deleteAll()

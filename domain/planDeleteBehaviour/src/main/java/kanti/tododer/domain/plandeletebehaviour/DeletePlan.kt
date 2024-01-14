@@ -13,7 +13,7 @@ class DeletePlan @Inject constructor(
 	private val planRepository: PlanRepository
 ) {
 
-	suspend operator fun invoke(planIds: List<Int>) {
+	suspend operator fun invoke(planIds: List<Long>) {
 		coroutineScope {
 			launch {
 				planRepository.delete(planIds)
