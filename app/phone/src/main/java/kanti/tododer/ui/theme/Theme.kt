@@ -44,13 +44,17 @@ fun TododerTheme(
 	dynamicColor: Boolean = true,
 	content: @Composable () -> Unit
 ) {
+//	val systemUiController = rememberSystemUiController()
+//	systemUiController.isSystemBarsVisible = false
 	val colorScheme = when {
 		dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
 			val context = LocalContext.current
 			if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
 		}
 
-		darkTheme -> DarkColorScheme
+		darkTheme -> {
+			DarkColorScheme
+		}
 		else -> LightColorScheme
 	}
 	val view = LocalView.current
