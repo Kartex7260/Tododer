@@ -38,8 +38,8 @@ class TodoRepositoryImpl @Inject constructor(
 		localDataSource.updateRemark(todoId, remark)
 	}
 
-	override suspend fun changeDone(todoId: Long) {
-		localDataSource.changeDone(todoId)
+	override suspend fun changeDone(todoId: Long, isDone: Boolean) {
+		localDataSource.changeDone(todoId, isDone)
 	}
 
 	override suspend fun delete(todoIds: List<Long>) {

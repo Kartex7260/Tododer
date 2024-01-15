@@ -41,13 +41,13 @@ class TodoListViewModelImpl @Inject constructor(
 		toKey = { id },
 		onDelete = { todos ->
 			todoRepository.delete(todos.map { it.id })
-			_updateCurrentPlan.value = Any()
+			updateUiState.value = Any()
 		}
 	)
 
-	private val _updateCurrentPlan = MutableStateFlow(Any())
+	private val updateUiState = MutableStateFlow(Any())
 	override val currentPlan: StateFlow<TodoListUiState> = appDataRepository.currentPlanId
-		.combine(_updateCurrentPlan) { planId, _ -> planId }
+		.combine(updateUiState) { planId, _ -> planId }
 		.map { currentPlanId ->
 			var plan = planRepository.getPlanOrDefault(currentPlanId)
 			plan = when (plan.type) {
@@ -103,7 +103,7 @@ class TodoListViewModelImpl @Inject constructor(
 				is TodoListUiState.Success -> {
 					val todoId = todoRepository.create(curPlan.plan.toFullId(), "", "")
 					_newTodoCreated.emit(todoId)
-					_updateCurrentPlan.value = Any()
+					updateUiState.value = Any()
 				}
 				else -> {}
 			}
@@ -111,6 +111,10 @@ class TodoListViewModelImpl @Inject constructor(
 	}
 
 	override fun changeDone(todoId: Long, isDone: Boolean) {
+		viewModelScope.launch {
+			todoRepository.changeDone(todoId, isDone)
+			updateUiState.value = Any()
+		}
 	}
 
 	override fun deleteTodos(todos: List<TodoData>) {

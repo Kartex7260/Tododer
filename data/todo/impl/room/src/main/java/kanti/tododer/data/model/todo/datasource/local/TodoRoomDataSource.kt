@@ -36,8 +36,8 @@ class TodoRoomDataSource @Inject constructor(
 		todoDao.updateRemark(todoId, remark)
 	}
 
-	override suspend fun changeDone(todoId: Long) {
-		todoDao.changeDone(todoId)
+	override suspend fun changeDone(todoId: Long, isDone: Boolean) {
+		todoDao.changeDone(todoId, isDone)
 	}
 
 	override suspend fun delete(todoIds: List<Long>) {

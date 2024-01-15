@@ -34,9 +34,9 @@ interface TodoDao {
 			"(SELECT rowId FROM todos WHERE id = :todoId LIMIT 1)")
 	suspend fun updateRemark(todoId: Long, remark: String)
 
-	@Query("UPDATE todos SET done = NOT done WHERE rowId IN " +
+	@Query("UPDATE todos SET done = :isDone WHERE rowId IN " +
 			"(SELECT rowId FROM todos WHERE id = :todoId LIMIT 1)")
-	suspend fun changeDone(todoId: Long)
+	suspend fun changeDone(todoId: Long, isDone: Boolean)
 
 	@Query("SELECT * FROM todos WHERE id = :id LIMIT 1")
 	suspend fun getTodo(id: Long): TodoEntity?

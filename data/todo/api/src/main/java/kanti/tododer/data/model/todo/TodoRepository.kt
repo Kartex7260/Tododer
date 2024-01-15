@@ -18,7 +18,7 @@ interface TodoRepository {
 
 	suspend fun updateRemark(todoId: Long, remark: String)
 
-	suspend fun changeDone(todoId: Long)
+	suspend fun changeDone(todoId: Long, isDone: Boolean)
 
 	suspend fun delete(todoIds: List<Long>)
 }
