@@ -45,6 +45,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
@@ -55,6 +58,7 @@ import kanti.tododer.ui.components.todo.TodoEditor
 import kanti.tododer.ui.components.todo.TodoEditorControllers
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.screen.todo_detail.viewmodel.TodoDetailViewModel
+import kanti.tododer.ui.screen.todo_detail.viewmodel.TodoDetailViewModelImpl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,10 +136,10 @@ fun TodoDetailTopBar(
 @Composable
 fun TodoDetailScreen(
 	navController: NavController = rememberNavController(),
-	vm: TodoDetailViewModel = TodoDetailViewModel,
+	vm: TodoDetailViewModel = hiltViewModel<TodoDetailViewModelImpl>(),
 	todoId: Long = 0
 ) {
-	LaunchedEffect(key1 = vm) {
+	LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
 		vm.push(todoId)
 	}
 
@@ -310,5 +314,7 @@ fun TodoDetailScreen(
 @Preview
 @Composable
 private fun PreviewTodoDetailScreen() {
-	TodoDetailScreen()
+	TodoDetailScreen(
+		vm = TodoDetailViewModel
+	)
 }

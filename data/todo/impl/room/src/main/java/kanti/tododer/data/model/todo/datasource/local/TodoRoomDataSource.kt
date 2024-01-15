@@ -13,6 +13,10 @@ class TodoRoomDataSource @Inject constructor(
 	private val sl: StateLanguage
 ) : TodoLocalDataSource {
 
+	override suspend fun getTodo(todoId: Long): Todo? {
+		return todoDao.getTodo(todoId)?.toTodo(sl)
+	}
+
 	override suspend fun getAllChildren(fullId: FullId): List<Todo> {
 		return todoDao.getAllChildren(fullId.toString()).map { it.toTodo(sl) }
 	}

@@ -54,7 +54,7 @@ interface TodoDetailViewModel {
 		private val _emptyStack = MutableSharedFlow<Unit>()
 		override val emptyStack: SharedFlow<Unit> = _emptyStack.asSharedFlow()
 
-		private val _todoDetail = MutableStateFlow(TodoData(id = 1, title = "Parent todo", remark = "Test remark"))
+		private val _todoDetail = MutableStateFlow(TodoData())
 		override val todoDetail: StateFlow<TodoData> = _todoDetail.asStateFlow()
 
 		private val _todoDeleted = MutableSharedFlow<String>()
@@ -82,23 +82,17 @@ interface TodoDetailViewModel {
 
 		override fun changeTitle(title: String) {
 			Log.d(logTag, "changeTitle(title: String = $title)")
-			_todoDetail.value = _todoDetail.value.copy(
-				title = title
-			)
+			_todoDetail.value = _todoDetail.value.copy()
 		}
 
 		override fun changeRemark(remark: String) {
 			Log.d(logTag, "changeRemark(remark: String = $remark)")
-			_todoDetail.value = _todoDetail.value.copy(
-				remark = remark
-			)
+			_todoDetail.value = _todoDetail.value.copy()
 		}
 
 		override fun changeDoneCurrent(isDone: Boolean) {
 			Log.d(logTag, "changeDoneCurrent(isDone: Boolean = $isDone)")
-			_todoDetail.value = _todoDetail.value.copy(
-				isDone = isDone
-			)
+			_todoDetail.value = _todoDetail.value.copy()
 		}
 
 		override fun changeDoneChild(todoId: Long, isDone: Boolean) {

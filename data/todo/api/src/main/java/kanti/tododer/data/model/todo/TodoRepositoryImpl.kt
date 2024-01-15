@@ -8,6 +8,10 @@ class TodoRepositoryImpl @Inject constructor(
 	private val localDataSource: TodoLocalDataSource
 ) : TodoRepository {
 
+	override suspend fun getTodo(todoId: Long): Todo? {
+		return localDataSource.getTodo(todoId)
+	}
+
 	override suspend fun getChildren(fullId: FullId): List<Todo> {
 		return localDataSource.getChildren(fullId, TodoState.Normal)
 	}

@@ -4,6 +4,8 @@ import kanti.tododer.data.model.FullId
 
 interface TodoRepository {
 
+	suspend fun getTodo(todoId: Long): Todo?
+
 	suspend fun getChildren(fullId: FullId): List<Todo>
 
 	suspend fun deleteChildren(fullId: FullId)

@@ -6,6 +6,8 @@ import kanti.tododer.data.model.todo.TodoState
 
 interface TodoLocalDataSource {
 
+	suspend fun getTodo(todoId: Long): Todo?
+
 	suspend fun getAllChildren(fullId: FullId): List<Todo>
 
 	suspend fun getChildren(fullId: FullId, state: TodoState): List<Todo>
