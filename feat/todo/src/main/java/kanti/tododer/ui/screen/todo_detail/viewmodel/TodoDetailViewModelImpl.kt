@@ -44,7 +44,9 @@ class TodoDetailViewModelImpl @Inject constructor(
 	private val _emptyStack = MutableSharedFlow<Unit>()
 	override val emptyStack: SharedFlow<Unit> = _emptyStack.asSharedFlow()
 
+	private val _updateTodoDetail = MutableStateFlow(Any())
 	override val todoDetail: StateFlow<TodoData> = _currentTodo
+		.combine(_updateTodoDetail) { currentTodo, _ -> currentTodo }
 		.map { todoId ->
 			val todo = todoRepository.getTodo(todoId)
 			todo?.toTodoData()
@@ -101,6 +103,12 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun changeDoneCurrent(isDone: Boolean) {
+		viewModelScope.launch {
+			if (_currentTodo.value == EMPTY_TODO_ID)
+				return@launch
+			todoRepository.changeDone(_currentTodo.value, isDone)
+			_updateTodoDetail.value = Any()
+		}
 	}
 
 	override fun changeDoneChild(todoId: Long, isDone: Boolean) {
@@ -136,7 +144,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 
 	override fun push(todoId: Long) {
 		if (_currentTodo.value != EMPTY_TODO_ID)
-			stack.push(todoDetail.value.id)
+			stack.push(_currentTodo.value)
 		viewModelScope.launch {
 			_currentTodo.emit(todoId)
 		}
