@@ -20,7 +20,7 @@ interface TodoDetailViewModel {
 	val todoDetail: StateFlow<TodoData>
 	val todoChildren: StateFlow<TodosData>
 
-	val onDeleted: SharedFlow<String>
+	val todosDeleted: SharedFlow<List<TodoData>>
 
 	fun createNewTodo()
 
@@ -34,9 +34,11 @@ interface TodoDetailViewModel {
 
 	fun deleteCurrent()
 
-	fun deleteChild(todoId: Long)
+	fun deleteChildren(todos: List<TodoData>)
 
-	fun undoDelete()
+	fun cancelDelete()
+
+	fun rejectCancelDelete()
 
 	fun push(todoId: Long)
 
@@ -57,8 +59,8 @@ interface TodoDetailViewModel {
 		private val _todoDetail = MutableStateFlow(TodoData())
 		override val todoDetail: StateFlow<TodoData> = _todoDetail.asStateFlow()
 
-		private val _todoDeleted = MutableSharedFlow<String>()
-		override val onDeleted: SharedFlow<String> = _todoDeleted.asSharedFlow()
+		private val _todoDeleted = MutableSharedFlow<List<TodoData>>()
+		override val todosDeleted: SharedFlow<List<TodoData>> = _todoDeleted.asSharedFlow()
 		
 		private val _todoChildren = MutableStateFlow(TodosData(listOf(
 			TodoData(id = 2, title = "Test 1"),
@@ -116,19 +118,23 @@ interface TodoDetailViewModel {
 		override fun deleteCurrent() {
 			Log.d(logTag, "deleteCurrent()")
 			coroutineScope.launch {
-				_todoDeleted.emit("Current todo")
+				_todoDeleted.emit(listOf(TodoData(title = "Current todo")))
 			}
 		}
 
-		override fun deleteChild(todoId: Long) {
-			Log.d(logTag, "deleteChild(todoId: Int = $todoId)")
+		override fun deleteChildren(todos: List<TodoData>) {
+			Log.d(logTag, "deleteChild(todoId: Int = $todos)")
 			coroutineScope.launch {
-				_todoDeleted.emit("Child todo")
+				_todoDeleted.emit(listOf(TodoData(title = "Child todo")))
 			}
 		}
 
-		override fun undoDelete() {
+		override fun cancelDelete() {
 			Log.d(logTag, "undoDelete()")
+		}
+
+		override fun rejectCancelDelete() {
+			Log.d(logTag, "rejectCancelDelete()")
 		}
 	}
 }

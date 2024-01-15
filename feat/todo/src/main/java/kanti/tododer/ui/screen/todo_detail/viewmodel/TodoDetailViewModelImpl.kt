@@ -9,6 +9,7 @@ import kanti.tododer.data.model.todo.TodoRepository
 import kanti.tododer.data.model.todo.toTodoData
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodosData
+import kanti.tododer.ui.services.deleter.DeleteCancelManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -32,6 +33,14 @@ class TodoDetailViewModelImpl @Inject constructor(
 	private val stack: Stack<Long> = Stack()
 	private val _currentTodo = MutableStateFlow(EMPTY_TODO_ID)
 
+	private val deleteCancelManager = DeleteCancelManager<TodoData>(
+		toKey = { id },
+		onDelete = { todos ->
+			todoRepository.delete(todos.map { it.id })
+			_updateTodoChildren.value = Any()
+		}
+	)
+
 	private val _emptyStack = MutableSharedFlow<Unit>()
 	override val emptyStack: SharedFlow<Unit> = _emptyStack.asSharedFlow()
 
@@ -52,7 +61,14 @@ class TodoDetailViewModelImpl @Inject constructor(
 		.combine(_updateTodoChildren) { todo, _ -> todo }
 		.map { todoData ->
 			val fullId = FullId(todoData.id, FullIdType.Todo)
-			val children = todoRepository.getChildren(fullId)
+			todoRepository.getChildren(fullId)
+		}
+		.combine(deleteCancelManager.deletedValues) { children, deletedChildren ->
+			children.filter { todo ->
+				!deletedChildren.containsKey(todo.id)
+			}
+		}
+		.map { children ->
 			TodosData(
 				todos = children.map { it.toTodoData() }
 			)
@@ -63,8 +79,8 @@ class TodoDetailViewModelImpl @Inject constructor(
 			initialValue = TodosData()
 		)
 
-	override val onDeleted: SharedFlow<String>
-		get() = MutableSharedFlow()
+	private val _todosDeleted = MutableSharedFlow<List<TodoData>>()
+	override val todosDeleted: SharedFlow<List<TodoData>> = _todosDeleted.asSharedFlow()
 
 	override fun createNewTodo() {
 		viewModelScope.launch {
@@ -93,10 +109,25 @@ class TodoDetailViewModelImpl @Inject constructor(
 	override fun deleteCurrent() {
 	}
 
-	override fun deleteChild(todoId: Long) {
+	override fun deleteChildren(todos: List<TodoData>) {
+		viewModelScope.launch {
+			if (todos.isEmpty())
+				return@launch
+			deleteCancelManager.delete(todos)
+			_todosDeleted.emit(todos)
+		}
 	}
 
-	override fun undoDelete() {
+	override fun cancelDelete() {
+		viewModelScope.launch {
+			deleteCancelManager.cancelDelete()
+		}
+	}
+
+	override fun rejectCancelDelete() {
+		viewModelScope.launch {
+			deleteCancelManager.rejectCancelChance()
+		}
 	}
 
 	override fun push(todoId: Long) {

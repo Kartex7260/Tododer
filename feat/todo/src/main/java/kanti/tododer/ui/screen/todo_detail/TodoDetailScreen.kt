@@ -59,6 +59,7 @@ import kanti.tododer.ui.components.todo.TodoEditorControllers
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.screen.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.screen.todo_detail.viewmodel.TodoDetailViewModelImpl
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -150,22 +151,32 @@ fun TodoDetailScreen(
 	}
 
 	val snackBarHost = remember { SnackbarHostState() }
-	val deletedFragment1 = stringResource(id = R.string.deleted_solo_1)
-	val deletedFragment2 = stringResource(id = R.string.deleted_solo_2_todo)
+	val soloDeletedFragment1 = stringResource(id = R.string.deleted_solo_1)
+	val soloDeletedFragment2 = stringResource(id = R.string.deleted_solo_2_todo)
+	val multiDeletedFragment1 = stringResource(id = R.string.deleted_multi_1)
+	val multiDeletedFragment2 = stringResource(id = R.string.deleted_multi_2_todo)
 	val cancelStringRes = stringResource(id = R.string.cancel)
 	LaunchedEffect(key1 = vm) {
-		vm.onDeleted.collect { todoTitle ->
+		vm.todosDeleted.collectLatest { todos ->
+			val message = if (todos.size == 1) {
+				val todo = todos[0]
+				"$soloDeletedFragment1 \"${todo.title}\" $soloDeletedFragment2"
+			} else {
+				"$multiDeletedFragment1 ${todos.size} $multiDeletedFragment2"
+			}
 			val result = snackBarHost.showSnackbar(
-				message = "$deletedFragment1 \"$todoTitle\" $deletedFragment2",
+				message = message,
 				withDismissAction = true,
 				actionLabel = cancelStringRes,
 				duration = SnackbarDuration.Short
 			)
 			when (result) {
 				SnackbarResult.ActionPerformed -> {
-					vm.undoDelete()
+					vm.cancelDelete()
 				}
-				else -> {}
+				else -> {
+					vm.rejectCancelDelete()
+				}
 			}
 		}
 	}
@@ -261,7 +272,7 @@ fun TodoDetailScreen(
 			items(
 				items = todoChildren.todos,
 				key = { it.id }
-			) { todoUiState ->
+			) { todoData ->
 				TodoCard(
 					modifier = Modifier
 						.padding(
@@ -269,12 +280,12 @@ fun TodoDetailScreen(
 							start = 16.dp,
 							end = 16.dp
 						),
-					todoData = todoUiState,
+					todoData = todoData,
 					onDoneChange = { isDone ->
-						vm.changeDoneChild(todoUiState.id, isDone)
+						vm.changeDoneChild(todoData.id, isDone)
 					},
 					onClick = {
-						vm.push(todoUiState.id)
+						vm.push(todoData.id)
 					}
 				) {
 					var expanded by remember {
@@ -291,7 +302,7 @@ fun TodoDetailScreen(
 					NormalTodoDropdownMenu(
 						expanded = expanded,
 						onDismissRequest = { expanded = false },
-						onDelete = { vm.deleteChild(todoUiState.id) }
+						onDelete = { vm.deleteChildren(listOf(todoData)) }
 					)
 				}
 			}

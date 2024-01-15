@@ -44,20 +44,7 @@
         <State />
       </entry>
       <entry key="app.phone">
-        <State>
-          <runningDeviceTargetSelectedWithDropDown>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="SERIAL_NUMBER" />
-                  <value value="2B301FDH3007J4" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-01-15T12:27:11.759708500Z" />
-        </State>
+        <State />
       </entry>
     </value>
   </component>
