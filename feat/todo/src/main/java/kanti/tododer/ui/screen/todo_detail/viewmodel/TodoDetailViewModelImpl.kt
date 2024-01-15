@@ -3,12 +3,13 @@ package kanti.tododer.ui.screen.todo_detail.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kanti.tododer.data.model.FullId
+import kanti.tododer.data.model.FullIdType
 import kanti.tododer.data.model.todo.TodoRepository
 import kanti.tododer.data.model.todo.toTodoData
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodosData
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -43,8 +44,21 @@ class TodoDetailViewModelImpl @Inject constructor(
 			started = SharingStarted.Lazily,
 			initialValue = TodoData()
 		)
-	override val todoChildren: StateFlow<TodosData>
-		get() = MutableStateFlow(TodosData())
+
+	override val todoChildren: StateFlow<TodosData> = todoDetail
+		.map { todoData ->
+			val fullId = FullId(todoData.id, FullIdType.Todo)
+			val children = todoRepository.getChildren(fullId)
+			TodosData(
+				todos = children.map { it.toTodoData() }
+			)
+		}
+		.stateIn(
+			scope = viewModelScope,
+			started = SharingStarted.Lazily,
+			initialValue = TodosData()
+		)
+
 	override val onDeleted: SharedFlow<String>
 		get() = MutableSharedFlow()
 
