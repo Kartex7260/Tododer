@@ -109,7 +109,7 @@ fun PlanListScreen(
 						vm.cancelDelete()
 					}
 					SnackbarResult.Dismissed -> {
-						vm.cancelChanceReject()
+						vm.rejectCancelChance()
 					}
 				}
 			}
@@ -118,7 +118,7 @@ fun PlanListScreen(
 
 	LifecycleStartEffect {
 		onStopOrDispose {
-			vm.cancelChanceReject()
+			vm.rejectCancelChance()
 		}
 	}
 

@@ -31,7 +31,7 @@ interface PlanListViewModel {
 
 	fun cancelDelete()
 
-	fun cancelChanceReject()
+	fun rejectCancelChance()
 
 	companion object : PlanListViewModel {
 
@@ -89,7 +89,7 @@ interface PlanListViewModel {
 		override fun cancelDelete() {
 		}
 
-		override fun cancelChanceReject() {
+		override fun rejectCancelChance() {
 		}
 	}
 }
