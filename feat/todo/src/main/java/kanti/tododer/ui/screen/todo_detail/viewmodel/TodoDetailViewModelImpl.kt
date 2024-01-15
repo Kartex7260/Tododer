@@ -104,6 +104,10 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun changeDoneChild(todoId: Long, isDone: Boolean) {
+		viewModelScope.launch {
+			todoRepository.changeDone(todoId, isDone)
+			_updateTodoChildren.value = Any()
+		}
 	}
 
 	override fun deleteCurrent() {
