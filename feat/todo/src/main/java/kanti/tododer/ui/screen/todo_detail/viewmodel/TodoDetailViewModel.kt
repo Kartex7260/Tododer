@@ -20,7 +20,8 @@ interface TodoDetailViewModel {
 	val todoDetail: StateFlow<TodoData>
 	val todoChildren: StateFlow<TodosData>
 
-	val todosDeleted: SharedFlow<List<TodoData>>
+	val childrenTodosDeleted: SharedFlow<List<TodoData>>
+	val currentTodoDeleted: SharedFlow<TodoData>
 
 	fun createNewTodo()
 
@@ -34,9 +35,11 @@ interface TodoDetailViewModel {
 
 	fun deleteCurrent()
 
+	fun cancelDeleteCurrent()
+
 	fun deleteChildren(todos: List<TodoData>)
 
-	fun cancelDelete()
+	fun cancelDeleteChildren()
 
 	fun rejectCancelDelete()
 
@@ -59,8 +62,11 @@ interface TodoDetailViewModel {
 		private val _todoDetail = MutableStateFlow(TodoData())
 		override val todoDetail: StateFlow<TodoData> = _todoDetail.asStateFlow()
 
-		private val _todoDeleted = MutableSharedFlow<List<TodoData>>()
-		override val todosDeleted: SharedFlow<List<TodoData>> = _todoDeleted.asSharedFlow()
+		private val _childrenTodoDeleted = MutableSharedFlow<List<TodoData>>()
+		override val childrenTodosDeleted: SharedFlow<List<TodoData>> = _childrenTodoDeleted.asSharedFlow()
+
+		private val _currentTodoDeleted = MutableSharedFlow<TodoData>()
+		override val currentTodoDeleted: SharedFlow<TodoData> = _currentTodoDeleted.asSharedFlow()
 		
 		private val _todoChildren = MutableStateFlow(TodosData(listOf(
 			TodoData(id = 2, title = "Test 1"),
@@ -118,18 +124,22 @@ interface TodoDetailViewModel {
 		override fun deleteCurrent() {
 			Log.d(logTag, "deleteCurrent()")
 			coroutineScope.launch {
-				_todoDeleted.emit(listOf(TodoData(title = "Current todo")))
+				_childrenTodoDeleted.emit(listOf(TodoData(title = "Current todo")))
 			}
+		}
+
+		override fun cancelDeleteCurrent() {
+			Log.d(logTag, "cancelDeleteCurrent()")
 		}
 
 		override fun deleteChildren(todos: List<TodoData>) {
 			Log.d(logTag, "deleteChild(todoId: Int = $todos)")
 			coroutineScope.launch {
-				_todoDeleted.emit(listOf(TodoData(title = "Child todo")))
+				_childrenTodoDeleted.emit(listOf(TodoData(title = "Child todo")))
 			}
 		}
 
-		override fun cancelDelete() {
+		override fun cancelDeleteChildren() {
 			Log.d(logTag, "undoDelete()")
 		}
 

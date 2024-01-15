@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
@@ -157,7 +158,7 @@ fun TodoDetailScreen(
 	val multiDeletedFragment2 = stringResource(id = R.string.deleted_multi_2_todo)
 	val cancelStringRes = stringResource(id = R.string.cancel)
 	LaunchedEffect(key1 = vm) {
-		vm.todosDeleted.collectLatest { todos ->
+		vm.childrenTodosDeleted.collectLatest { todos ->
 			val message = if (todos.size == 1) {
 				val todo = todos[0]
 				"$soloDeletedFragment1 \"${todo.title}\" $soloDeletedFragment2"
@@ -172,12 +173,38 @@ fun TodoDetailScreen(
 			)
 			when (result) {
 				SnackbarResult.ActionPerformed -> {
-					vm.cancelDelete()
+					vm.cancelDeleteChildren()
 				}
 				else -> {
 					vm.rejectCancelDelete()
 				}
 			}
+		}
+	}
+
+	LaunchedEffect(key1 = vm) {
+		vm.currentTodoDeleted.collectLatest { todo ->
+			val message = "$soloDeletedFragment1 \"${todo.title}\" $soloDeletedFragment2"
+			val result = snackBarHost.showSnackbar(
+				message = message,
+				withDismissAction = true,
+				actionLabel = cancelStringRes,
+				duration = SnackbarDuration.Short
+			)
+			when (result) {
+				SnackbarResult.ActionPerformed -> {
+					vm.cancelDeleteCurrent()
+				}
+				else -> {
+					vm.rejectCancelDelete()
+				}
+			}
+		}
+	}
+
+	LifecycleStartEffect(key1 = vm) {
+		onStopOrDispose {
+			vm.rejectCancelDelete()
 		}
 	}
 
