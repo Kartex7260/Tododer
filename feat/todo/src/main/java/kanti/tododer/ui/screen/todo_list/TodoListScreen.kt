@@ -31,6 +31,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.data.model.plan.Plan
@@ -42,6 +43,7 @@ import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListUiState
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModelImpl
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,23 +105,39 @@ fun TodoListScreen(
 		}
 	}
 
-	val deletedFragment1 = stringResource(id = R.string.deleted_solo_1)
-	val deletedFragment2 = stringResource(id = R.string.deleted_solo_2_todo)
+	val soloDeletedFragment1 = stringResource(id = R.string.deleted_solo_1)
+	val soloDeletedFragment2 = stringResource(id = R.string.deleted_solo_2_todo)
+	val multiDeletedFragment1 = stringResource(id = R.string.deleted_multi_1)
+	val multiDeletedFragment2 = stringResource(id = R.string.deleted_multi_2_todo)
 	val cancelStringRes = stringResource(id = R.string.cancel)
 	LaunchedEffect(key1 = vm) {
-		vm.todoDeleted.collect { todoTitle ->
+		vm.todosDeleted.collectLatest { deletedTodos ->
+			val message = if (deletedTodos.size == 1) {
+				val deletedTodo = deletedTodos[0]
+				"$soloDeletedFragment1 \"${deletedTodo.title}\" $soloDeletedFragment2"
+			} else {
+				"$multiDeletedFragment1 ${deletedTodos.size} $multiDeletedFragment2"
+			}
 			val result = snackbarHostState.showSnackbar(
-				message = "$deletedFragment1 \"$todoTitle\" $deletedFragment2",
+				message = message,
 				actionLabel = cancelStringRes,
 				withDismissAction = true,
 				duration = SnackbarDuration.Short
 			)
 			when (result) {
 				SnackbarResult.ActionPerformed -> {
-					vm.undoDelete()
+					vm.cancelDelete()
 				}
-				else -> {}
+				else -> {
+					vm.rejectCancelChance()
+				}
 			}
+		}
+	}
+
+	LifecycleStartEffect(key1 = vm) {
+		onStopOrDispose {
+			vm.rejectCancelChance()
 		}
 	}
 
@@ -180,7 +198,7 @@ fun TodoListScreen(
 			onDoneChanged = { isDone, todo ->
 				vm.changeDone(todo.id, isDone)
 			},
-			actions = { todoUiState ->
+			actions = { todoData ->
 				var showDropdownMenu by remember {
 					mutableStateOf(false)
 				}
@@ -194,7 +212,7 @@ fun TodoListScreen(
 					expanded = showDropdownMenu,
 					onDismissRequest = { showDropdownMenu = false },
 					onDelete = {
-						vm.deleteTodo(todoUiState.id)
+						vm.deleteTodos(listOf(todoData))
 					}
 				)
 			}

@@ -121,7 +121,7 @@ class PlanListViewModelImpl @Inject constructor(
 
 	override fun cancelChanceReject() {
 		viewModelScope.launch {
-			deleteCancelManager.cancelChanceReject()
+			deleteCancelManager.rejectCancelChance()
 		}
 	}
 }

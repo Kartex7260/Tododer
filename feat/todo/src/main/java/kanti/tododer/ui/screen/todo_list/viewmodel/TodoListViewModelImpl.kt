@@ -14,6 +14,7 @@ import kanti.tododer.domain.getplanchildren.GetPlanChildren
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodosData
+import kanti.tododer.ui.services.deleter.DeleteCancelManager
 import kanti.todoer.data.appdata.AppDataRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +37,14 @@ class TodoListViewModelImpl @Inject constructor(
 	@ApplicationContext context: Context
 ) : ViewModel(), TodoListViewModel {
 
+	private val deleteCancelManager = DeleteCancelManager<TodoData>(
+		toKey = { id },
+		onDelete = { todos ->
+			todoRepository.delete(todos.map { it.id })
+			_updateCurrentPlan.value = Any()
+		}
+	)
+
 	private val _updateCurrentPlan = MutableStateFlow(Any())
 	override val currentPlan: StateFlow<TodoListUiState> = appDataRepository.currentPlanId
 		.combine(_updateCurrentPlan) { planId, _ -> planId }
@@ -46,13 +55,26 @@ class TodoListViewModelImpl @Inject constructor(
 				PlanType.Default -> plan.toPlan(title = context.getString(R.string.plan_default))
 				else -> plan
 			}
-
 			val children = getPlanChildren(plan.id)
 
+			Pair(
+				first = plan,
+				second = children
+			)
+		}
+		.combine(deleteCancelManager.deletedValues) { planWithChildren, deletedChildren ->
+			Pair(
+				first = planWithChildren.first,
+				second = planWithChildren.second.filter { todo ->
+					!deletedChildren.containsKey(todo.id)
+				}
+			)
+		}
+		.map { planWithChildren ->
 			TodoListUiState.Success(
-				plan = plan,
+				plan = planWithChildren.first,
 				children = TodosData(
-					todos = children.map { todo ->
+					todos = planWithChildren.second.map { todo ->
 						TodoData(
 							id = todo.id,
 							title = todo.title,
@@ -69,8 +91,8 @@ class TodoListViewModelImpl @Inject constructor(
 			initialValue = TodoListUiState.Empty
 		)
 
-	override val todoDeleted: SharedFlow<String>
-		get() = MutableSharedFlow()
+	private val _todosDeleted = MutableSharedFlow<List<TodoData>>()
+	override val todosDeleted: SharedFlow<List<TodoData>> = _todosDeleted.asSharedFlow()
 
 	private val _newTodoCreated = MutableSharedFlow<Long>()
 	override val newTodoCreated: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
@@ -91,9 +113,24 @@ class TodoListViewModelImpl @Inject constructor(
 	override fun changeDone(todoId: Long, isDone: Boolean) {
 	}
 
-	override fun deleteTodo(todoId: Long) {
+	override fun deleteTodos(todos: List<TodoData>) {
+		if (todos.isEmpty())
+			return
+		viewModelScope.launch {
+			deleteCancelManager.delete(todos)
+			_todosDeleted.emit(todos)
+		}
 	}
 
-	override fun undoDelete() {
+	override fun cancelDelete() {
+		viewModelScope.launch {
+			deleteCancelManager.cancelDelete()
+		}
+	}
+
+	override fun rejectCancelChance() {
+		viewModelScope.launch {
+			deleteCancelManager.rejectCancelChance()
+		}
 	}
 }

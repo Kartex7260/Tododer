@@ -20,7 +20,7 @@ class DeleteCancelManager<Value>(
 	val onDeleted = _onDeleted.asSharedFlow()
 
 	suspend fun delete(values: List<Value>) {
-		cancelChanceReject()
+		rejectCancelChance()
 
 		val deletedMap = HashMap<Long, Value>()
 		for (value in values) {
@@ -35,7 +35,7 @@ class DeleteCancelManager<Value>(
 		_deleted.emit(HashMap())
 	}
 
-	suspend fun cancelChanceReject() {
+	suspend fun rejectCancelChance() {
 		if (_deleted.value.isEmpty())
 			return
 		onDelete(_deleted.value.values.toList())
