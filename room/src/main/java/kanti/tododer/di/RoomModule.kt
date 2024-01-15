@@ -21,7 +21,6 @@ object RoomModule {
 	@Singleton
 	fun provideTododerDatabase(@ApplicationContext context: Context): TododerDatabase {
 		return Room.databaseBuilder(context, TododerDatabase::class.java, Const.DATABASE_NAME)
-			.fallbackToDestructiveMigration()
 			.build()
 	}
 

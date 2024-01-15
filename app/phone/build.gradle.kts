@@ -1,3 +1,5 @@
+import java.util.Calendar
+
 plugins {
 	id("com.android.application")
 	id("org.jetbrains.kotlin.android")
@@ -15,7 +17,11 @@ android {
 		minSdk = 24
 		targetSdk = 34
 		versionCode = 1
-		versionName = "1.0"
+
+		val calendar = Calendar.getInstance()
+		versionName = "${calendar.get(Calendar.YEAR)}" +
+				".${calendar.get(Calendar.MONTH)}" +
+				".${calendar.get(Calendar.DAY_OF_MONTH)}"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		vectorDrawables {
@@ -25,8 +31,15 @@ android {
 
 	buildTypes {
 		release {
-			isMinifyEnabled = false
+			isDebuggable = false
+			isMinifyEnabled = true
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+		}
+		debug {
+			isDebuggable = true
+			isMinifyEnabled = false
+			applicationIdSuffix = ".debug"
+			versionNameSuffix = "-debug"
 		}
 	}
 	compileOptions {
