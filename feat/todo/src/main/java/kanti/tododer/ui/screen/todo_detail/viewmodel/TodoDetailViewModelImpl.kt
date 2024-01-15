@@ -10,10 +10,12 @@ import kanti.tododer.data.model.todo.toTodoData
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodosData
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -28,7 +30,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 ) : ViewModel(), TodoDetailViewModel {
 
 	private val stack: Stack<Long> = Stack()
-	private val _currentTodo = MutableSharedFlow<Long>()
+	private val _currentTodo = MutableStateFlow(EMPTY_TODO_ID)
 
 	private val _emptyStack = MutableSharedFlow<Unit>()
 	override val emptyStack: SharedFlow<Unit> = _emptyStack.asSharedFlow()
@@ -42,10 +44,12 @@ class TodoDetailViewModelImpl @Inject constructor(
 		.stateIn(
 			scope = viewModelScope,
 			started = SharingStarted.Lazily,
-			initialValue = TodoData()
+			initialValue = TodoData(id = EMPTY_TODO_ID)
 		)
 
+	private val _updateTodoChildren = MutableStateFlow(Any())
 	override val todoChildren: StateFlow<TodosData> = todoDetail
+		.combine(_updateTodoChildren) { todo, _ -> todo }
 		.map { todoData ->
 			val fullId = FullId(todoData.id, FullIdType.Todo)
 			val children = todoRepository.getChildren(fullId)
@@ -63,6 +67,15 @@ class TodoDetailViewModelImpl @Inject constructor(
 		get() = MutableSharedFlow()
 
 	override fun createNewTodo() {
+		viewModelScope.launch {
+			val currentTodo = todoDetail.value
+			if (currentTodo.id == EMPTY_TODO_ID)
+				return@launch
+			val parentFullId = FullId(currentTodo.id, FullIdType.Todo)
+			val todoId = todoRepository.create(parentFullId, "", "")
+			push(todoId)
+			_updateTodoChildren.value = Any()
+		}
 	}
 
 	override fun changeTitle(title: String) {
@@ -87,7 +100,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun push(todoId: Long) {
-		if (todoDetail.value.id != 0L)
+		if (_currentTodo.value != EMPTY_TODO_ID)
 			stack.push(todoDetail.value.id)
 		viewModelScope.launch {
 			_currentTodo.emit(todoId)
@@ -103,5 +116,10 @@ class TodoDetailViewModelImpl @Inject constructor(
 				_emptyStack.emit(Unit)
 			}
 		}
+	}
+
+	companion object {
+
+		private const val EMPTY_TODO_ID = 0L
 	}
 }
