@@ -33,13 +33,9 @@ fun NavGraphBuilder.addTodoNavGraph(
 
 		val todoDetailTodoIdParam = context.getString(R.string.nav_destination_todo_detail_todo_id_param)
 		composable(
-			route = "${context.getString(R.string.nav_destination_todo_detail)}?" +
-					"$todoDetailTodoIdParam={$todoDetailTodoIdParam}",
+			route = "${context.getString(R.string.nav_destination_todo_detail)}/{$todoDetailTodoIdParam}",
 			arguments = listOf(
-				navArgument(todoDetailTodoIdParam) {
-					type = NavType.LongType
-					defaultValue = 0
-				}
+				navArgument(todoDetailTodoIdParam) { type = NavType.LongType }
 			)
 		) {
 			TodoDetailScreen(

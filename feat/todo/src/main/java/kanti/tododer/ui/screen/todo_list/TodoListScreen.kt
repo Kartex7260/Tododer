@@ -124,9 +124,17 @@ fun TodoListScreen(
 	}
 
 	val todoChildrenRoute = stringResource(id = R.string.nav_destination_todo_detail)
-	val todoChildrenRouteTodoIdParam = stringResource(
-		id = R.string.nav_destination_todo_detail_todo_id_param
-	)
+	fun todoDetailRoute(todoId: Long): String {
+		return "$todoChildrenRoute/$todoId"
+	}
+
+	LaunchedEffect(key1 = vm) {
+		vm.newTodoCreated.collect { todoId ->
+			navController.navigate(
+				route = todoDetailRoute(todoId)
+			)
+		}
+	}
 
 	val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 	Scaffold(
@@ -149,9 +157,7 @@ fun TodoListScreen(
 		floatingActionButton = {
 			FloatingActionButton(
 				onClick = {
-					navController.navigate(
-						route = todoChildrenRoute
-					)
+					vm.createNewTodo()
 				},
 				containerColor = MaterialTheme.colorScheme.tertiaryContainer,
 				contentColor = MaterialTheme.colorScheme.onTertiaryContainer
@@ -166,10 +172,9 @@ fun TodoListScreen(
 		TodoLazyColumn(
 			modifier = Modifier.padding(paddingValues),
 			content = children,
-			onClick = {
+			onClick = { todoData ->
 				navController.navigate(
-					route = "$todoChildrenRoute?" +
-							"$todoChildrenRouteTodoIdParam=${it.id}"
+					route = todoDetailRoute(todoData.id)
 				)
 			},
 			onDoneChanged = { isDone, todo ->

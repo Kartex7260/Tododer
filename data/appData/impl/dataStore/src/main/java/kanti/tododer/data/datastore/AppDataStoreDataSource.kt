@@ -18,11 +18,10 @@ class AppDataStoreDataSource @Inject constructor(
 ) : AppDataLocalDataSource {
 
 	private val _currentPlanIdKey = "currentPlanId"
-
 	private val currentPlanIdKey = longPreferencesKey(name = _currentPlanIdKey)
 
 	override val currentPlanId: Flow<Long?>
-		get() = appContext.dataStore.data.map {  preferences ->
+		get() = appContext.dataStore.data.map { preferences ->
 			preferences[currentPlanIdKey]
 		}
 

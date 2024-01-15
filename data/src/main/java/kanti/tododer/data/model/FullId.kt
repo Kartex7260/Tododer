@@ -10,7 +10,7 @@ data class FullId(
 
 	companion object {
 
-		private const val SEPARATOR = "-"
+		private const val SEPARATOR = ":"
 
 		fun from(line: String): FullId {
 			val splitParts = line.split(SEPARATOR)
