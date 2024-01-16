@@ -23,7 +23,7 @@ interface TodoListViewModel {
 
 	val newTodoCreated: SharedFlow<Long>
 
-	fun updateUiState()
+	fun updateUiState(deletedTodoId: Long?)
 
 	fun createNewTodo()
 
@@ -65,7 +65,7 @@ interface TodoListViewModel {
 		private val _newTodoCreated = MutableSharedFlow<Long>()
 		override val newTodoCreated: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
 
-		override fun updateUiState() {
+		override fun updateUiState(deletedTodoId: Long?) {
 		}
 
 		override fun createNewTodo() {

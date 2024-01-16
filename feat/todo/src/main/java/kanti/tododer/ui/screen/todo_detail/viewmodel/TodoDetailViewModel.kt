@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 interface TodoDetailViewModel {
 
-	val emptyStack: SharedFlow<Unit>
+	val emptyStack: SharedFlow<Long?>
 
 	val todoDetail: StateFlow<TodoData>
 	val todoChildren: StateFlow<TodosData>
@@ -56,8 +56,8 @@ interface TodoDetailViewModel {
 		private const val maxPop = 3
 		private var currentPop = 0
 
-		private val _emptyStack = MutableSharedFlow<Unit>()
-		override val emptyStack: SharedFlow<Unit> = _emptyStack.asSharedFlow()
+		private val _emptyStack = MutableSharedFlow<Long?>()
+		override val emptyStack: SharedFlow<Long?> = _emptyStack.asSharedFlow()
 
 		private val _todoDetail = MutableStateFlow(TodoData())
 		override val todoDetail: StateFlow<TodoData> = _todoDetail.asStateFlow()
@@ -116,7 +116,7 @@ interface TodoDetailViewModel {
 			currentPop++
 			if (currentPop >= maxPop) {
 				coroutineScope.launch {
-					_emptyStack.emit(value = Unit)
+					_emptyStack.emit(value = null)
 				}
 			}
 		}

@@ -29,7 +29,7 @@ fun TodoEditor(
 	Column(
 		modifier = modifier
 	) {
-		var title by rememberSaveable(inputs = arrayOf(initialState.title)) {
+		var title by rememberSaveable(inputs = arrayOf(initialState)) {
 			mutableStateOf(initialState.title)
 		}
 		OutlinedTextField(
@@ -48,7 +48,7 @@ fun TodoEditor(
 			label = { Text(text = stringResource(id = R.string.title)) }
 		)
 
-		var remark by rememberSaveable(inputs = arrayOf(initialState.remark)) {
+		var remark by rememberSaveable(inputs = arrayOf(initialState)) {
 			mutableStateOf(initialState.remark)
 		}
 		OutlinedTextField(

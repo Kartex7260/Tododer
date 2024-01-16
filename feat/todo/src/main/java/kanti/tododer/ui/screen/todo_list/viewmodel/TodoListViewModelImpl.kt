@@ -1,15 +1,18 @@
 package kanti.tododer.ui.screen.todo_list.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kanti.tododer.Const
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.data.model.plan.toFullId
 import kanti.tododer.data.model.plan.toPlan
 import kanti.tododer.data.model.todo.TodoRepository
+import kanti.tododer.data.model.todo.toTodoData
 import kanti.tododer.domain.getplanchildren.GetPlanChildren
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.todo.TodoData
@@ -97,8 +100,17 @@ class TodoListViewModelImpl @Inject constructor(
 	private val _newTodoCreated = MutableSharedFlow<Long>()
 	override val newTodoCreated: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
 
-	override fun updateUiState() {
+	override fun updateUiState(deletedTodoId: Long?) {
 		updateUiState.value = Any()
+
+		if (deletedTodoId == null)
+			return
+		viewModelScope.launch {
+			val deletedTodo = todoRepository.getTodo(deletedTodoId) ?: return@launch
+			val deletedTodoData = listOf(deletedTodo.toTodoData())
+			deleteCancelManager.delete(deletedTodoData)
+			_todosDeleted.emit(deletedTodoData)
+		}
 	}
 
 	override fun createNewTodo() {

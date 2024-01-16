@@ -45,8 +45,8 @@ class TodoDetailViewModelImpl @Inject constructor(
 		}
 	)
 
-	private val _emptyStack = MutableSharedFlow<Unit>()
-	override val emptyStack: SharedFlow<Unit> = _emptyStack.asSharedFlow()
+	private val _emptyStack = MutableSharedFlow<Long?>()
+	override val emptyStack: SharedFlow<Long?> = _emptyStack.asSharedFlow()
 
 	private val _updateTodoDetail = MutableStateFlow(Any())
 	override val todoDetail: StateFlow<TodoData> = _currentTodo
@@ -138,15 +138,19 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun deleteCurrent() {
-		viewModelScope.launch {
-			val currentTodo = _currentTodo.value
-			if (currentTodo == EMPTY_TODO_ID)
+		viewModelScope.launch(NonCancellable) {
+			val currentTodoId = _currentTodo.value
+			if (currentTodoId == EMPTY_TODO_ID)
 				return@launch
 
 			val todoData = todoDetail.value
-			deleteCancelManager.delete(listOf(todoData))
-			pop()
-			_currentTodoDeleted.emit(todoData)
+			val exit = deletePop()
+			if (exit) {
+				_emptyStack.emit(currentTodoId)
+			} else {
+				deleteCancelManager.delete(listOf(todoData))
+				_currentTodoDeleted.emit(todoData)
+			}
 		}
 	}
 
@@ -194,8 +198,18 @@ class TodoDetailViewModelImpl @Inject constructor(
 				val current = stack.pop()
 				_currentTodo.emit(current)
 			} catch (ex: EmptyStackException) {
-				_emptyStack.emit(Unit)
+				_emptyStack.emit(null)
 			}
+		}
+	}
+
+	private suspend fun deletePop(): Boolean {
+		return try {
+			val current = stack.pop()
+			_currentTodo.emit(current)
+			false
+		} catch (ex: EmptyStackException) {
+			true
 		}
 	}
 

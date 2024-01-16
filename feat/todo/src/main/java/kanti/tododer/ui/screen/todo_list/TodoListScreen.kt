@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kanti.tododer.Const
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
@@ -143,7 +144,9 @@ fun TodoListScreen(
 	}
 
 	LifecycleResumeEffect(key1 = vm) {
-		vm.updateUiState()
+		val deletedTodoId = navController.currentBackStackEntry?.savedStateHandle
+			?.get<Long>(Const.BackStackKeys.DELETED)
+		vm.updateUiState(deletedTodoId)
 		onPauseOrDispose {  }
 	}
 
