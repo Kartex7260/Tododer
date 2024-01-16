@@ -92,8 +92,7 @@ fun TodoListScreen(
 	topBarActions: @Composable () -> Unit = {},
 	vm: TodoListViewModel = hiltViewModel<TodoListViewModelImpl>()
 ) {
-	var showRenameDialog by rememberSaveable { mutableStateOf(false) }
-	var currentRenamedTodo: TodoData? by rememberSaveable { mutableStateOf(null) }
+	var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
 
 	val snackbarHostState = remember {
 		SnackbarHostState()
@@ -227,8 +226,7 @@ fun TodoListScreen(
 					expanded = showDropdownMenu,
 					onDismissRequest = { showDropdownMenu = false },
 					onRename = {
-						currentRenamedTodo = todoData
-						showRenameDialog = true
+						showRenameDialog = todoData
 					},
 					onDelete = {
 						vm.deleteTodos(listOf(todoData))
@@ -238,16 +236,16 @@ fun TodoListScreen(
 		)
 	}
 
-	if (showRenameDialog && currentRenamedTodo != null) {
+	if (showRenameDialog != null) {
+		val renamedTodo = showRenameDialog!!
 		RenameDialog(
 			onCloseDialog = {
-				showRenameDialog = false
-				currentRenamedTodo = null
+				showRenameDialog = null
 			},
 			label = { Text(text = stringResource(id = R.string.new_title))},
-			name = currentRenamedTodo!!.title,
+			name = renamedTodo.title,
 			onRename = { newTitle ->
-				vm.renameTodo(currentRenamedTodo!!.id, newTitle)
+				vm.renameTodo(renamedTodo.id, newTitle)
 			}
 		)
 	}
