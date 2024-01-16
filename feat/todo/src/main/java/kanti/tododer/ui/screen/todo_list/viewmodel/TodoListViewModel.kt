@@ -23,6 +23,8 @@ interface TodoListViewModel {
 
 	val newTodoCreated: SharedFlow<Long>
 
+	fun updateUiState()
+
 	fun createNewTodo()
 
 	fun changeDone(todoId: Long, isDone: Boolean)
@@ -62,6 +64,9 @@ interface TodoListViewModel {
 
 		private val _newTodoCreated = MutableSharedFlow<Long>()
 		override val newTodoCreated: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
+
+		override fun updateUiState() {
+		}
 
 		override fun createNewTodo() {
 			coroutineScope.launch {

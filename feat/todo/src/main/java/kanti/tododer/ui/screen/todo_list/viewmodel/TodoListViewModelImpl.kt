@@ -97,6 +97,10 @@ class TodoListViewModelImpl @Inject constructor(
 	private val _newTodoCreated = MutableSharedFlow<Long>()
 	override val newTodoCreated: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
 
+	override fun updateUiState() {
+		updateUiState.value = Any()
+	}
+
 	override fun createNewTodo() {
 		viewModelScope.launch {
 			when (val curPlan = currentPlan.value) {

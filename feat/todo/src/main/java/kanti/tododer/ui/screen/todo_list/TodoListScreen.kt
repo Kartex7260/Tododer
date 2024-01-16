@@ -31,6 +31,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -139,6 +140,11 @@ fun TodoListScreen(
 		onStopOrDispose {
 			vm.rejectCancelChance()
 		}
+	}
+
+	LifecycleResumeEffect(key1 = vm) {
+		vm.updateUiState()
+		onPauseOrDispose {  }
 	}
 
 	val todoChildrenRoute = stringResource(id = R.string.nav_destination_todo_detail)
