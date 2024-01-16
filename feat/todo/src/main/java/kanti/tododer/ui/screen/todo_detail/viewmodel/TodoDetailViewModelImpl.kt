@@ -103,6 +103,13 @@ class TodoDetailViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun renameTodo(todoId: Long, newTitle: String) {
+		viewModelScope.launch {
+			todoRepository.updateTitle(todoId, newTitle)
+			_updateTodoChildren.value = Any()
+		}
+	}
+
 	override fun changeTitle(title: String) {
 		viewModelScope.launch(NonCancellable) {
 			val todoId = _currentTodo.value

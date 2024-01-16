@@ -34,6 +34,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -54,6 +55,7 @@ import androidx.navigation.compose.rememberNavController
 import kanti.tododer.Const
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.dialogs.DeleteTodoDialog
+import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
 import kanti.tododer.ui.components.todo.TodoCard
 import kanti.tododer.ui.components.todo.TodoEditor
@@ -219,9 +221,8 @@ fun TodoDetailScreen(
 		mutableStateOf(IntSize(0, 0))
 	}
 
-	var showDeleteDialog by remember {
-		mutableStateOf(false)
-	}
+	var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+	var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
 
 	Scaffold(
 		modifier = Modifier
@@ -332,6 +333,9 @@ fun TodoDetailScreen(
 					NormalTodoDropdownMenu(
 						expanded = expanded,
 						onDismissRequest = { expanded = false },
+						onRename = {
+							showRenameDialog = todoData
+						},
 						onDelete = { vm.deleteChildren(listOf(todoData)) }
 					)
 				}
@@ -344,6 +348,18 @@ fun TodoDetailScreen(
 			onCloseDialog = { showDeleteDialog = false },
 			todoTitle = todoDetail.title,
 			delete = { vm.deleteCurrent() }
+		)
+	}
+
+	if (showRenameDialog != null) {
+		val renamedTodo = showRenameDialog!!
+		RenameDialog(
+			onCloseDialog = { showRenameDialog = null },
+			label = { Text(text = stringResource(id = R.string.new_title)) },
+			name = renamedTodo.title,
+			onRename = { newTitle ->
+				vm.renameTodo(renamedTodo.id, newTitle)
+			}
 		)
 	}
 

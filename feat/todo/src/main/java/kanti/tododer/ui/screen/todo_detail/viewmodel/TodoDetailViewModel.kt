@@ -25,6 +25,8 @@ interface TodoDetailViewModel {
 
 	fun createNewTodo()
 
+	fun renameTodo(todoId: Long, newTitle: String)
+
 	fun changeTitle(title: String)
 
 	fun changeRemark(remark: String)
@@ -86,6 +88,10 @@ interface TodoDetailViewModel {
 
 		override fun createNewTodo() {
 			Log.d(logTag, "createNewTodo()")
+		}
+
+		override fun renameTodo(todoId: Long, newTitle: String) {
+			Log.d(logTag, "renameTodo(todoId: Long, newTitle: String)")
 		}
 
 		override fun changeTitle(title: String) {
