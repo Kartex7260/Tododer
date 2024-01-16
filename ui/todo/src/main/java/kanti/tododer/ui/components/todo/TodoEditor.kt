@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,7 +19,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TodoEditor(
 	modifier: Modifier = Modifier,
-	state: TodoData,
+	initialState: TodoData,
 	onTitleChanged: (title: String) -> Unit = {},
 	onRemarkChanged: (remark: String) -> Unit = {},
 	onDoneChanged: (isDone: Boolean) -> Unit = {},
@@ -28,9 +29,15 @@ fun TodoEditor(
 	Column(
 		modifier = modifier
 	) {
+		var title by rememberSaveable(inputs = arrayOf(initialState.title)) {
+			mutableStateOf(initialState.title)
+		}
 		OutlinedTextField(
-			value = state.title,
-			onValueChange = onTitleChanged,
+			value = title,
+			onValueChange = { newTitle ->
+				title = newTitle
+				onTitleChanged(newTitle)
+			},
 			modifier = Modifier
 				.padding(
 					start = 16.dp,
@@ -41,9 +48,15 @@ fun TodoEditor(
 			label = { Text(text = stringResource(id = R.string.title)) }
 		)
 
+		var remark by rememberSaveable(inputs = arrayOf(initialState.remark)) {
+			mutableStateOf(initialState.remark)
+		}
 		OutlinedTextField(
-			value = state.remark,
-			onValueChange = onRemarkChanged,
+			value = remark,
+			onValueChange = { newRemark ->
+				remark = newRemark
+				onRemarkChanged(newRemark)
+			},
 			modifier = Modifier
 				.padding(
 					start = 16.dp,
@@ -62,7 +75,7 @@ fun TodoEditor(
 					end = 16.dp
 				)
 				.fillMaxWidth(),
-			state = state,
+			state = initialState,
 			onDoneChanged = onDoneChanged,
 //			onArchive = onArchive
 			onDelete = onDelete
@@ -74,7 +87,7 @@ fun TodoEditor(
 @Composable
 fun PreviewTodoEditor() {
 	var title by remember {
-		mutableStateOf("")
+		mutableStateOf("Test")
 	}
 	var remark by remember {
 		mutableStateOf("")
@@ -83,7 +96,7 @@ fun PreviewTodoEditor() {
 		mutableStateOf(false)
 	}
 	TodoEditor(
-		state = TodoData(
+		initialState = TodoData(
 			id = 1,
 			title = title,
 			remark = remark,

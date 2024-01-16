@@ -269,7 +269,7 @@ fun TodoDetailScreen(
 						.onSizeChanged { size ->
 							editorSize = size
 						},
-					state = todoDetail,
+					initialState = todoDetail,
 					onTitleChanged = { title ->
 						vm.changeTitle(title)
 					},

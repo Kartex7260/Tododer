@@ -104,9 +104,21 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun changeTitle(title: String) {
+		viewModelScope.launch(NonCancellable) {
+			val todoId = _currentTodo.value
+			if (todoId == EMPTY_TODO_ID)
+				return@launch
+			todoRepository.updateTitle(todoId, title)
+		}
 	}
 
 	override fun changeRemark(remark: String) {
+		viewModelScope.launch(NonCancellable) {
+			val todoId = _currentTodo.value
+			if (todoId == EMPTY_TODO_ID)
+				return@launch
+			todoRepository.updateRemark(todoId, remark)
+		}
 	}
 
 	override fun changeDoneCurrent(isDone: Boolean) {
