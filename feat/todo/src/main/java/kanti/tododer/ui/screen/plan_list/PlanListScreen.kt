@@ -81,8 +81,7 @@ fun PlanListScreen(
 	topBarActions: @Composable () -> Unit = {},
 	vm: PlanListViewModel = hiltViewModel<PlanListViewModelImpl>()
 ) {
-	var showRenameDialog by rememberSaveable { mutableStateOf(false) }
-	var currentRenamedPlan: PlanData? by rememberSaveable { mutableStateOf(null) }
+	var showRenameDialog: PlanData? by rememberSaveable { mutableStateOf(null) }
 
 	var showCreateDialog by rememberSaveable { mutableStateOf(false) }
 	val snackbarHostState = remember { SnackbarHostState() }
@@ -219,8 +218,7 @@ fun PlanListScreen(
 					expanded = showDropdownMenu,
 					onDismissRequest = { showDropdownMenu = false },
 					onRename = {
-						currentRenamedPlan = planData
-						showRenameDialog = true
+						showRenameDialog = planData
 					},
 					onDelete = {
 						vm.deletePlans(listOf(planData))
@@ -230,16 +228,14 @@ fun PlanListScreen(
 		)
 	}
 
-	if (showRenameDialog && currentRenamedPlan != null) {
+	if (showRenameDialog != null) {
+		val renamedPlan = showRenameDialog!!
 		RenameDialog(
-			onCloseDialog = {
-				currentRenamedPlan = null
-				showRenameDialog = false
-			},
-			name = currentRenamedPlan!!.title,
+			onCloseDialog = { showRenameDialog = null },
+			name = renamedPlan.title,
 			label = { Text(text = stringResource(id = R.string.new_title)) },
 			onRename = { newTitle ->
-				vm.renamePlanTitle(currentRenamedPlan!!.id, newTitle)
+				vm.renamePlanTitle(renamedPlan.id, newTitle)
 			}
 		)
 	}
