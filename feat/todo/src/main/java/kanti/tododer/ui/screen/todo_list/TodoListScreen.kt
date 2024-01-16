@@ -25,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -39,7 +40,9 @@ import kanti.tododer.Const
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
+import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodoLazyColumn
 import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListUiState
@@ -89,6 +92,9 @@ fun TodoListScreen(
 	topBarActions: @Composable () -> Unit = {},
 	vm: TodoListViewModel = hiltViewModel<TodoListViewModelImpl>()
 ) {
+	var showRenameDialog by rememberSaveable { mutableStateOf(false) }
+	var currentRenamedTodo: TodoData? by rememberSaveable { mutableStateOf(null) }
+
 	val snackbarHostState = remember {
 		SnackbarHostState()
 	}
@@ -220,10 +226,28 @@ fun TodoListScreen(
 				NormalTodoDropdownMenu(
 					expanded = showDropdownMenu,
 					onDismissRequest = { showDropdownMenu = false },
+					onRename = {
+						currentRenamedTodo = todoData
+						showRenameDialog = true
+					},
 					onDelete = {
 						vm.deleteTodos(listOf(todoData))
 					}
 				)
+			}
+		)
+	}
+
+	if (showRenameDialog && currentRenamedTodo != null) {
+		RenameDialog(
+			onCloseDialog = {
+				showRenameDialog = false
+				currentRenamedTodo = null
+			},
+			label = { Text(text = stringResource(id = R.string.new_title))},
+			name = currentRenamedTodo!!.title,
+			onRename = { newTitle ->
+				vm.renameTodo(currentRenamedTodo!!.id, newTitle)
 			}
 		)
 	}

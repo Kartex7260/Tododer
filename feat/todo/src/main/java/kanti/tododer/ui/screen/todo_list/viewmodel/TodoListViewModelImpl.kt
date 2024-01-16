@@ -1,12 +1,10 @@
 package kanti.tododer.ui.screen.todo_list.viewmodel
 
 import android.content.Context
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kanti.tododer.Const
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.data.model.plan.toFullId
@@ -123,6 +121,13 @@ class TodoListViewModelImpl @Inject constructor(
 				}
 				else -> {}
 			}
+		}
+	}
+
+	override fun renameTodo(todoId: Long, newTitle: String) {
+		viewModelScope.launch {
+			todoRepository.updateTitle(todoId, newTitle)
+			updateUiState.value = Any()
 		}
 	}
 

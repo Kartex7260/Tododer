@@ -27,6 +27,8 @@ interface TodoListViewModel {
 
 	fun createNewTodo()
 
+	fun renameTodo(todoId: Long, newTitle: String)
+
 	fun changeDone(todoId: Long, isDone: Boolean)
 
 	fun deleteTodos(todos: List<TodoData>)
@@ -72,6 +74,9 @@ interface TodoListViewModel {
 			coroutineScope.launch {
 				_newTodoCreated.emit(0L)
 			}
+		}
+
+		override fun renameTodo(todoId: Long, newTitle: String) {
 		}
 
 		override fun changeDone(todoId: Long, isDone: Boolean) {
