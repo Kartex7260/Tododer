@@ -22,7 +22,12 @@ import androidx.compose.ui.unit.dp
 fun TodoLazyColumn(
 	modifier: Modifier = Modifier,
 	state: LazyListState = rememberLazyListState(),
-	contentPadding: PaddingValues = PaddingValues(all = 16.dp),
+	contentPadding: PaddingValues = PaddingValues(
+		top = 12.dp,
+		bottom = 12.dp,
+		start = 16.dp,
+		end = 16.dp
+	),
 	flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
 	userScrollEnabled: Boolean = true,
 	preContent: @Composable () -> Unit = {},
@@ -47,7 +52,7 @@ fun TodoLazyColumn(
 	) { uiState ->
 		TodoCard(
 			modifier = Modifier
-				.padding(bottom = 16.dp),
+				.padding(bottom = 8.dp),
 			onClick = { onClick(uiState) },
 			onDoneChange = { onDoneChanged(it, uiState) },
 			todoData = uiState

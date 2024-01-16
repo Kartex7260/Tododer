@@ -22,7 +22,12 @@ import androidx.compose.ui.unit.dp
 fun PlanLazyColumn(
 	modifier: Modifier = Modifier,
 	state: LazyListState = rememberLazyListState(),
-	contentPadding: PaddingValues = PaddingValues(all = 16.dp),
+	contentPadding: PaddingValues = PaddingValues(
+		top = 12.dp,
+		bottom = 12.dp,
+		start = 16.dp,
+		end = 16.dp
+	),
 	flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
 	userScrollEnabled: Boolean = true,
 	preContent: @Composable () -> Unit = {},
@@ -46,7 +51,7 @@ fun PlanLazyColumn(
 	) { uiState ->
 		PlanCard(
 			modifier = Modifier
-				.padding(bottom = 16.dp),
+				.padding(bottom = 8.dp),
 			planData = uiState,
 			onClick = { onClick(uiState) }
 		) {

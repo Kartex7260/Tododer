@@ -40,7 +40,7 @@ fun TodoEditorControllers(
 //			}
 			IconButton(onClick = { onDelete() }) {
 				Icon(
-					painter = painterResource(id = R.drawable.outline_delete_24),
+					painter = painterResource(id = R.drawable.baseline_delete_forever_24),
 					contentDescription = null
 				)
 			}

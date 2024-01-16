@@ -184,7 +184,7 @@ fun PlanListScreen(
 
 				PlanCard(
 					modifier = Modifier
-						.padding(top = 16.dp),
+						.padding(top = 8.dp),
 					planData = planDefault,
 					onClick = {
 						vm.setCurrentPlan(planDefault.id)
