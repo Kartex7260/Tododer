@@ -27,6 +27,8 @@ interface PlanListViewModel {
 
 	fun createPlanEndSetCurrent(title: String)
 
+	fun renamePlanTitle(todoId: Long, newTitle: String)
+
 	fun deletePlans(plans: List<PlanData>)
 
 	fun cancelDelete()
@@ -77,6 +79,9 @@ interface PlanListViewModel {
 			coroutineScope.launch {
 				_newPlanCreated.emit(Unit)
 			}
+		}
+
+		override fun renamePlanTitle(todoId: Long, newTitle: String) {
 		}
 
 		override fun deletePlans(plans: List<PlanData>) {

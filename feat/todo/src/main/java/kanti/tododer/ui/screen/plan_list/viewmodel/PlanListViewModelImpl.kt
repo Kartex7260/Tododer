@@ -107,6 +107,12 @@ class PlanListViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun renamePlanTitle(todoId: Long, newTitle: String) {
+		viewModelScope.launch {
+			planRepository.updateTitle(todoId, newTitle)
+		}
+	}
+
 	override fun deletePlans(plans: List<PlanData>) {
 		viewModelScope.launch {
 			deleteCancelManager.delete(plans)

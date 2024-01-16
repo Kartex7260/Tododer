@@ -19,6 +19,7 @@ fun NormalTodoDropdownMenu(
 	@SuppressLint("ModifierParameter")
 	modifier: Modifier = Modifier,
 	offset: DpOffset = DpOffset(0.dp, 0.dp),
+	onRename: () -> Unit = {},
 	onDelete: () -> Unit = {}
 ) {
 	DropdownMenu(
@@ -27,6 +28,13 @@ fun NormalTodoDropdownMenu(
 		modifier = modifier,
 		offset = offset
 	) {
+		DropdownMenuItem(
+			text = { Text(text = stringResource(id = R.string.rename)) },
+			onClick = {
+				onRename()
+				onDismissRequest()
+			}
+		)
 		DropdownMenuItem(
 			text = { Text(text = stringResource(id = R.string.delete)) },
 			onClick = {

@@ -39,8 +39,10 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalPlanDropdownMenu
 import kanti.tododer.ui.components.plan.PlanCard
+import kanti.tododer.ui.components.plan.PlanData
 import kanti.tododer.ui.components.plan.PlanLazyColumn
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModelImpl
@@ -79,7 +81,10 @@ fun PlanListScreen(
 	topBarActions: @Composable () -> Unit = {},
 	vm: PlanListViewModel = hiltViewModel<PlanListViewModelImpl>()
 ) {
-	var showDialog by rememberSaveable { mutableStateOf(false) }
+	var showRenameDialog by rememberSaveable { mutableStateOf(false) }
+	var currentRenamedPlan: PlanData? by rememberSaveable { mutableStateOf(null) }
+
+	var showCreateDialog by rememberSaveable { mutableStateOf(false) }
 	val snackbarHostState = remember { SnackbarHostState() }
 
 	val cancelStringRes = stringResource(id = R.string.cancel)
@@ -154,7 +159,7 @@ fun PlanListScreen(
 		floatingActionButton = {
 			FloatingActionButton(
 				onClick = {
-					showDialog = true
+					showCreateDialog = true
 				},
 				containerColor = MaterialTheme.colorScheme.tertiaryContainer,
 				contentColor = MaterialTheme.colorScheme.onTertiaryContainer
@@ -213,6 +218,10 @@ fun PlanListScreen(
 				NormalPlanDropdownMenu(
 					expanded = showDropdownMenu,
 					onDismissRequest = { showDropdownMenu = false },
+					onRename = {
+						currentRenamedPlan = planData
+						showRenameDialog = true
+					},
 					onDelete = {
 						vm.deletePlans(listOf(planData))
 					}
@@ -221,10 +230,24 @@ fun PlanListScreen(
 		)
 	}
 
-	if (showDialog) {
+	if (showRenameDialog && currentRenamedPlan != null) {
+		RenameDialog(
+			onCloseDialog = {
+				currentRenamedPlan = null
+				showRenameDialog = false
+			},
+			name = currentRenamedPlan!!.title,
+			label = { Text(text = stringResource(id = R.string.new_title)) },
+			onRename = { newTitle ->
+				vm.renamePlanTitle(currentRenamedPlan!!.id, newTitle)
+			}
+		)
+	}
+
+	if (showCreateDialog) {
 		CreatePlanDialog(
 			onCloseDialog = {
-				showDialog = false
+				showCreateDialog = false
 			},
 			create = { title ->
 				vm.createPlanEndSetCurrent(title)

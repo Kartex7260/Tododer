@@ -12,9 +12,17 @@ import kanti.tododer.feat.todo.R
 fun NormalPlanDropdownMenu(
 	expanded: Boolean = true,
 	onDismissRequest: () -> Unit = {},
+	onRename: () -> Unit = {},
 	onDelete: () -> Unit = {}
 ) {
 	DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
+		DropdownMenuItem(
+			text = { Text(text = stringResource(id = R.string.rename)) },
+			onClick = {
+				onRename()
+				onDismissRequest()
+			}
+		)
 		DropdownMenuItem(
 			text = { Text(text = stringResource(id = R.string.delete)) },
 			onClick = {

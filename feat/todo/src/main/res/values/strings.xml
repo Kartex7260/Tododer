@@ -20,8 +20,9 @@
     <string name="cancel">Cancel</string>
     <string name="plan_name">Plan name</string>
 
-
+    <string name="rename">Rename</string>
     <string name="delete">Delete</string>
+    <string name="new_title">New title</string>
 
     <string name="delete_ask_1">Delete the</string>
     <string name="delete_ask_2_todo">task</string>
