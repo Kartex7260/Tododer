@@ -95,6 +95,7 @@ dependencies {
 	implementation(project(":data:todo:impl:room"))
 	implementation(project(":data:plan:impl:room"))
 	implementation(project(":data:appData:impl:dataStore"))
+	implementation(project(":data:settings:api"))
 	implementation(project(":data:settings:impl:dataStore"))
 
 //	implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
