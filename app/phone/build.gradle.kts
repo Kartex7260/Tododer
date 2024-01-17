@@ -90,6 +90,7 @@ dependencies {
 
 	implementation(project(":data"))
 	implementation(project(":feat:todo"))
+	implementation(project(":feat:settings"))
 	implementation(project(":domain:dataInitializer"))
 	implementation(project(":data:todo:impl:room"))
 	implementation(project(":data:plan:impl:room"))

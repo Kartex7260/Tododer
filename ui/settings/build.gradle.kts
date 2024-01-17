@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-	namespace = "kanti.tododer.ui.components.plan"
+	namespace = "kanti.tododer.ui.components.settings"
 	compileSdk = 34
 
 	defaultConfig {
@@ -48,6 +48,4 @@ dependencies {
 	androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 	debugImplementation("androidx.compose.ui:ui-tooling")
 	debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-	implementation(files("../../lib/fillingProgressBar-compose.aar"))
 }

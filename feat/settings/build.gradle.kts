@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-	namespace = "kanti.tododer.ui.components.plan"
+	namespace = "kanti.tododer.feat.settings"
 	compileSdk = 34
 
 	defaultConfig {
@@ -37,10 +37,14 @@ android {
 
 dependencies {
 
+	implementation("androidx.navigation:navigation-compose:2.7.6")
+	implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 	implementation(platform("androidx.compose:compose-bom:2023.10.01"))
 	implementation("androidx.compose.ui:ui")
 	implementation("androidx.compose.ui:ui-tooling-preview")
 	implementation("androidx.compose.material3:material3")
+	implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+
 	testImplementation("junit:junit:4.13.2")
 	androidTestImplementation("androidx.test.ext:junit:1.1.5")
 	androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -49,5 +53,5 @@ dependencies {
 	debugImplementation("androidx.compose.ui:ui-tooling")
 	debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-	implementation(files("../../lib/fillingProgressBar-compose.aar"))
+	implementation(project(":ui:settings"))
 }
