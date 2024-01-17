@@ -1,6 +1,6 @@
-package kanti.tododer
+package kanti.tododer.ui
 
-object Const {
+object UiConst {
 
 	object BackStackKeys {
 

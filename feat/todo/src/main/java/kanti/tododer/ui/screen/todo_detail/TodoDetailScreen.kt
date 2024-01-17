@@ -54,7 +54,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import kanti.tododer.Const
+import kanti.tododer.ui.UiConst
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.dialogs.DeleteTodoDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
@@ -153,7 +153,7 @@ fun TodoDetailScreen(
 	LaunchedEffect(key1 = vm) {
 		vm.emptyStack.collect { deleted ->
 			navController.previousBackStackEntry?.savedStateHandle
-				?.set(Const.BackStackKeys.DELETED, deleted)
+				?.set(UiConst.BackStackKeys.DELETED, deleted)
 			navController.popBackStack()
 		}
 	}

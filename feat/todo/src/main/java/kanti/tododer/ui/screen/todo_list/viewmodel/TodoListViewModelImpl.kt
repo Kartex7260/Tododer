@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kanti.tododer.common.Const
+import kanti.tododer.data.model.FullId
+import kanti.tododer.data.model.FullIdType
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.data.model.plan.toFullId
@@ -115,7 +118,12 @@ class TodoListViewModelImpl @Inject constructor(
 		viewModelScope.launch {
 			when (val curPlan = currentPlan.value) {
 				is TodoListUiState.Success -> {
-					val todoId = todoRepository.create(curPlan.plan.toFullId(), "", "")
+					val planFullId = if (curPlan.plan.type == PlanType.All) {
+						FullId(id = Const.PlansIds.DEFAULT, FullIdType.Plan)
+					} else {
+						curPlan.plan.toFullId()
+					}
+					val todoId = todoRepository.create(planFullId, "", "")
 					_newTodoCreated.emit(todoId)
 					updateUiState.value = Any()
 				}
