@@ -21,6 +21,10 @@
             <option value="$PROJECT_DIR$/data/plan/api" />
             <option value="$PROJECT_DIR$/data/plan/impl" />
             <option value="$PROJECT_DIR$/data/plan/impl/room" />
+            <option value="$PROJECT_DIR$/data/settings" />
+            <option value="$PROJECT_DIR$/data/settings/api" />
+            <option value="$PROJECT_DIR$/data/settings/impl" />
+            <option value="$PROJECT_DIR$/data/settings/impl/dataStore" />
             <option value="$PROJECT_DIR$/data/todo" />
             <option value="$PROJECT_DIR$/data/todo/api" />
             <option value="$PROJECT_DIR$/data/todo/impl" />

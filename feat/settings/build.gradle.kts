@@ -1,6 +1,9 @@
 plugins {
 	id("com.android.library")
 	id("org.jetbrains.kotlin.android")
+
+	kotlin("kapt")
+	id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -53,5 +56,9 @@ dependencies {
 	debugImplementation("androidx.compose.ui:ui-tooling")
 	debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+	implementation("com.google.dagger:hilt-android:2.48.1")
+	kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+
 	implementation(project(":ui:settings"))
+	implementation(project(":data:settings:api"))
 }
