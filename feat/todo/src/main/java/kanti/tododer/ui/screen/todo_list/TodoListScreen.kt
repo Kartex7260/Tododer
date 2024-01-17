@@ -6,6 +6,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -31,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.PopupProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
@@ -56,7 +59,7 @@ private fun TodoListTopBar(
 	plan: Plan?,
 	navController: NavController,
 	scrollBehavior: TopAppBarScrollBehavior,
-	topBarActions: @Composable () -> Unit
+	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?
 ) {
 	val title = when (plan?.type) {
 		PlanType.All -> stringResource(id = R.string.plan_all)
@@ -80,7 +83,26 @@ private fun TodoListTopBar(
 				)
 			}
 		},
-		actions = { topBarActions() },
+		actions = {
+			if (optionMenuItems != null) {
+				var expandOptionMenu by rememberSaveable { mutableStateOf(false) }
+				IconButton(onClick = { expandOptionMenu = true }) {
+					Icon(
+						imageVector = Icons.Default.MoreVert,
+						contentDescription = null,
+					)
+				}
+				DropdownMenu(
+					expanded = expandOptionMenu,
+					onDismissRequest = { expandOptionMenu = false },
+					properties = PopupProperties()
+				) {
+					optionMenuItems {
+						expandOptionMenu = false
+					}
+				}
+			}
+		},
 		scrollBehavior = scrollBehavior
 	)
 }
@@ -89,7 +111,7 @@ private fun TodoListTopBar(
 @Composable
 fun TodoListScreen(
 	navController: NavController,
-	topBarActions: @Composable () -> Unit = {},
+	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
 	vm: TodoListViewModel = hiltViewModel<TodoListViewModelImpl>()
 ) {
 	var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
@@ -178,7 +200,7 @@ fun TodoListScreen(
 				plan = plan,
 				scrollBehavior = scrollBehavior,
 				navController = navController,
-				topBarActions = topBarActions
+				optionMenuItems = optionMenuItems
 			)
 		},
 
@@ -259,13 +281,11 @@ fun PreviewTodoListScreen() {
 	TodoListScreen(
 		navController = rememberNavController(),
 		vm = TodoListViewModel,
-		topBarActions = {
-			IconButton(onClick = {  }) {
-				Icon(
-					imageVector = Icons.Default.MoreVert,
-					contentDescription = null
-				)
-			}
+		optionMenuItems = { closeMenu ->
+			DropdownMenuItem(
+				text = { Text(text = "Test menu item") },
+				onClick = { closeMenu() }
+			)
 		}
 	)
 }

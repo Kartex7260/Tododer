@@ -17,7 +17,7 @@ import kanti.tododer.ui.screen.todo_list.TodoListScreen
 
 fun NavGraphBuilder.addTodoNavGraph(
 	navController: NavController,
-	todoListTobBarActions: @Composable () -> Unit = {},
+	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
 	context: Context
 ) {
 	navigation(
@@ -29,7 +29,7 @@ fun NavGraphBuilder.addTodoNavGraph(
 		) {
 			TodoListScreen(
 				navController = navController,
-				topBarActions = todoListTobBarActions
+				optionMenuItems = optionMenuItems
 			)
 		}
 
@@ -55,7 +55,7 @@ fun NavGraphBuilder.addTodoNavGraph(
 		) {
 			PlanListScreen(
 				navController = navController,
-				topBarActions = todoListTobBarActions
+				optionMenuItems = optionMenuItems
 			)
 		}
 	}

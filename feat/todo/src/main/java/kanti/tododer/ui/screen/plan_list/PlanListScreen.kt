@@ -7,6 +7,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -52,7 +54,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 private fun PlanListTopBar(
 	back: () -> Unit,
-	topBarActions: @Composable () -> Unit,
+	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?,
 	scrollBehavior: TopAppBarScrollBehavior
 ) {
 	CenterAlignedTopAppBar(
@@ -68,7 +70,23 @@ private fun PlanListTopBar(
 			}
 		},
 		actions = {
-			topBarActions()
+			if (optionMenuItems != null) {
+				var expandOptionMenu by rememberSaveable { mutableStateOf(false) }
+				IconButton(onClick = { expandOptionMenu = true }) {
+					Icon(
+						imageVector = Icons.Default.MoreVert,
+						contentDescription = null
+					)
+				}
+				DropdownMenu(
+					expanded = expandOptionMenu,
+					onDismissRequest = { expandOptionMenu = false }
+				) {
+					optionMenuItems {
+						expandOptionMenu = false
+					}
+				}
+			}
 		},
 		scrollBehavior = scrollBehavior
 	)
@@ -78,7 +96,7 @@ private fun PlanListTopBar(
 @Composable
 fun PlanListScreen(
 	navController: NavController = rememberNavController(),
-	topBarActions: @Composable () -> Unit = {},
+	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
 	vm: PlanListViewModel = hiltViewModel<PlanListViewModelImpl>()
 ) {
 	var showRenameDialog: PlanData? by rememberSaveable { mutableStateOf(null) }
@@ -144,7 +162,7 @@ fun PlanListScreen(
 		topBar = {
 			PlanListTopBar(
 				back = { navController.popBackStack() },
-				topBarActions = topBarActions,
+				optionMenuItems = optionMenuItems,
 				scrollBehavior = scrollBehavior
 			)
 		},
@@ -256,13 +274,13 @@ fun PlanListScreen(
 @Composable
 private fun PreviewPlanListScreen() {
 	PlanListScreen(
-		topBarActions = {
-			IconButton(onClick = { }) {
-				Icon(
-					imageVector = Icons.Default.MoreVert,
-					contentDescription = null
-				)
-			}
+		optionMenuItems = { closeMenu ->
+			DropdownMenuItem(
+				text = { Text(text = "Test") },
+				onClick = {
+					closeMenu()
+				}
+			)
 		},
 		vm = PlanListViewModel
 	)
