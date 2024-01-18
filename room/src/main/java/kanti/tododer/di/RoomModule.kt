@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import kanti.tododer.common.Const
 import kanti.tododer.data.room.TododerDatabase
 import kanti.tododer.data.room.plan.PlanDao
+import kanti.tododer.data.room.progress.PlanProgressDao
 import kanti.tododer.data.room.todo.TodoDao
 import javax.inject.Singleton
 
@@ -34,5 +35,11 @@ object RoomModule {
 	@Singleton
 	fun provideTodoDao(database: TododerDatabase): TodoDao {
 		return database.todoDao()
+	}
+
+	@Provides
+	@Singleton
+	fun provideProgressDao(database: TododerDatabase): PlanProgressDao {
+		return database.progressDao()
 	}
 }
