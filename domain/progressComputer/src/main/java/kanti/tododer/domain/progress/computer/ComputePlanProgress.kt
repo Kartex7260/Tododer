@@ -31,7 +31,8 @@ class ComputePlanProgress @Inject constructor(
 		val children = getPlanChildren(planId)
 		for (child in children) {
 			progressComputer.add(child.id, child.done)
-			computeTodoChildren(child.toFullId(), progressComputer)
+			if (!child.done)
+				computeTodoChildren(child.toFullId(), progressComputer)
 		}
 	}
 
