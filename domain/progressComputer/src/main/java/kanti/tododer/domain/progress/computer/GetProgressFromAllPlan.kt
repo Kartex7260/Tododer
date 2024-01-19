@@ -4,9 +4,9 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.progress.PlanProgress
 import kanti.tododer.data.model.progress.ProgressRepository
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
@@ -23,15 +23,15 @@ class GetProgressFromAllPlan @Inject constructor(
 	val planAllProgress: Flow<Float> = planRepository.planAll.computeProgress()
 	val planDefaultProgress: Flow<Float> = planRepository.planDefault.computeProgress()
 
-	val plansProgress: Flow<PlanProgress> = planRepository.standardPlans.transform { plans ->
-		coroutineScope {
+	val plansProgress: Flow<PlanProgress> = channelFlow {
+		planRepository.standardPlans.collect { plans ->
 			for (plan in plans) {
 				launch {
 					var progress = progressRepository.getProgress(plan.id) ?: 0f
-					emit(PlanProgress(plan.id, progress))
+					channel.send(PlanProgress(plan.id, progress))
 
 					progress = computePlanProgress(plan.id)
-					emit(PlanProgress(plan.id, progress))
+					channel.send(PlanProgress(plan.id, progress))
 				}
 			}
 		}

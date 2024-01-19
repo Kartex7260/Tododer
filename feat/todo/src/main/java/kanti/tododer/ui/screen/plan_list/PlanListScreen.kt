@@ -1,6 +1,10 @@
 package kanti.tododer.ui.screen.plan_list
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -37,18 +41,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kanti.tododer.data.model.progress.PlanProgress
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalPlanDropdownMenu
 import kanti.tododer.ui.components.plan.PlanCard
 import kanti.tododer.ui.components.plan.PlanData
-import kanti.tododer.ui.components.plan.PlanLazyColumn
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModelImpl
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -138,7 +144,12 @@ fun PlanListScreen(
 		}
 	}
 
-	LifecycleStartEffect {
+	LifecycleResumeEffect(key1 = vm) {
+		vm.updateUiState()
+		onPauseOrDispose {  }
+	}
+
+	LifecycleStartEffect(key1 = vm) {
 		onStopOrDispose {
 			vm.rejectCancelChance()
 		}
@@ -188,22 +199,33 @@ fun PlanListScreen(
 			}
 		}
 	) { paddingValues ->
-		PlanLazyColumn(
-			modifier = Modifier
-				.padding(paddingValues),
-			preContent = {
+		LazyColumn(
+			modifier = Modifier.padding(paddingValues),
+			contentPadding = PaddingValues(
+				top = 12.dp,
+				bottom = 12.dp,
+				start = 16.dp,
+				end = 16.dp
+			),
+			verticalArrangement = Arrangement.spacedBy(8.dp)
+		) {
+			item {
+				val planAllProgress by vm.planAllProgress.collectAsState(initial = 0f)
+				val planAllWithProgress = planAll.copy(progress = planAllProgress)
 				PlanCard(
-					planData = planAll,
+					planData = planAllWithProgress,
 					onClick = {
 						vm.setCurrentPlan(planAll.id)
 						navController.popBackStack()
 					}
 				)
 
+				val planDefaultProgress by vm.planDefaultProgress.collectAsState(initial = 0f)
+				val planDefaultWithProgress = planDefault.copy(progress = planDefaultProgress)
 				PlanCard(
 					modifier = Modifier
 						.padding(top = 8.dp),
-					planData = planDefault,
+					planData = planDefaultWithProgress,
 					onClick = {
 						vm.setCurrentPlan(planDefault.id)
 						navController.popBackStack()
@@ -214,36 +236,46 @@ fun PlanListScreen(
 					modifier = Modifier
 						.padding(
 							top = 16.dp,
-							bottom = 16.dp,
+							bottom = 8.dp,
 							start = 16.dp,
 							end = 16.dp
 						)
 				)
-			},
-			content = plans,
-			onClick = { plan ->
-				vm.setCurrentPlan(plan.id)
-				navController.popBackStack()
-			},
-			action = { planData ->
-				var showDropdownMenu by remember {
-					mutableStateOf(false)
-				}
-				IconButton(onClick = { showDropdownMenu = true }) {
-					Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
-				}
-				NormalPlanDropdownMenu(
-					expanded = showDropdownMenu,
-					onDismissRequest = { showDropdownMenu = false },
-					onRename = {
-						showRenameDialog = planData
-					},
-					onDelete = {
-						vm.deletePlans(listOf(planData))
-					}
-				)
 			}
-		)
+
+			items(
+				items = plans.plans,
+				key = { it.id }
+			) { planData ->
+				val planProgress by vm.plansProgress.filter { it.planId == planData.id }
+					.collectAsState(initial = PlanProgress(planData.id, 0f))
+				val planWithProgress = planData.copy(progress = planProgress.progress)
+				PlanCard(
+					planData = planWithProgress,
+					onClick = {
+						vm.setCurrentPlan(planData.id)
+						navController.popBackStack()
+					}
+				) {
+					var showDropdownMenu by remember {
+						mutableStateOf(false)
+					}
+					IconButton(onClick = { showDropdownMenu = true }) {
+						Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+					}
+					NormalPlanDropdownMenu(
+						expanded = showDropdownMenu,
+						onDismissRequest = { showDropdownMenu = false },
+						onRename = {
+							showRenameDialog = planData
+						},
+						onDelete = {
+							vm.deletePlans(listOf(planData))
+						}
+					)
+				}
+			}
+		}
 	}
 
 	if (showRenameDialog != null) {

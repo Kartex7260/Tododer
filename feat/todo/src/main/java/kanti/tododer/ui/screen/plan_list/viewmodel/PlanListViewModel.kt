@@ -1,6 +1,7 @@
 package kanti.tododer.ui.screen.plan_list.viewmodel
 
 import android.util.Log
+import kanti.tododer.data.model.progress.PlanProgress
 import kanti.tododer.ui.components.plan.PlanData
 import kanti.tododer.ui.components.plan.PlansData
 import kotlinx.coroutines.CoroutineScope
@@ -22,6 +23,12 @@ interface PlanListViewModel {
 	val plans: StateFlow<PlansData>
 
 	val plansDeleted: SharedFlow<List<PlanData>>
+
+	val planAllProgress: SharedFlow<Float>
+	val planDefaultProgress: SharedFlow<Float>
+	val plansProgress: SharedFlow<PlanProgress>
+
+	fun updateUiState()
 
 	fun setCurrentPlan(planId: Long)
 
@@ -69,6 +76,15 @@ interface PlanListViewModel {
 
 		private val _plansDeleted = MutableSharedFlow<List<PlanData>>()
 		override val plansDeleted: SharedFlow<List<PlanData>> = _plansDeleted.asSharedFlow()
+
+		override val planAllProgress: SharedFlow<Float>
+			get() = MutableSharedFlow()
+		override val planDefaultProgress: SharedFlow<Float>
+			get() = MutableSharedFlow()
+		override val plansProgress: SharedFlow<PlanProgress>
+			get() = MutableSharedFlow()
+
+		override fun updateUiState() {}
 
 		override fun setCurrentPlan(planId: Long) {
 			Log.d(logTag, "setCurrentPlan(planId: Int = $planId)")

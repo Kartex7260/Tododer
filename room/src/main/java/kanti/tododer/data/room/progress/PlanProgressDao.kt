@@ -14,6 +14,6 @@ interface PlanProgressDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	suspend fun insert(progress: PlanProgressEntity)
 
-	@Query("DELETE FROM plan_progress WHERE plan_id = :planId LIMIT 1")
+	@Query("DELETE FROM plan_progress WHERE plan_id = :planId")
 	suspend fun deleteProgress(planId: Long)
 }

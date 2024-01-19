@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kanti.tododer.data.model.plan.PlanRepository
+import kanti.tododer.data.model.progress.PlanProgress
 import kanti.tododer.domain.plandeletebehaviour.DeletePlan
+import kanti.tododer.domain.progress.computer.GetProgressFromAllPlan
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.plan.PlanData
 import kanti.tododer.ui.components.plan.PlansData
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,6 +33,7 @@ class PlanListViewModelImpl @Inject constructor(
 	private val planRepository: PlanRepository,
 	private val deletePlan: DeletePlan,
 	private val appDataRepository: AppDataRepository,
+	private val getProgressFromAllPlan: GetProgressFromAllPlan,
 	@ApplicationContext private val appContext: Context
 ) : ViewModel(), PlanListViewModel {
 
@@ -92,6 +96,26 @@ class PlanListViewModelImpl @Inject constructor(
 		)
 
 	override val plansDeleted: SharedFlow<List<PlanData>> = deleteCancelManager.onDeleted
+
+	override val planAllProgress: SharedFlow<Float> = getProgressFromAllPlan.planAllProgress
+		.shareIn(
+			scope = viewModelScope,
+			started = SharingStarted.Lazily
+		)
+	override val planDefaultProgress: SharedFlow<Float> = getProgressFromAllPlan.planDefaultProgress
+		.shareIn(
+			scope = viewModelScope,
+			started = SharingStarted.Lazily
+		)
+	override val plansProgress: SharedFlow<PlanProgress> = getProgressFromAllPlan.plansProgress
+		.shareIn(
+			scope = viewModelScope,
+			started = SharingStarted.Lazily
+		)
+
+	override fun updateUiState() {
+		getProgressFromAllPlan.update()
+	}
 
 	override fun setCurrentPlan(planId: Long) {
 		viewModelScope.launch(NonCancellable) {
