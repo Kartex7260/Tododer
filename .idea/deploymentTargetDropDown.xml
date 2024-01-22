@@ -2,47 +2,6 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="All Tests">
-        <State />
-      </entry>
-      <entry key="PreviewTodoCard">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\kiril\.android\avd\Pixel_7_API_33_2.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-01-03T10:05:13.618573600Z" />
-        </State>
-      </entry>
-      <entry key="PreviewTodoListScreen">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\kiril\.android\avd\Pixel_7_API_33_2.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-01-03T11:19:52.805000600Z" />
-        </State>
-      </entry>
-      <entry key="TodoDaoTest">
-        <State />
-      </entry>
-      <entry key="app">
-        <State />
-      </entry>
       <entry key="app.phone">
         <State />
       </entry>

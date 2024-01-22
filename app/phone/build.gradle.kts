@@ -41,6 +41,13 @@ android {
 			applicationIdSuffix = ".debug"
 			versionNameSuffix = "-debug"
 		}
+		create("debug-release") {
+			isDebuggable = false
+			isMinifyEnabled = true
+			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+			applicationIdSuffix = ".debug"
+			versionNameSuffix = "-debug-release"
+		}
 	}
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_1_8
