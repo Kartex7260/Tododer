@@ -21,8 +21,18 @@ class TodoRoomDataSource @Inject constructor(
 		return todoDao.getAllChildren(fullId.toString()).map { it.toTodo(sl) }
 	}
 
-	override suspend fun getChildren(fullId: FullId, state: TodoState): List<Todo> {
+	override suspend fun getChildren(fullId: FullId, state: TodoState?): List<Todo> {
+		if (state == null) {
+			return getAllChildren(fullId)
+		}
 		return todoDao.getChildren(fullId.toString(), state.name).map { it.toTodo(sl) }
+	}
+
+	override suspend fun getChildrenCount(fullId: FullId, state: TodoState?): Long {
+		if (state == null) {
+			return todoDao.getAllChildrenCount(fullId.toString())
+		}
+		return todoDao.getChildrenCount(fullId.toString(), state.name)
 	}
 
 	override suspend fun insert(todo: Todo): Long {
@@ -50,5 +60,9 @@ class TodoRoomDataSource @Inject constructor(
 			delete(children.map { it.id })
 		}
 		todoDao.delete(todoIds)
+	}
+
+	override suspend fun deleteIfNameIsEmpty(todoId: Long) {
+		todoDao.deleteIfNameIsEmpty(todoId)
 	}
 }

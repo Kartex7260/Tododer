@@ -10,7 +10,9 @@ interface TodoLocalDataSource {
 
 	suspend fun getAllChildren(fullId: FullId): List<Todo>
 
-	suspend fun getChildren(fullId: FullId, state: TodoState): List<Todo>
+	suspend fun getChildren(fullId: FullId, state: TodoState?): List<Todo>
+
+	suspend fun getChildrenCount(fullId: FullId, state: TodoState?): Long
 
 	suspend fun insert(todo: Todo): Long
 
@@ -21,4 +23,6 @@ interface TodoLocalDataSource {
 	suspend fun changeDone(todoId: Long, isDone: Boolean)
 
 	suspend fun delete(todoIds: List<Long>)
+
+	suspend fun deleteIfNameIsEmpty(todoId: Long)
 }

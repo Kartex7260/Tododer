@@ -14,8 +14,14 @@ interface TodoDao {
 	@Query("SELECT * FROM todos WHERE parent_id = :parentId")
 	suspend fun getAllChildren(parentId: String): List<TodoEntity>
 
+	@Query("SELECT COUNT(*) FROM todos WHERE parent_id = :parentId")
+	suspend fun getAllChildrenCount(parentId: String): Long
+
 	@Query("SELECT * FROM todos WHERE parent_id = :parentId AND state LIKE '%' || :state || '%'")
 	suspend fun getChildren(parentId: String, state: String): List<TodoEntity>
+
+	@Query("SELECT COUNT(*) FROM todos WHERE parent_id = :parentId AND state LIKE '%' || :state || '%'")
+	suspend fun getChildrenCount(parentId: String, state: String): Long
 
 	@Query("DELETE FROM todos WHERE parent_id = :parentId")
 	suspend fun deleteChildren(parentId: String)
@@ -43,6 +49,9 @@ interface TodoDao {
 
 	@Query("DELETE FROM todos WHERE id IN(:todoIds)")
 	suspend fun delete(todoIds: List<Long>)
+
+	@Query("DELETE FROM todos WHERE id = :todoId AND title = ''")
+	suspend fun deleteIfNameIsEmpty(todoId: Long)
 
 	@Query("DELETE FROM todos")
 	suspend fun deleteAll()

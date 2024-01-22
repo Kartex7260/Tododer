@@ -1,6 +1,7 @@
 package kanti.tododer.data.model.todo
 
 import kanti.tododer.data.model.FullId
+import kanti.tododer.data.model.FullIdType
 import kanti.tododer.data.model.todo.datasource.local.TodoLocalDataSource
 import javax.inject.Inject
 
@@ -48,5 +49,12 @@ class TodoRepositoryImpl @Inject constructor(
 
 	override suspend fun delete(todoIds: List<Long>) {
 		localDataSource.delete(todoIds)
+	}
+
+	override suspend fun deleteIfNameIsEmptyAndNoChild(todoId: Long) {
+		val fullId = FullId(todoId, FullIdType.Todo)
+		if (localDataSource.getChildrenCount(fullId, TodoState.Normal) != 0L)
+			return
+		localDataSource.deleteIfNameIsEmpty(todoId)
 	}
 }
