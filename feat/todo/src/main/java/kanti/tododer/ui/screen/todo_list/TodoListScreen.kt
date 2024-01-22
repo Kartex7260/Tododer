@@ -1,6 +1,7 @@
 package kanti.tododer.ui.screen.todo_list
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
@@ -21,12 +22,15 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.autoSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -190,7 +194,28 @@ fun TodoListScreen(
 		}
 	}
 
-	val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+	@Composable
+	fun <T : Any> rememberSaveableByPlan(
+		saver: Saver<T, out Any> = autoSaver(),
+		init: () -> T
+	): T {
+		return rememberSaveable(
+			inputs = arrayOf(plan),
+			saver = saver,
+			key = plan.id.toString(),
+			init = init
+		)
+	}
+
+	val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
+		state = rememberSaveableByPlan(saver = TopAppBarState.Saver) {
+			TopAppBarState(
+				initialHeightOffsetLimit = -Float.MAX_VALUE,
+				initialHeightOffset = 0f,
+				initialContentOffset = 0f
+			)
+		}
+	)
 	Scaffold(
 		modifier = Modifier
 			.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -225,6 +250,9 @@ fun TodoListScreen(
 	) { paddingValues ->
 		TodoLazyColumn(
 			modifier = Modifier.padding(paddingValues),
+			state = rememberSaveableByPlan(saver = LazyListState.Saver) {
+				LazyListState(0, 0)
+			},
 			content = children,
 			onClick = { todoData ->
 				navController.navigate(
