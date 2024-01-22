@@ -1,6 +1,10 @@
 package kanti.tododer.ui.components.dialogs
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -47,7 +51,17 @@ fun RenameDialog(
 			OutlinedTextField(
 				value = newName,
 				onValueChange = { newName = it },
-				label = label
+				label = label,
+				trailingIcon = {
+					if (!newName.isEmpty()) {
+						IconButton(onClick = { newName = "" }) {
+							Icon(
+								imageVector = Icons.Default.Clear,
+								contentDescription = null
+							)
+						}
+					}
+				}
 			)
 		}
 	)
