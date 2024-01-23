@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/phone/release/output-metadata.json
+/app/phone/release/phone-release.apk

@@ -49,5 +49,5 @@ dependencies {
 	debugImplementation("androidx.compose.ui:ui-tooling")
 	debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-	implementation(files("../../lib/fillingProgressBar-compose.aar"))
+	implementation(project(":ui:fillingProgressBar"))
 }
