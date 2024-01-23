@@ -13,8 +13,12 @@ class TodoRepositoryImpl @Inject constructor(
 		return localDataSource.getTodo(todoId)
 	}
 
-	override suspend fun getChildren(fullId: FullId): List<Todo> {
-		return localDataSource.getChildren(fullId, TodoState.Normal)
+	override suspend fun getChildren(fullId: FullId, state: TodoState?): List<Todo> {
+		return localDataSource.getChildren(fullId, state)
+	}
+
+	override suspend fun getChildrenCount(fullId: FullId, state: TodoState?): Long {
+		return localDataSource.getChildrenCount(fullId, state)
 	}
 
 	override suspend fun deleteChildren(fullId: FullId) {

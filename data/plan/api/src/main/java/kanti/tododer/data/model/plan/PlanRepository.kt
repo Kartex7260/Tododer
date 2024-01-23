@@ -24,6 +24,8 @@ interface PlanRepository {
 
 	suspend fun delete(planIds: List<Long>): List<Plan>
 
+	suspend fun deletePlanIfNameIsEmpty(planId: Long)
+
 	suspend fun undoDelete()
 
 	suspend fun undoChanceRejected(): List<Plan>?

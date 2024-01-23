@@ -60,6 +60,10 @@ class PlanRepositoryImpl @Inject constructor(
 		return plans
 	}
 
+	override suspend fun deletePlanIfNameIsEmpty(planId: Long) {
+		localDataSource.deletePlanIfNameIsEmpty(planId)
+	}
+
 	override suspend fun undoDelete() {
 		val plans = chanceUndoMutex.withLock {
 			chanceUndo.unregister() ?: return

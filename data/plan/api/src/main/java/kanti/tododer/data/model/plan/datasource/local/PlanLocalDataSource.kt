@@ -26,6 +26,8 @@ interface PlanLocalDataSource {
 
 	suspend fun delete(planIds: List<Long>)
 
+	suspend fun deletePlanIfNameIsEmpty(planId: Long)
+
 	suspend fun isEmpty(): Boolean
 
 	suspend fun clear()

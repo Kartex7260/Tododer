@@ -6,7 +6,9 @@ interface TodoRepository {
 
 	suspend fun getTodo(todoId: Long): Todo?
 
-	suspend fun getChildren(fullId: FullId): List<Todo>
+	suspend fun getChildren(fullId: FullId, state: TodoState? = TodoState.Normal): List<Todo>
+
+	suspend fun getChildrenCount(fullId: FullId, state: TodoState? = TodoState.Normal): Long
 
 	suspend fun deleteChildren(fullId: FullId)
 
