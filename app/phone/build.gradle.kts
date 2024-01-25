@@ -69,12 +69,10 @@ android {
 			applicationIdSuffix = ".debug"
 			versionNameSuffix = "-debug"
 		}
-		create("debug-release") {
+		create("pre-release") {
 			isDebuggable = false
-			isMinifyEnabled = true
-			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-			applicationIdSuffix = ".debug"
-			versionNameSuffix = "-debug-release"
+			applicationIdSuffix = ".pre_release"
+			versionNameSuffix = "-pre-release"
             signingConfig = signingConfigs.getByName("release")
             matchingFallbacks += listOf("release")
         }
