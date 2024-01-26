@@ -20,6 +20,7 @@ interface TodoListViewModel {
 	val currentPlan: StateFlow<TodoListUiState>
 
 	val todosDeleted: SharedFlow<List<TodoData>>
+	val blankTodoDeleted: SharedFlow<Unit>
 
 	val newTodoCreated: SharedFlow<Long>
 
@@ -68,6 +69,8 @@ interface TodoListViewModel {
 
 		private val _todoDeleted = MutableSharedFlow<List<TodoData>>()
 		override val todosDeleted: SharedFlow<List<TodoData>> = _todoDeleted.asSharedFlow()
+
+		override val blankTodoDeleted: SharedFlow<Unit> = MutableSharedFlow()
 
 		private val _newTodoCreated = MutableSharedFlow<Long>()
 		override val newTodoCreated: SharedFlow<Long> = _newTodoCreated.asSharedFlow()

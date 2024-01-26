@@ -4,7 +4,9 @@ import kanti.tododer.data.model.todo.TodoRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class DeleteBlankTodoWithFlow @Inject constructor(
     private val todoRepository: TodoRepository
 ) {

@@ -156,6 +156,16 @@ fun TodoListScreen(
 		}
 	}
 
+	val blankTodoDeleted = stringResource(id = R.string.deleted_blank_todo)
+	LaunchedEffect(key1 = vm) {
+		vm.blankTodoDeleted.collectLatest {
+			snackbarHostState.showSnackbar(
+				message = blankTodoDeleted,
+				withDismissAction = true
+			)
+		}
+	}
+
 	LifecycleStartEffect(key1 = vm) {
 		onStopOrDispose {
 			vm.onStop()

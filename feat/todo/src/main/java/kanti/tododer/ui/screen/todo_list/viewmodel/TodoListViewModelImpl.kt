@@ -16,17 +16,20 @@ import kanti.tododer.data.model.todo.TodoRepository
 import kanti.tododer.data.model.todo.toTodoData
 import kanti.tododer.domain.getplanchildren.GetPlanChildren
 import kanti.tododer.domain.plandeletebehaviour.DeletePlanIfBlank
+import kanti.tododer.domain.todo.delete.DeleteBlankTodoWithFlow
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
 import kanti.todoer.data.appdata.AppDataRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -40,6 +43,7 @@ class TodoListViewModelImpl @Inject constructor(
 	private val planRepository: PlanRepository,
 	private val getPlanChildren: GetPlanChildren,
 	private val deletePlanIfBlank: DeletePlanIfBlank,
+	deleteBlankTodoWithFlow: DeleteBlankTodoWithFlow,
 	@ApplicationContext context: Context
 ) : ViewModel(), TodoListViewModel {
 
@@ -100,8 +104,20 @@ class TodoListViewModelImpl @Inject constructor(
 	private val _todosDeleted = MutableSharedFlow<List<TodoData>>()
 	override val todosDeleted: SharedFlow<List<TodoData>> = _todosDeleted.asSharedFlow()
 
+	private val _blankTodoDeleted = MutableSharedFlow<Unit>()
+	override val blankTodoDeleted: SharedFlow<Unit> = _blankTodoDeleted.asSharedFlow()
+
 	private val _newTodoCreated = MutableSharedFlow<Long>()
 	override val newTodoCreated: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
+
+	init {
+		viewModelScope.launch {
+			deleteBlankTodoWithFlow.blankTodoDeleted.collectLatest {
+				delay(100L)
+				_blankTodoDeleted.emit(Unit)
+			}
+		}
+	}
 
 	override fun updateUiState(deletedTodoId: Long?) {
 		updateUiState.value = Any()
