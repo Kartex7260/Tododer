@@ -22,6 +22,7 @@ interface TodoDetailViewModel {
 
 	val childrenTodosDeleted: SharedFlow<List<TodoData>>
 	val currentTodoDeleted: SharedFlow<TodoData>
+	val blankTodoDeleted: SharedFlow<Unit>
 
 	fun createNewTodo()
 
@@ -69,7 +70,9 @@ interface TodoDetailViewModel {
 
 		private val _currentTodoDeleted = MutableSharedFlow<TodoData>()
 		override val currentTodoDeleted: SharedFlow<TodoData> = _currentTodoDeleted.asSharedFlow()
-		
+
+		override val blankTodoDeleted: SharedFlow<Unit> = MutableSharedFlow()
+
 		private val _todoChildren = MutableStateFlow(TodosData(listOf(
 			TodoData(id = 2, title = "Test 1"),
 			TodoData(id = 3, title = "Test 2"),

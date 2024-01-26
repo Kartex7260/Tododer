@@ -189,6 +189,16 @@ fun TodoDetailScreen(
 		}
 	}
 
+	val blankTodoDeleted = stringResource(id = R.string.deleted_blank_todo)
+	LaunchedEffect(key1 = vm) {
+		vm.blankTodoDeleted.collectLatest {
+			snackBarHost.showSnackbar(
+				message = blankTodoDeleted,
+				withDismissAction = true
+			)
+		}
+	}
+
 	LaunchedEffect(key1 = vm) {
 		vm.currentTodoDeleted.collectLatest { todo ->
 			val message = "$soloDeletedFragment1 \"${todo.title}\" $soloDeletedFragment2"

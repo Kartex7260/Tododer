@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 
-class DeleteTodoWithFlow @Inject constructor(
+class DeleteBlankTodoWithFlow @Inject constructor(
     private val todoRepository: TodoRepository
 ) {
 
@@ -13,7 +13,8 @@ class DeleteTodoWithFlow @Inject constructor(
     val blankTodoDeleted = _blankTodoDeleted.asSharedFlow()
 
     suspend operator fun invoke(todoId: Long) {
-        todoRepository.deleteIfNameIsEmptyAndNoChild(todoId)
-        _blankTodoDeleted.emit(Unit)
+        val deleted = todoRepository.deleteIfNameIsEmptyAndNoChild(todoId)
+        if (deleted)
+            _blankTodoDeleted.emit(Unit)
     }
 }

@@ -26,5 +26,5 @@ interface TodoRepository {
 
 	suspend fun delete(todoIds: List<Long>)
 
-	suspend fun deleteIfNameIsEmptyAndNoChild(todoId: Long)
+	suspend fun deleteIfNameIsEmptyAndNoChild(todoId: Long): Boolean
 }

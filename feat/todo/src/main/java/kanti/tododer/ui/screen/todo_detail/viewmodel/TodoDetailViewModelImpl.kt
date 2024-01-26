@@ -7,6 +7,7 @@ import kanti.tododer.data.model.FullId
 import kanti.tododer.data.model.FullIdType
 import kanti.tododer.data.model.todo.TodoRepository
 import kanti.tododer.data.model.todo.toTodoData
+import kanti.tododer.domain.todo.delete.DeleteBlankTodoWithFlow
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,7 +31,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoDetailViewModelImpl @Inject constructor(
-	private val todoRepository: TodoRepository
+	private val todoRepository: TodoRepository,
+	private val deleteBlankTodoWithFlow: DeleteBlankTodoWithFlow
 ) : ViewModel(), TodoDetailViewModel {
 
 	private val stack: Stack<Long> = Stack()
@@ -90,6 +93,11 @@ class TodoDetailViewModelImpl @Inject constructor(
 
 	private val _currentTodoDeleted = MutableSharedFlow<TodoData>()
 	override val currentTodoDeleted: SharedFlow<TodoData> = _currentTodoDeleted.asSharedFlow()
+
+	override val blankTodoDeleted: SharedFlow<Unit> = deleteBlankTodoWithFlow.blankTodoDeleted
+		.onSubscription {
+			_updateTodoChildren.value = Any()
+		}
 
 	override fun createNewTodo() {
 		viewModelScope.launch {
@@ -202,6 +210,10 @@ class TodoDetailViewModelImpl @Inject constructor(
 	override fun pop() {
 		viewModelScope.launch {
 			try {
+				val curTodoId = _currentTodo.value
+				launch {
+					deleteBlankTodoWithFlow(curTodoId)
+				}
 				val current = stack.pop()
 				_currentTodo.emit(current)
 			} catch (ex: EmptyStackException) {

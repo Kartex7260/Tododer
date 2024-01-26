@@ -68,6 +68,7 @@ dependencies {
 	implementation(project(":domain:planDeleteBehaviour"))
 	implementation(project(":domain:getPlanChildren"))
 	implementation(project(":domain:progressComputer"))
+	implementation(project(":domain:deleteTodo"))
 	implementation(project(":ui:deleter"))
 	implementation(project(":ui:todo"))
 	implementation(project(":ui:plan"))

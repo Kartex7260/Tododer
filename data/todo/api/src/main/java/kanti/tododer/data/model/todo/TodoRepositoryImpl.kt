@@ -60,10 +60,12 @@ class TodoRepositoryImpl @Inject constructor(
 		localDataSource.delete(todoIds)
 	}
 
-	override suspend fun deleteIfNameIsEmptyAndNoChild(todoId: Long) {
+	override suspend fun deleteIfNameIsEmptyAndNoChild(todoId: Long): Boolean {
 		val fullId = FullId(todoId, FullIdType.Todo)
-		if (localDataSource.getChildrenCount(fullId, TodoState.Normal) != 0L)
-			return
+		val childrenCount = localDataSource.getChildrenCount(fullId, null)
+		if (childrenCount != 0L)
+			return false
 		localDataSource.deleteIfNameIsEmpty(todoId)
+		return true
 	}
 }
