@@ -19,3 +19,20 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepattributes LineNumberTable,SourceFile
+-renamesourcefileattribute SourceFile
+
+#-keep class kanti.sl.** { *; }
+#-keep interface kanti.sl.** { *; }
+#-keep enum kanti.sl.** { *; }
+#
+#-keep class kanti.tododer.data.** { *; }
+#-keep interface kanti.tododer.data.** { *; }
+#-keep enum kanti.tododer.data.** { *; }
+
+-keep class kanti.tododer.data.model.plan.PlanState { *; }
+-keep class * extends kanti.tododer.data.model.plan.PlanState { *; }
+
+-keep class kanti.tododer.data.model.todo.TodoState { *; }
+-keep class * extends kanti.tododer.data.model.todo.TodoState { *; }

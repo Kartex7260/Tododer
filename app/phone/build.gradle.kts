@@ -58,21 +58,28 @@ android {
 	buildTypes {
 		release {
 			isDebuggable = false
+
 			isMinifyEnabled = true
+			isShrinkResources = true
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
 			signingConfig = signingConfigs.getByName("release")
 			matchingFallbacks += listOf("release")
 		}
 		debug {
 			isDebuggable = true
+
 			isMinifyEnabled = false
+
 			applicationIdSuffix = ".debug"
 			versionNameSuffix = "-debug"
 		}
 		create("pre-release") {
 			isDebuggable = false
+
 			applicationIdSuffix = ".pre_release"
 			versionNameSuffix = "-pre-release"
+
             signingConfig = signingConfigs.getByName("release")
             matchingFallbacks += listOf("release")
         }
@@ -120,6 +127,7 @@ dependencies {
 	kapt("com.google.dagger:hilt-android-compiler:2.48.1")
 
 	implementation(project(":data:plan:api"))
+	implementation(project(":data:todo:api"))
 
 	implementation(project(":data"))
 	implementation(project(":feat:todo"))
