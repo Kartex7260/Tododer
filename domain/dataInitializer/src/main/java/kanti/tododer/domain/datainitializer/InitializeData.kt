@@ -16,10 +16,12 @@ class InitializeData @Inject constructor(
 				listOf(
 					Plan(
 						id = Const.PlansIds.ALL,
+						title = "All",
 						type = PlanType.All
 					),
 					Plan(
 						id = Const.PlansIds.DEFAULT,
+						title = "Default",
 						type = PlanType.Default
 					)
 				)
