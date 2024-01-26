@@ -15,6 +15,7 @@ import kanti.tododer.data.model.plan.toPlan
 import kanti.tododer.data.model.todo.TodoRepository
 import kanti.tododer.data.model.todo.toTodoData
 import kanti.tododer.domain.getplanchildren.GetPlanChildren
+import kanti.tododer.domain.plandeletebehaviour.DeletePlanIfBlank
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodosData
@@ -38,6 +39,7 @@ class TodoListViewModelImpl @Inject constructor(
 	private val todoRepository: TodoRepository,
 	private val planRepository: PlanRepository,
 	private val getPlanChildren: GetPlanChildren,
+	private val deletePlanIfBlank: DeletePlanIfBlank,
 	@ApplicationContext context: Context
 ) : ViewModel(), TodoListViewModel {
 
@@ -75,7 +77,7 @@ class TodoListViewModelImpl @Inject constructor(
 			)
 		}
 		.map { planWithChildren ->
-			TodoListUiState.Success(
+			TodoListUiState(
 				plan = planWithChildren.first,
 				children = TodosData(
 					todos = planWithChildren.second.map { todo ->
@@ -92,7 +94,7 @@ class TodoListViewModelImpl @Inject constructor(
 		.stateIn(
 			scope = viewModelScope,
 			started = SharingStarted.Lazily,
-			initialValue = TodoListUiState.Empty
+			initialValue = TodoListUiState()
 		)
 
 	private val _todosDeleted = MutableSharedFlow<List<TodoData>>()
@@ -116,19 +118,14 @@ class TodoListViewModelImpl @Inject constructor(
 
 	override fun createNewTodo() {
 		viewModelScope.launch {
-			when (val curPlan = currentPlan.value) {
-				is TodoListUiState.Success -> {
-					val planFullId = if (curPlan.plan.type == PlanType.All) {
-						FullId(id = Const.PlansIds.DEFAULT, FullIdType.Plan)
-					} else {
-						curPlan.plan.toFullId()
-					}
-					val todoId = todoRepository.create(planFullId, "", "")
-					_newTodoCreated.emit(todoId)
-					updateUiState.value = Any()
-				}
-				else -> {}
+			val planFullId = if (currentPlan.value.plan.type == PlanType.All) {
+				FullId(id = Const.PlansIds.DEFAULT, FullIdType.Plan)
+			} else {
+				currentPlan.value.plan.toFullId()
 			}
+			val todoId = todoRepository.create(planFullId, "", "")
+			_newTodoCreated.emit(todoId)
+			updateUiState.value = Any()
 		}
 	}
 
@@ -164,6 +161,14 @@ class TodoListViewModelImpl @Inject constructor(
 	override fun rejectCancelChance() {
 		viewModelScope.launch {
 			deleteCancelManager.rejectCancelChance()
+		}
+	}
+
+	override fun onStop() {
+		rejectCancelChance()
+		viewModelScope.launch {
+			val planFullId = FullId(currentPlan.value.plan.id, FullIdType.Plan)
+			deletePlanIfBlank.invoke(planFullId)
 		}
 	}
 }

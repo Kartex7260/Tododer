@@ -43,16 +43,14 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import kanti.tododer.ui.UiConst
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.UiConst
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodoLazyColumn
-import kanti.tododer.ui.components.todo.TodosData
-import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListUiState
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModelImpl
 import kotlinx.coroutines.flow.collectLatest
@@ -125,18 +123,8 @@ fun TodoListScreen(
 	}
 
 	val todoListUiState by vm.currentPlan.collectAsState()
-	val (plan, children) = when (todoListUiState) {
-		is TodoListUiState.Empty -> Pair(Plan(), TodosData())
-		is TodoListUiState.Success -> {
-			Pair(
-				(todoListUiState as TodoListUiState.Success).plan,
-				(todoListUiState as TodoListUiState.Success).children
-			)
-		}
-		is TodoListUiState.Fail -> {
-			Pair(Plan(), TodosData())
-		}
-	}
+	val plan = todoListUiState.plan
+	val children = todoListUiState.children
 
 	val soloDeletedFragment1 = stringResource(id = R.string.deleted_solo_1)
 	val soloDeletedFragment2 = stringResource(id = R.string.deleted_solo_2_todo)
@@ -170,7 +158,7 @@ fun TodoListScreen(
 
 	LifecycleStartEffect(key1 = vm) {
 		onStopOrDispose {
-			vm.rejectCancelChance()
+			vm.onStop()
 		}
 	}
 

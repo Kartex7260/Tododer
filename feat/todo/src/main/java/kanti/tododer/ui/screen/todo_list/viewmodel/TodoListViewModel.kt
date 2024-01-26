@@ -37,13 +37,15 @@ interface TodoListViewModel {
 
 	fun rejectCancelChance()
 
+	fun onStop()
+
 	companion object : TodoListViewModel {
 
 		private const val logTag = "TodoListViewModel"
 
 		private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
-		private val _children = MutableStateFlow<TodoListUiState>(TodoListUiState.Success(
+		private val _children = MutableStateFlow<TodoListUiState>(TodoListUiState(
 			plan = Plan(1, title = "Test", type = PlanType.Custom),
 			children = TodosData(listOf(
 				TodoData(1, "Test 1"),
@@ -99,6 +101,10 @@ interface TodoListViewModel {
 
 		override fun rejectCancelChance() {
 			Log.d(logTag, "rejectCancelChance()")
+		}
+
+		override fun onStop() {
+			Log.d(logTag, "onStop()")
 		}
 	}
 }
