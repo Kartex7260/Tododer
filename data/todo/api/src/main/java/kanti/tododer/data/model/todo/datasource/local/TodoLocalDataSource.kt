@@ -24,5 +24,5 @@ interface TodoLocalDataSource {
 
 	suspend fun delete(todoIds: List<Long>)
 
-	suspend fun deleteIfNameIsEmpty(todoId: Long)
+	suspend fun deleteIfNameIsEmpty(todoId: Long): Boolean
 }

@@ -65,7 +65,6 @@ class TodoRepositoryImpl @Inject constructor(
 		val childrenCount = localDataSource.getChildrenCount(fullId, null)
 		if (childrenCount != 0L)
 			return false
-		localDataSource.deleteIfNameIsEmpty(todoId)
-		return true
+		return localDataSource.deleteIfNameIsEmpty(todoId)
 	}
 }

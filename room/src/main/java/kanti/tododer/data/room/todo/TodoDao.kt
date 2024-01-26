@@ -51,7 +51,7 @@ interface TodoDao {
 	suspend fun delete(todoIds: List<Long>)
 
 	@Query("DELETE FROM todos WHERE id = :todoId AND title = ''")
-	suspend fun deleteIfNameIsEmpty(todoId: Long)
+	suspend fun deleteIfNameIsEmpty(todoId: Long): Int
 
 	@Query("DELETE FROM todos")
 	suspend fun deleteAll()

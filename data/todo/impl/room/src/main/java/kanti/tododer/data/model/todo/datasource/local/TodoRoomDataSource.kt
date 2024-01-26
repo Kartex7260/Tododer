@@ -57,7 +57,7 @@ class TodoRoomDataSource @Inject constructor(
 		todoDao.delete(todoIds)
 	}
 
-	override suspend fun deleteIfNameIsEmpty(todoId: Long) {
-		todoDao.deleteIfNameIsEmpty(todoId)
+	override suspend fun deleteIfNameIsEmpty(todoId: Long): Boolean {
+		return todoDao.deleteIfNameIsEmpty(todoId) == 1
 	}
 }
