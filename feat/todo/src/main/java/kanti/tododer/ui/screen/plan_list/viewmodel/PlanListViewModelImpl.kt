@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.progress.PlanProgress
 import kanti.tododer.domain.plandeletebehaviour.DeletePlan
+import kanti.tododer.domain.plandeletebehaviour.DeletePlanIfBlank
 import kanti.tododer.domain.progress.computer.GetProgressFromAllPlan
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.plan.PlanData
@@ -34,6 +35,7 @@ class PlanListViewModelImpl @Inject constructor(
 	private val deletePlan: DeletePlan,
 	private val appDataRepository: AppDataRepository,
 	private val getProgressFromAllPlan: GetProgressFromAllPlan,
+	deletePlanIfBlank: DeletePlanIfBlank,
 	@ApplicationContext private val appContext: Context
 ) : ViewModel(), PlanListViewModel {
 
@@ -96,6 +98,7 @@ class PlanListViewModelImpl @Inject constructor(
 		)
 
 	override val plansDeleted: SharedFlow<List<PlanData>> = deleteCancelManager.onDeleted
+	override val blankPlanDeleted: SharedFlow<Unit> = deletePlanIfBlank.planDeleted
 
 	override val planAllProgress: SharedFlow<Float> = getProgressFromAllPlan.planAllProgress
 		.shareIn(

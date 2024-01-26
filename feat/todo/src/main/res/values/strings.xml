@@ -34,4 +34,6 @@
     <string name="deleted_multi_1">Deleted</string>
     <string name="deleted_multi_2_todo">tasks</string>
     <string name="deleted_multi_2_plan">plans</string>
+
+    <string name="deleted_blank_plan">An blank plan has been deleted</string>
 </resources>

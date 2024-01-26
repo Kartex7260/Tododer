@@ -36,6 +36,7 @@ dependencies {
 	implementation(project(":data"))
 	implementation(project(":data:plan:api"))
 	implementation(project(":data:todo:api"))
+	implementation(project(":data:appData:api"))
 
 	implementation("com.google.dagger:hilt-android:2.48.1")
 	kapt("com.google.dagger:hilt-android-compiler:2.48.1")

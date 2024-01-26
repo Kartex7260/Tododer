@@ -23,6 +23,7 @@ interface PlanListViewModel {
 	val plans: StateFlow<PlansData>
 
 	val plansDeleted: SharedFlow<List<PlanData>>
+	val blankPlanDeleted: SharedFlow<Unit>
 
 	val planAllProgress: SharedFlow<Float>
 	val planDefaultProgress: SharedFlow<Float>
@@ -76,6 +77,9 @@ interface PlanListViewModel {
 
 		private val _plansDeleted = MutableSharedFlow<List<PlanData>>()
 		override val plansDeleted: SharedFlow<List<PlanData>> = _plansDeleted.asSharedFlow()
+
+		private val _blankPlanDeleted = MutableSharedFlow<Unit>()
+		override val blankPlanDeleted: SharedFlow<Unit> = _blankPlanDeleted.asSharedFlow()
 
 		override val planAllProgress: SharedFlow<Float>
 			get() = MutableSharedFlow()

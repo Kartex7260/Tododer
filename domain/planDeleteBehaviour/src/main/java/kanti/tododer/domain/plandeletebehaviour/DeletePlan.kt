@@ -4,13 +4,15 @@ import kanti.tododer.data.model.FullId
 import kanti.tododer.data.model.FullIdType
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.todo.TodoRepository
+import kanti.todoer.data.appdata.AppDataRepository
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class DeletePlan @Inject constructor(
 	private val todoRepository: TodoRepository,
-	private val planRepository: PlanRepository
+	private val planRepository: PlanRepository,
+	private val appDataRepository: AppDataRepository
 ) {
 
 	suspend operator fun invoke(planIds: List<Long>) {
@@ -23,6 +25,9 @@ class DeletePlan @Inject constructor(
 				todoRepository.deleteChildren(
 					fullId = FullId(planId, FullIdType.Plan)
 				)
+				launch {
+					appDataRepository.deleteIfCurrent(planId)
+				}
 			}
 		}
 	}

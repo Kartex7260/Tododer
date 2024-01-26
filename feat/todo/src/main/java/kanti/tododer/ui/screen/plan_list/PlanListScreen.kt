@@ -144,6 +144,16 @@ fun PlanListScreen(
 		}
 	}
 
+	val blankPlanDeleted = stringResource(id = R.string.deleted_blank_plan)
+	LaunchedEffect(key1 = vm) {
+		vm.blankPlanDeleted.collectLatest {
+			snackbarHostState.showSnackbar(
+				message = blankPlanDeleted,
+				withDismissAction = true
+			)
+		}
+	}
+
 	LifecycleResumeEffect(key1 = vm) {
 		vm.updateUiState()
 		onPauseOrDispose {  }
