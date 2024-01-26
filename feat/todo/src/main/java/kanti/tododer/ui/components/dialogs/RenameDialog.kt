@@ -24,6 +24,7 @@ fun RenameDialog(
 	title: (@Composable () -> Unit)? = null,
 	label: (@Composable () -> Unit)? = null,
 	name: String,
+	allowEmptyName: Boolean = false,
 	onRename: (newName: String) -> Unit = {}
 ) {
 	var newName by rememberSaveable(inputs = arrayOf(name)) {
@@ -36,7 +37,8 @@ fun RenameDialog(
 				onClick = {
 					onRename(newName)
 					onCloseDialog()
-				}
+				},
+				enabled = newName.isNotBlank() || allowEmptyName
 			) {
 				Text(text = stringResource(id = R.string.rename))
 			}
