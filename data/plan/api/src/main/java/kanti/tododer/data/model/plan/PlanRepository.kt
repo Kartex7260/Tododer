@@ -24,7 +24,7 @@ interface PlanRepository {
 
 	suspend fun delete(planIds: List<Long>): List<Plan>
 
-	suspend fun deletePlanIfNameIsEmpty(planId: Long)
+	suspend fun deletePlanIfNameIsEmpty(planId: Long): Boolean
 
 	suspend fun undoDelete()
 

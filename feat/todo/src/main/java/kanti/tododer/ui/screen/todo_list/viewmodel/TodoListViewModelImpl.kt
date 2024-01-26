@@ -184,7 +184,7 @@ class TodoListViewModelImpl @Inject constructor(
 		rejectCancelChance()
 		viewModelScope.launch {
 			val planFullId = FullId(currentPlan.value.plan.id, FullIdType.Plan)
-			deletePlanIfBlank.invoke(planFullId)
+			deletePlanIfBlank(planFullId)
 		}
 	}
 }

@@ -86,8 +86,8 @@ class PlanRoomDataSource @Inject constructor(
 		planDao.delete(planIds)
 	}
 
-	override suspend fun deletePlanIfNameIsEmpty(planId: Long) {
-		planDao.deleteIfNameEmpty(planId)
+	override suspend fun deletePlanIfNameIsEmpty(planId: Long): Boolean {
+		return planDao.deleteIfNameEmpty(planId) == 1
 	}
 
 	override suspend fun isEmpty(): Boolean {

@@ -22,8 +22,10 @@ class DeletePlanIfBlank @Inject constructor(
     suspend operator fun invoke(planFullId: FullId) {
         if (todoRepository.getChildrenCount(planFullId) == 0L)
             return
-        planRepository.deletePlanIfNameIsEmpty(planFullId.id)
-        appDataRepository.deleteIfCurrent(planFullId.id)
-        _planDeleted.emit(Unit)
+        val deleted = planRepository.deletePlanIfNameIsEmpty(planFullId.id)
+        if (deleted) {
+            appDataRepository.deleteIfCurrent(planFullId.id)
+            _planDeleted.emit(Unit)
+        }
     }
 }
