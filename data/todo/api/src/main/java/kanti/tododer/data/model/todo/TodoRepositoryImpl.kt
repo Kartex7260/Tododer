@@ -52,6 +52,11 @@ class TodoRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun delete(todoIds: List<Long>) {
+		for (todoId in todoIds) {
+			val fullId = FullId(todoId, FullIdType.Todo)
+			val children = getChildren(fullId)
+			delete(children.map { it.id })
+		}
 		localDataSource.delete(todoIds)
 	}
 
