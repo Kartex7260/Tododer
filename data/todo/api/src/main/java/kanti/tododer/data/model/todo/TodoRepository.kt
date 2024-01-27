@@ -12,6 +12,8 @@ interface TodoRepository {
 
 	suspend fun deleteChildren(fullId: FullId)
 
+	suspend fun exists(todoId: Long): Boolean
+
 	suspend fun create(
 		parentFullId: FullId,
 		title: String,

@@ -200,9 +200,11 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun push(todoId: Long) {
-		if (_currentTodo.value != EMPTY_TODO_ID)
-			stack.push(_currentTodo.value)
 		viewModelScope.launch {
+			if (!todoRepository.exists(todoId))
+				return@launch
+			if (_currentTodo.value != EMPTY_TODO_ID)
+				stack.push(_currentTodo.value)
 			_currentTodo.emit(todoId)
 		}
 	}
@@ -211,7 +213,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 		viewModelScope.launch {
 			try {
 				val curTodoId = _currentTodo.value
-				launch {
+				launch(NonCancellable) {
 					deleteBlankTodoWithFlow(curTodoId)
 				}
 				val current = stack.pop()

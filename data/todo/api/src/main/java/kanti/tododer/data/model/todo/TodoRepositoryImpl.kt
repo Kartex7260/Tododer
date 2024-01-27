@@ -26,6 +26,10 @@ class TodoRepositoryImpl @Inject constructor(
 		localDataSource.delete(children.map { it.id })
 	}
 
+	override suspend fun exists(todoId: Long): Boolean {
+		return getTodo(todoId) != null
+	}
+
 	override suspend fun create(
 		parentFullId: FullId,
 		title: String,
