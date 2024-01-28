@@ -50,6 +50,8 @@ interface TodoDetailViewModel {
 
 	fun pop()
 
+	fun onStop()
+
 	companion object : TodoDetailViewModel {
 
 		private const val logTag = "TodoDetailViewModel"
@@ -154,6 +156,10 @@ interface TodoDetailViewModel {
 
 		override fun rejectCancelDelete() {
 			Log.d(logTag, "rejectCancelDelete()")
+		}
+
+		override fun onStop() {
+			Log.d(logTag, "onStop()")
 		}
 	}
 }

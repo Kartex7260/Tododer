@@ -221,7 +221,7 @@ fun TodoDetailScreen(
 
 	LifecycleStartEffect(key1 = vm) {
 		onStopOrDispose {
-			vm.rejectCancelDelete()
+			vm.onStop()
 		}
 	}
 

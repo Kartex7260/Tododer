@@ -228,6 +228,13 @@ class TodoDetailViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun onStop() {
+		rejectCancelDelete()
+		viewModelScope.launch(NonCancellable) {
+			deleteBlankTodoWithFlow(_currentTodo.value)
+		}
+	}
+
 	private suspend fun deletePop(): Boolean {
 		return try {
 			val current = stack.pop()
