@@ -63,6 +63,7 @@ import kanti.tododer.ui.components.todo.TodoCard
 import kanti.tododer.ui.components.todo.TodoEditor
 import kanti.tododer.ui.components.todo.TodoEditorControllers
 import kanti.tododer.ui.components.todo.TodoData
+import kanti.tododer.ui.components.todo.TodoEditorDefaults
 import kanti.tododer.ui.screen.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.screen.todo_detail.viewmodel.TodoDetailViewModelImpl
 import kotlinx.coroutines.flow.collectLatest
@@ -286,6 +287,10 @@ fun TodoDetailScreen(
 							editorSize = size
 						},
 					initialState = todoDetail,
+					strings = TodoEditorDefaults.strings(
+						title = stringResource(id = R.string.title),
+						remark = stringResource(id = R.string.remark)
+					),
 					onTitleChanged = { title ->
 						vm.changeTitle(title)
 					},
