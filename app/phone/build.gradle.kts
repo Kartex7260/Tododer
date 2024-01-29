@@ -42,7 +42,7 @@ android {
 		applicationId = "kanti.tododer"
 		minSdk = 24
 		targetSdk = 34
-		versionCode = 1
+		versionCode = 2
 
 		val calendar = Calendar.getInstance()
 		versionName = "${calendar.get(Calendar.YEAR)}" +
