@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.settings.R
 import kanti.tododer.ui.components.settings.ChangeThemeItem
+import kanti.tododer.ui.components.settings.ChangeThemeItemDefaults
 import kanti.tododer.ui.screen.main.viewmodel.SettingsMainViewModel
 import kanti.tododer.ui.screen.main.viewmodel.SettingsMainViewModelImpl
 
@@ -69,6 +70,12 @@ fun SettingsMainScreen(
 			item {
 				ChangeThemeItem(
 					state = uiState.appTheme,
+					strings = ChangeThemeItemDefaults.strings(
+						appTheme = stringResource(id = R.string.app_theme),
+						themeAsSystem = stringResource(id = R.string.app_theme_as_system),
+						themeLight = stringResource(id = R.string.app_theme_light),
+						themeDark = stringResource(id = R.string.app_theme_dark)
+					),
 					onThemeChanged = { vm.changeAppTheme(it) }
 				)
 			}

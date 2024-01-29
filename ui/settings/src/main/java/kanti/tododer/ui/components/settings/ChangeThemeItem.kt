@@ -14,30 +14,26 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ChangeThemeItem(
 	modifier: Modifier = Modifier,
 	state: ThemeSettingsUiState,
+	strings: ChangeThemeItemStrings = ChangeThemeItemDefaults.strings(),
 	onThemeChanged: ((ThemeSettingsUiState) -> Unit) = {}
 ) {
-	val appThemeAsSystem = stringResource(id = R.string.app_theme_as_system)
-	val appThemeLight = stringResource(id = R.string.app_theme_light)
-	val appThemeDark = stringResource(id = R.string.app_theme_dark)
-
 	var expandThemeMenu by rememberSaveable { mutableStateOf(false) }
 	ListItem(
 		modifier = modifier
 			.clickable { expandThemeMenu = true },
-		headlineContent = { Text(text = stringResource(id = R.string.app_theme)) },
+		headlineContent = { Text(text = strings.appTheme) },
 		supportingContent = {
 			Text(
 				text = when (state) {
-					ThemeSettingsUiState.AS_SYSTEM -> appThemeAsSystem
-					ThemeSettingsUiState.LIGHT -> appThemeLight
-					ThemeSettingsUiState.DARK -> appThemeDark
+					ThemeSettingsUiState.AS_SYSTEM -> strings.themeAsSystem
+					ThemeSettingsUiState.LIGHT -> strings.themeLight
+					ThemeSettingsUiState.DARK -> strings.themeDark
 				}
 			)
 		},
@@ -53,21 +49,21 @@ fun ChangeThemeItem(
 	}
 	DropdownMenu(expanded = expandThemeMenu, onDismissRequest = { closeMenu() }) {
 		DropdownMenuItem(
-			text = { Text(text = appThemeAsSystem) },
+			text = { Text(text = strings.themeAsSystem) },
 			onClick = {
 				onThemeChanged(ThemeSettingsUiState.AS_SYSTEM)
 				closeMenu()
 			}
 		)
 		DropdownMenuItem(
-			text = { Text(text = appThemeLight) },
+			text = { Text(text = strings.themeLight) },
 			onClick = {
 				onThemeChanged(ThemeSettingsUiState.LIGHT)
 				closeMenu()
 			}
 		)
 		DropdownMenuItem(
-			text = { Text(text = appThemeDark) },
+			text = { Text(text = strings.themeDark) },
 			onClick = {
 				onThemeChanged(ThemeSettingsUiState.DARK)
 				closeMenu()
