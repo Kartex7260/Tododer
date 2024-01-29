@@ -112,33 +112,32 @@ fun PlanListScreen(
 
 	val cancelStringRes = stringResource(id = R.string.cancel)
 
-	val deletedSoloFragment1 = stringResource(id = R.string.deleted_solo_1)
-	val deletedSoloFragment2 = stringResource(id = R.string.deleted_solo_2_plan)
-	val deletedMultiFragment1 = stringResource(id = R.string.deleted_multi_1)
-	val deletedMultiFragment2 = stringResource(id = R.string.deleted_multi_2_plan)
+	val regexCount = stringResource(id = R.string.regex_count)
+	val regexName = stringResource(id = R.string.regex_name)
+	val planDeleted = stringResource(id = R.string.plan_deleted)
+	val plansDeleted = stringResource(id = R.string.plans_deleted)
 	LaunchedEffect(key1 = vm) {
 		vm.plansDeleted.collectLatest { plans ->
-			if (plans.isNotEmpty()) {
-				val message = if (plans.size == 1) {
-					val plan = plans[0]
-					"$deletedSoloFragment1 \"${plan.title}\" $deletedSoloFragment2"
-				} else {
-					"$deletedMultiFragment1 ${plans.size} $deletedMultiFragment2"
-				}
+			if (plans.isEmpty())
+				return@collectLatest
 
-				val result = snackbarHostState.showSnackbar(
-					message = message,
-					actionLabel = cancelStringRes,
-					withDismissAction = true,
-					duration = SnackbarDuration.Short
-				)
-				when (result) {
-					SnackbarResult.ActionPerformed -> {
-						vm.cancelDelete()
-					}
-					SnackbarResult.Dismissed -> {
-						vm.rejectCancelChance()
-					}
+			val message = if (plans.size == 1) {
+				planDeleted.replace(regexName, plans[0].title)
+			} else {
+				plansDeleted.replace(regexCount, plans.size.toString())
+			}
+			val result = snackbarHostState.showSnackbar(
+				message = message,
+				actionLabel = cancelStringRes,
+				withDismissAction = true,
+				duration = SnackbarDuration.Short
+			)
+			when (result) {
+				SnackbarResult.ActionPerformed -> {
+					vm.cancelDelete()
+				}
+				SnackbarResult.Dismissed -> {
+					vm.rejectCancelChance()
 				}
 			}
 		}

@@ -30,10 +30,9 @@ fun DeleteTodoDialog(
 			}
 		},
 		text = {
-			val firstFragment = stringResource(id = R.string.delete_ask_1)
-			val secondFragment = stringResource(id = R.string.delete_ask_2_todo)
+			val regexName = stringResource(id = R.string.regex_name)
 			Text(
-				text = "$firstFragment \"$todoTitle\" $secondFragment?"
+				text = stringResource(id = R.string.delete_todo_ask).replace(regexName, todoTitle)
 			)
 		}
 	)

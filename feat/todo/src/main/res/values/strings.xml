@@ -6,14 +6,14 @@
     <string name="plan_all">All tasks</string>
     <string name="plan_default">Tasks</string>
 
-    <string name="nav_destination_todo">todo</string>
+    <string name="nav_destination_todo" translatable="false">todo</string>
 
-    <string name="nav_destination_todos">todos</string>
+    <string name="nav_destination_todos" translatable="false">todos</string>
 
-    <string name="nav_destination_todo_detail">todoChildren</string>
-    <string name="nav_destination_todo_detail_todo_id_param">todoId</string>
+    <string name="nav_destination_todo_detail" translatable="false">todoChildren</string>
+    <string name="nav_destination_todo_detail_todo_id_param" translatable="false">todoId</string>
 
-    <string name="nav_destination_plans">plans</string>
+    <string name="nav_destination_plans" translatable="false">plans</string>
 
     <string name="create_new_plan">Create a new plan</string>
     <string name="create">Create</string>
@@ -24,17 +24,15 @@
     <string name="delete">Delete</string>
     <string name="new_title">New title</string>
 
-    <string name="delete_ask_1">Delete the</string>
-    <string name="delete_ask_2_todo">task</string>
-
-    <string name="deleted_solo_1">The</string>
-    <string name="deleted_solo_2_todo">task has been deleted</string>
-    <string name="deleted_solo_2_plan">plan has been deleted</string>
-    
-    <string name="deleted_multi_1">Deleted</string>
-    <string name="deleted_multi_2_todo">tasks</string>
-    <string name="deleted_multi_2_plan">plans</string>
-
+    <string name="title">Title</string>
+    <string name="remark">Remark</string>
+    <string name="plan_deleted">The \"{name}\" plan has been deleted</string>
     <string name="deleted_blank_plan">An blank plan has been deleted</string>
+    <string name="todo_deleted">The \"{name}\" task has been deleted</string>
     <string name="deleted_blank_todo">An blank todo has been deleted</string>
+    <string name="plans_deleted">{count} plans were deleted</string>
+    <string name="regex_name" translatable="false">{name}</string>
+    <string name="regex_count" translatable="false">{count}</string>
+    <string name="todos_deleted">{count} todos were deleted</string>
+    <string name="delete_todo_ask">Delete the \"{name}\" todo?</string>
 </resources>

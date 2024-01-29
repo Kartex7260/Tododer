@@ -63,6 +63,7 @@ import kanti.tododer.ui.components.todo.TodoCard
 import kanti.tododer.ui.components.todo.TodoEditor
 import kanti.tododer.ui.components.todo.TodoEditorControllers
 import kanti.tododer.ui.components.todo.TodoData
+import kanti.tododer.ui.components.todo.TodoEditorDefaults
 import kanti.tododer.ui.screen.todo_detail.viewmodel.TodoDetailViewModel
 import kanti.tododer.ui.screen.todo_detail.viewmodel.TodoDetailViewModelImpl
 import kotlinx.coroutines.flow.collectLatest
@@ -159,19 +160,22 @@ fun TodoDetailScreen(
 	}
 
 	val snackBarHost = remember { SnackbarHostState() }
-	val soloDeletedFragment1 = stringResource(id = R.string.deleted_solo_1)
-	val soloDeletedFragment2 = stringResource(id = R.string.deleted_solo_2_todo)
-	val multiDeletedFragment1 = stringResource(id = R.string.deleted_multi_1)
-	val multiDeletedFragment2 = stringResource(id = R.string.deleted_multi_2_todo)
+	val regexName = stringResource(id = R.string.regex_name)
+	val regexCount = stringResource(id = R.string.regex_count)
+	val todoDeleted = stringResource(id = R.string.todo_deleted)
+	val todosDeleted = stringResource(id = R.string.todos_deleted)
 	val cancelStringRes = stringResource(id = R.string.cancel)
 	LaunchedEffect(key1 = vm) {
 		vm.childrenTodosDeleted.collectLatest { todos ->
+			if (todos.isEmpty())
+				return@collectLatest
+
 			val message = if (todos.size == 1) {
-				val todo = todos[0]
-				"$soloDeletedFragment1 \"${todo.title}\" $soloDeletedFragment2"
+				todoDeleted.replace(regexName, todos[0].title)
 			} else {
-				"$multiDeletedFragment1 ${todos.size} $multiDeletedFragment2"
+				todosDeleted.replace(regexCount, todos.size.toString())
 			}
+
 			val result = snackBarHost.showSnackbar(
 				message = message,
 				withDismissAction = true,
@@ -201,9 +205,8 @@ fun TodoDetailScreen(
 
 	LaunchedEffect(key1 = vm) {
 		vm.currentTodoDeleted.collectLatest { todo ->
-			val message = "$soloDeletedFragment1 \"${todo.title}\" $soloDeletedFragment2"
 			val result = snackBarHost.showSnackbar(
-				message = message,
+				message = todoDeleted,
 				withDismissAction = true,
 				actionLabel = cancelStringRes,
 				duration = SnackbarDuration.Short
@@ -286,6 +289,10 @@ fun TodoDetailScreen(
 							editorSize = size
 						},
 					initialState = todoDetail,
+					strings = TodoEditorDefaults.strings(
+						title = stringResource(id = R.string.title),
+						remark = stringResource(id = R.string.remark)
+					),
 					onTitleChanged = { title ->
 						vm.changeTitle(title)
 					},
