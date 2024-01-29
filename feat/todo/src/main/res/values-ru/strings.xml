@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="plans">Планы</string>
+    <string name="plan_all">Все задачи</string>
+    <string name="plan_default">Задачи</string>
+    <string name="create_new_plan">Создать план</string>
+    <string name="create">Создать</string>
+    <string name="cancel">Отмена</string>
+    <string name="plan_name">Имя плана</string>
+    <string name="rename">Переименовать</string>
+    <string name="delete">Удалить</string>
+    <string name="new_title">Новый заголовок</string>
+    <string name="delete_ask_1">Удалить</string>
+    <string name="delete_ask_2_todo">задачу</string>
+    <string name="deleted_solo_1">Удалена</string>
+    <string name="deleted_solo_2_todo">задача</string>
+    <string name="deleted_solo_2_plan">план</string>
+    <string name="deleted_multi_1">Удалить</string>
+    <string name="deleted_multi_2_todo">задачи</string>
+    <string name="deleted_multi_2_plan">плана</string>
+    <string name="deleted_blank_plan">Пустой план удалён</string>
+    <string name="deleted_blank_todo">Пустая задача удаленна</string>
+    <string name="title">Загаловок</string>
+    <string name="remark">Примечание</string>
+</resources>

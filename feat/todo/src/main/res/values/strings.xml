@@ -6,14 +6,14 @@
     <string name="plan_all">All tasks</string>
     <string name="plan_default">Tasks</string>
 
-    <string name="nav_destination_todo">todo</string>
+    <string name="nav_destination_todo" translatable="false">todo</string>
 
-    <string name="nav_destination_todos">todos</string>
+    <string name="nav_destination_todos" translatable="false">todos</string>
 
-    <string name="nav_destination_todo_detail">todoChildren</string>
-    <string name="nav_destination_todo_detail_todo_id_param">todoId</string>
+    <string name="nav_destination_todo_detail" translatable="false">todoChildren</string>
+    <string name="nav_destination_todo_detail_todo_id_param" translatable="false">todoId</string>
 
-    <string name="nav_destination_plans">plans</string>
+    <string name="nav_destination_plans" translatable="false">plans</string>
 
     <string name="create_new_plan">Create a new plan</string>
     <string name="create">Create</string>
