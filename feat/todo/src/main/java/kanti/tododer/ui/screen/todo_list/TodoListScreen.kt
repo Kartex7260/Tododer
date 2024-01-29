@@ -126,19 +126,22 @@ fun TodoListScreen(
 	val plan = todoListUiState.plan
 	val children = todoListUiState.children
 
-	val soloDeletedFragment1 = stringResource(id = R.string.deleted_solo_1)
-	val soloDeletedFragment2 = stringResource(id = R.string.deleted_solo_2_todo)
-	val multiDeletedFragment1 = stringResource(id = R.string.deleted_multi_1)
-	val multiDeletedFragment2 = stringResource(id = R.string.deleted_multi_2_todo)
+	val regexCount = stringResource(id = R.string.regex_count)
+	val regexName = stringResource(id = R.string.regex_name)
+	val todoDeleted = stringResource(id = R.string.todo_deleted)
+	val todosDeleted = stringResource(id = R.string.todos_deleted)
 	val cancelStringRes = stringResource(id = R.string.cancel)
 	LaunchedEffect(key1 = vm) {
 		vm.todosDeleted.collectLatest { deletedTodos ->
+			if (deletedTodos.isEmpty())
+				return@collectLatest
+
 			val message = if (deletedTodos.size == 1) {
-				val deletedTodo = deletedTodos[0]
-				"$soloDeletedFragment1 \"${deletedTodo.title}\" $soloDeletedFragment2"
+				todoDeleted.replace(regexName, deletedTodos[0].title)
 			} else {
-				"$multiDeletedFragment1 ${deletedTodos.size} $multiDeletedFragment2"
+				todosDeleted.replace(regexCount, deletedTodos.size.toString())
 			}
+
 			val result = snackbarHostState.showSnackbar(
 				message = message,
 				actionLabel = cancelStringRes,
