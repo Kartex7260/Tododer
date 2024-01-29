@@ -346,7 +346,7 @@ fun TodoDetailScreen(
 						mutableStateOf(false)
 					}
 					IconButton(
-						onClick = { expanded = true }
+						onClick = { expanded = !expanded }
 					) {
 						Icon(
 							imageVector = Icons.Default.MoreVert,

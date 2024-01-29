@@ -72,4 +72,5 @@ dependencies {
 	implementation(project(":ui:deleter"))
 	implementation(project(":ui:todo"))
 	implementation(project(":ui:plan"))
+	implementation(project(":ui:fillingProgressBar"))
 }

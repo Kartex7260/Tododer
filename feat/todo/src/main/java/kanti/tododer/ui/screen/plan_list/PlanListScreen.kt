@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
@@ -78,13 +79,14 @@ private fun PlanListTopBar(
 		actions = {
 			if (optionMenuItems != null) {
 				var expandOptionMenu by rememberSaveable { mutableStateOf(false) }
-				IconButton(onClick = { expandOptionMenu = true }) {
+				IconButton(onClick = { expandOptionMenu = !expandOptionMenu }) {
 					Icon(
 						imageVector = Icons.Default.MoreVert,
 						contentDescription = null
 					)
 				}
 				DropdownMenu(
+					offset = DpOffset(12.dp, 0.dp),
 					expanded = expandOptionMenu,
 					onDismissRequest = { expandOptionMenu = false }
 				) {
