@@ -1,6 +1,7 @@
 package kanti.tododer.ui.screen
 
 import android.content.Context
+import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
@@ -40,7 +41,8 @@ fun NavGraphBuilder.addTodoNavGraph(
 				navArgument(todoDetailTodoIdParam) { type = NavType.LongType }
 			),
 			enterTransition = { slideInHorizontally { it } },
-			exitTransition = { slideOutHorizontally { it } }
+			exitTransition = { slideOutHorizontally { it } },
+			popEnterTransition = { EnterTransition.None }
 		) {
 			TodoDetailScreen(
 				navController = navController,

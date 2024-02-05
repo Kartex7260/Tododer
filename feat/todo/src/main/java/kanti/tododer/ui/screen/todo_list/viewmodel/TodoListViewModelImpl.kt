@@ -47,10 +47,10 @@ class TodoListViewModelImpl @Inject constructor(
 	@ApplicationContext context: Context
 ) : ViewModel(), TodoListViewModel {
 
-	private val deleteCancelManager = DeleteCancelManager<TodoData>(
-		toKey = { id },
+	private val deleteCancelManager = DeleteCancelManager<TodoDeletion>(
+		toKey = { todoData.id },
 		onDelete = { todos ->
-			todoRepository.delete(todos.map { it.id })
+			todoRepository.delete(todos.map { it.todoData.id })
 			updateUiState.value = Any()
 		}
 	)
@@ -101,8 +101,8 @@ class TodoListViewModelImpl @Inject constructor(
 			initialValue = TodoListUiState()
 		)
 
-	private val _todosDeleted = MutableSharedFlow<List<TodoData>>()
-	override val todosDeleted: SharedFlow<List<TodoData>> = _todosDeleted.asSharedFlow()
+	private val _todosDeleted = MutableSharedFlow<List<TodoDeletion>>()
+	override val todosDeleted: SharedFlow<List<TodoDeletion>> = _todosDeleted.asSharedFlow()
 
 	private val _blankTodoDeleted = MutableSharedFlow<Unit>()
 	override val blankTodoDeleted: SharedFlow<Unit> = _blankTodoDeleted.asSharedFlow()
@@ -126,7 +126,7 @@ class TodoListViewModelImpl @Inject constructor(
 			return
 		viewModelScope.launch {
 			val deletedTodo = todoRepository.getTodo(deletedTodoId) ?: return@launch
-			val deletedTodoData = listOf(deletedTodo.toTodoData())
+			val deletedTodoData = listOf(TodoDeletion(deletedTodo.toTodoData(), true))
 			deleteCancelManager.delete(deletedTodoData)
 			_todosDeleted.emit(deletedTodoData)
 		}
@@ -163,8 +163,8 @@ class TodoListViewModelImpl @Inject constructor(
 		if (todos.isEmpty())
 			return
 		viewModelScope.launch {
-			deleteCancelManager.delete(todos)
-			_todosDeleted.emit(todos)
+			deleteCancelManager.delete(todos.map { TodoDeletion(it, false) })
+			_todosDeleted.emit(todos.map { TodoDeletion(it, false) })
 		}
 	}
 
