@@ -1,5 +1,6 @@
 package kanti.tododer.ui.screen.todo_detail.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,8 +26,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.EmptyStackException
-import java.util.Stack
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +34,8 @@ class TodoDetailViewModelImpl @Inject constructor(
 	private val deleteBlankTodoWithFlow: DeleteBlankTodoWithFlow
 ) : ViewModel(), TodoDetailViewModel {
 
-	private val stack: Stack<Long> = Stack()
+	private val logTag = "TodoDetailViewModelImpl"
+
 	private val _currentTodo = MutableStateFlow(EMPTY_TODO_ID)
 
 	private val deleteCancelManager = DeleteCancelManager<TodoData>(
@@ -48,13 +48,11 @@ class TodoDetailViewModelImpl @Inject constructor(
 		}
 	)
 
-	private val _emptyStack = MutableSharedFlow<Long?>()
-	override val emptyStack: SharedFlow<Long?> = _emptyStack.asSharedFlow()
-
 	private val _updateTodoDetail = MutableStateFlow(Any())
 	override val todoDetail: StateFlow<TodoData> = _currentTodo
 		.combine(_updateTodoDetail) { currentTodo, _ -> currentTodo }
 		.map { todoId ->
+			Log.d(logTag, "TodoRepository.getTodo($todoId)")
 			val todo = todoRepository.getTodo(todoId)
 			todo?.toTodoData()
 		}
@@ -69,6 +67,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 	override val todoChildren: StateFlow<TodosData> = todoDetail
 		.combine(_updateTodoChildren) { todo, _ -> todo }
 		.map { todoData ->
+			Log.d(logTag, "TodoRepository.getChildren(${todoData.id})")
 			val fullId = FullId(todoData.id, FullIdType.Todo)
 			todoRepository.getChildren(fullId)
 		}
@@ -103,6 +102,21 @@ class TodoDetailViewModelImpl @Inject constructor(
 			}
 		}
 
+	private val _toNext = MutableSharedFlow<Long>()
+	override val toNext: SharedFlow<Long> = _toNext.asSharedFlow()
+
+	private val _onExit = MutableSharedFlow<Unit>()
+	override val onExit: SharedFlow<Unit> = _onExit.asSharedFlow()
+
+	override fun show(todoId: Long) {
+		_currentTodo.value = todoId
+	}
+
+	override fun reshow() {
+		_updateTodoDetail.value = Any()
+		_updateTodoChildren.value = Any()
+	}
+
 	override fun createNewTodo() {
 		viewModelScope.launch {
 			val currentTodo = todoDetail.value
@@ -110,7 +124,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 				return@launch
 			val parentFullId = FullId(currentTodo.id, FullIdType.Todo)
 			val todoId = todoRepository.create(parentFullId, "", "")
-			push(todoId)
+			_toNext.emit(todoId)
 			_updateTodoChildren.value = Any()
 		}
 	}
@@ -163,13 +177,9 @@ class TodoDetailViewModelImpl @Inject constructor(
 				return@launch
 
 			val todoData = todoDetail.value
-			val exit = deletePop()
-			if (exit) {
-				_emptyStack.emit(currentTodoId)
-			} else {
-				deleteCancelManager.delete(listOf(todoData))
-				_currentTodoDeleted.emit(todoData)
-			}
+			_onExit.emit(Unit)
+			deleteCancelManager.delete(listOf(todoData))
+			_currentTodoDeleted.emit(todoData)
 		}
 	}
 
@@ -178,7 +188,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 			val currentDeletedMap = deleteCancelManager.deletedValues.value
 			val currentDeleted = currentDeletedMap.values.firstOrNull() ?: return@launch
 			deleteCancelManager.cancelDelete()
-			push(currentDeleted.id)
+			_toNext.emit(currentDeleted.id)
 		}
 	}
 
@@ -203,45 +213,10 @@ class TodoDetailViewModelImpl @Inject constructor(
 		}
 	}
 
-	override fun push(todoId: Long) {
-		viewModelScope.launch {
-			if (!todoRepository.exists(todoId))
-				return@launch
-			if (_currentTodo.value != EMPTY_TODO_ID)
-				stack.push(_currentTodo.value)
-			_currentTodo.emit(todoId)
-		}
-	}
-
-	override fun pop() {
-		viewModelScope.launch {
-			try {
-				val curTodoId = _currentTodo.value
-				launch(NonCancellable) {
-					deleteBlankTodoWithFlow(curTodoId)
-				}
-				val current = stack.pop()
-				_currentTodo.emit(current)
-			} catch (ex: EmptyStackException) {
-				_emptyStack.emit(null)
-			}
-		}
-	}
-
 	override fun onStop() {
 		rejectCancelDelete()
 		viewModelScope.launch(NonCancellable) {
 			deleteBlankTodoWithFlow(_currentTodo.value)
-		}
-	}
-
-	private suspend fun deletePop(): Boolean {
-		return try {
-			val current = stack.pop()
-			_currentTodo.emit(current)
-			false
-		} catch (ex: EmptyStackException) {
-			true
 		}
 	}
 

@@ -15,14 +15,19 @@ import kotlinx.coroutines.launch
 
 interface TodoDetailViewModel {
 
-	val emptyStack: SharedFlow<Long?>
-
 	val todoDetail: StateFlow<TodoData>
 	val todoChildren: StateFlow<TodosData>
 
 	val childrenTodosDeleted: SharedFlow<List<TodoData>>
 	val currentTodoDeleted: SharedFlow<TodoData>
 	val blankTodoDeleted: SharedFlow<Unit>
+
+	val toNext: SharedFlow<Long>
+	val onExit: SharedFlow<Unit>
+
+	fun show(todoId: Long)
+
+	fun reshow()
 
 	fun createNewTodo()
 
@@ -46,10 +51,6 @@ interface TodoDetailViewModel {
 
 	fun rejectCancelDelete()
 
-	fun push(todoId: Long)
-
-	fun pop()
-
 	fun onStop()
 
 	companion object : TodoDetailViewModel {
@@ -57,12 +58,6 @@ interface TodoDetailViewModel {
 		private const val logTag = "TodoDetailViewModel"
 
 		private val coroutineScope = CoroutineScope(Dispatchers.Main)
-
-		private const val maxPop = 3
-		private var currentPop = 0
-
-		private val _emptyStack = MutableSharedFlow<Long?>()
-		override val emptyStack: SharedFlow<Long?> = _emptyStack.asSharedFlow()
 
 		private val _todoDetail = MutableStateFlow(TodoData())
 		override val todoDetail: StateFlow<TodoData> = _todoDetail.asStateFlow()
@@ -91,6 +86,17 @@ interface TodoDetailViewModel {
 		)))
 		override val todoChildren: StateFlow<TodosData> = _todoChildren.asStateFlow()
 
+		override val toNext: SharedFlow<Long> = MutableSharedFlow()
+		override val onExit: SharedFlow<Unit> = MutableSharedFlow()
+
+		override fun show(todoId: Long) {
+			Log.d(logTag, "show(Long = $todoId)")
+		}
+
+		override fun reshow() {
+			Log.d(logTag, "reshow()")
+		}
+
 		override fun createNewTodo() {
 			Log.d(logTag, "createNewTodo()")
 		}
@@ -116,20 +122,6 @@ interface TodoDetailViewModel {
 
 		override fun changeDoneChild(todoId: Long, isDone: Boolean) {
 			Log.d(logTag, "changeDoneChild(todoId: Int = $todoId, isDone: Boolean = $isDone)")
-		}
-
-		override fun push(todoId: Long) {
-			Log.d(logTag, "push(todoId: Int = $todoId)")
-		}
-
-		override fun pop() {
-			Log.d(logTag, "pop()")
-			currentPop++
-			if (currentPop >= maxPop) {
-				coroutineScope.launch {
-					_emptyStack.emit(value = null)
-				}
-			}
 		}
 
 		override fun deleteCurrent() {
