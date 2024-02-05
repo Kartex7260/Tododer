@@ -4,10 +4,12 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.progress.PlanProgress
 import kanti.tododer.data.model.progress.ProgressRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,7 +37,7 @@ class GetProgressFromAllPlan @Inject constructor(
 				}
 			}
 		}
-	}
+	}.flowOn(Dispatchers.Default)
 
 	fun update() {
 		_update.value = Any()
@@ -48,5 +50,5 @@ class GetProgressFromAllPlan @Inject constructor(
 
 				progress = computePlanProgress(plan.id)
 				emit(progress)
-			}
+			}.flowOn(Dispatchers.Default)
 }

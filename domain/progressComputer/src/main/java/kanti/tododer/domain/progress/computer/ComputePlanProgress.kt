@@ -5,8 +5,9 @@ import kanti.tododer.data.model.progress.ProgressRepository
 import kanti.tododer.data.model.todo.TodoRepository
 import kanti.tododer.data.model.todo.toFullId
 import kanti.tododer.domain.getplanchildren.GetPlanChildren
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ComputePlanProgress @Inject constructor(
@@ -16,7 +17,7 @@ class ComputePlanProgress @Inject constructor(
 ) {
 
 	suspend operator fun invoke(planId: Long): Float {
-		return coroutineScope {
+		return withContext(Dispatchers.Default) {
 			val progressComputer = ProgressComputer()
 			computePlanChildren(planId, progressComputer)
 			val progress = progressComputer.progress
