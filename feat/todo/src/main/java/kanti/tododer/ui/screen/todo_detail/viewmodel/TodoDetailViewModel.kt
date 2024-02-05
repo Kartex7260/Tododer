@@ -25,7 +25,7 @@ interface TodoDetailViewModel {
 	val blankTodoDeleted: SharedFlow<Unit>
 
 	val toNext: SharedFlow<Long>
-	val onExit: SharedFlow<Unit>
+	val onExit: SharedFlow<TodoData?>
 
 	fun show(todoId: Long)
 
@@ -91,7 +91,7 @@ interface TodoDetailViewModel {
 		override val todoChildren: StateFlow<TodosData> = _todoChildren.asStateFlow()
 
 		override val toNext: SharedFlow<Long> = MutableSharedFlow()
-		override val onExit: SharedFlow<Unit> = MutableSharedFlow()
+		override val onExit: SharedFlow<TodoData?> = MutableSharedFlow()
 
 		override fun show(todoId: Long) {
 			Log.d(logTag, "show(Long = $todoId)")

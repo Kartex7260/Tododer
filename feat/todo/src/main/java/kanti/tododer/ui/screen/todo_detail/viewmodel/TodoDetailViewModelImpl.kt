@@ -107,8 +107,8 @@ class TodoDetailViewModelImpl @Inject constructor(
 	private val _toNext = MutableSharedFlow<Long>()
 	override val toNext: SharedFlow<Long> = _toNext.asSharedFlow()
 
-	private val _onExit = MutableSharedFlow<Unit>()
-	override val onExit: SharedFlow<Unit> = _onExit.asSharedFlow()
+	private val _onExit = MutableSharedFlow<TodoData?>()
+	override val onExit: SharedFlow<TodoData?> = _onExit.asSharedFlow()
 
 	override fun show(todoId: Long) {
 		_currentTodo.value = todoId
@@ -186,9 +186,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 				return@launch
 
 			val todoData = todoDetail.value
-			_onExit.emit(Unit)
-			deleteCancelManager.delete(listOf(todoData))
-			_currentTodoDeleted.emit(todoData)
+			_onExit.emit(todoData)
 		}
 	}
 
