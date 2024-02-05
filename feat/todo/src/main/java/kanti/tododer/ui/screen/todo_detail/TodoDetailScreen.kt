@@ -388,9 +388,10 @@ fun TodoDetailScreen(
     }
 
     if (showDeleteDialog) {
+        val todoTitle: String by vm.requireTodoTitle().collectAsState(initial = "")
         DeleteTodoDialog(
             onCloseDialog = { showDeleteDialog = false },
-            todoTitle = todoDetail.title,
+            todoTitle = todoTitle,
             delete = { vm.deleteCurrent() }
         )
     }
