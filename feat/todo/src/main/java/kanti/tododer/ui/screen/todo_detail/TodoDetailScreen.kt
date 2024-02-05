@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -153,9 +154,17 @@ fun TodoDetailScreen(
         vm.show(todoId)
     }
 
-    LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME) {
+    LifecycleResumeEffect {
         Log.d(logTag, "onResume($todoId): vm.reshow()")
-        vm.reshow()
+
+        val deletedTodo = navController.currentBackStackEntry?.savedStateHandle
+            ?.get<Long>(UiConst.BackStackKeys.DELETED)
+        vm.reshow(deletedTodo)
+
+        navController.currentBackStackEntry?.savedStateHandle
+            ?.set(UiConst.BackStackKeys.DELETED, null)
+
+        onPauseOrDispose {  }
     }
 
     LifecycleStartEffect(key1 = vm) {
@@ -196,8 +205,10 @@ fun TodoDetailScreen(
             if (todos.isEmpty())
                 return@collectLatest
 
-            val message = if (todos.size == 1) {
-                todoDeleted.replace(regexName, todos[0].title)
+            val soloTodo = todos.size == 1
+
+            val message = if (soloTodo) {
+                todoDeleted.replace(regexName, todos[0].todoData.title)
             } else {
                 todosDeleted.replace(regexCount, todos.size.toString())
             }
@@ -211,6 +222,11 @@ fun TodoDetailScreen(
             when (result) {
                 SnackbarResult.ActionPerformed -> {
                     vm.cancelDeleteChildren()
+                    if (soloTodo && todos[0].returnToChild) {
+                        navController.navigate(
+                            route = todoDetailRoute(todos[0].todoData.id)
+                        )
+                    }
                 }
 
                 else -> {
@@ -227,26 +243,6 @@ fun TodoDetailScreen(
                 message = blankTodoDeleted,
                 withDismissAction = true
             )
-        }
-    }
-
-    LaunchedEffect(key1 = vm) {
-        vm.currentTodoDeleted.collectLatest {
-            val result = snackBarHost.showSnackbar(
-                message = todoDeleted,
-                withDismissAction = true,
-                actionLabel = cancelStringRes,
-                duration = SnackbarDuration.Short
-            )
-            when (result) {
-                SnackbarResult.ActionPerformed -> {
-                    vm.cancelDeleteCurrent()
-                }
-
-                else -> {
-                    vm.rejectCancelDelete()
-                }
-            }
         }
     }
 
