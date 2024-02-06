@@ -23,11 +23,11 @@ interface TodoDao {
 	@Query("SELECT COUNT(*) FROM todos WHERE parent_id = :parentId AND state LIKE '%' || :state || '%'")
 	suspend fun getChildrenCount(parentId: String, state: String): Long
 
-	@Query("DELETE FROM todos WHERE parent_id = :parentId")
-	suspend fun deleteChildren(parentId: String)
-
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	suspend fun insert(todo: TodoEntity): Long
+
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	suspend fun insert(todos: List<TodoEntity>): List<Long>
 
 	@Query("SELECT * FROM todos WHERE rowId = :rowId LIMIT 1")
 	suspend fun getByRowId(rowId: Long): TodoEntity?
