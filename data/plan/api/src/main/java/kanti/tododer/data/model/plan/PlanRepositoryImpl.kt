@@ -1,20 +1,15 @@
 package kanti.tododer.data.model.plan
 
 import kanti.tododer.data.model.plan.datasource.local.PlanLocalDataSource
-import kanti.tododer.di.PlansQualifier
-import kanti.tododer.services.chanceundo.ChanceUndo
 import kanti.tododer.util.log.Logger
 import kanti.tododer.util.log.StandardLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 class PlanRepositoryImpl @Inject constructor(
 	private val localDataSource: PlanLocalDataSource,
-	@PlansQualifier private val chanceUndo: ChanceUndo<List<Plan>>,
 	@StandardLog private val logger: Logger
 ) : PlanRepository {
 
@@ -42,8 +37,6 @@ class PlanRepositoryImpl @Inject constructor(
 
 	override val standardPlans: Flow<List<Plan>>
 		get() = localDataSource.standardPlans
-
-	private val chanceUndoMutex = Mutex()
 
 	override suspend fun getPlanOrDefault(planId: Long): Plan {
 		return localDataSource.getPlan(planId) ?: getDefaultPlan()
@@ -74,30 +67,13 @@ class PlanRepositoryImpl @Inject constructor(
 		localDataSource.updateTitle(planId, title)
 	}
 
-	override suspend fun delete(planIds: List<Long>): List<Plan> {
-		val plans = localDataSource.getPlans(planIds)
+	override suspend fun delete(planIds: List<Long>) {
+		logger.d(logTag, "delete(List<Long> = count(${planIds.size}))")
 		localDataSource.delete(planIds)
-		chanceUndoMutex.withLock {
-			chanceUndo.register(plans)
-		}
-		return plans
 	}
 
 	override suspend fun deletePlanIfNameIsEmpty(planId: Long): Boolean {
 		return localDataSource.deletePlanIfNameIsEmpty(planId)
-	}
-
-	override suspend fun undoDelete() {
-		val plans = chanceUndoMutex.withLock {
-			chanceUndo.unregister() ?: return
-		}
-		localDataSource.insert(plans)
-	}
-
-	override suspend fun undoChanceRejected(): List<Plan>? {
-		return chanceUndoMutex.withLock {
-			chanceUndo.unregister()
-		}
 	}
 
 	override suspend fun isEmpty(): Boolean {

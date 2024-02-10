@@ -22,13 +22,9 @@ interface PlanRepository {
 
 	suspend fun updateTitle(planId: Long, title: String)
 
-	suspend fun delete(planIds: List<Long>): List<Plan>
+	suspend fun delete(planIds: List<Long>)
 
 	suspend fun deletePlanIfNameIsEmpty(planId: Long): Boolean
-
-	suspend fun undoDelete()
-
-	suspend fun undoChanceRejected(): List<Plan>?
 
 	suspend fun isEmpty(): Boolean
 
