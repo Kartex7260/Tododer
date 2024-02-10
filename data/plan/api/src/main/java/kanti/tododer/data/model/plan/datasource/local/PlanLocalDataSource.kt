@@ -12,7 +12,7 @@ interface PlanLocalDataSource {
 
 	suspend fun getPlan(planId: Long): Plan?
 
-	suspend fun getPlanFromType(type: PlanType): Plan
+	suspend fun getPlanFromType(type: PlanType): Plan?
 
 	suspend fun getPlans(plansId: List<Long>): List<Plan>
 

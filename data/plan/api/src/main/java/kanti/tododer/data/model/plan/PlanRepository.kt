@@ -8,8 +8,6 @@ interface PlanRepository {
 	val planDefault: Flow<Plan>
 	val standardPlans: Flow<List<Plan>>
 
-	suspend fun insert(plans: List<Plan>)
-
 	suspend fun getDefaultPlan(): Plan
 
 	suspend fun getStandardPlans(): List<Plan>
@@ -17,6 +15,8 @@ interface PlanRepository {
 	suspend fun getPlanOrDefault(planId: Long): Plan
 
 	suspend fun getPlan(planId: Long): Plan?
+
+	suspend fun insert(plans: List<Plan>)
 
 	suspend fun create(title: String): Long
 
