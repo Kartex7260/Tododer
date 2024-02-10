@@ -2,8 +2,6 @@ package kanti.todoer.data.appdata
 
 import kanti.tododer.common.Const
 import kanti.tododer.util.log.PrintLogger
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
@@ -11,12 +9,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 class AppDataRepositoryImplTest {
@@ -142,15 +137,6 @@ class AppDataRepositoryImplTest {
             appDataRepository.setCurrentPlan(initialPlanId)
             logger.d(logTag, "appDataRepository.deleteIfCurrent(1)")
             appDataRepository.deleteIfCurrent(1L)
-        }
-    }
-
-    companion object {
-        @JvmStatic
-        @OptIn(ExperimentalCoroutinesApi::class)
-        @BeforeAll
-        fun beforeAll() {
-            Dispatchers.setMain(UnconfinedTestDispatcher())
         }
     }
 }

@@ -3,22 +3,16 @@ package kanti.tododer.data.datastore
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import kanti.tododer.util.log.AndroidLogger
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.BeforeClass
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class AppDataStoreDataSourceTest {
 
     private val logTag = "AppDataStoreDataSourceTest"
@@ -76,14 +70,6 @@ class AppDataStoreDataSourceTest {
 
             mutex.withLock { currentScenery = 4 }
             dataSource.setCurrentPlan(null)
-        }
-    }
-
-    companion object {
-        @JvmStatic
-        @BeforeClass
-        fun beforeClass() {
-            Dispatchers.setMain(UnconfinedTestDispatcher())
         }
     }
 }
