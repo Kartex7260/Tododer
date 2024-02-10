@@ -3,20 +3,43 @@ package kanti.tododer.data.model.plan
 import kanti.tododer.data.model.plan.datasource.local.PlanLocalDataSource
 import kanti.tododer.di.PlansQualifier
 import kanti.tododer.services.chanceundo.ChanceUndo
+import kanti.tododer.util.log.Logger
+import kanti.tododer.util.log.StandardLog
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 class PlanRepositoryImpl @Inject constructor(
 	private val localDataSource: PlanLocalDataSource,
-	@PlansQualifier private val chanceUndo: ChanceUndo<List<Plan>>
+	@PlansQualifier private val chanceUndo: ChanceUndo<List<Plan>>,
+	@StandardLog private val logger: Logger
 ) : PlanRepository {
 
-	override val planAll: Flow<Plan>
-		get() = localDataSource.planAll
-	override val planDefault: Flow<Plan>
-		get() = localDataSource.defaultPlan
+	private val logTag = "PlanRepositoryImpl"
+
+	override val planAll: Flow<Plan> = localDataSource.planAll
+		.onEach { plan ->
+			logger.d(logTag, "planAll: Flow<Plan> collect null")
+			if (plan == null) {
+				logger.d(logTag, "planAll: Flow<Plan> it collect is ignore")
+				localDataSource.insert(PlanAll)
+			}
+		}
+		.filterNotNull()
+
+	override val planDefault: Flow<Plan>  = localDataSource.defaultPlan
+		.onEach { plan ->
+			logger.d(logTag, "planAll: Flow<Plan> collect null")
+			if (plan == null) {
+				logger.d(logTag, "planAll: Flow<Plan> it collect is ignore")
+				localDataSource.insert(PlanDefault)
+			}
+		}
+		.filterNotNull()
+
 	override val standardPlans: Flow<List<Plan>>
 		get() = localDataSource.standardPlans
 

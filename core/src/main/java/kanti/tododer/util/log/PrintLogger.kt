@@ -7,9 +7,9 @@ import javax.inject.Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class PrintLog
 
-class PrintLogger @Inject constructor() : Logger {
+class PrintLogger @Inject constructor() : BaseLogger() {
 
-    override fun d(tag: String?, msg: String): Int {
+    override fun baseD(tag: String?, msg: String): Int {
         println("DEBUG: $tag $msg")
         return 0
     }

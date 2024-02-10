@@ -34,7 +34,6 @@
             <option value="$PROJECT_DIR$/data/todo/impl" />
             <option value="$PROJECT_DIR$/data/todo/impl/room" />
             <option value="$PROJECT_DIR$/domain" />
-            <option value="$PROJECT_DIR$/domain/dataInitializer" />
             <option value="$PROJECT_DIR$/domain/deleteTodo" />
             <option value="$PROJECT_DIR$/domain/getPlanChildren" />
             <option value="$PROJECT_DIR$/domain/planDeleteBehaviour" />

@@ -8,9 +8,9 @@ import javax.inject.Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class StandardLog
 
-class AndroidLogger @Inject constructor() : Logger {
+class AndroidLogger @Inject constructor() : BaseLogger() {
 
-    override fun d(tag: String?, msg: String): Int {
+    override fun baseD(tag: String?, msg: String): Int {
         return Log.d(tag, msg)
     }
 }

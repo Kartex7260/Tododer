@@ -1,47 +1,41 @@
 package kanti.tododer.data.model.plan.datasource.local
 
-import android.util.Log
 import kanti.sl.StateLanguage
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanState
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.data.room.plan.PlanDao
+import kanti.tododer.util.log.Logger
+import kanti.tododer.util.log.StandardLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PlanRoomDataSource @Inject constructor(
 	private val planDao: PlanDao,
-	private val sl: StateLanguage
+	private val sl: StateLanguage,
+	@StandardLog private val logger: Logger
 ) : PlanLocalDataSource {
 
 	private val logTag = "PlanRoomDataSource"
 
-	override val planAll: Flow<Plan>
-		get() = planDao.getFromTypeFlow(PlanType.All.name)
-			.onEach {
-				if (it == null) {
-					Log.w(logTag, "Plan(ALl) not found!")
-				}
+	override val planAll: Flow<Plan?> = planDao.getFromTypeFlow(PlanType.All.name)
+			.map {
+				logger.d(logTag, "planAll: Flow<Plan?>: collect $it")
+				it?.toPlan(sl)
 			}
-			.filterNotNull()
-			.map { it.toPlan(sl) }
 			.flowOn(Dispatchers.IO)
-	override val defaultPlan: Flow<Plan>
-		get() = planDao.getFromTypeFlow(PlanType.Default.name)
-			.onEach {
-				if (it == null) {
-					Log.w(logTag, "Plan(Default) not found!")
-				}
+
+	override val defaultPlan: Flow<Plan?> = planDao.getFromTypeFlow(PlanType.Default.name)
+			.map {
+				logger.d(logTag, "defaultPlan: Flow<Plan?>: collect $it")
+				it?.toPlan(sl)
 			}
-			.filterNotNull()
-			.map { it.toPlan(sl) }
 			.flowOn(Dispatchers.IO)
+
 	override val standardPlans: Flow<List<Plan>>
 		get() = planDao.getAllPlansFlow(PlanState.Normal.name, PlanType.Custom.name).map { plans ->
 			plans.map {

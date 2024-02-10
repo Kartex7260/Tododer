@@ -25,7 +25,6 @@ class MainActivity : ComponentActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		viewModel.init()
 		setContent {
 			val appTheme by viewModel.appTheme.collectAsState()
 			val darkTheme = when (appTheme) {

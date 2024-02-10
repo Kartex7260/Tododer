@@ -33,6 +33,7 @@ android {
 
 dependencies {
 
+	implementation(project(":core"))
 	implementation(project(":data"))
 	implementation(project(":data:plan:api"))
 	implementation(project(":room"))
