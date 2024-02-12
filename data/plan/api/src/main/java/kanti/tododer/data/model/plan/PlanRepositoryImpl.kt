@@ -25,7 +25,7 @@ class PlanRepositoryImpl @Inject constructor(
         }
         .filterNotNull()
 
-    override val planDefault: Flow<Plan> = localDataSource.defaultPlan
+    override val planDefault: Flow<Plan> = localDataSource.planDefault
         .onEach { plan ->
             logger.d(logTag, "planAll: Flow<Plan> collect $plan")
             if (plan == null) {

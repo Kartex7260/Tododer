@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface PlanLocalDataSource {
 
 	val planAll: Flow<Plan?>
-	val defaultPlan: Flow<Plan?>
+	val planDefault: Flow<Plan?>
 	val standardPlans: Flow<List<Plan>>
 
 	suspend fun getPlan(planId: Long): Plan?

@@ -25,7 +25,7 @@ class FakePlanLocalDataSource(
             plan
         }
 
-    override val defaultPlan: Flow<Plan?> = stateFlow
+    override val planDefault: Flow<Plan?> = stateFlow
         .map { plans ->
             val plan = plans.firstOrNull { it.type == PlanType.Default }
             logger.d(logTag, "planAll: Flow<Plan?>: collect $plan")
