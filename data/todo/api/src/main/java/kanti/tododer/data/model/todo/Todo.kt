@@ -24,7 +24,7 @@ private data class TodoImpl(
 
 fun Todo(
 	id: Long = 0,
-	parentId: FullId,
+	parentId: FullId = FullId(),
 	title: String = "",
 	remark: String = "",
 	done: Boolean = false,

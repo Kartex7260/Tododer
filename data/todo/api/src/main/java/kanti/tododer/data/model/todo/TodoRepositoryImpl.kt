@@ -20,7 +20,10 @@ class TodoRepositoryImpl @Inject constructor(
 
     override suspend fun getChildren(fullId: FullId, state: TodoState?): List<Todo> {
         val result = localDataSource.getChildren(fullId, state)
-        logger.d(LOG_TAG, "getChildren(FullId = $fullId, TodoState? = $state): return $result")
+        logger.d(
+            LOG_TAG,
+            "getChildren(FullId = $fullId, TodoState? = $state): return count(${result.size})"
+        )
         return result
     }
 
@@ -68,17 +71,17 @@ class TodoRepositoryImpl @Inject constructor(
 
     override suspend fun updateTitle(todoId: Long, title: String) {
         localDataSource.updateTitle(todoId, title)
-        logger.d(LOG_TAG, "updateTitle(Long = $todoId, String = $title")
+        logger.d(LOG_TAG, "updateTitle(Long = $todoId, String = $title)")
     }
 
     override suspend fun updateRemark(todoId: Long, remark: String) {
         localDataSource.updateRemark(todoId, remark)
-        logger.d(LOG_TAG, "updateRemark(Long = $todoId, String = $remark")
+        logger.d(LOG_TAG, "updateRemark(Long = $todoId, String = $remark)")
     }
 
     override suspend fun changeDone(todoId: Long, isDone: Boolean) {
         localDataSource.changeDone(todoId, isDone)
-        logger.d(LOG_TAG, "changeDone(Long = $todoId, Boolean = $isDone")
+        logger.d(LOG_TAG, "changeDone(Long = $todoId, Boolean = $isDone)")
     }
 
     override suspend fun delete(todoIds: List<Long>) {
