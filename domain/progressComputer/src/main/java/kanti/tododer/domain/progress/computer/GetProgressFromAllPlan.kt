@@ -1,6 +1,5 @@
 package kanti.tododer.domain.progress.computer
 
-import kanti.tododer.common.logTag
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.progress.PlanProgress
@@ -58,12 +57,13 @@ class GetProgressFromAllPlan @Inject constructor(
     private fun Flow<Plan>.computeProgress(planName: String): Flow<Float> =
         combine(_update) { plan, _ -> plan }
             .transform { plan ->
-                logger.d(logTag, "$planName: computing progress")
-                var progress = progressRepository.getProgress(plan.id) ?: 0f
-                emit(progress)
+                val progressFromDb = progressRepository.getProgress(plan.id)
+                emit(progressFromDb ?: 0f)
 
-                progress = computePlanProgress(plan.id)
+                val progress = computePlanProgress(plan.id)
                 emit(progress)
+                logger.d(LOG_TAG, "$planName: computing progress, from db = $progressFromDb, " +
+                        "computed progress = $progress")
             }.flowOn(Dispatchers.Default)
 
     companion object {
