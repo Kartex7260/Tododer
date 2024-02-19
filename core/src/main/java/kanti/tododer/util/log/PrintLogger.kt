@@ -13,4 +13,15 @@ class PrintLogger @Inject constructor() : BaseLogger() {
         println("DEBUG: $tag $msg")
         return 0
     }
+
+    override fun baseE(tag: String?, msg: String): Int {
+        println("ERROR: $tag $msg")
+        return 0
+    }
+
+    override fun baseE(tag: String?, msg: String?, th: Throwable?): Int {
+        println("ERROR: $tag, $msg")
+        th?.printStackTrace()
+        return 0
+    }
 }

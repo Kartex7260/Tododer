@@ -16,5 +16,23 @@ abstract class BaseLogger : Logger {
         return -1
     }
 
+    override fun e(tag: String?, msg: String): Int {
+        if (isEnabled) {
+            return baseE(tag, msg)
+        }
+        return -1
+    }
+
+    override fun e(tag: String?, msg: String?, th: Throwable?): Int {
+        if (isEnabled) {
+            return baseE(tag, msg, th)
+        }
+        return -1
+    }
+
     protected abstract fun baseD(tag: String?, msg: String): Int
+
+    protected abstract fun baseE(tag: String?, msg: String): Int
+
+    protected abstract fun baseE(tag: String?, msg: String?, th: Throwable?): Int
 }
