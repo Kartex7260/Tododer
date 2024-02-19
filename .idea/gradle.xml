@@ -17,6 +17,10 @@
             <option value="$PROJECT_DIR$/data/appData/api" />
             <option value="$PROJECT_DIR$/data/appData/impl" />
             <option value="$PROJECT_DIR$/data/appData/impl/dataStore" />
+            <option value="$PROJECT_DIR$/data/colorStyle" />
+            <option value="$PROJECT_DIR$/data/colorStyle/api" />
+            <option value="$PROJECT_DIR$/data/colorStyle/impl" />
+            <option value="$PROJECT_DIR$/data/colorStyle/impl/room" />
             <option value="$PROJECT_DIR$/data/plan" />
             <option value="$PROJECT_DIR$/data/plan/api" />
             <option value="$PROJECT_DIR$/data/plan/impl" />

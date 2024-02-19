@@ -132,6 +132,8 @@ dependencies {
 	implementation(project(":data"))
 	implementation(project(":feat:todo"))
 	implementation(project(":feat:settings"))
+	implementation(project(":data:colorStyle:api"))
+	implementation(project(":data:colorStyle:impl:room"))
 	implementation(project(":data:todo:impl:room"))
 	implementation(project(":data:plan:impl:room"))
 	implementation(project(":data:progress:impl:room"))

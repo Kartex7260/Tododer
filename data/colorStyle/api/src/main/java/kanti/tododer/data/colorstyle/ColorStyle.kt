@@ -10,7 +10,7 @@ interface ColorStyleData {
     val type: ColorStyleType
 }
 
-private class ColorStyleDataImpl(
+private data class ColorStyleDataImpl(
     override val id: Int,
     override val name: String,
     override val type: ColorStyleType
@@ -105,7 +105,7 @@ enum class ColorStyleType {
     Custom
 }
 
-private class ColorStyleImpl(
+private data class ColorStyleImpl(
     override val id: Int,
     override val name: String,
     override val type: ColorStyleType,
@@ -168,7 +168,12 @@ private class ColorStyleImpl(
     override val onSurfaceVariantDark: Long,
 
     override val outlineDark: Long,
-) : ColorStyle
+) : ColorStyle {
+
+    override fun toString(): String {
+        return "ColorStyleImpl(id=$id, name=$name, type=$type)"
+    }
+}
 
 fun ColorStyle(
     parent: ColorStyle = DefaultColorStyles.Standard,

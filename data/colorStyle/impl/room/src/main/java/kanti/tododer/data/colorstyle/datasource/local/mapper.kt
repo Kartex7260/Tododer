@@ -39,7 +39,7 @@ fun ColorStyleEntity.toColorStyle(): ColorStyle = ColorStyle(
 
     backgroundLight = backgroundLight,
     onBackgroundLight = onBackgroundLight,
-    surfaceLight = secondaryLight,
+    surfaceLight = surfaceLight,
     onSurfaceLight = onSurfaceLight,
     surfaceVariantLight = surfaceVariantLight,
     onSurfaceVariantLight = onSurfaceVariantLight,
@@ -104,7 +104,7 @@ fun ColorStyle.toColorStyleEntity(): ColorStyleEntity = ColorStyleEntity(
 
     backgroundLight = backgroundLight,
     onBackgroundLight = onBackgroundLight,
-    surfaceLight = secondaryLight,
+    surfaceLight = surfaceLight,
     onSurfaceLight = onSurfaceLight,
     surfaceVariantLight = surfaceVariantLight,
     onSurfaceVariantLight = onSurfaceVariantLight,

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
+import kanti.tododer.data.colorstyle.ColorStyle
 import kanti.tododer.data.model.settings.AppTheme
 import kanti.tododer.ui.theme.TododerTheme
 
@@ -32,8 +33,10 @@ class MainActivity : ComponentActivity() {
 				AppTheme.LIGHT -> false
 				AppTheme.DARK -> true
 			}
+			val colorStyle by viewModel.colorStyle.collectAsState()
 			MainActivityContent(
-				darkTheme = darkTheme
+				darkTheme = darkTheme,
+				colorStyle = colorStyle
 			)
 		}
 	}
@@ -41,10 +44,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainActivityContent(
-	darkTheme: Boolean = isSystemInDarkTheme()
+	darkTheme: Boolean = isSystemInDarkTheme(),
+	colorStyle: ColorStyle? = null
 ) {
 	TododerTheme(
-		darkTheme = darkTheme
+		darkTheme = darkTheme,
+		colorStyle = colorStyle
 	) {
 		Surface(
 			modifier = Modifier.fillMaxSize(),

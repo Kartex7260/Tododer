@@ -3,6 +3,8 @@ package kanti.tododer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kanti.tododer.data.colorstyle.ColorStyle
+import kanti.tododer.data.colorstyle.ColorStyleRepository
 import kanti.tododer.data.model.settings.AppTheme
 import kanti.tododer.data.model.settings.SettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-	settingsRepository: SettingsRepository
+	settingsRepository: SettingsRepository,
+	colorStyleRepository: ColorStyleRepository
 ) : ViewModel() {
 
 	val appTheme: StateFlow<AppTheme> = settingsRepository.settings
@@ -24,5 +27,15 @@ class MainViewModel @Inject constructor(
 			scope = viewModelScope,
 			started = SharingStarted.Lazily,
 			initialValue = AppTheme.AS_SYSTEM
+		)
+
+	val colorStyle: StateFlow<ColorStyle?> = settingsRepository.settings
+		.map { settingsData ->
+			settingsData.colorStyleId?.let { colorStyleRepository.getById(it) }
+		}
+		.stateIn(
+			scope = viewModelScope,
+			started = SharingStarted.Lazily,
+			initialValue = null
 		)
 }
