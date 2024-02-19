@@ -2,12 +2,30 @@ package kanti.tododer.data.colorstyle
 
 import javax.annotation.concurrent.Immutable
 
+@Immutable
 interface ColorStyleData {
 
     val id: Int
     val name: String
     val type: ColorStyleType
 }
+
+private class ColorStyleDataImpl(
+    override val id: Int,
+    override val name: String,
+    override val type: ColorStyleType
+) : ColorStyleData
+
+fun ColorStyleData(
+    id: Int,
+    name: String,
+    type: ColorStyleType
+): ColorStyleData = ColorStyleDataImpl(
+    id = id,
+    name = name,
+    type = type
+)
+
 
 @Immutable
 interface ColorStyle : ColorStyleData {
