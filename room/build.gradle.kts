@@ -2,8 +2,10 @@ plugins {
 	id("com.android.library")
 	id("org.jetbrains.kotlin.android")
 	id("com.google.devtools.ksp")
-	id("org.jetbrains.kotlin.kapt")
+	kotlin("kapt")
 	id("com.google.dagger.hilt.android")
+
+	id("androidx.room") version "2.6.1" apply false
 }
 
 android {
@@ -30,6 +32,10 @@ android {
 	kotlinOptions {
 		jvmTarget = "1.8"
 	}
+}
+
+ksp {
+	arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {

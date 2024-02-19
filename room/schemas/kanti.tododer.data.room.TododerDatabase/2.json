@@ -1,0 +1,436 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "291d3034293d9234b9ec6997e02fc98e",
+    "entities": [
+      {
+        "tableName": "color_style",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `primary_light` INTEGER NOT NULL, `on_primary_light` INTEGER NOT NULL, `primary_container_light` INTEGER NOT NULL, `on_primary_container_light` INTEGER NOT NULL, `secondary_light` INTEGER NOT NULL, `on_secondary_light` INTEGER NOT NULL, `secondary_container_light` INTEGER NOT NULL, `on_secondary_container_light` INTEGER NOT NULL, `tertiary_light` INTEGER NOT NULL, `on_tertiary_light` INTEGER NOT NULL, `tertiary_container_light` INTEGER NOT NULL, `on_tertiary_container_light` INTEGER NOT NULL, `error_light` INTEGER NOT NULL, `on_error_light` INTEGER NOT NULL, `error_container_light` INTEGER NOT NULL, `on_error_container_light` INTEGER NOT NULL, `background_light` INTEGER NOT NULL, `on_background_light` INTEGER NOT NULL, `surface_light` INTEGER NOT NULL, `on_surface_light` INTEGER NOT NULL, `surface_variant_light` INTEGER NOT NULL, `on_surface_variant_light` INTEGER NOT NULL, `outline_light` INTEGER NOT NULL, `primary_dark` INTEGER NOT NULL, `on_primary_dark` INTEGER NOT NULL, `primary_container_dark` INTEGER NOT NULL, `on_primary_container_dark` INTEGER NOT NULL, `secondary_dark` INTEGER NOT NULL, `on_secondary_dark` INTEGER NOT NULL, `secondary_container_dark` INTEGER NOT NULL, `on_secondary_container_dark` INTEGER NOT NULL, `tertiary_dark` INTEGER NOT NULL, `on_tertiary_dark` INTEGER NOT NULL, `tertiary_container_dark` INTEGER NOT NULL, `on_tertiary_container_dark` INTEGER NOT NULL, `error_dark` INTEGER NOT NULL, `on_error_dark` INTEGER NOT NULL, `error_container_dark` INTEGER NOT NULL, `on_error_container_dark` INTEGER NOT NULL, `background_dark` INTEGER NOT NULL, `on_background_dark` INTEGER NOT NULL, `surface_dark` INTEGER NOT NULL, `on_surface_dark` INTEGER NOT NULL, `surface_variant_dark` INTEGER NOT NULL, `on_surface_variant_dark` INTEGER NOT NULL, `outline_dark` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "primaryLight",
+            "columnName": "primary_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onPrimaryLight",
+            "columnName": "on_primary_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "primaryContainerLight",
+            "columnName": "primary_container_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onPrimaryContainerLight",
+            "columnName": "on_primary_container_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "secondaryLight",
+            "columnName": "secondary_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onSecondaryLight",
+            "columnName": "on_secondary_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "secondaryContainerLight",
+            "columnName": "secondary_container_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onSecondaryContainerLight",
+            "columnName": "on_secondary_container_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tertiaryLight",
+            "columnName": "tertiary_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onTertiaryLight",
+            "columnName": "on_tertiary_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tertiaryContainerLight",
+            "columnName": "tertiary_container_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onTertiaryContainerLight",
+            "columnName": "on_tertiary_container_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "errorLight",
+            "columnName": "error_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onErrorLight",
+            "columnName": "on_error_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "errorContainerLight",
+            "columnName": "error_container_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onErrorContainerLight",
+            "columnName": "on_error_container_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backgroundLight",
+            "columnName": "background_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onBackgroundLight",
+            "columnName": "on_background_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "surfaceLight",
+            "columnName": "surface_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onSurfaceLight",
+            "columnName": "on_surface_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "surfaceVariantLight",
+            "columnName": "surface_variant_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onSurfaceVariantLight",
+            "columnName": "on_surface_variant_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "outlineLight",
+            "columnName": "outline_light",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "primaryDark",
+            "columnName": "primary_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onPrimaryDark",
+            "columnName": "on_primary_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "primaryContainerDark",
+            "columnName": "primary_container_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onPrimaryContainerDark",
+            "columnName": "on_primary_container_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "secondaryDark",
+            "columnName": "secondary_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onSecondaryDark",
+            "columnName": "on_secondary_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "secondaryContainerDark",
+            "columnName": "secondary_container_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onSecondaryContainerDark",
+            "columnName": "on_secondary_container_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tertiaryDark",
+            "columnName": "tertiary_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onTertiaryDark",
+            "columnName": "on_tertiary_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tertiaryContainerDark",
+            "columnName": "tertiary_container_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onTertiaryContainerDark",
+            "columnName": "on_tertiary_container_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "errorDark",
+            "columnName": "error_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onErrorDark",
+            "columnName": "on_error_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "errorContainerDark",
+            "columnName": "error_container_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onErrorContainerDark",
+            "columnName": "on_error_container_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backgroundDark",
+            "columnName": "background_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onBackgroundDark",
+            "columnName": "on_background_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "surfaceDark",
+            "columnName": "surface_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onSurfaceDark",
+            "columnName": "on_surface_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "surfaceVariantDark",
+            "columnName": "surface_variant_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onSurfaceVariantDark",
+            "columnName": "on_surface_variant_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "outlineDark",
+            "columnName": "outline_dark",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "plans",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `state` TEXT NOT NULL, `type` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "todos",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parent_id` TEXT NOT NULL, `title` TEXT NOT NULL, `remark` TEXT NOT NULL, `done` INTEGER NOT NULL, `state` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentId",
+            "columnName": "parent_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remark",
+            "columnName": "remark",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "done",
+            "columnName": "done",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "plan_progress",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`plan_id` INTEGER NOT NULL, `progress` REAL NOT NULL, PRIMARY KEY(`plan_id`))",
+        "fields": [
+          {
+            "fieldPath": "planId",
+            "columnName": "plan_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "progress",
+            "columnName": "progress",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "plan_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '291d3034293d9234b9ec6997e02fc98e')"
+    ]
+  }
+}
