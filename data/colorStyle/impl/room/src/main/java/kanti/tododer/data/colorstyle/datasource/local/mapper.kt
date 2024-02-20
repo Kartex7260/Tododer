@@ -69,7 +69,7 @@ fun ColorStyleEntity.toColorStyle(): ColorStyle = ColorStyle(
 
     backgroundDark = backgroundDark,
     onBackgroundDark = onBackgroundDark,
-    surfaceDark = secondaryDark,
+    surfaceDark = surfaceDark,
     onSurfaceDark = onSurfaceDark,
     surfaceVariantDark = surfaceVariantDark,
     onSurfaceVariantDark = onSurfaceVariantDark,
@@ -134,7 +134,7 @@ fun ColorStyle.toColorStyleEntity(): ColorStyleEntity = ColorStyleEntity(
 
     backgroundDark = backgroundDark,
     onBackgroundDark = onBackgroundDark,
-    surfaceDark = secondaryDark,
+    surfaceDark = surfaceDark,
     onSurfaceDark = onSurfaceDark,
     surfaceVariantDark = surfaceVariantDark,
     onSurfaceVariantDark = onSurfaceVariantDark,
