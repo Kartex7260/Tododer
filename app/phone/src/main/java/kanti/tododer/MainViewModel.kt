@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.colorstyle.ColorStyle
 import kanti.tododer.data.colorstyle.ColorStyleRepository
+import kanti.tododer.data.colorstyle.ColorStyleType
 import kanti.tododer.data.model.settings.AppTheme
 import kanti.tododer.data.model.settings.SettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,7 +32,13 @@ class MainViewModel @Inject constructor(
 
 	val colorStyle: StateFlow<ColorStyle?> = settingsRepository.settings
 		.map { settingsData ->
-			settingsData.colorStyleId?.let { colorStyleRepository.getById(it) }
+			val colorStyle = colorStyleRepository.getById(settingsData.colorStyleId).also { colorStyle ->
+				if (colorStyle == null)
+					settingsRepository.resetColorStyle()
+			}
+			if (colorStyle != null && colorStyle.type == ColorStyleType.Dynamic)
+				return@map null
+			colorStyle
 		}
 		.stateIn(
 			scope = viewModelScope,

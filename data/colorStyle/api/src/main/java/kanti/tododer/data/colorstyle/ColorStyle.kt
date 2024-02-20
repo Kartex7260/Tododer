@@ -93,6 +93,7 @@ interface ColorStyle : ColorStyleData {
 enum class ColorStyleType {
 
     Standard,
+    Dynamic,
 
     Red,
     Orange,

@@ -8,5 +8,14 @@ interface SettingsRepository {
 
 	suspend fun setTheme(theme: AppTheme)
 
-	suspend fun setColorStyle(colorStyleId: Int?)
+	suspend fun setColorStyle(colorStyleId: Int)
+
+	suspend fun resetColorStyle() {
+		setColorStyle(COLOR_STYLE_DEFAULT)
+	}
+
+	companion object {
+
+		const val COLOR_STYLE_DEFAULT = -1
+	}
 }

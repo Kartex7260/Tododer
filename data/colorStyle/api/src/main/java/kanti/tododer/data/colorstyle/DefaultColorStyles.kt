@@ -5,6 +5,7 @@ object DefaultColorStyles {
     object Ids {
 
         const val Standard = -1
+        const val Dynamic = -2
 
         const val Red = 1
         const val Orange = 2
@@ -15,13 +16,14 @@ object DefaultColorStyles {
         const val Purple = 7
 
         fun values(): List<Int> = listOf(
-            Standard, Red, Orange, Yellow, Green, LightBlue, Blue, Purple
+            Standard, Dynamic, Red, Orange, Yellow, Green, LightBlue, Blue, Purple
         )
     }
 
     fun getById(id: Int): ColorStyle {
         return when (id) {
             Ids.Standard -> Standard
+            Ids.Dynamic -> Dynamic
             Ids.Red -> Red
             Ids.Orange -> Orange
             Ids.Yellow -> Yellow
@@ -97,6 +99,13 @@ object DefaultColorStyles {
         override val onSurfaceVariantDark: Long = 0xFFc1c7ce
 
         override val outlineDark: Long = 0xFF8b9198
+    }
+
+    object Dynamic : ColorStyle {
+
+        override val id: Int = Ids.Dynamic
+        override val name: String = "Dynamic"
+        override val type: ColorStyleType = ColorStyleType.Dynamic
     }
 
     object Red : ColorStyle {
