@@ -23,8 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.settings.R
-import kanti.tododer.ui.components.settings.ChangeThemeItem
-import kanti.tododer.ui.components.settings.ChangeThemeItemDefaults
+import kanti.tododer.ui.components.settings.theme.ChangeThemeItem
+import kanti.tododer.ui.components.settings.theme.ChangeThemeItemDefaults
 import kanti.tododer.ui.screen.main.viewmodel.SettingsMainViewModel
 import kanti.tododer.ui.screen.main.viewmodel.SettingsMainViewModelImpl
 

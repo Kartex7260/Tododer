@@ -1,6 +1,6 @@
 package kanti.tododer.data.model.settings
 
-import kanti.tododer.ui.components.settings.ThemeSettingsUiState
+import kanti.tododer.ui.components.settings.theme.ThemeSettingsUiState
 
 fun AppTheme.toUiState(): ThemeSettingsUiState {
 	return when (this) {

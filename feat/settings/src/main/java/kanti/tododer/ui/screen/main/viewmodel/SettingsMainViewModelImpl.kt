@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.model.settings.SettingsRepository
 import kanti.tododer.data.model.settings.toData
 import kanti.tododer.data.model.settings.toUiState
-import kanti.tododer.ui.components.settings.ThemeSettingsUiState
+import kanti.tododer.ui.components.settings.theme.ThemeSettingsUiState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

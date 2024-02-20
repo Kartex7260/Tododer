@@ -1,4 +1,4 @@
-package kanti.tododer.ui.components.settings
+package kanti.tododer.ui.components.settings.theme
 
 object ChangeThemeItemDefaults {
 

@@ -1,6 +1,6 @@
 package kanti.tododer.ui.screen.main.viewmodel
 
-import kanti.tododer.ui.components.settings.ThemeSettingsUiState
+import kanti.tododer.ui.components.settings.theme.ThemeSettingsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
