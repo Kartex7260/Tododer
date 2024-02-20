@@ -1,7 +1,6 @@
 package kanti.tododer.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +15,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.google.android.material.color.DynamicColors
 import kanti.tododer.data.colorstyle.ColorStyle
 import kanti.tododer.data.colorstyle.DefaultColorStyles
 
@@ -97,7 +97,7 @@ fun TododerTheme(
 //	val systemUiController = rememberSystemUiController()
 //	systemUiController.isSystemBarsVisible = false
 	val colorScheme = when {
-		colorStyle == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+		colorStyle == null && DynamicColors.isDynamicColorAvailable() -> {
 			val context = LocalContext.current
 			if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
 		}

@@ -21,7 +21,7 @@ fun ChangeColorStyleItem(
     strings: ChangeColorStyleStrings = ChangeColorStyleItemDefaults.strings(),
     onChangeStyle: (id: Int) -> Unit = {}
 ) {
-    val currentColorStyle = remember {
+    val currentColorStyle = remember(key1 = state) {
         state.colorStylesData.first { it.id == state.currentStyleId }
     }
     SettingsMenuItem(

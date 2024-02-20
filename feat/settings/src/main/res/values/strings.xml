@@ -9,4 +9,14 @@
     <string name="app_theme_as_system">Like in the system</string>
     <string name="app_theme_light">Light</string>
     <string name="app_theme_dark">Dark</string>
+    <string name="app_name" translatable="false">Tododer</string>
+    <string name="color_style">Color style</string>
+    <string name="color_style_dynamic">As system</string>
+    <string name="color_style_red">Red</string>
+    <string name="color_style_orange">Orange</string>
+    <string name="color_style_yellow">Yellow</string>
+    <string name="color_style_green">Green</string>
+    <string name="color_style_light_blue">Light blue</string>
+    <string name="color_style_blue">Blue</string>
+    <string name="color_style_purple">Purple</string>
 </resources>

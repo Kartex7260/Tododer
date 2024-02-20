@@ -23,6 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.settings.R
+import kanti.tododer.ui.components.settings.colorstyle.ChangeColorStyleItem
+import kanti.tododer.ui.components.settings.colorstyle.ChangeColorStyleItemDefaults
 import kanti.tododer.ui.components.settings.theme.ChangeThemeItem
 import kanti.tododer.ui.components.settings.theme.ChangeThemeItemDefaults
 import kanti.tododer.ui.screen.main.viewmodel.SettingsMainViewModel
@@ -77,6 +79,24 @@ fun SettingsMainScreen(
 						themeDark = stringResource(id = R.string.app_theme_dark)
 					),
 					onThemeChanged = { vm.changeAppTheme(it) }
+				)
+			}
+			item {
+				ChangeColorStyleItem(
+					state = uiState.colorStyle,
+					strings = ChangeColorStyleItemDefaults.strings(
+						colorStyle = stringResource(id = R.string.color_style),
+						standard = stringResource(id = R.string.app_name),
+						dynamic = stringResource(id = R.string.color_style_dynamic),
+						red = stringResource(id = R.string.color_style_red),
+						orange = stringResource(id = R.string.color_style_orange),
+						yellow = stringResource(id = R.string.color_style_yellow),
+						green = stringResource(id = R.string.color_style_green),
+						lightBlue = stringResource(id = R.string.color_style_light_blue),
+						blue = stringResource(id = R.string.color_style_blue),
+						purple = stringResource(id = R.string.color_style_purple)
+					),
+					onChangeStyle = { id ->  vm.changeColorStyle(id) }
 				)
 			}
 		}
