@@ -18,5 +18,5 @@
     <string name="deleted_blank_todo">Пустая задача была удалена</string>
     <string name="plans_deleted">Планов было удалено ({count})</string>
     <string name="todos_deleted">Задач было удалено ({count})</string>
-    <string name="delete_todo_ask">Удалить задачу \"{name}\"?</string>
+    <string name="delete_current_todo_ask">Удалить текущую задачу?</string>
 </resources>

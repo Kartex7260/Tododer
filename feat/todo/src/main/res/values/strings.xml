@@ -34,5 +34,5 @@
     <string name="regex_name" translatable="false">{name}</string>
     <string name="regex_count" translatable="false">{count}</string>
     <string name="todos_deleted">{count} todos were deleted</string>
-    <string name="delete_todo_ask">Delete the \"{name}\" todo?</string>
+    <string name="delete_current_todo_ask">Delete the current task?</string>
 </resources>

@@ -57,7 +57,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
-import kanti.tododer.ui.components.dialogs.DeleteTodoDialog
+import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
 import kanti.tododer.ui.components.todo.TodoCard
@@ -387,10 +387,9 @@ fun TodoDetailScreen(
     }
 
     if (showDeleteDialog) {
-        val todoTitle: String by vm.requireTodoTitle().collectAsState(initial = "")
-        DeleteTodoDialog(
+        DeleteDialog(
             onCloseDialog = { showDeleteDialog = false },
-            todoTitle = todoTitle,
+            title = { Text(text = stringResource(id = R.string.delete_current_todo_ask)) },
             delete = { vm.deleteCurrent() }
         )
     }

@@ -6,14 +6,12 @@ import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoDeletion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 interface TodoDetailViewModel {
@@ -34,10 +32,6 @@ interface TodoDetailViewModel {
     fun createNewTodo()
 
     fun renameTodo(todoId: Long, newTitle: String)
-
-    fun requireTodoTitle(): Flow<String> {
-        return flowOf("")
-    }
 
     fun changeTitle(title: String)
 

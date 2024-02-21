@@ -14,7 +14,6 @@ import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoDeletion
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -152,13 +150,6 @@ class TodoDetailViewModelImpl @Inject constructor(
             if (todoId == EMPTY_TODO_ID)
                 return@launch
             todoRepository.updateTitle(todoId, title)
-        }
-    }
-
-    override fun requireTodoTitle(): Flow<String> {
-        return flow {
-            val todo = todoRepository.getTodo(_currentTodo.value) ?: return@flow
-            emit(todo.title)
         }
     }
 
