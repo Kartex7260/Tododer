@@ -13,6 +13,7 @@ import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoDeletion
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -58,6 +60,7 @@ class TodoDetailViewModelImpl @Inject constructor(
             todo?.toTodoData()
         }
         .filterNotNull()
+        .flowOn(Dispatchers.Default)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
@@ -82,6 +85,7 @@ class TodoDetailViewModelImpl @Inject constructor(
                 todos = children.map { it.toTodoData() }
             )
         }
+        .flowOn(Dispatchers.Default)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,

@@ -15,6 +15,7 @@ import kanti.tododer.ui.components.plan.PlanData
 import kanti.tododer.ui.components.plan.PlansData
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
 import kanti.todoer.data.appdata.AppDataRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
@@ -58,7 +60,9 @@ class PlanListViewModelImpl @Inject constructor(
 				title = appContext.getString(R.string.plan_all),
 				progress = 0f
 			)
-		}.stateIn(
+		}
+		.flowOn(Dispatchers.Default)
+		.stateIn(
 			scope = viewModelScope,
 			started = SharingStarted.Lazily,
 			initialValue = PlanData()
@@ -70,7 +74,9 @@ class PlanListViewModelImpl @Inject constructor(
 				title = appContext.getString(R.string.plan_default),
 				progress = 0f
 			)
-		}.stateIn(
+		}
+		.flowOn(Dispatchers.Default)
+		.stateIn(
 			scope = viewModelScope,
 			started = SharingStarted.Lazily,
 			initialValue = PlanData()
@@ -91,7 +97,9 @@ class PlanListViewModelImpl @Inject constructor(
 					)
 				}
 			)
-		}.stateIn(
+		}
+		.flowOn(Dispatchers.Default)
+		.stateIn(
 			scope = viewModelScope,
 			started = SharingStarted.Lazily,
 			initialValue = PlansData()
