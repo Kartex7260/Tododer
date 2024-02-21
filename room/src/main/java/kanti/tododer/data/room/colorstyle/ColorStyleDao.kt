@@ -19,4 +19,7 @@ interface ColorStyleDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(colorStyle: ColorStyleEntity)
+
+    @Query("DELETE FROM color_style")
+    suspend fun clear()
 }
