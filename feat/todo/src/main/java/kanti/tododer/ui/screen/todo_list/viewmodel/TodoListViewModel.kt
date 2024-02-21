@@ -22,11 +22,11 @@ interface TodoListViewModel {
     val todosDeleted: SharedFlow<List<TodoDeletion>>
     val blankTodoDeleted: SharedFlow<Unit>
 
-    val newTodoCreated: SharedFlow<Long>
+    val goToTodo: SharedFlow<Long>
 
     fun updateUiState(deletedTodoId: Long?)
 
-    fun createNewTodo()
+    fun createNewTodo(title: String, goTo: Boolean)
 
     fun renameTodo(todoId: Long, newTitle: String)
 
@@ -76,12 +76,12 @@ interface TodoListViewModel {
         override val blankTodoDeleted: SharedFlow<Unit> = MutableSharedFlow()
 
         private val _newTodoCreated = MutableSharedFlow<Long>()
-        override val newTodoCreated: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
+        override val goToTodo: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
 
         override fun updateUiState(deletedTodoId: Long?) {
         }
 
-        override fun createNewTodo() {
+        override fun createNewTodo(title: String, goTo: Boolean) {
             coroutineScope.launch {
                 _newTodoCreated.emit(0L)
             }

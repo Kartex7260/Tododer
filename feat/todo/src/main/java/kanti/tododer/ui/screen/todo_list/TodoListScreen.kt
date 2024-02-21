@@ -48,6 +48,7 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
+import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
 import kanti.tododer.ui.components.todo.TodoData
@@ -123,6 +124,7 @@ fun TodoListScreen(
     }
 
     var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
+    var showCreateDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -198,7 +200,7 @@ fun TodoListScreen(
     }
 
     LaunchedEffect(key1 = vm) {
-        vm.newTodoCreated.collect { todoId ->
+        vm.goToTodo.collect { todoId ->
             navController.navigate(
                 route = todoDetailRoute(todoId)
             )
@@ -246,9 +248,7 @@ fun TodoListScreen(
 
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    vm.createNewTodo()
-                },
+                onClick = { showCreateDialog = true },
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer
             ) {
@@ -307,6 +307,20 @@ fun TodoListScreen(
             name = renamedTodo.title,
             onRename = { newTitle ->
                 vm.renameTodo(renamedTodo.id, newTitle)
+            }
+        )
+    }
+
+    if (showCreateDialog) {
+        CreateDialog(
+            onCloseDialog = { showCreateDialog = false },
+            title = { Text(text = stringResource(id = R.string.create_new_todo)) },
+            textFieldLabel = { Text(text = stringResource(id = R.string.todo_name)) },
+            add = { title ->
+                vm.createNewTodo(title = title, goTo = false)
+            },
+            create = { title ->
+                vm.createNewTodo(title = title, goTo = false)
             }
         )
     }

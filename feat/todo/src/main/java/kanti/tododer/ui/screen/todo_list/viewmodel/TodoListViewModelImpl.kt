@@ -107,8 +107,8 @@ class TodoListViewModelImpl @Inject constructor(
 	private val _blankTodoDeleted = MutableSharedFlow<Unit>()
 	override val blankTodoDeleted: SharedFlow<Unit> = _blankTodoDeleted.asSharedFlow()
 
-	private val _newTodoCreated = MutableSharedFlow<Long>()
-	override val newTodoCreated: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
+	private val _goToTodo = MutableSharedFlow<Long>()
+	override val goToTodo: SharedFlow<Long> = _goToTodo.asSharedFlow()
 
 	init {
 		viewModelScope.launch {
@@ -132,15 +132,17 @@ class TodoListViewModelImpl @Inject constructor(
 		}
 	}
 
-	override fun createNewTodo() {
+	override fun createNewTodo(title: String, goTo: Boolean) {
 		viewModelScope.launch {
 			val planFullId = if (currentPlan.value.plan.type == PlanType.All) {
 				FullId(id = Const.PlansIds.DEFAULT, FullIdType.Plan)
 			} else {
 				currentPlan.value.plan.toFullId()
 			}
-			val todoId = todoRepository.create(planFullId, "", "")
-			_newTodoCreated.emit(todoId)
+			val todoId = todoRepository.create(planFullId, title, "")
+			if (goTo) {
+				_goToTodo.emit(todoId)
+			}
 			updateUiState.value = Any()
 		}
 	}
