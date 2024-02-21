@@ -57,6 +57,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
+import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
@@ -254,6 +255,7 @@ fun TodoDetailScreen(
         mutableStateOf(IntSize(0, 0))
     }
 
+    var showCreateDialog by rememberSaveable { mutableStateOf(false) }
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
     var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
 
@@ -284,7 +286,7 @@ fun TodoDetailScreen(
 
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { vm.createNewTodo() },
+                onClick = { showCreateDialog = true },
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer
             ) {
@@ -384,6 +386,20 @@ fun TodoDetailScreen(
                 }
             }
         }
+    }
+
+    if (showCreateDialog) {
+        CreateDialog(
+            onCloseDialog = { showCreateDialog = false },
+            title = { Text(text = stringResource(id = R.string.create_new_todo)) },
+            textFieldLabel = { Text(text = stringResource(id = R.string.todo_name)) },
+            add = { title ->
+                vm.createNewTodo(title = title, goTo = false)
+            },
+            create = { title ->
+                vm.createNewTodo(title = title, goTo = false)
+            }
+        )
     }
 
     if (showDeleteDialog) {

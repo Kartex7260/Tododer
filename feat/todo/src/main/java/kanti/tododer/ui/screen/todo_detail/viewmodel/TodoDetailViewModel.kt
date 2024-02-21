@@ -29,7 +29,7 @@ interface TodoDetailViewModel {
 
     fun reshow(todoId: Long?)
 
-    fun createNewTodo()
+    fun createNewTodo(title: String, goTo: Boolean)
 
     fun renameTodo(todoId: Long, newTitle: String)
 
@@ -97,8 +97,8 @@ interface TodoDetailViewModel {
             Log.d(logTag, "reshow(todoId: Long?)")
         }
 
-        override fun createNewTodo() {
-            Log.d(logTag, "createNewTodo()")
+        override fun createNewTodo(title: String, goTo: Boolean) {
+            Log.d(logTag, "createNewTodo(String = $title, Boolean = $goTo)")
         }
 
         override fun renameTodo(todoId: Long, newTitle: String) {

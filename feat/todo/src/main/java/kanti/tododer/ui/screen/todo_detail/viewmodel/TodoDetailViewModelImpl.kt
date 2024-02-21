@@ -125,14 +125,16 @@ class TodoDetailViewModelImpl @Inject constructor(
         }
     }
 
-    override fun createNewTodo() {
+    override fun createNewTodo(title: String, goTo: Boolean) {
         viewModelScope.launch {
             val currentTodo = todoDetail.value
             if (currentTodo.id == EMPTY_TODO_ID)
                 return@launch
             val parentFullId = FullId(currentTodo.id, FullIdType.Todo)
-            val todoId = todoRepository.create(parentFullId, "", "")
-            _toNext.emit(todoId)
+            val todoId = todoRepository.create(parentFullId, title, "")
+            if (goTo) {
+                _toNext.emit(todoId)
+            }
             _updateTodoChildren.value = Any()
         }
     }
