@@ -1,5 +1,7 @@
 package kanti.tododer.ui.components.dialogs
 
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.AlertDialog
@@ -15,6 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import kanti.tododer.feat.todo.R
 
@@ -30,15 +34,17 @@ fun RenameDialog(
 	var newName by rememberSaveable(inputs = arrayOf(name)) {
 		mutableStateOf(name)
 	}
+	fun hasRename() = newName.isNotBlank() || allowEmptyName
+	val rename = {
+		onRename(newName)
+		onCloseDialog()
+	}
 	AlertDialog(
 		onDismissRequest = { onCloseDialog() },
 		confirmButton = {
 			TextButton(
-				onClick = {
-					onRename(newName)
-					onCloseDialog()
-				},
-				enabled = newName.isNotBlank() || allowEmptyName
+				onClick = rename,
+				enabled = hasRename()
 			) {
 				Text(text = stringResource(id = R.string.rename))
 			}
@@ -54,8 +60,8 @@ fun RenameDialog(
 				value = newName,
 				onValueChange = { newName = it },
 				label = label,
-				trailingIcon = {
-					if (!newName.isEmpty()) {
+				trailingIcon = if (newName.isNotEmpty()) {
+					{
 						IconButton(onClick = { newName = "" }) {
 							Icon(
 								imageVector = Icons.Default.Clear,
@@ -63,7 +69,17 @@ fun RenameDialog(
 							)
 						}
 					}
-				}
+				} else null,
+				keyboardOptions = KeyboardOptions(
+					capitalization = KeyboardCapitalization.Sentences,
+					imeAction = ImeAction.Next
+				),
+				keyboardActions = KeyboardActions(
+					onNext = {
+						if (hasRename())
+							rename()
+					}
+				)
 			)
 		}
 	)
