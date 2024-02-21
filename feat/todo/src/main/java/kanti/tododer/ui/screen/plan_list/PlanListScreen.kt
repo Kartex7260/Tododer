@@ -48,6 +48,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.data.model.progress.PlanProgress
 import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalPlanDropdownMenu
 import kanti.tododer.ui.components.plan.PlanCard
@@ -302,9 +303,15 @@ fun PlanListScreen(
 	}
 
 	if (showCreateDialog) {
-		CreatePlanDialog(
+		CreateDialog(
 			onCloseDialog = {
 				showCreateDialog = false
+			},
+			title = {
+				Text(text = stringResource(id = R.string.create_new_plan))
+			},
+			textFieldLabel = {
+				Text(text = stringResource(id = R.string.plan_name))
 			},
 			create = { title ->
 				vm.createPlanEndSetCurrent(title)

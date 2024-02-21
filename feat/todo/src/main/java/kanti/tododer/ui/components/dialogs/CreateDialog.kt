@@ -1,9 +1,9 @@
-package kanti.tododer.ui.screen.plan_list
+package kanti.tododer.ui.components.dialogs
 
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,9 +14,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import kanti.tododer.feat.todo.R
 
 @Composable
-fun CreatePlanDialog(
-	onCloseDialog: () -> Unit,
-	create: (title: String) -> Unit
+fun CreateDialog(
+	onCloseDialog: () -> Unit = {},
+	title: (@Composable () -> Unit)? = null,
+	textFieldLabel: (@Composable () -> Unit)? = null,
+	add: ((title: String) -> Unit)? = null,
+	create: (title: String) -> Unit = {}
 ) {
 	var titleState by remember {
 		mutableStateOf("")
@@ -24,7 +27,19 @@ fun CreatePlanDialog(
 	AlertDialog(
 		onDismissRequest = { onCloseDialog() },
 		confirmButton = {
-			Button(
+			if (add != null) {
+				TextButton(
+					onClick = {
+						add(titleState)
+						titleState = ""
+					},
+					enabled = titleState.isNotBlank()
+				) {
+					Text(text = stringResource(id = R.string.add))
+				}
+			}
+
+			TextButton(
 				onClick = {
 					create(titleState)
 					onCloseDialog()
@@ -35,22 +50,18 @@ fun CreatePlanDialog(
 			}
 		},
 		dismissButton = {
-			Button(
+			TextButton(
 				onClick = { onCloseDialog() }
 			) {
 				Text(text = stringResource(id = R.string.cancel))
 			}
 		},
-		title = {
-			Text(text = stringResource(id = R.string.create_new_plan))
-		},
+		title = title,
 		text = {
 			OutlinedTextField(
 				value = titleState,
 				onValueChange = { titleState = it },
-				label = {
-					Text(text = stringResource(id = R.string.plan_name))
-				}
+				label = textFieldLabel
 			)
 		}
 	)
@@ -58,6 +69,13 @@ fun CreatePlanDialog(
 
 @Preview
 @Composable
-private fun PreviewCreatePlanDialog() {
-	CreatePlanDialog(onCloseDialog = {  }, create = {})
+private fun PreviewCreateDialog() {
+	CreateDialog(
+		title = {
+			Text(text = "Title")
+		},
+		textFieldLabel = {
+			Text(text = "Label")
+		}
+	)
 }
