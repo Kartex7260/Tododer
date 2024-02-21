@@ -7,13 +7,13 @@ object DefaultColorStyles {
         const val Standard = -1
         const val Dynamic = -2
 
-        const val Red = 1
-        const val Orange = 2
-        const val Yellow = 3
-        const val Green = 4
-        const val LightBlue = 5
-        const val Blue = 6
-        const val Purple = 7
+        const val Red = -3
+        const val Orange = -4
+        const val Yellow = -5
+        const val Green = -6
+        const val LightBlue = -7
+        const val Blue = -8
+        const val Purple = -9
 
         fun values(): List<Int> = listOf(
             Standard, Dynamic, Red, Orange, Yellow, Green, LightBlue, Blue, Purple
@@ -33,6 +33,17 @@ object DefaultColorStyles {
             Ids.Purple -> Purple
             else -> throw IllegalArgumentException("Not found default style by id = $id")
         }
+    }
+
+    fun values(): List<ColorStyle> = listOf(
+        Standard, Dynamic, Red, Orange, Yellow, Green, LightBlue, Blue, Purple
+    )
+
+    object Empty : ColorStyle {
+
+        override val id: Int = 0
+        override val name: String = ""
+        override val type: ColorStyleType = ColorStyleType.Custom
     }
 
     object Standard : ColorStyle {

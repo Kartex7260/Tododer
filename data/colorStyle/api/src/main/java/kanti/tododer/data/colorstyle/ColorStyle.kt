@@ -17,9 +17,10 @@ private data class ColorStyleDataImpl(
 ) : ColorStyleData
 
 fun ColorStyleData(
-    id: Int,
-    name: String,
-    type: ColorStyleType
+    parent: ColorStyleData = DefaultColorStyles.Empty,
+    id: Int = parent.id,
+    name: String = parent.name,
+    type: ColorStyleType = parent.type
 ): ColorStyleData = ColorStyleDataImpl(
     id = id,
     name = name,
@@ -177,7 +178,7 @@ private data class ColorStyleImpl(
 }
 
 fun ColorStyle(
-    parent: ColorStyle = DefaultColorStyles.Standard,
+    parent: ColorStyle = DefaultColorStyles.Empty,
     id: Int = parent.id,
     name: String = parent.name,
     type: ColorStyleType = parent.type,
