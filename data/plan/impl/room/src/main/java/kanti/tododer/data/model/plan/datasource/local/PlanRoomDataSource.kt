@@ -104,7 +104,7 @@ class PlanRoomDataSource @Inject constructor(
     }
 
     override suspend fun deletePlanIfNameIsEmpty(planId: Long): Boolean {
-        val result = planDao.deleteIfNameEmpty(planId) == 1
+        val result = planDao.deleteIfNameEmpty(planId, PlanType.Custom.name) == 1
         logger.d(logTag, "deletePlanIfNameIsEmpty(Long = $planId): return $result")
         return result
     }
