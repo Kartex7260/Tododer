@@ -22,14 +22,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -217,7 +220,6 @@ fun TodoDetailScreen(
 
             val result = snackBarHost.showSnackbar(
                 message = message,
-                withDismissAction = true,
                 actionLabel = cancelStringRes,
                 duration = SnackbarDuration.Short
             )
@@ -242,8 +244,7 @@ fun TodoDetailScreen(
     LaunchedEffect(key1 = vm) {
         vm.blankTodoDeleted.collectLatest {
             snackBarHost.showSnackbar(
-                message = blankTodoDeleted,
-                withDismissAction = true
+                message = blankTodoDeleted
             )
         }
     }
@@ -282,7 +283,19 @@ fun TodoDetailScreen(
         },
 
         snackbarHost = {
-            SnackbarHost(hostState = snackBarHost)
+            SnackbarHost(hostState = snackBarHost) { snackbarData ->
+                val dismissState = rememberDismissState(
+                    confirmValueChange = {
+                        snackbarData.dismiss()
+                        true
+                    }
+                )
+                SwipeToDismiss(
+                    state = dismissState,
+                    background = {},
+                    dismissContent = { Snackbar(snackbarData = snackbarData) }
+                )
+            }
         },
 
         floatingActionButton = {

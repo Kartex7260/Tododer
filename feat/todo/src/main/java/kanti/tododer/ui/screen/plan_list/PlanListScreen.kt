@@ -23,9 +23,11 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -133,7 +135,6 @@ fun PlanListScreen(
             val result = snackbarHostState.showSnackbar(
                 message = message,
                 actionLabel = cancelStringRes,
-                withDismissAction = true,
                 duration = SnackbarDuration.Short
             )
             when (result) {
@@ -152,8 +153,7 @@ fun PlanListScreen(
     LaunchedEffect(key1 = vm) {
         vm.blankPlanDeleted.collectLatest {
             snackbarHostState.showSnackbar(
-                message = blankPlanDeleted,
-                withDismissAction = true
+                message = blankPlanDeleted
             )
         }
     }
@@ -197,7 +197,19 @@ fun PlanListScreen(
 
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) { snackbarData ->
-                Snackbar(snackbarData = snackbarData)
+                val dismissState = rememberDismissState(
+                    confirmValueChange = {
+                        snackbarData.dismiss()
+                        true
+                    }
+                )
+                SwipeToDismiss(
+                    state = dismissState,
+                    background = {},
+                    dismissContent = {
+                        Snackbar(snackbarData = snackbarData)
+                    }
+                )
             }
         },
 

@@ -17,14 +17,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.TopAppBarState
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -93,7 +96,9 @@ private fun TodoListTopBar(
         actions = {
             if (optionMenuItems != null) {
                 var expandOptionMenu by rememberSaveable { mutableStateOf(false) }
-                fun closeMenu() { expandOptionMenu = false }
+                fun closeMenu() {
+                    expandOptionMenu = false
+                }
                 IconButton(onClick = { expandOptionMenu = !expandOptionMenu }) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
@@ -149,6 +154,7 @@ fun TodoListScreen(
     fun todoDetailRoute(todoId: Long): String {
         return "$todoChildrenRoute/$todoId"
     }
+
     val planListRoute = stringResource(id = R.string.nav_destination_plans)
     val planListRouteIdParam = stringResource(id = R.string.nav_destination_plans_id_param)
     fun planListRoute(deleted: Long? = null): String {
@@ -189,7 +195,6 @@ fun TodoListScreen(
             val result = snackbarHostState.showSnackbar(
                 message = message,
                 actionLabel = cancelStringRes,
-                withDismissAction = true,
                 duration = SnackbarDuration.Short
             )
             when (result) {
@@ -213,8 +218,7 @@ fun TodoListScreen(
     LaunchedEffect(key1 = vm) {
         vm.blankTodoDeleted.collectLatest {
             snackbarHostState.showSnackbar(
-                message = blankTodoDeleted,
-                withDismissAction = true
+                message = blankTodoDeleted
             )
         }
     }
@@ -283,7 +287,19 @@ fun TodoListScreen(
         },
 
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
+            SnackbarHost(hostState = snackbarHostState) { snackbarData ->
+                val dismissState = rememberDismissState(
+                    confirmValueChange = {
+                        snackbarData.dismiss()
+                        true
+                    }
+                )
+                SwipeToDismiss(
+                    state = dismissState,
+                    background = {},
+                    dismissContent = { Snackbar(snackbarData = snackbarData) }
+                )
+            }
         },
 
         floatingActionButton = {
