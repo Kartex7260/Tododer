@@ -7,5 +7,6 @@ import kanti.tododer.ui.components.todo.TodosData
 @Stable
 data class TodoListUiState(
 	val plan: Plan = Plan(),
+	val isEditablePlan: Boolean = plan.type.isEditable,
 	val children: TodosData = TodosData()
 )

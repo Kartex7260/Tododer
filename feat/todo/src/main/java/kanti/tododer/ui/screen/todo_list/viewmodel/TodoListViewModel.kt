@@ -28,6 +28,8 @@ interface TodoListViewModel {
 
     fun createNewTodo(title: String, goTo: Boolean)
 
+    fun renamePlan(newTitle: String)
+
     fun renameTodo(todoId: Long, newTitle: String)
 
     fun changeDone(todoId: Long, isDone: Boolean)
@@ -85,6 +87,9 @@ interface TodoListViewModel {
             coroutineScope.launch {
                 _newTodoCreated.emit(0L)
             }
+        }
+
+        override fun renamePlan(newTitle: String) {
         }
 
         override fun renameTodo(todoId: Long, newTitle: String) {

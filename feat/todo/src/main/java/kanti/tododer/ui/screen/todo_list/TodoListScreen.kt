@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -63,7 +65,10 @@ private fun TodoListTopBar(
     plan: Plan?,
     navController: NavController,
     scrollBehavior: TopAppBarScrollBehavior,
-    optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?
+    optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?,
+    isEditablePlan: Boolean,
+    menuOnRename: () -> Unit,
+    menuOnDelete: () -> Unit
 ) {
     val title = when (plan?.type) {
         PlanType.All -> stringResource(id = R.string.plan_all)
@@ -90,6 +95,7 @@ private fun TodoListTopBar(
         actions = {
             if (optionMenuItems != null) {
                 var expandOptionMenu by rememberSaveable { mutableStateOf(false) }
+                fun closeMenu() { expandOptionMenu = false }
                 IconButton(onClick = { expandOptionMenu = !expandOptionMenu }) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
@@ -99,10 +105,33 @@ private fun TodoListTopBar(
                 DropdownMenu(
                     offset = DpOffset(12.dp, 0.dp),
                     expanded = expandOptionMenu,
-                    onDismissRequest = { expandOptionMenu = false }
+                    onDismissRequest = { closeMenu() }
                 ) {
+                    if (isEditablePlan) {
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.rename_plan)) },
+                            leadingIcon = {
+                                Icon(imageVector = Icons.Default.Create, contentDescription = null)
+                            },
+                            onClick = {
+                                menuOnRename()
+                                closeMenu()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.delete_plan)) },
+                            leadingIcon = {
+                                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                            },
+                            onClick = {
+                                menuOnDelete()
+                                closeMenu()
+                            }
+                        )
+                    }
+
                     optionMenuItems {
-                        expandOptionMenu = false
+                        closeMenu()
                     }
                 }
             }
@@ -123,7 +152,8 @@ fun TodoListScreen(
         return "$todoChildrenRoute/$todoId"
     }
 
-    var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
+    var showRenamePlanDialog: Plan? by rememberSaveable { mutableStateOf(null) }
+    var showRenameTodoDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
     var showCreateDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     val snackbarHostState = remember {
@@ -167,7 +197,10 @@ fun TodoListScreen(
                         )
                     }
                 }
-                SnackbarResult.Dismissed -> { vm.rejectCancelChance() }
+
+                SnackbarResult.Dismissed -> {
+                    vm.rejectCancelChance()
+                }
             }
         }
     }
@@ -238,7 +271,10 @@ fun TodoListScreen(
                 plan = plan,
                 scrollBehavior = scrollBehavior,
                 navController = navController,
-                optionMenuItems = optionMenuItems
+                optionMenuItems = optionMenuItems,
+                isEditablePlan = todoListUiState.isEditablePlan,
+                menuOnRename = { showRenamePlanDialog = plan },
+                menuOnDelete = { /* TODO: delete */ }
             )
         },
 
@@ -287,7 +323,7 @@ fun TodoListScreen(
                     expanded = showDropdownMenu,
                     onDismissRequest = { showDropdownMenu = false },
                     onRename = {
-                        showRenameDialog = todoData
+                        showRenameTodoDialog = todoData
                     },
                     onDelete = {
                         vm.deleteTodos(listOf(todoData))
@@ -297,11 +333,23 @@ fun TodoListScreen(
         )
     }
 
-    if (showRenameDialog != null) {
-        val renamedTodo = showRenameDialog!!
+    if (showRenamePlanDialog != null) {
+        val curPlan = showRenamePlanDialog!!
+        RenameDialog(
+            onCloseDialog = { showRenamePlanDialog = null },
+            label = { Text(text = stringResource(id = R.string.new_title)) },
+            name = curPlan.title,
+            onRename = { title ->
+                vm.renamePlan(title)
+            }
+        )
+    }
+
+    if (showRenameTodoDialog != null) {
+        val renamedTodo = showRenameTodoDialog!!
         RenameDialog(
             onCloseDialog = {
-                showRenameDialog = null
+                showRenameTodoDialog = null
             },
             label = { Text(text = stringResource(id = R.string.new_title)) },
             name = renamedTodo.title,

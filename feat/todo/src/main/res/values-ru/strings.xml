@@ -22,4 +22,6 @@
     <string name="plans_deleted">Планов было удалено ({count})</string>
     <string name="todos_deleted">Задач было удалено ({count})</string>
     <string name="delete_current_todo_ask">Удалить текущую задачу?</string>
+    <string name="rename_plan">Переименновать план</string>
+    <string name="delete_plan">Удалить план</string>
 </resources>

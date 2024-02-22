@@ -149,6 +149,14 @@ class TodoListViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun renamePlan(newTitle: String) {
+		viewModelScope.launch {
+			val plan = currentPlan.value.plan
+			planRepository.updateTitle(planId = plan.id, title = newTitle)
+			updateUiState.value = Any()
+		}
+	}
+
 	override fun renameTodo(todoId: Long, newTitle: String) {
 		viewModelScope.launch {
 			todoRepository.updateTitle(todoId, newTitle)
