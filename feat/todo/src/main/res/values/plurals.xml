@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <plurals name="plans_deleted">
+        <item quantity="one">%d plan was deleted</item>
+        <item quantity="two">%d plans have been deleted</item>
+        <item quantity="few">%d plans have been deleted</item>
+        <item quantity="many">%d plans have been deleted</item>
+        <item quantity="other">%d plans have been deleted</item>
+    </plurals>
+
+    <plurals name="todos_deleted">
+        <item quantity="one">%d todo was deleted</item>
+        <item quantity="two">%d todos have been deleted</item>
+        <item quantity="few">%d todos have been deleted</item>
+        <item quantity="many">%d todos have been deleted</item>
+        <item quantity="other">%d todos have been deleted</item>
+    </plurals>
+
+</resources>

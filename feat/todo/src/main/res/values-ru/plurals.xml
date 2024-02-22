@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <plurals name="plans_deleted">
+        <item quantity="one">Удалён %d план</item>
+        <item quantity="few">Удалёно %d плана</item>
+        <item quantity="many">Удалено %d планов</item>
+        <item quantity="other">Удалено %d планов</item>
+    </plurals>
+
+    <plurals name="todos_deleted">
+        <item quantity="one">Удалён %d задача</item>
+        <item quantity="few">Удалёно %d задачи</item>
+        <item quantity="many">Удалено %d задач</item>
+        <item quantity="other">Удалено %d задач</item>
+    </plurals>
+
+</resources>

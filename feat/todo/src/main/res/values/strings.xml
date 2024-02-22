@@ -30,14 +30,11 @@
 
     <string name="title">Title</string>
     <string name="remark">Remark</string>
-    <string name="plan_deleted">The \"{name}\" plan has been deleted</string>
+    <string name="plan_deleted">The \"%d\" plan has been deleted</string>
     <string name="deleted_blank_plan">An blank plan has been deleted</string>
-    <string name="todo_deleted">The \"{name}\" task has been deleted</string>
+    <string name="todo_deleted">The \"%d\" task has been deleted</string>
     <string name="deleted_blank_todo">An blank todo has been deleted</string>
-    <string name="plans_deleted">{count} plans were deleted</string>
-    <string name="regex_name" translatable="false">{name}</string>
-    <string name="regex_count" translatable="false">{count}</string>
-    <string name="todos_deleted">{count} todos were deleted</string>
+    <string name="regex_name" translatable="false">%d</string>
     <string name="delete_current_todo_ask">Delete the current task?</string>
     <string name="rename_plan">Rename the plan</string>
     <string name="delete_plan">Delete a plan</string>

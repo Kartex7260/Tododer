@@ -38,6 +38,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
@@ -116,35 +117,27 @@ fun PlanListScreen(
     var showCreateDialog by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val cancelStringRes = stringResource(id = R.string.cancel)
-
-    val regexCount = stringResource(id = R.string.regex_count)
-    val regexName = stringResource(id = R.string.regex_name)
-    val planDeleted = stringResource(id = R.string.plan_deleted)
-    val plansDeleted = stringResource(id = R.string.plans_deleted)
+    val context = LocalContext.current
     LaunchedEffect(key1 = vm) {
         vm.plansDeleted.collectLatest { plans ->
             if (plans.isEmpty())
                 return@collectLatest
 
-            val message = if (plans.size == 1) {
+            val size = plans.size
+            val message = if (size == 1) {
+                val regexName = context.getString(R.string.regex_name)
+                val planDeleted = context.getString(R.string.plan_deleted)
                 planDeleted.replace(regexName, plans[0].title)
-            } else {
-                plansDeleted.replace(regexCount, plans.size.toString())
-            }
+            } else context.resources.getQuantityString(R.plurals.plans_deleted, size, size)
+
             val result = snackbarHostState.showSnackbar(
                 message = message,
-                actionLabel = cancelStringRes,
+                actionLabel = context.getString(R.string.cancel),
                 duration = SnackbarDuration.Short
             )
             when (result) {
-                SnackbarResult.ActionPerformed -> {
-                    vm.cancelDelete()
-                }
-
-                SnackbarResult.Dismissed -> {
-                    vm.rejectCancelChance()
-                }
+                SnackbarResult.ActionPerformed -> vm.cancelDelete()
+                SnackbarResult.Dismissed -> vm.rejectCancelChance()
             }
         }
     }

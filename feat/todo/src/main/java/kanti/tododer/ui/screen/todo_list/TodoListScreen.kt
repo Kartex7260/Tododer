@@ -40,6 +40,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
@@ -174,42 +175,37 @@ fun TodoListScreen(
     val plan = todoListUiState.plan
     val children = todoListUiState.children
 
-    val regexCount = stringResource(id = R.string.regex_count)
-    val regexName = stringResource(id = R.string.regex_name)
-    val todoDeleted = stringResource(id = R.string.todo_deleted)
-    val todosDeleted = stringResource(id = R.string.todos_deleted)
-    val cancelStringRes = stringResource(id = R.string.cancel)
+    val context = LocalContext.current
     LaunchedEffect(key1 = vm) {
         vm.todosDeleted.collectLatest { deletedTodos ->
             if (deletedTodos.isEmpty())
                 return@collectLatest
 
-            val soloTodo = deletedTodos.size == 1
-
-            val message = if (soloTodo) {
+            val size = deletedTodos.size
+            val isSoloTodo = size == 1
+            val message = if (isSoloTodo) {
+                val regexName = context.getString(R.string.regex_name)
+                val todoDeleted = context.getString(R.string.todo_deleted)
                 todoDeleted.replace(regexName, deletedTodos[0].todoData.title)
             } else {
-                todosDeleted.replace(regexCount, deletedTodos.size.toString())
+                context.resources.getQuantityString(R.plurals.todos_deleted, size, size)
             }
 
             val result = snackbarHostState.showSnackbar(
                 message = message,
-                actionLabel = cancelStringRes,
+                actionLabel = context.getString(R.string.cancel),
                 duration = SnackbarDuration.Short
             )
             when (result) {
                 SnackbarResult.ActionPerformed -> {
                     vm.cancelDelete()
-                    if (soloTodo && deletedTodos[0].returnToChild) {
+                    if (isSoloTodo && deletedTodos[0].returnToChild) {
                         navController.navigate(
                             route = todoDetailRoute(deletedTodos[0].todoData.id)
                         )
                     }
                 }
-
-                SnackbarResult.Dismissed -> {
-                    vm.rejectCancelChance()
-                }
+                SnackbarResult.Dismissed -> vm.rejectCancelChance()
             }
         }
     }

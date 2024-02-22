@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -199,28 +200,25 @@ fun TodoDetailScreen(
         }
     }
 
+    val context = LocalContext.current
     val snackBarHost = remember { SnackbarHostState() }
-    val regexName = stringResource(id = R.string.regex_name)
-    val regexCount = stringResource(id = R.string.regex_count)
-    val todoDeleted = stringResource(id = R.string.todo_deleted)
-    val todosDeleted = stringResource(id = R.string.todos_deleted)
-    val cancelStringRes = stringResource(id = R.string.cancel)
     LaunchedEffect(key1 = vm) {
         vm.childrenTodosDeleted.collectLatest { todos ->
             if (todos.isEmpty())
                 return@collectLatest
 
-            val soloTodo = todos.size == 1
-
+            val size = todos.size
+            val soloTodo = size == 1
             val message = if (soloTodo) {
+                val regexName = context.getString(R.string.regex_name)
+                val todoDeleted = context.getString(R.string.todo_deleted)
                 todoDeleted.replace(regexName, todos[0].todoData.title)
-            } else {
-                todosDeleted.replace(regexCount, todos.size.toString())
-            }
+            } else
+                context.resources.getQuantityString(R.plurals.todos_deleted, size, size)
 
             val result = snackBarHost.showSnackbar(
                 message = message,
-                actionLabel = cancelStringRes,
+                actionLabel = context.getString(R.string.cancel),
                 duration = SnackbarDuration.Short
             )
             when (result) {
@@ -232,10 +230,7 @@ fun TodoDetailScreen(
                         )
                     }
                 }
-
-                else -> {
-                    vm.rejectCancelDelete()
-                }
+                else -> vm.rejectCancelDelete()
             }
         }
     }
