@@ -83,17 +83,13 @@ class PlanListViewModelImpl @Inject constructor(
 		)
 	override val plans: StateFlow<PlansData> = planRepository.standardPlans
 		.combine(deleteCancelManager.deletedValues) { plans, deletedPlans ->
-			plans.filter {
-				!deletedPlans.containsKey(it.id)
-			}
-		}
-		.map { plans ->
 			PlansData(
 				plans = plans.map { plan ->
 					PlanData(
 						id = plan.id,
 						title = plan.title,
-						progress = 0f
+						progress = 0f,
+						visible = !deletedPlans.containsKey(plan.id)
 					)
 				}
 			)

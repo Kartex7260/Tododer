@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kanti.tododer.ui.components.DeleteAnimationVisible
 
 @Composable
 fun PlanLazyColumn(
@@ -49,14 +50,16 @@ fun PlanLazyColumn(
 		items = content.plans,
 		key = { it.id }
 	) { uiState ->
-		PlanCard(
-			modifier = Modifier
-				.padding(bottom = 8.dp),
-			planData = uiState,
-			onClick = { onClick(uiState) }
-		) {
-			if (action != null) {
-				action(uiState)
+		DeleteAnimationVisible(visible = uiState.visible) {
+			PlanCard(
+				modifier = Modifier
+					.padding(bottom = 8.dp),
+				planData = uiState,
+				onClick = { onClick(uiState) }
+			) {
+				if (action != null) {
+					action(uiState)
+				}
 			}
 		}
 	}
