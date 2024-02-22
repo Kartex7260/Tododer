@@ -57,6 +57,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
+import kanti.tododer.ui.components.DeleteAnimationVisible
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
@@ -347,42 +348,44 @@ fun TodoDetailScreen(
                 items = todoChildren.todos,
                 key = { it.id }
             ) { todoData ->
-                TodoCard(
-                    modifier = Modifier
-                        .padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            bottom = 12.dp
-                        ),
-                    todoData = todoData,
-                    onDoneChange = { isDone ->
-                        vm.changeDoneChild(todoData.id, isDone)
-                    },
-                    onClick = {
-                        navController.navigate(
-                            route = todoDetailRoute(todoData.id)
-                        )
-                    }
-                ) {
-                    var expanded by remember {
-                        mutableStateOf(false)
-                    }
-                    IconButton(
-                        onClick = { expanded = !expanded }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = null
-                        )
-                    }
-                    NormalTodoDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        onRename = {
-                            showRenameDialog = todoData
+                DeleteAnimationVisible(visible = todoData.visible) {
+                    TodoCard(
+                        modifier = Modifier
+                            .padding(
+                                start = 16.dp,
+                                end = 16.dp,
+                                bottom = 12.dp
+                            ),
+                        todoData = todoData,
+                        onDoneChange = { isDone ->
+                            vm.changeDoneChild(todoData.id, isDone)
                         },
-                        onDelete = { vm.deleteChildren(listOf(todoData)) }
-                    )
+                        onClick = {
+                            navController.navigate(
+                                route = todoDetailRoute(todoData.id)
+                            )
+                        }
+                    ) {
+                        var expanded by remember {
+                            mutableStateOf(false)
+                        }
+                        IconButton(
+                            onClick = { expanded = !expanded }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = null
+                            )
+                        }
+                        NormalTodoDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            onRename = {
+                                showRenameDialog = todoData
+                            },
+                            onDelete = { vm.deleteChildren(listOf(todoData)) }
+                        )
+                    }
                 }
             }
         }

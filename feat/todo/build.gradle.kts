@@ -40,7 +40,7 @@ android {
 
 dependencies {
 
-	implementation("androidx.navigation:navigation-compose:2.7.6")
+	implementation("androidx.navigation:navigation-compose:2.7.7")
 	implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 	implementation(platform("androidx.compose:compose-bom:2023.10.01"))
 	implementation("androidx.compose.ui:ui")
@@ -73,4 +73,5 @@ dependencies {
 	implementation(project(":ui:todo"))
 	implementation(project(":ui:plan"))
 	implementation(project(":ui:fillingProgressBar"))
+	implementation(project(":ui:common"))
 }

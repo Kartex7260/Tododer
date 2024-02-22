@@ -76,13 +76,10 @@ class TodoDetailViewModelImpl @Inject constructor(
             todoRepository.getChildren(fullId)
         }
         .combine(deleteCancelManager.deletedValues) { children, deletedChildren ->
-            children.filter { todo ->
-                !deletedChildren.containsKey(todo.id)
-            }
-        }
-        .map { children ->
             TodosData(
-                todos = children.map { it.toTodoData() }
+                todos = children.map { todo ->
+                    todo.toTodoData(visible = !deletedChildren.containsKey(todo.id))
+                }
             )
         }
         .flowOn(Dispatchers.Default)
