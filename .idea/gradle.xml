@@ -47,6 +47,7 @@
             <option value="$PROJECT_DIR$/feat/todo" />
             <option value="$PROJECT_DIR$/room" />
             <option value="$PROJECT_DIR$/ui" />
+            <option value="$PROJECT_DIR$/ui/common" />
             <option value="$PROJECT_DIR$/ui/deleter" />
             <option value="$PROJECT_DIR$/ui/fillingProgressBar" />
             <option value="$PROJECT_DIR$/ui/plan" />

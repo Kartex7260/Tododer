@@ -81,8 +81,6 @@ class TodoListViewModelImpl @Inject constructor(
 					!deletedChildren.containsKey(todo.id)
 				}
 			)
-		}
-		.map { planWithChildren ->
 			TodoListUiState(
 				plan = planWithChildren.first,
 				children = TodosData(
@@ -91,7 +89,8 @@ class TodoListViewModelImpl @Inject constructor(
 							id = todo.id,
 							title = todo.title,
 							remark = todo.remark,
-							isDone = todo.done
+							isDone = todo.done,
+							visible = !deletedChildren.containsKey(todo.id)
 						)
 					}
 				)

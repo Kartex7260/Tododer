@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kanti.tododer.ui.components.DeleteAnimationVisible
 
 @Composable
 fun TodoLazyColumn(
@@ -50,13 +51,15 @@ fun TodoLazyColumn(
 		items = content.todos,
 		key = { it.id }
 	) { uiState ->
-		TodoCard(
-			modifier = Modifier
-				.padding(bottom = 8.dp),
-			onClick = { onClick(uiState) },
-			onDoneChange = { onDoneChanged(it, uiState) },
-			todoData = uiState
-		) { actions(uiState) }
+		DeleteAnimationVisible(visible = uiState.visible) {
+			TodoCard(
+				modifier = Modifier
+					.padding(bottom = 8.dp),
+				onClick = { onClick(uiState) },
+				onDoneChange = { onDoneChanged(it, uiState) },
+				todoData = uiState
+			) { actions(uiState) }
+		}
 	}
 	item {
 		postContent()
