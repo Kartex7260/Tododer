@@ -14,6 +14,7 @@
     <string name="nav_destination_todo_detail_todo_id_param" translatable="false">todoId</string>
 
     <string name="nav_destination_plans" translatable="false">plans</string>
+    <string name="nav_destination_plans_id_param" translatable="false">planId</string>
 
     <string name="create_new_plan">Create a new plan</string>
     <string name="create_new_todo">Create a new task</string>
@@ -40,4 +41,5 @@
     <string name="delete_current_todo_ask">Delete the current task?</string>
     <string name="rename_plan">Rename the plan</string>
     <string name="delete_plan">Delete a plan</string>
+    <string name="delete_plan_ask">Delete the plan?</string>
 </resources>

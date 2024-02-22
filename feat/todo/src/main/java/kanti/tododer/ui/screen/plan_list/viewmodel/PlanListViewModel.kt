@@ -39,6 +39,8 @@ interface PlanListViewModel {
 
 	fun deletePlans(plans: List<PlanData>)
 
+	fun deletePlan(planId: Long)
+
 	fun cancelDelete()
 
 	fun rejectCancelChance()
@@ -109,6 +111,9 @@ interface PlanListViewModel {
 			coroutineScope.launch {
 				_plansDeleted.emit(plans)
 			}
+		}
+
+		override fun deletePlan(planId: Long) {
 		}
 
 		override fun cancelDelete() {

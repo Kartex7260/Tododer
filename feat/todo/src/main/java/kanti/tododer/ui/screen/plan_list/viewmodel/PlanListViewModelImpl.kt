@@ -150,6 +150,13 @@ class PlanListViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun deletePlan(planId: Long) {
+		viewModelScope.launch {
+			val plan = plans.value.plans.firstOrNull { it.id == planId } ?: return@launch
+			deleteCancelManager.delete(listOf(plan))
+		}
+	}
+
 	override fun cancelDelete() {
 		viewModelScope.launch {
 			deleteCancelManager.cancelDelete()

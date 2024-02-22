@@ -50,14 +50,20 @@ fun NavGraphBuilder.addTodoNavGraph(
 			)
 		}
 
+		val planListRoute = context.getString(R.string.nav_destination_plans)
+		val planListRouteIdParam = context.getString(R.string.nav_destination_plans_id_param)
 		composable(
-			route = context.getString(R.string.nav_destination_plans),
+			route = "$planListRoute?$planListRouteIdParam={$planListRouteIdParam}",
+			arguments = listOf(
+				navArgument(planListRouteIdParam) { defaultValue = 0L }
+			),
 			enterTransition = { slideInHorizontally { -it } },
 			exitTransition = { slideOutHorizontally { -it } }
 		) {
 			PlanListScreen(
 				navController = navController,
-				optionMenuItems = optionMenuItems
+				optionMenuItems = optionMenuItems,
+				deletedPlan = it.arguments?.getLong(planListRouteIdParam) ?: 0
 			)
 		}
 	}

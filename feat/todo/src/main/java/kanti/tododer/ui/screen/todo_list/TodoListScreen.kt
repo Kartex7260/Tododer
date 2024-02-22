@@ -51,6 +51,7 @@ import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
 import kanti.tododer.ui.components.dialogs.CreateDialog
+import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
 import kanti.tododer.ui.components.todo.TodoData
@@ -63,7 +64,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 private fun TodoListTopBar(
     plan: Plan?,
-    navController: NavController,
+    navToPlanList: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?,
     isEditablePlan: Boolean,
@@ -76,16 +77,13 @@ private fun TodoListTopBar(
         PlanType.Custom -> plan.title
         else -> ""
     }
-    val plansRoute = stringResource(id = R.string.nav_destination_plans)
 
     CenterAlignedTopAppBar(
         title = {
             Text(text = title)
         },
         navigationIcon = {
-            IconButton(onClick = {
-                navController.navigate(plansRoute)
-            }) {
+            IconButton(onClick = navToPlanList) {
                 Icon(
                     imageVector = Icons.Default.List,
                     contentDescription = null
@@ -151,7 +149,13 @@ fun TodoListScreen(
     fun todoDetailRoute(todoId: Long): String {
         return "$todoChildrenRoute/$todoId"
     }
+    val planListRoute = stringResource(id = R.string.nav_destination_plans)
+    val planListRouteIdParam = stringResource(id = R.string.nav_destination_plans_id_param)
+    fun planListRoute(deleted: Long? = null): String {
+        return "$planListRoute${if (deleted == null) "" else "?$planListRouteIdParam=$deleted"}"
+    }
 
+    var showDeletePlanDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     var showRenamePlanDialog: Plan? by rememberSaveable { mutableStateOf(null) }
     var showRenameTodoDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
     var showCreateDialog: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -270,11 +274,11 @@ fun TodoListScreen(
             TodoListTopBar(
                 plan = plan,
                 scrollBehavior = scrollBehavior,
-                navController = navController,
+                navToPlanList = { navController.navigate(route = planListRoute()) },
                 optionMenuItems = optionMenuItems,
                 isEditablePlan = todoListUiState.isEditablePlan,
                 menuOnRename = { showRenamePlanDialog = plan },
-                menuOnDelete = { /* TODO: delete */ }
+                menuOnDelete = { showDeletePlanDialog = true }
             )
         },
 
@@ -329,6 +333,16 @@ fun TodoListScreen(
                         vm.deleteTodos(listOf(todoData))
                     }
                 )
+            }
+        )
+    }
+
+    if (showDeletePlanDialog) {
+        DeleteDialog(
+            onCloseDialog = { showDeletePlanDialog = false },
+            title = { Text(text = stringResource(id = R.string.delete_plan_ask)) },
+            delete = {
+                navController.navigate(route = planListRoute(deleted = plan.id))
             }
         )
     }

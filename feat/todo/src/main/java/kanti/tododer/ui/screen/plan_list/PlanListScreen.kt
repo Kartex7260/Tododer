@@ -61,279 +61,284 @@ import kotlinx.coroutines.flow.filter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PlanListTopBar(
-	back: () -> Unit,
-	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?,
-	scrollBehavior: TopAppBarScrollBehavior
+    back: () -> Unit,
+    optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?,
+    scrollBehavior: TopAppBarScrollBehavior
 ) {
-	CenterAlignedTopAppBar(
-		title = {
-			Text(text = stringResource(id = R.string.plans))
-		},
-		navigationIcon = {
-			IconButton(onClick = { back() }) {
-				Icon(
-					imageVector = Icons.Default.ArrowBack,
-					contentDescription = null
-				)
-			}
-		},
-		actions = {
-			if (optionMenuItems != null) {
-				var expandOptionMenu by rememberSaveable { mutableStateOf(false) }
-				IconButton(onClick = { expandOptionMenu = !expandOptionMenu }) {
-					Icon(
-						imageVector = Icons.Default.MoreVert,
-						contentDescription = null
-					)
-				}
-				DropdownMenu(
-					offset = DpOffset(12.dp, 0.dp),
-					expanded = expandOptionMenu,
-					onDismissRequest = { expandOptionMenu = false }
-				) {
-					optionMenuItems {
-						expandOptionMenu = false
-					}
-				}
-			}
-		},
-		scrollBehavior = scrollBehavior
-	)
+    CenterAlignedTopAppBar(
+        title = {
+            Text(text = stringResource(id = R.string.plans))
+        },
+        navigationIcon = {
+            IconButton(onClick = { back() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = null
+                )
+            }
+        },
+        actions = {
+            if (optionMenuItems != null) {
+                var expandOptionMenu by rememberSaveable { mutableStateOf(false) }
+                IconButton(onClick = { expandOptionMenu = !expandOptionMenu }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null
+                    )
+                }
+                DropdownMenu(
+                    offset = DpOffset(12.dp, 0.dp),
+                    expanded = expandOptionMenu,
+                    onDismissRequest = { expandOptionMenu = false }
+                ) {
+                    optionMenuItems {
+                        expandOptionMenu = false
+                    }
+                }
+            }
+        },
+        scrollBehavior = scrollBehavior
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlanListScreen(
-	navController: NavController = rememberNavController(),
-	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
-	vm: PlanListViewModel = hiltViewModel<PlanListViewModelImpl>()
+    navController: NavController = rememberNavController(),
+    optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
+    deletedPlan: Long = 0,
+    vm: PlanListViewModel = hiltViewModel<PlanListViewModelImpl>()
 ) {
-	var showRenameDialog: PlanData? by rememberSaveable { mutableStateOf(null) }
+    var showRenameDialog: PlanData? by rememberSaveable { mutableStateOf(null) }
 
-	var showCreateDialog by rememberSaveable { mutableStateOf(false) }
-	val snackbarHostState = remember { SnackbarHostState() }
+    var showCreateDialog by rememberSaveable { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
-	val cancelStringRes = stringResource(id = R.string.cancel)
+    val cancelStringRes = stringResource(id = R.string.cancel)
 
-	val regexCount = stringResource(id = R.string.regex_count)
-	val regexName = stringResource(id = R.string.regex_name)
-	val planDeleted = stringResource(id = R.string.plan_deleted)
-	val plansDeleted = stringResource(id = R.string.plans_deleted)
-	LaunchedEffect(key1 = vm) {
-		vm.plansDeleted.collectLatest { plans ->
-			if (plans.isEmpty())
-				return@collectLatest
+    val regexCount = stringResource(id = R.string.regex_count)
+    val regexName = stringResource(id = R.string.regex_name)
+    val planDeleted = stringResource(id = R.string.plan_deleted)
+    val plansDeleted = stringResource(id = R.string.plans_deleted)
+    LaunchedEffect(key1 = vm) {
+        vm.plansDeleted.collectLatest { plans ->
+            if (plans.isEmpty())
+                return@collectLatest
 
-			val message = if (plans.size == 1) {
-				planDeleted.replace(regexName, plans[0].title)
-			} else {
-				plansDeleted.replace(regexCount, plans.size.toString())
-			}
-			val result = snackbarHostState.showSnackbar(
-				message = message,
-				actionLabel = cancelStringRes,
-				withDismissAction = true,
-				duration = SnackbarDuration.Short
-			)
-			when (result) {
-				SnackbarResult.ActionPerformed -> {
-					vm.cancelDelete()
-				}
-				SnackbarResult.Dismissed -> {
-					vm.rejectCancelChance()
-				}
-			}
-		}
-	}
+            val message = if (plans.size == 1) {
+                planDeleted.replace(regexName, plans[0].title)
+            } else {
+                plansDeleted.replace(regexCount, plans.size.toString())
+            }
+            val result = snackbarHostState.showSnackbar(
+                message = message,
+                actionLabel = cancelStringRes,
+                withDismissAction = true,
+                duration = SnackbarDuration.Short
+            )
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    vm.cancelDelete()
+                }
 
-	val blankPlanDeleted = stringResource(id = R.string.deleted_blank_plan)
-	LaunchedEffect(key1 = vm) {
-		vm.blankPlanDeleted.collectLatest {
-			snackbarHostState.showSnackbar(
-				message = blankPlanDeleted,
-				withDismissAction = true
-			)
-		}
-	}
+                SnackbarResult.Dismissed -> {
+                    vm.rejectCancelChance()
+                }
+            }
+        }
+    }
 
-	LifecycleResumeEffect(key1 = vm) {
-		vm.updateUiState()
-		onPauseOrDispose {  }
-	}
+    val blankPlanDeleted = stringResource(id = R.string.deleted_blank_plan)
+    LaunchedEffect(key1 = vm) {
+        vm.blankPlanDeleted.collectLatest {
+            snackbarHostState.showSnackbar(
+                message = blankPlanDeleted,
+                withDismissAction = true
+            )
+        }
+    }
 
-	LifecycleStartEffect(key1 = vm) {
-		onStopOrDispose {
-			vm.rejectCancelChance()
-		}
-	}
+    val planAll by vm.planAll.collectAsState()
+    val planDefault by vm.planDefault.collectAsState()
+    val plans by vm.plans.collectAsState()
 
-	LaunchedEffect(key1 = vm) {
-		vm.newPlanCreated.collect {
-			navController.popBackStack()
-		}
-	}
+    LifecycleResumeEffect(key1 = vm) {
+        vm.updateUiState()
+        if (deletedPlan != 0L) {
+            vm.deletePlan(deletedPlan)
+        }
+        onPauseOrDispose { }
+    }
 
-	val planAll by vm.planAll.collectAsState()
-	val planDefault by vm.planDefault.collectAsState()
-	val plans by vm.plans.collectAsState()
+    LifecycleStartEffect(key1 = vm) {
+        onStopOrDispose {
+            vm.rejectCancelChance()
+        }
+    }
 
-	val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-	Scaffold(
-		modifier = Modifier
-			.nestedScroll(scrollBehavior.nestedScrollConnection),
+    LaunchedEffect(key1 = vm) {
+        vm.newPlanCreated.collect {
+            navController.popBackStack()
+        }
+    }
 
-		topBar = {
-			PlanListTopBar(
-				back = { navController.popBackStack() },
-				optionMenuItems = optionMenuItems,
-				scrollBehavior = scrollBehavior
-			)
-		},
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    Scaffold(
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
 
-		snackbarHost = {
-			SnackbarHost(hostState = snackbarHostState) { snackbarData ->
-				Snackbar(snackbarData = snackbarData)
-			}
-		},
+        topBar = {
+            PlanListTopBar(
+                back = { navController.popBackStack() },
+                optionMenuItems = optionMenuItems,
+                scrollBehavior = scrollBehavior
+            )
+        },
 
-		floatingActionButton = {
-			FloatingActionButton(
-				onClick = {
-					showCreateDialog = true
-				},
-				containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-				contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-			) {
-				Icon(
-					imageVector = Icons.Default.Add,
-					contentDescription = null
-				)
-			}
-		}
-	) { paddingValues ->
-		LazyColumn(
-			modifier = Modifier.padding(paddingValues),
-			contentPadding = PaddingValues(
-				top = 12.dp,
-				bottom = 12.dp,
-				start = 16.dp,
-				end = 16.dp
-			)
-		) {
-			item {
-				val planAllProgress by vm.planAllProgress.collectAsState(initial = 0f)
-				val planAllWithProgress = planAll.copy(progress = planAllProgress)
-				PlanCard(
-					planData = planAllWithProgress,
-					onClick = {
-						vm.setCurrentPlan(planAll.id)
-						navController.popBackStack()
-					}
-				)
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { snackbarData ->
+                Snackbar(snackbarData = snackbarData)
+            }
+        },
 
-				val planDefaultProgress by vm.planDefaultProgress.collectAsState(initial = 0f)
-				val planDefaultWithProgress = planDefault.copy(progress = planDefaultProgress)
-				PlanCard(
-					modifier = Modifier
-						.padding(top = 8.dp),
-					planData = planDefaultWithProgress,
-					onClick = {
-						vm.setCurrentPlan(planDefault.id)
-						navController.popBackStack()
-					}
-				)
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    showCreateDialog = true
+                },
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null
+                )
+            }
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues),
+            contentPadding = PaddingValues(
+                top = 12.dp,
+                bottom = 12.dp,
+                start = 16.dp,
+                end = 16.dp
+            )
+        ) {
+            item {
+                val planAllProgress by vm.planAllProgress.collectAsState(initial = 0f)
+                val planAllWithProgress = planAll.copy(progress = planAllProgress)
+                PlanCard(
+                    planData = planAllWithProgress,
+                    onClick = {
+                        vm.setCurrentPlan(planAll.id)
+                        navController.popBackStack()
+                    }
+                )
 
-				Divider(
-					modifier = Modifier
-						.padding(
-							top = 16.dp,
-							bottom = 16.dp,
-							start = 16.dp,
-							end = 16.dp
-						)
-				)
-			}
+                val planDefaultProgress by vm.planDefaultProgress.collectAsState(initial = 0f)
+                val planDefaultWithProgress = planDefault.copy(progress = planDefaultProgress)
+                PlanCard(
+                    modifier = Modifier
+                        .padding(top = 8.dp),
+                    planData = planDefaultWithProgress,
+                    onClick = {
+                        vm.setCurrentPlan(planDefault.id)
+                        navController.popBackStack()
+                    }
+                )
 
-			items(
-				items = plans.plans,
-				key = { it.id }
-			) { planData ->
-				val planProgress by vm.plansProgress.filter { it.planId == planData.id }
-					.collectAsState(initial = PlanProgress(planData.id, 0f))
-				val planWithProgress = planData.copy(progress = planProgress.progress)
-				DeleteAnimationVisible(visible = planData.visible) {
-					PlanCard(
-						modifier = Modifier.padding(bottom = 8.dp),
-						planData = planWithProgress,
-						onClick = {
-							vm.setCurrentPlan(planData.id)
-							navController.popBackStack()
-						}
-					) {
-						var showDropdownMenu by remember {
-							mutableStateOf(false)
-						}
-						IconButton(onClick = { showDropdownMenu = true }) {
-							Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
-						}
-						NormalPlanDropdownMenu(
-							expanded = showDropdownMenu,
-							onDismissRequest = { showDropdownMenu = false },
-							onRename = {
-								showRenameDialog = planData
-							},
-							onDelete = {
-								vm.deletePlans(listOf(planData))
-							}
-						)
-					}
-				}
-			}
-		}
-	}
+                Divider(
+                    modifier = Modifier
+                        .padding(
+                            top = 16.dp,
+                            bottom = 16.dp,
+                            start = 16.dp,
+                            end = 16.dp
+                        )
+                )
+            }
 
-	if (showRenameDialog != null) {
-		val renamedPlan = showRenameDialog!!
-		RenameDialog(
-			onCloseDialog = { showRenameDialog = null },
-			name = renamedPlan.title,
-			label = { Text(text = stringResource(id = R.string.new_title)) },
-			onRename = { newTitle ->
-				vm.renamePlanTitle(renamedPlan.id, newTitle)
-			}
-		)
-	}
+            items(
+                items = plans.plans,
+                key = { it.id }
+            ) { planData ->
+                val planProgress by vm.plansProgress.filter { it.planId == planData.id }
+                    .collectAsState(initial = PlanProgress(planData.id, 0f))
+                val planWithProgress = planData.copy(progress = planProgress.progress)
+                DeleteAnimationVisible(visible = planData.visible) {
+                    PlanCard(
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        planData = planWithProgress,
+                        onClick = {
+                            vm.setCurrentPlan(planData.id)
+                            navController.popBackStack()
+                        }
+                    ) {
+                        var showDropdownMenu by remember {
+                            mutableStateOf(false)
+                        }
+                        IconButton(onClick = { showDropdownMenu = true }) {
+                            Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                        }
+                        NormalPlanDropdownMenu(
+                            expanded = showDropdownMenu,
+                            onDismissRequest = { showDropdownMenu = false },
+                            onRename = {
+                                showRenameDialog = planData
+                            },
+                            onDelete = {
+                                vm.deletePlans(listOf(planData))
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
 
-	if (showCreateDialog) {
-		CreateDialog(
-			onCloseDialog = {
-				showCreateDialog = false
-			},
-			title = {
-				Text(text = stringResource(id = R.string.create_new_plan))
-			},
-			textFieldLabel = {
-				Text(text = stringResource(id = R.string.plan_name))
-			},
-			create = { title ->
-				vm.createPlanEndSetCurrent(title)
-			}
-		)
-	}
+    if (showRenameDialog != null) {
+        val renamedPlan = showRenameDialog!!
+        RenameDialog(
+            onCloseDialog = { showRenameDialog = null },
+            name = renamedPlan.title,
+            label = { Text(text = stringResource(id = R.string.new_title)) },
+            onRename = { newTitle ->
+                vm.renamePlanTitle(renamedPlan.id, newTitle)
+            }
+        )
+    }
+
+    if (showCreateDialog) {
+        CreateDialog(
+            onCloseDialog = {
+                showCreateDialog = false
+            },
+            title = {
+                Text(text = stringResource(id = R.string.create_new_plan))
+            },
+            textFieldLabel = {
+                Text(text = stringResource(id = R.string.plan_name))
+            },
+            create = { title ->
+                vm.createPlanEndSetCurrent(title)
+            }
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun PreviewPlanListScreen() {
-	PlanListScreen(
-		optionMenuItems = { closeMenu ->
-			DropdownMenuItem(
-				text = { Text(text = "Test") },
-				onClick = {
-					closeMenu()
-				}
-			)
-		},
-		vm = PlanListViewModel
-	)
+    PlanListScreen(
+        optionMenuItems = { closeMenu ->
+            DropdownMenuItem(
+                text = { Text(text = "Test") },
+                onClick = {
+                    closeMenu()
+                }
+            )
+        },
+        vm = PlanListViewModel
+    )
 }

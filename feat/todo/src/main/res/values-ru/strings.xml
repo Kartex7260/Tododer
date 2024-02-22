@@ -24,4 +24,5 @@
     <string name="delete_current_todo_ask">Удалить текущую задачу?</string>
     <string name="rename_plan">Переименновать план</string>
     <string name="delete_plan">Удалить план</string>
+    <string name="delete_plan_ask">Удалить план?</string>
 </resources>
