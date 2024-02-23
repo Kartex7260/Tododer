@@ -1,7 +1,10 @@
 package kanti.tododer.ui.screen.todo_list
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
@@ -54,12 +57,13 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
+import kanti.tododer.ui.components.DeleteAnimationVisible
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
+import kanti.tododer.ui.components.todo.TodoCard
 import kanti.tododer.ui.components.todo.TodoData
-import kanti.tododer.ui.components.todo.TodoLazyColumn
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModelImpl
 import kotlinx.coroutines.flow.collectLatest
@@ -311,42 +315,60 @@ fun TodoListScreen(
             }
         }
     ) { paddingValues ->
-        TodoLazyColumn(
+        LazyColumn(
             modifier = Modifier.padding(paddingValues),
             state = rememberSaveableByPlan(saver = LazyListState.Saver) {
                 LazyListState(0, 0)
             },
-            content = children,
-            onClick = { todoData ->
-                navController.navigate(
-                    route = todoDetailRoute(todoData.id)
-                )
-            },
-            onDoneChanged = { isDone, todo ->
-                vm.changeDone(todo.id, isDone)
-            },
-            actions = { todoData ->
-                var showDropdownMenu by remember {
-                    mutableStateOf(false)
-                }
-                IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = null
-                    )
-                }
-                NormalTodoDropdownMenu(
-                    expanded = showDropdownMenu,
-                    onDismissRequest = { showDropdownMenu = false },
-                    onRename = {
-                        showRenameTodoDialog = todoData
-                    },
-                    onDelete = {
-                        vm.deleteTodos(listOf(todoData))
+            contentPadding = PaddingValues(
+                top = 12.dp,
+                bottom = 12.dp,
+                start = 16.dp,
+                end = 16.dp
+            )
+        ) {
+            items(
+                items = children.todos,
+                key = { it.data.id }
+            ) { todoUiState ->
+                val todoData = todoUiState.data
+                DeleteAnimationVisible(visible = todoUiState.visible) {
+                    TodoCard(
+                        modifier = Modifier
+                            .padding(bottom = 8.dp),
+                        onClick = {
+                            navController.navigate(
+                                route = todoDetailRoute(todoData.id)
+                            )
+                        },
+                        onDoneChange = { isDone ->
+                            vm.changeDone(todoData.id, isDone)
+                        },
+                        todoData = todoData
+                    ) {
+                        var showDropdownMenu by remember {
+                            mutableStateOf(false)
+                        }
+                        IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = null
+                            )
+                        }
+                        NormalTodoDropdownMenu(
+                            expanded = showDropdownMenu,
+                            onDismissRequest = { showDropdownMenu = false },
+                            onRename = {
+                                showRenameTodoDialog = todoData
+                            },
+                            onDelete = {
+                                vm.deleteTodos(listOf(todoData))
+                            }
+                        )
                     }
-                )
+                }
             }
-        )
+        }
     }
 
     if (showDeletePlanDialog) {

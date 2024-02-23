@@ -354,9 +354,10 @@ fun TodoDetailScreen(
 
             items(
                 items = todoChildren.todos,
-                key = { it.id }
-            ) { todoData ->
-                DeleteAnimationVisible(visible = todoData.visible) {
+                key = { it.data.id }
+            ) { todoUiState ->
+                val todoData = todoUiState.data
+                DeleteAnimationVisible(visible = todoUiState.visible) {
                     TodoCard(
                         modifier = Modifier
                             .padding(

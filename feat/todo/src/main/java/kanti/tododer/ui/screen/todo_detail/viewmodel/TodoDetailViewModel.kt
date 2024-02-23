@@ -1,8 +1,9 @@
 package kanti.tododer.ui.screen.todo_detail.viewmodel
 
 import android.util.Log
+import kanti.tododer.ui.common.TodoUiState
+import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.components.todo.TodoData
-import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoDeletion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 interface TodoDetailViewModel {
 
     val todoDetail: StateFlow<TodoData>
-    val todoChildren: StateFlow<TodosData>
+    val todoChildren: StateFlow<TodosUiState>
 
     val childrenTodosDeleted: SharedFlow<List<TodoDeletion>>
     val blankTodoDeleted: SharedFlow<Unit>
@@ -67,24 +68,24 @@ interface TodoDetailViewModel {
         override val blankTodoDeleted: SharedFlow<Unit> = MutableSharedFlow()
 
         private val _todoChildren = MutableStateFlow(
-            TodosData(
-                listOf(
-                    TodoData(id = 2, title = "Test 1"),
-                    TodoData(id = 3, title = "Test 2"),
-                    TodoData(id = 4, title = "Test 3"),
-                    TodoData(id = 5, title = "Test 4"),
-                    TodoData(id = 6, title = "Test 5"),
-                    TodoData(id = 7, title = "Test 6"),
-                    TodoData(id = 8, title = "Test 7"),
-                    TodoData(id = 9, title = "Test 8"),
-                    TodoData(id = 10, title = "Test 9"),
-                    TodoData(id = 11, title = "Test 10"),
-                    TodoData(id = 12, title = "Test 11"),
-                    TodoData(id = 13, title = "Test 12"),
+            TodosUiState(
+                todos = listOf(
+                    TodoUiState(data = TodoData(id = 2, title = "Test 1")),
+                    TodoUiState(data = TodoData(id = 3, title = "Test 2")),
+                    TodoUiState(data = TodoData(id = 4, title = "Test 3")),
+                    TodoUiState(data = TodoData(id = 5, title = "Test 4")),
+                    TodoUiState(data = TodoData(id = 6, title = "Test 5")),
+                    TodoUiState(data = TodoData(id = 7, title = "Test 6")),
+                    TodoUiState(data = TodoData(id = 8, title = "Test 7")),
+                    TodoUiState(data = TodoData(id = 9, title = "Test 8")),
+                    TodoUiState(data = TodoData(id = 10, title = "Test 9")),
+                    TodoUiState(data = TodoData(id = 11, title = "Test 10")),
+                    TodoUiState(data = TodoData(id = 12, title = "Test 11")),
+                    TodoUiState(data = TodoData(id = 13, title = "Test 12")),
                 )
             )
         )
-        override val todoChildren: StateFlow<TodosData> = _todoChildren.asStateFlow()
+        override val todoChildren: StateFlow<TodosUiState> = _todoChildren.asStateFlow()
 
         override val toNext: SharedFlow<Long> = MutableSharedFlow()
         override val onExit: SharedFlow<TodoData?> = MutableSharedFlow()

@@ -11,8 +11,9 @@ import kanti.tododer.domain.plandeletebehaviour.DeletePlan
 import kanti.tododer.domain.plandeletebehaviour.DeletePlanIfBlank
 import kanti.tododer.domain.progress.computer.GetProgressFromAllPlan
 import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.common.PlansUiState
+import kanti.tododer.ui.common.toUiState
 import kanti.tododer.ui.components.plan.PlanData
-import kanti.tododer.ui.components.plan.PlansData
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
 import kanti.todoer.data.appdata.AppDataRepository
 import kotlinx.coroutines.Dispatchers
@@ -81,15 +82,13 @@ class PlanListViewModelImpl @Inject constructor(
 			started = SharingStarted.Lazily,
 			initialValue = PlanData()
 		)
-	override val plans: StateFlow<PlansData> = planRepository.standardPlans
+	override val plans: StateFlow<PlansUiState> = planRepository.standardPlans
 		.combine(deleteCancelManager.deletedValues) { plans, deletedPlans ->
-			PlansData(
+			PlansUiState(
 				plans = plans.map { plan ->
-					PlanData(
-						id = plan.id,
-						title = plan.title,
-						progress = 0f,
-						visible = !deletedPlans.containsKey(plan.id)
+					plan.toUiState(
+						visible = !deletedPlans.containsKey(plan.id),
+						progress = 0.0f
 					)
 				}
 			)
@@ -98,7 +97,7 @@ class PlanListViewModelImpl @Inject constructor(
 		.stateIn(
 			scope = viewModelScope,
 			started = SharingStarted.Lazily,
-			initialValue = PlansData()
+			initialValue = PlansUiState()
 		)
 
 	override val plansDeleted: SharedFlow<List<PlanData>> = deleteCancelManager.onDeleted
@@ -152,8 +151,8 @@ class PlanListViewModelImpl @Inject constructor(
 
 	override fun deletePlan(planId: Long) {
 		viewModelScope.launch {
-			val plan = plans.value.plans.firstOrNull { it.id == planId } ?: return@launch
-			deleteCancelManager.delete(listOf(plan))
+			val plan = plans.value.plans.firstOrNull { it.data.id == planId } ?: return@launch
+			deleteCancelManager.delete(listOf(plan.data))
 		}
 	}
 

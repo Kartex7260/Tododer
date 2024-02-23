@@ -266,12 +266,13 @@ fun PlanListScreen(
 
             items(
                 items = plans.plans,
-                key = { it.id }
-            ) { planData ->
+                key = { it.data.id }
+            ) { planUiState ->
+                val planData = planUiState.data
                 val planProgress by vm.plansProgress.filter { it.planId == planData.id }
                     .collectAsState(initial = PlanProgress(planData.id, 0f))
                 val planWithProgress = planData.copy(progress = planProgress.progress)
-                DeleteAnimationVisible(visible = planData.visible) {
+                DeleteAnimationVisible(visible = planUiState.visible) {
                     PlanCard(
                         modifier = Modifier.padding(bottom = 8.dp),
                         planData = planWithProgress,

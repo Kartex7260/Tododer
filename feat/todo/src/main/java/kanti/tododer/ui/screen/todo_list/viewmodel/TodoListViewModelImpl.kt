@@ -13,13 +13,14 @@ import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.data.model.plan.toFullId
 import kanti.tododer.data.model.plan.toPlan
 import kanti.tododer.data.model.todo.TodoRepository
-import kanti.tododer.data.model.todo.toTodoData
 import kanti.tododer.domain.getplanchildren.GetPlanChildren
 import kanti.tododer.domain.plandeletebehaviour.DeletePlanIfBlank
 import kanti.tododer.domain.todo.delete.DeleteBlankTodoWithFlow
 import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.common.TodoUiState
+import kanti.tododer.ui.common.TodosUiState
+import kanti.tododer.ui.common.toData
 import kanti.tododer.ui.components.todo.TodoData
-import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
 import kanti.todoer.data.appdata.AppDataRepository
 import kotlinx.coroutines.Dispatchers
@@ -40,163 +41,159 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoListViewModelImpl @Inject constructor(
-	appDataRepository: AppDataRepository,
-	private val todoRepository: TodoRepository,
-	private val planRepository: PlanRepository,
-	private val getPlanChildren: GetPlanChildren,
-	private val deletePlanIfBlank: DeletePlanIfBlank,
-	deleteBlankTodoWithFlow: DeleteBlankTodoWithFlow,
-	@ApplicationContext context: Context
+    appDataRepository: AppDataRepository,
+    private val todoRepository: TodoRepository,
+    private val planRepository: PlanRepository,
+    private val getPlanChildren: GetPlanChildren,
+    private val deletePlanIfBlank: DeletePlanIfBlank,
+    deleteBlankTodoWithFlow: DeleteBlankTodoWithFlow,
+    @ApplicationContext context: Context
 ) : ViewModel(), TodoListViewModel {
 
-	private val deleteCancelManager = DeleteCancelManager<TodoDeletion>(
-		toKey = { todoData.id },
-		onDelete = { todos ->
-			todoRepository.delete(todos.map { it.todoData.id })
-			updateUiState.value = Any()
-		}
-	)
+    private val deleteCancelManager = DeleteCancelManager<TodoDeletion>(
+        toKey = { todoData.id },
+        onDelete = { todos ->
+            todoRepository.delete(todos.map { it.todoData.id })
+            updateUiState.value = Any()
+        }
+    )
 
-	private val updateUiState = MutableStateFlow(Any())
-	override val currentPlan: StateFlow<TodoListUiState> = appDataRepository.currentPlanId
-		.combine(updateUiState) { planId, _ -> planId }
-		.map { currentPlanId ->
-			var plan = planRepository.getPlanOrDefault(currentPlanId)
-			plan = when (plan.type) {
-				PlanType.All -> plan.toPlan(title = context.getString(R.string.plan_all))
-				PlanType.Default -> plan.toPlan(title = context.getString(R.string.plan_default))
-				else -> plan
-			}
-			val children = getPlanChildren(plan.id)
+    private val updateUiState = MutableStateFlow(Any())
+    override val currentPlan: StateFlow<TodoListUiState> = appDataRepository.currentPlanId
+        .combine(updateUiState) { planId, _ -> planId }
+        .map { currentPlanId ->
+            var plan = planRepository.getPlanOrDefault(currentPlanId)
+            plan = when (plan.type) {
+                PlanType.All -> plan.toPlan(title = context.getString(R.string.plan_all))
+                PlanType.Default -> plan.toPlan(title = context.getString(R.string.plan_default))
+                else -> plan
+            }
+            val children = getPlanChildren(plan.id)
 
-			Pair(
-				first = plan,
-				second = children
-			)
-		}
-		.combine(deleteCancelManager.deletedValues) { planWithChildren, deletedChildren ->
-			Pair(
-				first = planWithChildren.first,
-				second = planWithChildren.second.filter { todo ->
-					!deletedChildren.containsKey(todo.id)
-				}
-			)
-			TodoListUiState(
-				plan = planWithChildren.first,
-				children = TodosData(
-					todos = planWithChildren.second.map { todo ->
-						TodoData(
-							id = todo.id,
-							title = todo.title,
-							remark = todo.remark,
-							isDone = todo.done,
-							visible = !deletedChildren.containsKey(todo.id)
-						)
-					}
-				)
-			)
-		}
-		.flowOn(Dispatchers.Default)
-		.stateIn(
-			scope = viewModelScope,
-			started = SharingStarted.Lazily,
-			initialValue = TodoListUiState()
-		)
+            Pair(
+                first = plan,
+                second = children
+            )
+        }
+        .combine(deleteCancelManager.deletedValues) { planWithChildren, deletedChildren ->
+            TodoListUiState(
+                plan = planWithChildren.first,
+                children = TodosUiState(
+                    todos = planWithChildren.second.map { todo ->
+                        TodoUiState(
+                            visible = !deletedChildren.containsKey(todo.id),
+                            data = TodoData(
+                                id = todo.id,
+                                title = todo.title,
+                                remark = todo.remark,
+                                isDone = todo.done
+                            )
+                        )
+                    }
+                )
+            )
+        }
+        .flowOn(Dispatchers.Default)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = TodoListUiState()
+        )
 
-	private val _todosDeleted = MutableSharedFlow<List<TodoDeletion>>()
-	override val todosDeleted: SharedFlow<List<TodoDeletion>> = _todosDeleted.asSharedFlow()
+    private val _todosDeleted = MutableSharedFlow<List<TodoDeletion>>()
+    override val todosDeleted: SharedFlow<List<TodoDeletion>> = _todosDeleted.asSharedFlow()
 
-	private val _blankTodoDeleted = MutableSharedFlow<Unit>()
-	override val blankTodoDeleted: SharedFlow<Unit> = _blankTodoDeleted.asSharedFlow()
+    private val _blankTodoDeleted = MutableSharedFlow<Unit>()
+    override val blankTodoDeleted: SharedFlow<Unit> = _blankTodoDeleted.asSharedFlow()
 
-	private val _goToTodo = MutableSharedFlow<Long>()
-	override val goToTodo: SharedFlow<Long> = _goToTodo.asSharedFlow()
+    private val _goToTodo = MutableSharedFlow<Long>()
+    override val goToTodo: SharedFlow<Long> = _goToTodo.asSharedFlow()
 
-	init {
-		viewModelScope.launch {
-			deleteBlankTodoWithFlow.blankTodoDeleted.collectLatest {
-				delay(100L)
-				_blankTodoDeleted.emit(Unit)
-			}
-		}
-	}
+    init {
+        viewModelScope.launch {
+            deleteBlankTodoWithFlow.blankTodoDeleted.collectLatest {
+                delay(100L)
+                _blankTodoDeleted.emit(Unit)
+            }
+        }
+    }
 
-	override fun updateUiState(deletedTodoId: Long?) {
-		updateUiState.value = Any()
+    override fun updateUiState(deletedTodoId: Long?) {
+        updateUiState.value = Any()
 
-		if (deletedTodoId == null)
-			return
-		viewModelScope.launch {
-			val deletedTodo = todoRepository.getTodo(deletedTodoId) ?: return@launch
-			val deletedTodoData = listOf(TodoDeletion(deletedTodo.toTodoData(), true))
-			deleteCancelManager.delete(deletedTodoData)
-			_todosDeleted.emit(deletedTodoData)
-		}
-	}
+        if (deletedTodoId == null)
+            return
+        viewModelScope.launch {
+            val deletedTodo = todoRepository.getTodo(deletedTodoId) ?: return@launch
+            val deletedTodoData = listOf(TodoDeletion(deletedTodo.toData(), true))
+            deleteCancelManager.delete(deletedTodoData)
+            _todosDeleted.emit(deletedTodoData)
+        }
+    }
 
-	override fun createNewTodo(title: String, goTo: Boolean) {
-		viewModelScope.launch {
-			val planFullId = if (currentPlan.value.plan.type == PlanType.All) {
-				FullId(id = Const.PlansIds.DEFAULT, FullIdType.Plan)
-			} else {
-				currentPlan.value.plan.toFullId()
-			}
-			val todoId = todoRepository.create(planFullId, title, "")
-			if (goTo) {
-				_goToTodo.emit(todoId)
-			}
-			updateUiState.value = Any()
-		}
-	}
+    override fun createNewTodo(title: String, goTo: Boolean) {
+        viewModelScope.launch {
+            val planFullId = if (currentPlan.value.plan.type == PlanType.All) {
+                FullId(id = Const.PlansIds.DEFAULT, FullIdType.Plan)
+            } else {
+                currentPlan.value.plan.toFullId()
+            }
+            val todoId = todoRepository.create(planFullId, title, "")
+            if (goTo) {
+                _goToTodo.emit(todoId)
+            }
+            updateUiState.value = Any()
+        }
+    }
 
-	override fun renamePlan(newTitle: String) {
-		viewModelScope.launch {
-			val plan = currentPlan.value.plan
-			planRepository.updateTitle(planId = plan.id, title = newTitle)
-			updateUiState.value = Any()
-		}
-	}
+    override fun renamePlan(newTitle: String) {
+        viewModelScope.launch {
+            val plan = currentPlan.value.plan
+            planRepository.updateTitle(planId = plan.id, title = newTitle)
+            updateUiState.value = Any()
+        }
+    }
 
-	override fun renameTodo(todoId: Long, newTitle: String) {
-		viewModelScope.launch {
-			todoRepository.updateTitle(todoId, newTitle)
-			updateUiState.value = Any()
-		}
-	}
+    override fun renameTodo(todoId: Long, newTitle: String) {
+        viewModelScope.launch {
+            todoRepository.updateTitle(todoId, newTitle)
+            updateUiState.value = Any()
+        }
+    }
 
-	override fun changeDone(todoId: Long, isDone: Boolean) {
-		viewModelScope.launch {
-			todoRepository.changeDone(todoId, isDone)
-			updateUiState.value = Any()
-		}
-	}
+    override fun changeDone(todoId: Long, isDone: Boolean) {
+        viewModelScope.launch {
+            todoRepository.changeDone(todoId, isDone)
+            updateUiState.value = Any()
+        }
+    }
 
-	override fun deleteTodos(todos: List<TodoData>) {
-		if (todos.isEmpty())
-			return
-		viewModelScope.launch {
-			deleteCancelManager.delete(todos.map { TodoDeletion(it, false) })
-			_todosDeleted.emit(todos.map { TodoDeletion(it, false) })
-		}
-	}
+    override fun deleteTodos(todos: List<TodoData>) {
+        if (todos.isEmpty())
+            return
+        viewModelScope.launch {
+            deleteCancelManager.delete(todos.map { TodoDeletion(it, false) })
+            _todosDeleted.emit(todos.map { TodoDeletion(it, false) })
+        }
+    }
 
-	override fun cancelDelete() {
-		viewModelScope.launch {
-			deleteCancelManager.cancelDelete()
-		}
-	}
+    override fun cancelDelete() {
+        viewModelScope.launch {
+            deleteCancelManager.cancelDelete()
+        }
+    }
 
-	override fun rejectCancelChance() {
-		viewModelScope.launch {
-			deleteCancelManager.rejectCancelChance()
-		}
-	}
+    override fun rejectCancelChance() {
+        viewModelScope.launch {
+            deleteCancelManager.rejectCancelChance()
+        }
+    }
 
-	override fun onStop() {
-		rejectCancelChance()
-		viewModelScope.launch {
-			val planFullId = FullId(currentPlan.value.plan.id, FullIdType.Plan)
-			deletePlanIfBlank(planFullId)
-		}
-	}
+    override fun onStop() {
+        rejectCancelChance()
+        viewModelScope.launch {
+            val planFullId = FullId(currentPlan.value.plan.id, FullIdType.Plan)
+            deletePlanIfBlank(planFullId)
+        }
+    }
 }

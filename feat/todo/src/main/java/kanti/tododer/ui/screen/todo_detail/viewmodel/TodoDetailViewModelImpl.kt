@@ -7,10 +7,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.model.FullId
 import kanti.tododer.data.model.FullIdType
 import kanti.tododer.data.model.todo.TodoRepository
-import kanti.tododer.data.model.todo.toTodoData
 import kanti.tododer.domain.todo.delete.DeleteBlankTodoWithFlow
+import kanti.tododer.ui.common.TodosUiState
+import kanti.tododer.ui.common.toData
+import kanti.tododer.ui.common.toUiState
 import kanti.tododer.ui.components.todo.TodoData
-import kanti.tododer.ui.components.todo.TodosData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoDeletion
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
 import kotlinx.coroutines.Dispatchers
@@ -57,7 +58,7 @@ class TodoDetailViewModelImpl @Inject constructor(
         .map { todoId ->
             Log.d(logTag, "TodoRepository.getTodo($todoId)")
             val todo = todoRepository.getTodo(todoId)
-            todo?.toTodoData()
+            todo?.toData()
         }
         .filterNotNull()
         .flowOn(Dispatchers.Default)
@@ -68,7 +69,7 @@ class TodoDetailViewModelImpl @Inject constructor(
         )
 
     private val _updateTodoChildren = MutableStateFlow(Any())
-    override val todoChildren: StateFlow<TodosData> = todoDetail
+    override val todoChildren: StateFlow<TodosUiState> = todoDetail
         .combine(_updateTodoChildren) { todo, _ -> todo }
         .map { todoData ->
             Log.d(logTag, "TodoRepository.getChildren(${todoData.id})")
@@ -76,9 +77,9 @@ class TodoDetailViewModelImpl @Inject constructor(
             todoRepository.getChildren(fullId)
         }
         .combine(deleteCancelManager.deletedValues) { children, deletedChildren ->
-            TodosData(
+            TodosUiState(
                 todos = children.map { todo ->
-                    todo.toTodoData(visible = !deletedChildren.containsKey(todo.id))
+                    todo.toUiState(visible = !deletedChildren.containsKey(todo.id))
                 }
             )
         }
@@ -86,7 +87,7 @@ class TodoDetailViewModelImpl @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
-            initialValue = TodosData()
+            initialValue = TodosUiState()
         )
 
     private val _childrenTodosDeleted = MutableSharedFlow<List<TodoDeletion>>()
@@ -120,7 +121,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 
         viewModelScope.launch {
             val todo = todoRepository.getTodo(todoId) ?: return@launch
-            val todoDeletion = listOf(TodoDeletion(todo.toTodoData(), true))
+            val todoDeletion = listOf(TodoDeletion(todo.toData(), true))
             deleteCancelManager.delete(todoDeletion)
             _childrenTodosDeleted.emit(todoDeletion)
         }
