@@ -1,4 +1,4 @@
-package kanti.tododer.ui.components
+package kanti.tododer.ui.components.selection
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
