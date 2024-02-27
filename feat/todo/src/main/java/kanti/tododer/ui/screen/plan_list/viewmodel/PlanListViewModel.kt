@@ -27,10 +27,6 @@ interface PlanListViewModel {
     val plansDeleted: SharedFlow<List<PlanData>>
     val blankPlanDeleted: SharedFlow<Unit>
 
-    val planAllProgress: SharedFlow<Float>
-    val planDefaultProgress: SharedFlow<Float>
-    val plansProgress: SharedFlow<PlanProgress>
-
     fun updateUiState()
 
     fun setCurrentPlan(planId: Long)

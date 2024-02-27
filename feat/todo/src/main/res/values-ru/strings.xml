@@ -23,4 +23,7 @@
     <string name="rename_plan">Переименновать план</string>
     <string name="delete_plan">Удалить план</string>
     <string name="delete_plan_ask">Удалить план?</string>
+    <string name="caption_todo_list">Tododer Апп\nПлан: \"{1}\"\nЗадач: {2}, Выполненных задач: {3}</string>
+    <string name="caption_todo_detail">Tododer Апп\nЗадача: \"{1}\"\nЗадач: {2}, Выполненных задач: {3}</string>
+    <string name="caption_plan_list">Tododer Апп\nПланов: \"{1}\", Полностью выполненных: {2}\nВсего задач: {3}</string>
 </resources>

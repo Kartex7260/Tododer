@@ -94,7 +94,7 @@ class GetProgressFromAllPlan @Inject constructor(
             }")
             _plansProgress.value = progresses
 
-            progresses = mutableListOf<PlanProgress>()
+            progresses = mutableListOf()
             jobs.clear()
             for (plan in plans) {
                 val job = launch {

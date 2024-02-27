@@ -1,8 +1,8 @@
 package kanti.tododer.ui.components.todo
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 
-@Stable
+@Immutable
 data class TodoData(
 	val id: Long = 0,
 	val title: String = "",

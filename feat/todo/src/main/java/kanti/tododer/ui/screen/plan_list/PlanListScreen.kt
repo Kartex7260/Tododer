@@ -1,6 +1,9 @@
 package kanti.tododer.ui.screen.plan_list
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -36,6 +39,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -50,6 +54,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.DeleteAnimationVisible
+import kanti.tododer.ui.components.ScreenBottomCaption
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalPlanDropdownMenu
@@ -223,7 +228,7 @@ fun PlanListScreen(
             modifier = Modifier.padding(paddingValues),
             contentPadding = PaddingValues(
                 top = 12.dp,
-                bottom = 12.dp,
+                bottom = 16.dp,
                 start = 16.dp,
                 end = 16.dp
             )
@@ -289,6 +294,25 @@ fun PlanListScreen(
                             }
                         )
                     }
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                ) {
+                    val captionStg = stringResource(id = R.string.caption_plan_list)
+                    val todosCount by vm.todosCount.collectAsState()
+                    ScreenBottomCaption(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter),
+                        text = captionStg
+                            .replace("{1}", (plans.plans.filter { it.visible }.size + 1).toString())
+                            .replace("{2}", plans.plans.filter { it.data.progress == 1f }.size.toString())
+                            .replace("{3}", todosCount.toString())
+                    )
                 }
             }
         }

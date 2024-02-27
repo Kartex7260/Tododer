@@ -1,6 +1,10 @@
 package kanti.tododer.ui.screen.todo_list
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -41,6 +45,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.autoSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -58,6 +63,7 @@ import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
 import kanti.tododer.ui.components.DeleteAnimationVisible
+import kanti.tododer.ui.components.ScreenBottomCaption
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
@@ -209,6 +215,7 @@ fun TodoListScreen(
                         )
                     }
                 }
+
                 SnackbarResult.Dismissed -> vm.rejectCancelChance()
             }
         }
@@ -316,13 +323,15 @@ fun TodoListScreen(
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
             state = rememberSaveableByPlan(saver = LazyListState.Saver) {
                 LazyListState(0, 0)
             },
             contentPadding = PaddingValues(
                 top = 12.dp,
-                bottom = 12.dp,
+                bottom = 16.dp,
                 start = 16.dp,
                 end = 16.dp
             )
@@ -366,6 +375,27 @@ fun TodoListScreen(
                             }
                         )
                     }
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .height(56.dp)
+                        .fillMaxWidth()
+                ) {
+                    val captionStg = stringResource(id = R.string.caption_todo_list)
+                    ScreenBottomCaption(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter),
+                        text = captionStg
+                            .replace("{1}", plan.title)
+                            .replace("{2}", children.todos.filter { it.visible } .size.toString())
+                            .replace(
+                                "{3}",
+                                children.todos.filter { it.data.isDone && it.visible }.size.toString()
+                            )
+                    )
                 }
             }
         }
