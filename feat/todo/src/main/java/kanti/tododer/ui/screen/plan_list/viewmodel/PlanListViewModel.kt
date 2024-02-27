@@ -1,7 +1,6 @@
 package kanti.tododer.ui.screen.plan_list.viewmodel
 
 import android.util.Log
-import kanti.tododer.data.model.progress.PlanProgress
 import kanti.tododer.ui.common.PlanUiState
 import kanti.tododer.ui.common.PlansUiState
 import kanti.tododer.ui.components.plan.PlanData
@@ -22,6 +21,8 @@ interface PlanListViewModel {
     val planAll: StateFlow<PlanData>
     val planDefault: StateFlow<PlanData>
     val plans: StateFlow<PlansUiState>
+
+    val todosCount: StateFlow<Int>
 
     val plansDeleted: SharedFlow<List<PlanData>>
     val blankPlanDeleted: SharedFlow<Unit>
@@ -88,12 +89,8 @@ interface PlanListViewModel {
         private val _blankPlanDeleted = MutableSharedFlow<Unit>()
         override val blankPlanDeleted: SharedFlow<Unit> = _blankPlanDeleted.asSharedFlow()
 
-        override val planAllProgress: SharedFlow<Float>
-            get() = MutableSharedFlow()
-        override val planDefaultProgress: SharedFlow<Float>
-            get() = MutableSharedFlow()
-        override val plansProgress: SharedFlow<PlanProgress>
-            get() = MutableSharedFlow()
+        override val todosCount: StateFlow<Int>
+            get() = MutableStateFlow(0)
 
         override fun updateUiState() {}
 

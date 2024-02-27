@@ -1,35 +1,29 @@
 package kanti.tododer.domain.progress.computer
 
 import kanti.tododer.data.model.FullId
-import kanti.tododer.data.model.progress.ProgressRepository
 import kanti.tododer.data.model.todo.TodoRepository
 import kanti.tododer.data.model.todo.toFullId
 import kanti.tododer.domain.getplanchildren.GetPlanChildren
 import kanti.tododer.util.log.Logger
 import kanti.tododer.util.log.StandardLog
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ComputePlanProgress @Inject constructor(
+class CountTodo @Inject constructor(
     private val todoRepository: TodoRepository,
     private val getPlanChildren: GetPlanChildren,
-    private val progressRepository: ProgressRepository,
     @StandardLog private val logger: Logger
 ) {
 
-    suspend operator fun invoke(planId: Long): ProgressComputer {
+    suspend operator fun invoke(planId: Long): Int {
         val result = withContext(Dispatchers.Default) {
             val progressComputer = ProgressComputer()
             computePlanChildren(planId, progressComputer)
-            launch {
-                progressRepository.setProgress(planId, progressComputer.progress)
-            }
-            progressComputer
+            progressComputer.all
         }
-		logger.d(LOG_TAG, "invoke(Long = $planId): return $result")
-		return result
+        logger.d(LOG_TAG, "invoke(Long = $planId): return $result")
+        return result
     }
 
     private suspend fun computePlanChildren(planId: Long, progressComputer: ProgressComputer) {
@@ -39,10 +33,10 @@ class ComputePlanProgress @Inject constructor(
             if (!child.done)
                 computeTodoChildren(child.toFullId(), progressComputer)
         }
-		logger.d(
-			LOG_TAG,
-			"computePlanChildren(Long = $planId, ProgressComputer = $progressComputer)"
-		)
+        logger.d(
+            LOG_TAG,
+            "computePlanChildren(Long = $planId, ProgressComputer = $progressComputer)"
+        )
     }
 
     private suspend fun computeTodoChildren(
@@ -55,14 +49,14 @@ class ComputePlanProgress @Inject constructor(
             if (!child.done)
                 computeTodoChildren(child.toFullId(), progressComputer)
         }
-		logger.d(
-			LOG_TAG,
-			"computeTodoChildren(FullId = $todoFullId, ProgressComputer = $progressComputer)"
-		)
+        logger.d(
+            LOG_TAG,
+            "computeTodoChildren(FullId = $todoFullId, ProgressComputer = $progressComputer)"
+        )
     }
 
-	companion object {
+    companion object {
 
-		private const val LOG_TAG = "ComputePlanProgress"
-	}
+        private const val LOG_TAG = "CountTodo"
+    }
 }

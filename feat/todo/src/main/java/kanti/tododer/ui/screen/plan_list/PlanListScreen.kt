@@ -48,7 +48,6 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import kanti.tododer.data.model.progress.PlanProgress
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.DeleteAnimationVisible
 import kanti.tododer.ui.components.dialogs.CreateDialog
@@ -59,7 +58,6 @@ import kanti.tododer.ui.components.plan.PlanData
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModelImpl
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -231,22 +229,18 @@ fun PlanListScreen(
             )
         ) {
             item {
-                val planAllProgress by vm.planAllProgress.collectAsState(initial = 0f)
-                val planAllWithProgress = planAll.copy(progress = planAllProgress)
                 PlanCard(
-                    planData = planAllWithProgress,
+                    planData = planAll,
                     onClick = {
                         vm.setCurrentPlan(planAll.id)
                         navController.popBackStack()
                     }
                 )
 
-                val planDefaultProgress by vm.planDefaultProgress.collectAsState(initial = 0f)
-                val planDefaultWithProgress = planDefault.copy(progress = planDefaultProgress)
                 PlanCard(
                     modifier = Modifier
                         .padding(top = 8.dp),
-                    planData = planDefaultWithProgress,
+                    planData = planDefault,
                     onClick = {
                         vm.setCurrentPlan(planDefault.id)
                         navController.popBackStack()
@@ -269,13 +263,10 @@ fun PlanListScreen(
                 key = { it.data.id }
             ) { planUiState ->
                 val planData = planUiState.data
-                val planProgress by vm.plansProgress.filter { it.planId == planData.id }
-                    .collectAsState(initial = PlanProgress(planData.id, 0f))
-                val planWithProgress = planData.copy(progress = planProgress.progress)
                 DeleteAnimationVisible(visible = planUiState.visible) {
                     PlanCard(
                         modifier = Modifier.padding(bottom = 8.dp),
-                        planData = planWithProgress,
+                        planData = planData,
                         onClick = {
                             vm.setCurrentPlan(planData.id)
                             navController.popBackStack()
