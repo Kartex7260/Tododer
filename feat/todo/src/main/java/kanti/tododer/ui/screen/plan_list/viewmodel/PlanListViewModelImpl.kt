@@ -13,6 +13,7 @@ import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.common.PlansUiState
 import kanti.tododer.ui.common.toUiState
 import kanti.tododer.ui.components.plan.PlanData
+import kanti.tododer.ui.components.selection.SelectionController
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
 import kanti.tododer.util.log.Logger
 import kanti.tododer.util.log.StandardLog
@@ -40,7 +41,8 @@ class PlanListViewModelImpl @Inject constructor(
 	private val getProgressFromAllPlan: GetProgressFromAllPlan,
 	deletePlanIfBlank: DeletePlanIfBlank,
 	@ApplicationContext private val appContext: Context,
-	@StandardLog private val logger: Logger
+	@StandardLog private val logger: Logger,
+	private val selectionController: SelectionController
 ) : ViewModel(), PlanListViewModel {
 
 	private val deleteCancelManager = DeleteCancelManager<PlanData>(
@@ -86,8 +88,9 @@ class PlanListViewModelImpl @Inject constructor(
 	override val plans: StateFlow<PlansUiState> = combine(
 			flow = planRepository.standardPlans,
 			flow2 = deleteCancelManager.deletedValues,
-			flow3 = getProgressFromAllPlan.plansProgress
-		) { plans, deletedPlans, plansProgress ->
+			flow3 = getProgressFromAllPlan.plansProgress,
+			flow4 = selectionController.selectionState
+		) { plans, deletedPlans, plansProgress, selectionState ->
 			logger.d(LOG_TAG, "plans: combine(\n" +
 					"\tplans=${plans.joinToString(
 						prefix = "(ID, TITLE)[",
@@ -100,10 +103,13 @@ class PlanListViewModelImpl @Inject constructor(
 					"\tplansProgress=${plansProgress.joinToString(
 						prefix = "(ID, PROGRESS)[",
 						postfix = "]"
-					) { "(${it.planId}, ${it.progress})" }}\n)")
+					) { "(${it.planId}, ${it.progress})" }}\n" +
+					"\tselectionState=${selectionState}\n)")
 			PlansUiState(
+				selection = selectionState.selection,
 				plans = plans.map { plan ->
 					plan.toUiState(
+						selected = selectionState.selected.contains(plan.id),
 						visible = !deletedPlans.containsKey(plan.id),
 						progress = plansProgress.firstOrNull { it.planId == plan.id }?.progress ?: 0f
 					)
@@ -182,6 +188,23 @@ class PlanListViewModelImpl @Inject constructor(
 			deleteCancelManager.rejectCancelChance()
 			updateUiState()
 		}
+	}
+
+	override fun selection(planId: Long) {
+		selectionController.selection = true
+		selectionController.setSelect(planId, true)
+	}
+
+	override fun selectionOff(): Boolean {
+		if (selectionController.selection) {
+			selectionController.clear()
+			return true
+		}
+		return false
+	}
+
+	override fun setSelect(planId: Long, selected: Boolean) {
+		selectionController.setSelect(planId, selected)
 	}
 
 	companion object {

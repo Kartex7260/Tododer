@@ -1,6 +1,7 @@
 package kanti.tododer.ui.components.plan
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,15 +30,20 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import kanti.fillingprogressbar.FillingProgressBar
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlanCard(
 	modifier: Modifier = Modifier,
 	planData: PlanData,
-	onClick: () -> Unit,
+	onLongClick: () -> Unit = {},
+	onClick: () -> Unit = {},
 	endButton: @Composable () -> Unit = {}
 ) = Card(
 	modifier = modifier
-		.clickable(onClick = onClick)
+		.combinedClickable(
+			onLongClick = onLongClick,
+			onClick = onClick
+		)
 		.height(56.dp)
 ) {
 	Column(

@@ -43,6 +43,12 @@ interface PlanListViewModel {
 
     fun rejectCancelChance()
 
+    fun selection(planId: Long)
+
+    fun selectionOff(): Boolean
+
+    fun setSelect(planId: Long, selected: Boolean)
+
     companion object : PlanListViewModel {
 
         private const val logTag = "PlanListViewModel"
@@ -118,6 +124,16 @@ interface PlanListViewModel {
         }
 
         override fun rejectCancelChance() {
+        }
+
+        override fun selection(planId: Long) {
+        }
+
+        override fun selectionOff(): Boolean {
+            return false
+        }
+
+        override fun setSelect(planId: Long, selected: Boolean) {
         }
     }
 }

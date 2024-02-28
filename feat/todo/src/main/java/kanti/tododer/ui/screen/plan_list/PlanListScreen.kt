@@ -60,6 +60,7 @@ import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalPlanDropdownMenu
 import kanti.tododer.ui.components.plan.PlanCard
 import kanti.tododer.ui.components.plan.PlanData
+import kanti.tododer.ui.components.selection.SelectionBox
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModelImpl
 import kotlinx.coroutines.flow.collectLatest
@@ -269,30 +270,40 @@ fun PlanListScreen(
             ) { planUiState ->
                 val planData = planUiState.data
                 DeleteAnimationVisible(visible = planUiState.visible) {
-                    PlanCard(
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        planData = planData,
-                        onClick = {
-                            vm.setCurrentPlan(planData.id)
-                            navController.popBackStack()
-                        }
+                    SelectionBox(
+                        selection = plans.selection,
+                        selected = planUiState.selected,
+                        onChangeSelected = { vm.setSelect(planData.id, it) }
                     ) {
-                        var showDropdownMenu by remember {
-                            mutableStateOf(false)
-                        }
-                        IconButton(onClick = { showDropdownMenu = true }) {
-                            Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
-                        }
-                        NormalPlanDropdownMenu(
-                            expanded = showDropdownMenu,
-                            onDismissRequest = { showDropdownMenu = false },
-                            onRename = {
-                                showRenameDialog = planData
-                            },
-                            onDelete = {
-                                vm.deletePlans(listOf(planData))
+                        PlanCard(
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            planData = planData,
+                            onLongClick = { vm.selection(planData.id) },
+                            onClick = {
+                                val unselectResult = vm.selectionOff()
+                                if (unselectResult)
+                                    return@PlanCard
+                                vm.setCurrentPlan(planData.id)
+                                navController.popBackStack()
                             }
-                        )
+                        ) {
+                            var showDropdownMenu by remember {
+                                mutableStateOf(false)
+                            }
+                            IconButton(onClick = { showDropdownMenu = true }) {
+                                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                            }
+                            NormalPlanDropdownMenu(
+                                expanded = showDropdownMenu,
+                                onDismissRequest = { showDropdownMenu = false },
+                                onRename = {
+                                    showRenameDialog = planData
+                                },
+                                onDelete = {
+                                    vm.deletePlans(listOf(planData))
+                                }
+                            )
+                        }
                     }
                 }
             }
