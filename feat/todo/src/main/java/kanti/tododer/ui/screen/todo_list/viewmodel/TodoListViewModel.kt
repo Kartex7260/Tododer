@@ -41,6 +41,12 @@ interface TodoListViewModel {
 
     fun rejectCancelChance()
 
+    fun selection(todoId: Long)
+
+    fun selectionOff(): Boolean
+
+    fun setSelect(todoId: Long, selected: Boolean)
+
     fun onStop()
 
     companion object : TodoListViewModel {
@@ -49,7 +55,7 @@ interface TodoListViewModel {
 
         private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
-        private val _children = MutableStateFlow<TodoListUiState>(
+        private val _children = MutableStateFlow(
             TodoListUiState(
                 plan = Plan(1, title = "Test", type = PlanType.Custom),
                 children = TodosUiState(
@@ -114,6 +120,19 @@ interface TodoListViewModel {
 
         override fun rejectCancelChance() {
             Log.d(logTag, "rejectCancelChance()")
+        }
+
+        override fun selection(todoId: Long) {
+            Log.d(logTag, "selection(Long = $todoId)")
+        }
+
+        override fun selectionOff(): Boolean {
+            Log.d(logTag, "selectionOff()")
+            return true
+        }
+
+        override fun setSelect(todoId: Long, selected: Boolean) {
+            Log.d(logTag, "setSelect(Long = $todoId, Boolean = $selected)")
         }
 
         override fun onStop() {

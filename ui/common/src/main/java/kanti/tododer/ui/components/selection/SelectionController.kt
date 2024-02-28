@@ -1,21 +1,28 @@
 package kanti.tododer.ui.components.selection
 
-import kotlinx.coroutines.flow.Flow
+import kanti.tododer.util.log.Logger
+import kanti.tododer.util.log.StandardLog
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-class SelectionController @Inject constructor() {
+class SelectionController @Inject constructor(
+    @StandardLog private val logger: Logger
+) {
 
-    private val selected = mutableSetOf<Long>()
+    private val mSelected = mutableSetOf<Long>()
 
     private val _selectionState = MutableStateFlow(SelectionUiState())
-    val selectionState: Flow<SelectionUiState> = _selectionState.asStateFlow()
+    val selectionState: StateFlow<SelectionUiState> = _selectionState.asStateFlow()
 
     var selection: Boolean
         get() = _selectionState.value.selection
         set(value) {
+            logger.d(LOG_TAG, "setSelection(Boolean = $value)")
+            if (_selectionState.value.selection == value)
+                return
             _selectionState.update {
                 it.copy(
                     selection = value
@@ -23,25 +30,31 @@ class SelectionController @Inject constructor() {
             }
         }
 
+    val selected: List<Long> get() = mSelected.toList()
+
     fun setSelect(id: Long, select: Boolean) {
+        logger.d(LOG_TAG, "setSelect(Long = $id, Boolean = $select)")
         if (select) {
-            selected.add(id)
+            mSelected.add(id)
         } else {
-            selected.remove(id)
+            mSelected.remove(id)
         }
         updateState()
     }
 
-    fun setSelect(pairs: List<Pair<Long, Boolean>>) {
-        for (pair in pairs) {
-            if (pair.second) {
-                selected.add(pair.first)
-            } else {
-                selected.remove(pair.first)
-            }
+    fun clear() {
+        mSelected.clear()
+        _selectionState.update {
+            it.copy(selection = false, selected = mSelected.toSet())
         }
-        updateState()
     }
 
-    private fun updateState() = _selectionState.update { it.copy(selected = selected) }
+    private fun updateState() {
+        _selectionState.update { it.copy(selected = mSelected.toSet()) }
+    }
+
+    companion object {
+
+        private const val LOG_TAG = "SelectionController"
+    }
 }

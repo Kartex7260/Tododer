@@ -68,6 +68,7 @@ import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
+import kanti.tododer.ui.components.selection.SelectionBox
 import kanti.tododer.ui.components.todo.TodoCard
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModel
@@ -342,38 +343,47 @@ fun TodoListScreen(
             ) { todoUiState ->
                 val todoData = todoUiState.data
                 DeleteAnimationVisible(visible = todoUiState.visible) {
-                    TodoCard(
-                        modifier = Modifier
-                            .padding(bottom = 8.dp),
-                        onClick = {
-                            navController.navigate(
-                                route = todoDetailRoute(todoData.id)
-                            )
-                        },
-                        onDoneChange = { isDone ->
-                            vm.changeDone(todoData.id, isDone)
-                        },
-                        todoData = todoData
+                    SelectionBox(
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        selection = children.selection,
+                        selected = todoUiState.selected,
+                        onChangeSelected = { vm.setSelect(todoData.id, it) }
                     ) {
-                        var showDropdownMenu by remember {
-                            mutableStateOf(false)
-                        }
-                        IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = null
+                        TodoCard(
+                            onLongClick = { vm.selection(todoData.id) },
+                            onClick = {
+                                val unselectResult = vm.selectionOff()
+                                if (unselectResult)
+                                    return@TodoCard
+                                navController.navigate(
+                                    route = todoDetailRoute(todoData.id)
+                                )
+                            },
+                            onDoneChange = { isDone ->
+                                vm.changeDone(todoData.id, isDone)
+                            },
+                            todoData = todoData
+                        ) {
+                            var showDropdownMenu by remember {
+                                mutableStateOf(false)
+                            }
+                            IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = null
+                                )
+                            }
+                            NormalTodoDropdownMenu(
+                                expanded = showDropdownMenu,
+                                onDismissRequest = { showDropdownMenu = false },
+                                onRename = {
+                                    showRenameTodoDialog = todoData
+                                },
+                                onDelete = {
+                                    vm.deleteTodos(listOf(todoData))
+                                }
                             )
                         }
-                        NormalTodoDropdownMenu(
-                            expanded = showDropdownMenu,
-                            onDismissRequest = { showDropdownMenu = false },
-                            onRename = {
-                                showRenameTodoDialog = todoData
-                            },
-                            onDelete = {
-                                vm.deleteTodos(listOf(todoData))
-                            }
-                        )
                     }
                 }
             }

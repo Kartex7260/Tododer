@@ -4,8 +4,9 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Checkbox
@@ -17,8 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -32,33 +31,26 @@ fun SelectionBox(
 ) = Box(
     modifier = modifier
 ) {
-    var checkBoxWidth by remember { mutableStateOf(0.dp) }
-    Box(
+    Row(
         modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.CenterEnd
+            .matchParentSize(),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        val density = LocalDensity.current
         Checkbox(
             modifier = Modifier
-                .onGloballyPositioned {
-                    checkBoxWidth = with(density) { it.size.width.toDp() }
-                }
-                .padding(
-                    start = 4.dp
-                ),
+                .padding(start = 4.dp),
             checked = selected,
             onCheckedChange = onChangeSelected
         )
     }
 
     val contentPadding by animateDpAsState(
-        targetValue = if (selection) checkBoxWidth else 0.dp,
+        targetValue = if (selection) 52.dp else 0.dp,
         label = "contentPadding"
     )
-    Box(
+    Row(
         modifier = Modifier
-            .fillMaxSize()
             .padding(end = contentPadding)
     ) {
         content()
@@ -76,8 +68,8 @@ private fun PreviewSelectionBox() {
     ) {
         Box(
             modifier = Modifier
-                .background(Color.Green)
                 .size(200.dp)
+                .background(Color.Green)
                 .combinedClickable(
                     onClick = {
                         selection = false

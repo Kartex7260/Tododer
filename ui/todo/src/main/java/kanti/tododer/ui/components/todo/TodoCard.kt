@@ -1,6 +1,7 @@
 package kanti.tododer.ui.components.todo
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,16 +33,21 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TodoCard(
 	modifier: Modifier = Modifier,
 	todoData: TodoData,
+	onLongClick: () -> Unit = {},
 	onClick: () -> Unit = {},
 	onDoneChange: (Boolean) -> Unit = {},
 	action: @Composable () -> Unit = {}
 ) = Card(
 	modifier = modifier
-		.clickable(onClick = onClick)
+		.combinedClickable(
+			onLongClick = onLongClick,
+			onClick = onClick
+		)
 		.height(56.dp)
 ) {
 	Column(

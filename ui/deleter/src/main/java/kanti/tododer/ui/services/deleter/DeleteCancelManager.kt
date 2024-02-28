@@ -1,13 +1,11 @@
 package kanti.tododer.ui.services.deleter
 
-import androidx.compose.runtime.Stable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-@Stable
 class DeleteCancelManager<Value>(
 	val toKey: Value.() -> Long,
 	private val onDelete: suspend (List<Value>) -> Unit = {}

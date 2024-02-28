@@ -17,11 +17,14 @@ import kanti.tododer.domain.getplanchildren.GetPlanChildren
 import kanti.tododer.domain.plandeletebehaviour.DeletePlanIfBlank
 import kanti.tododer.domain.todo.delete.DeleteBlankTodoWithFlow
 import kanti.tododer.feat.todo.R
-import kanti.tododer.ui.common.TodoUiState
 import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.common.toData
+import kanti.tododer.ui.common.toUiState
+import kanti.tododer.ui.components.selection.SelectionController
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
+import kanti.tododer.util.log.Logger
+import kanti.tododer.util.log.StandardLog
 import kanti.todoer.data.appdata.AppDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -35,6 +38,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,7 +51,9 @@ class TodoListViewModelImpl @Inject constructor(
     private val getPlanChildren: GetPlanChildren,
     private val deletePlanIfBlank: DeletePlanIfBlank,
     deleteBlankTodoWithFlow: DeleteBlankTodoWithFlow,
-    @ApplicationContext context: Context
+    private val selectionController: SelectionController,
+    @ApplicationContext context: Context,
+    @StandardLog private val logger: Logger
 ) : ViewModel(), TodoListViewModel {
 
     private val deleteCancelManager = DeleteCancelManager<TodoDeletion>(
@@ -60,6 +66,7 @@ class TodoListViewModelImpl @Inject constructor(
 
     private val updateUiState = MutableStateFlow(Any())
     override val currentPlan: StateFlow<TodoListUiState> = appDataRepository.currentPlanId
+        .onEach { selectionController.clear() }
         .combine(updateUiState) { planId, _ -> planId }
         .map { currentPlanId ->
             var plan = planRepository.getPlanOrDefault(currentPlanId)
@@ -75,23 +82,26 @@ class TodoListViewModelImpl @Inject constructor(
                 second = children
             )
         }
-        .combine(deleteCancelManager.deletedValues) { planWithChildren, deletedChildren ->
-            TodoListUiState(
-                plan = planWithChildren.first,
-                children = TodosUiState(
-                    todos = planWithChildren.second.map { todo ->
-                        TodoUiState(
-                            visible = !deletedChildren.containsKey(todo.id),
-                            data = TodoData(
-                                id = todo.id,
-                                title = todo.title,
-                                remark = todo.remark,
-                                isDone = todo.done
+        .run {
+            combine(
+                flow = this,
+                flow2 = deleteCancelManager.deletedValues,
+                flow3 = selectionController.selectionState
+            ) { planWithChildren, deletedChildren, selectionState ->
+                logger.d(LOG_TAG, "currentPlan: combine($planWithChildren, $deletedChildren, $selectionState)")
+                TodoListUiState(
+                    plan = planWithChildren.first,
+                    children = TodosUiState(
+                        selection = selectionState.selection,
+                        todos = planWithChildren.second.map { todo ->
+                            todo.toUiState(
+                                selected = selectionState.selected.contains(todo.id),
+                                visible = !deletedChildren.containsKey(todo.id)
                             )
-                        )
-                    }
+                        }
+                    )
                 )
-            )
+            }
         }
         .flowOn(Dispatchers.Default)
         .stateIn(
@@ -189,11 +199,33 @@ class TodoListViewModelImpl @Inject constructor(
         }
     }
 
+    override fun selection(todoId: Long) {
+        selectionController.selection = true
+        selectionController.setSelect(todoId, true)
+    }
+
+    override fun selectionOff(): Boolean {
+        if (selectionController.selection) {
+            selectionController.clear()
+            return true
+        }
+        return false
+    }
+
+    override fun setSelect(todoId: Long, selected: Boolean) {
+        selectionController.setSelect(todoId, selected)
+    }
+
     override fun onStop() {
         rejectCancelChance()
         viewModelScope.launch {
             val planFullId = FullId(currentPlan.value.plan.id, FullIdType.Plan)
             deletePlanIfBlank(planFullId)
         }
+    }
+
+    companion object {
+
+        private const val LOG_TAG = "TodoListViewModelImpl"
     }
 }
