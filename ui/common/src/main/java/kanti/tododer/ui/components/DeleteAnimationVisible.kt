@@ -9,10 +9,11 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun DeleteAnimationVisible(
+    modifier: Modifier = Modifier,
     visible: Boolean = true,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) = AnimatedVisibility(
-    modifier = Modifier,
+    modifier = modifier,
     visible = visible,
     enter = scaleIn(),
     exit = scaleOut(),

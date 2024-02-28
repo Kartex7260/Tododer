@@ -50,6 +50,12 @@ interface TodoDetailViewModel {
 
     fun rejectCancelDelete()
 
+    fun selection(todoId: Long)
+
+    fun selectionOff(): Boolean
+
+    fun setSelect(todoId: Long, selected: Boolean)
+
     fun onStop()
 
     companion object : TodoDetailViewModel {
@@ -159,6 +165,19 @@ interface TodoDetailViewModel {
 
         override fun rejectCancelDelete() {
             Log.d(logTag, "rejectCancelDelete()")
+        }
+
+        override fun selection(todoId: Long) {
+            Log.d(logTag, "selection(Long = $todoId)")
+        }
+
+        override fun selectionOff(): Boolean {
+            Log.d(logTag, "selectionOff(): return false")
+            return false
+        }
+
+        override fun setSelect(todoId: Long, selected: Boolean) {
+            Log.d(logTag, "setSelect(Long = $todoId, Boolean = $selected)")
         }
 
         override fun onStop() {

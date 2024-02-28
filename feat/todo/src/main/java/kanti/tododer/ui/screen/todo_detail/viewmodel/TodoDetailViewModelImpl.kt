@@ -11,6 +11,7 @@ import kanti.tododer.domain.todo.delete.DeleteBlankTodoWithFlow
 import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.common.toData
 import kanti.tododer.ui.common.toUiState
+import kanti.tododer.ui.components.selection.SelectionController
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoDeletion
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
@@ -35,7 +36,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoDetailViewModelImpl @Inject constructor(
     private val todoRepository: TodoRepository,
-    private val deleteBlankTodoWithFlow: DeleteBlankTodoWithFlow
+    private val deleteBlankTodoWithFlow: DeleteBlankTodoWithFlow,
+    private val selectionController: SelectionController
 ) : ViewModel(), TodoDetailViewModel {
 
     private val logTag = "TodoDetailViewModelImpl"
@@ -76,12 +78,22 @@ class TodoDetailViewModelImpl @Inject constructor(
             val fullId = FullId(todoData.id, FullIdType.Todo)
             todoRepository.getChildren(fullId)
         }
-        .combine(deleteCancelManager.deletedValues) { children, deletedChildren ->
-            TodosUiState(
-                todos = children.map { todo ->
-                    todo.toUiState(visible = !deletedChildren.containsKey(todo.id))
-                }
-            )
+        .run {
+            combine(
+                flow = this,
+                flow2 = deleteCancelManager.deletedValues,
+                flow3 = selectionController.selectionState
+            ) { children, deletedChildren, selectionState ->
+                TodosUiState(
+                    selection = selectionState.selection,
+                    todos = children.map { todo ->
+                        todo.toUiState(
+                            selected = selectionState.selected.contains(todo.id),
+                            visible = !deletedChildren.containsKey(todo.id)
+                        )
+                    }
+                )
+            }
         }
         .flowOn(Dispatchers.Default)
         .stateIn(
@@ -213,6 +225,23 @@ class TodoDetailViewModelImpl @Inject constructor(
         viewModelScope.launch {
             deleteCancelManager.rejectCancelChance()
         }
+    }
+
+    override fun selection(todoId: Long) {
+        selectionController.selection = true
+        selectionController.setSelect(todoId, true)
+    }
+
+    override fun selectionOff(): Boolean {
+        if (selectionController.selection) {
+            selectionController.clear()
+            return true
+        }
+        return false
+    }
+
+    override fun setSelect(todoId: Long, selected: Boolean) {
+        selectionController.setSelect(todoId, selected)
     }
 
     override fun onStop() {

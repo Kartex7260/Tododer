@@ -69,6 +69,7 @@ import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
+import kanti.tododer.ui.components.selection.SelectionBox
 import kanti.tododer.ui.components.todo.TodoCard
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodoEditor
@@ -360,43 +361,56 @@ fun TodoDetailScreen(
                 key = { it.data.id }
             ) { todoUiState ->
                 val todoData = todoUiState.data
-                DeleteAnimationVisible(visible = todoUiState.visible) {
-                    TodoCard(
-                        modifier = Modifier
-                            .padding(
-                                start = 16.dp,
-                                end = 16.dp,
-                                bottom = 12.dp
-                            ),
-                        todoData = todoData,
-                        onDoneChange = { isDone ->
-                            vm.changeDoneChild(todoData.id, isDone)
-                        },
-                        onClick = {
-                            navController.navigate(
-                                route = todoDetailRoute(todoData.id)
-                            )
-                        }
+                DeleteAnimationVisible(
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 12.dp
+                        ),
+                    visible = todoUiState.visible
+                ) {
+                    SelectionBox(
+                        selection = todoChildren.selection,
+                        selected = todoUiState.selected,
+                        onChangeSelected = { vm.setSelect(todoData.id, it) }
                     ) {
-                        var expanded by remember {
-                            mutableStateOf(false)
-                        }
-                        IconButton(
-                            onClick = { expanded = !expanded }
+                        TodoCard(
+                            modifier = Modifier,
+                            todoData = todoData,
+                            onDoneChange = { isDone ->
+                                vm.changeDoneChild(todoData.id, isDone)
+                            },
+                            onLongClick = { vm.selection(todoData.id) },
+                            onClick = {
+                                val unselectResult = vm.selectionOff()
+                                if (unselectResult)
+                                    return@TodoCard
+                                navController.navigate(
+                                    route = todoDetailRoute(todoData.id)
+                                )
+                            }
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = null
+                            var expanded by remember {
+                                mutableStateOf(false)
+                            }
+                            IconButton(
+                                onClick = { expanded = !expanded }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = null
+                                )
+                            }
+                            NormalTodoDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                                onRename = {
+                                    showRenameDialog = todoData
+                                },
+                                onDelete = { vm.deleteChildren(listOf(todoData)) }
                             )
                         }
-                        NormalTodoDropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                            onRename = {
-                                showRenameDialog = todoData
-                            },
-                            onDelete = { vm.deleteChildren(listOf(todoData)) }
-                        )
                     }
                 }
             }
