@@ -80,6 +80,11 @@ class TodoRoomDataSource @Inject constructor(
 		logger.d(LOG_TAG, "changeDone(Long = $todoId, Boolean = $isDone)")
 	}
 
+	override suspend fun changeDone(todoIds: List<Long>, isDone: Boolean) {
+		todoDao.changeDone(todoIds, isDone)
+		logger.d(LOG_TAG, "changeDone(List<Long> = count(${todoIds.size}), Boolean = $isDone)")
+	}
+
 	override suspend fun delete(todoIds: List<Long>) {
 		todoDao.delete(todoIds)
 		logger.d(LOG_TAG, "delete(List<Long> = count(${todoIds.size}))")

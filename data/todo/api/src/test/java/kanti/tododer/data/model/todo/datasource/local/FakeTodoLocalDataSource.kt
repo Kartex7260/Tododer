@@ -86,6 +86,15 @@ class FakeTodoLocalDataSource(
 		logger.d(LOG_TAG, "changeDone(Long = $todoId, Boolean = $isDone)")
 	}
 
+	override suspend fun changeDone(todoIds: List<Long>, isDone: Boolean) {
+		logger.enabled(false)
+		for (todoId in todoIds) {
+			changeDone(todoId, isDone)
+		}
+		logger.enabled(true)
+		logger.d(LOG_TAG, "changeDone(List<Long> = count(${todoIds.size}), Boolean = $isDone)")
+	}
+
 	override suspend fun delete(todoIds: List<Long>) {
 		for (todoId in todoIds) {
 			todosMap.remove(todoId)

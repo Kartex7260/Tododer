@@ -195,7 +195,7 @@ class TodoRoomDataSourceTest {
 	}
 
 	@Test
-	@DisplayName("changeDone(Long, String)")
+	@DisplayName("changeDone(Long, Boolean)")
 	fun changeDone() = runTest {
 		dataSource.changeDone(1L, true)
 		assertEquals(0, todosMap.size)
@@ -204,6 +204,24 @@ class TodoRoomDataSourceTest {
 		dataSource.changeDone(1L, true)
 		assertArrayEquals(
 			arrayOf(Todo(1, done = true).toTodoEntity(sl)),
+			todosMap.values.toTypedArray()
+		)
+	}
+
+	@Test
+	@DisplayName("changeDone(List<Long>, Boolean)")
+	fun changeDoneMany() = runTest {
+		dataSource.changeDone(1L, true)
+		assertEquals(0, todosMap.size)
+
+		todosMap[1] = Todo(1).toTodoEntity(sl)
+		todosMap[2] = Todo(2).toTodoEntity(sl)
+		dataSource.changeDone(listOf(1, 2), true)
+		assertArrayEquals(
+			arrayOf(
+				Todo(1, done = true).toTodoEntity(sl),
+				Todo(2, done = true).toTodoEntity(sl)
+			),
 			todosMap.values.toTypedArray()
 		)
 	}

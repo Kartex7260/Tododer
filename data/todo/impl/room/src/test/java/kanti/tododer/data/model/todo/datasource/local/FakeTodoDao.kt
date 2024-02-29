@@ -115,6 +115,15 @@ class FakeTodoDao(
 		todosMap[todoId] = newTodo
 	}
 
+	override suspend fun changeDone(todoIds: List<Long>, isDone: Boolean) {
+		logger.enabled(false)
+		for (todoId in todoIds) {
+			changeDone(todoId, isDone)
+		}
+		logger.enabled(true)
+		logger.d(LOG_TAG, "changeDone(List<Long> = count(${todoIds.size}), Boolean = $isDone)")
+	}
+
 	override suspend fun getTodo(id: Long): TodoEntity? {
 		val todo = todosMap[id]
 		logger.d(LOG_TAG, "getTodo(Long = $id): return $todo")

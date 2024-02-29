@@ -211,7 +211,7 @@ class TodoRepositoryImplTest {
 	}
 
 	@Test
-	@DisplayName("changeDone(Todo)")
+	@DisplayName("changeDone(Long, Boolean)")
 	fun changeDone() = runTest {
 		val expectedArray = arrayOf(
 			Todo(id = 1, done = false),
@@ -228,6 +228,26 @@ class TodoRepositoryImplTest {
 		assertArrayEquals(expectedArray, todosMap.values.toTypedArray())
 
 		repository.changeDone(todoId = 3, isDone = true)
+		assertArrayEquals(expectedArray, todosMap.values.toTypedArray())
+	}
+
+	@Test
+	@DisplayName("changeDone(List<Long>, Boolean)")
+	fun changeDoneMany() = runTest {
+		val expectedArray = arrayOf(
+			Todo(id = 1, done = true),
+			Todo(id = 2, done = true)
+		)
+
+		todosMap.putAll(mapOf(
+			1L to Todo(id = 1, done = false),
+			2L to Todo(id = 2, done = false)
+		))
+
+		repository.changeDone(todoIds = listOf(1, 2), isDone = true)
+		assertArrayEquals(expectedArray, todosMap.values.toTypedArray())
+
+		repository.changeDone(todoIds = listOf(5), isDone = true)
 		assertArrayEquals(expectedArray, todosMap.values.toTypedArray())
 	}
 
