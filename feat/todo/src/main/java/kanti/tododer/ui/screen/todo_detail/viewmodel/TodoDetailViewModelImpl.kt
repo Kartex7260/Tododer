@@ -244,6 +244,17 @@ class TodoDetailViewModelImpl @Inject constructor(
         selectionController.setSelect(todoId, selected)
     }
 
+    override fun deleteSelected() {
+        viewModelScope.launch {
+            val selected = selectionController.selected
+            selectionController.clear()
+            val children = todoChildren.value.todos
+                .filter { selected.contains(it.data.id) }
+                .map { it.data }
+            deleteChildren(children)
+        }
+    }
+
     override fun onStop() {
         rejectCancelDelete()
         viewModelScope.launch(NonCancellable) {
