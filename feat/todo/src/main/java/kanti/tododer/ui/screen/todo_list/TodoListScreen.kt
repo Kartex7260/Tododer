@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.List
@@ -62,6 +63,7 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
+import kanti.tododer.ui.components.ContentSwitcher
 import kanti.tododer.ui.components.DeleteAnimationVisible
 import kanti.tododer.ui.components.ScreenBottomCaption
 import kanti.tododer.ui.components.TodoFloatingActionButton
@@ -80,7 +82,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 private fun TodoListTopBar(
     plan: Plan?,
-    navToPlanList: () -> Unit,
+    multiSelection: Boolean,
+    navIconClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?,
     isEditablePlan: Boolean,
@@ -99,10 +102,21 @@ private fun TodoListTopBar(
             Text(text = title)
         },
         navigationIcon = {
-            IconButton(onClick = navToPlanList) {
-                Icon(
-                    imageVector = Icons.Default.List,
-                    contentDescription = null
+            IconButton(onClick = navIconClick) {
+                ContentSwitcher(
+                    state = multiSelection,
+                    trueContent = {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = null
+                        )
+                    },
+                    falseContent = {
+                        Icon(
+                            imageVector = Icons.Default.List,
+                            contentDescription = null
+                        )
+                    }
                 )
             }
         },
@@ -286,8 +300,14 @@ fun TodoListScreen(
         topBar = {
             TodoListTopBar(
                 plan = plan,
+                multiSelection = children.selection,
                 scrollBehavior = scrollBehavior,
-                navToPlanList = { navController.navigate(route = planListRoute()) },
+                navIconClick = {
+                    if (children.selection)
+                        vm.selectionOff()
+                    else
+                        navController.navigate(route = planListRoute())
+                },
                 optionMenuItems = optionMenuItems,
                 isEditablePlan = todoListUiState.isEditablePlan,
                 menuOnRename = { showRenamePlanDialog = plan },
