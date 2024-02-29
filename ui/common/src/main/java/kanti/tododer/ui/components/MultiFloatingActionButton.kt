@@ -1,8 +1,13 @@
 package kanti.tododer.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
@@ -31,72 +36,86 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun MultiFloatingActionButton(
-    altFab: Boolean = false,
-    initExpandSmallFabState: Boolean = false,
-    onClick: () -> Unit = {},
-    smallFabContent: @Composable ColumnScope.(spacerBetweenSmallFab: @Composable () -> Unit) -> Unit,
-    containerColor: Color = FloatingActionButtonDefaults.containerColor,
-    contentColor: Color = contentColorFor(backgroundColor = containerColor),
-    altFabContent: @Composable () -> Unit,
-    fabContent: @Composable () -> Unit,
+	altFab: Boolean = false,
+	initExpandSmallFabState: Boolean = false,
+	onClick: () -> Unit = {},
+	smallFabContent: @Composable ColumnScope.(spacerBetweenSmallFab: @Composable () -> Unit) -> Unit,
+	containerColor: Color = FloatingActionButtonDefaults.containerColor,
+	contentColor: Color = contentColorFor(backgroundColor = containerColor),
+	altFabContent: @Composable AnimatedVisibilityScope.() -> Unit,
+	fabContent: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
-    val spacerBetweenSmallFab = @Composable {
-        Spacer(modifier = Modifier.height(height = 8.dp))
-    }
-    var expandSmallFab by rememberSaveable { mutableStateOf(initExpandSmallFabState) }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AnimatedVisibility(
-            visible = expandSmallFab && altFab,
-            enter = expandVertically(
-                expandFrom = Alignment.Top
-            ),
-            exit = shrinkVertically(
-                shrinkTowards = Alignment.Top
-            )
-        ) {
-            Column {
-                smallFabContent(spacerBetweenSmallFab)
-                Spacer(modifier = Modifier.height(height = 20.dp))
-            }
-        }
-        FloatingActionButton(
-            onClick = {
-                if (altFab) {
-                    expandSmallFab = !expandSmallFab
-                } else onClick()
-            },
-            containerColor = containerColor,
-            contentColor = contentColor,
-            content = if (altFab) altFabContent else fabContent
-        )
-    }
+	val spacerBetweenSmallFab = @Composable {
+		Spacer(modifier = Modifier.height(height = 8.dp))
+	}
+	var expandSmallFab by rememberSaveable(inputs = arrayOf(altFab)) {
+		mutableStateOf(initExpandSmallFabState)
+	}
+	Column(
+		horizontalAlignment = Alignment.CenterHorizontally
+	) {
+		AnimatedVisibility(
+			visible = expandSmallFab && altFab,
+			enter = expandVertically(
+				expandFrom = Alignment.Top
+			),
+			exit = shrinkVertically(
+				shrinkTowards = Alignment.Top
+			)
+		) {
+			Column {
+				smallFabContent(spacerBetweenSmallFab)
+				Spacer(modifier = Modifier.height(height = 20.dp))
+			}
+		}
+		FloatingActionButton(
+			onClick = {
+				if (altFab) {
+					expandSmallFab = !expandSmallFab
+				} else onClick()
+			},
+			containerColor = containerColor,
+			contentColor = contentColor
+		) {
+			AnimatedVisibility(
+				visible = altFab,
+				enter = slideInVertically { -it } + fadeIn(),
+				exit = slideOutVertically { it } + fadeOut(),
+				content = altFabContent
+			)
+			AnimatedVisibility(
+				visible = !altFab,
+				enter = slideInVertically { -it } + fadeIn(),
+				exit = slideOutVertically { it } + fadeOut(),
+				content = fabContent
+			)
+		}
+	}
 }
 
 @Preview
 @Composable
 private fun PreviewMultiFloatingActionButton(
-    @PreviewParameter(FabType::class) fabType: Boolean
+	@PreviewParameter(FabType::class) fabType: Boolean
 ) {
-    MultiFloatingActionButton(
-        altFab = fabType,
-        initExpandSmallFabState = true,
-        smallFabContent = { spacerBetweenSmallFab ->
-            SmallFloatingActionButton(onClick = { }) {
-                Icon(imageVector = Icons.Default.Create, contentDescription = null)
-            }
-            spacerBetweenSmallFab()
-            SmallFloatingActionButton(onClick = { }) {
-                Icon(imageVector = Icons.Default.Create, contentDescription = null)
-            }
-        },
-        altFabContent = {
-            Icon(imageVector = Icons.Default.List, contentDescription = null)
-        }
-    ) {
-        Icon(imageVector = Icons.Default.Add, contentDescription = null)
-    }
+	MultiFloatingActionButton(
+		altFab = fabType,
+		initExpandSmallFabState = true,
+		smallFabContent = { spacerBetweenSmallFab ->
+			SmallFloatingActionButton(onClick = { }) {
+				Icon(imageVector = Icons.Default.Create, contentDescription = null)
+			}
+			spacerBetweenSmallFab()
+			SmallFloatingActionButton(onClick = { }) {
+				Icon(imageVector = Icons.Default.Create, contentDescription = null)
+			}
+		},
+		altFabContent = {
+			Icon(imageVector = Icons.Default.List, contentDescription = null)
+		}
+	) {
+		Icon(imageVector = Icons.Default.Add, contentDescription = null)
+	}
 }
 
 private class FabType : CollectionPreviewParameterProvider<Boolean>(listOf(true, false))
