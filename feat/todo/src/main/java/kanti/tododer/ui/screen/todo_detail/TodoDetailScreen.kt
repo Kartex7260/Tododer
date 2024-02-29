@@ -1,9 +1,12 @@
 package kanti.tododer.ui.screen.todo_detail
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -385,25 +388,31 @@ fun TodoDetailScreen(
                                 )
                             }
                         ) {
-                            var expanded by remember {
-                                mutableStateOf(false)
-                            }
-                            IconButton(
-                                onClick = { expanded = !expanded }
+                            AnimatedVisibility(
+                                visible = !todoChildren.selection,
+                                enter = fadeIn(),
+                                exit = fadeOut()
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.MoreVert,
-                                    contentDescription = null
+                                var expanded by remember {
+                                    mutableStateOf(false)
+                                }
+                                IconButton(
+                                    onClick = { expanded = !expanded }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.MoreVert,
+                                        contentDescription = null
+                                    )
+                                }
+                                NormalTodoDropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false },
+                                    onRename = {
+                                        showRenameDialog = todoData
+                                    },
+                                    onDelete = { vm.deleteChildren(listOf(todoData)) }
                                 )
                             }
-                            NormalTodoDropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false },
-                                onRename = {
-                                    showRenameDialog = todoData
-                                },
-                                onDelete = { vm.deleteChildren(listOf(todoData)) }
-                            )
                         }
                     }
                 }

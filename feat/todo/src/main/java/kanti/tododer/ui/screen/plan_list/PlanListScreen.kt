@@ -1,5 +1,8 @@
 package kanti.tododer.ui.screen.plan_list
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -278,22 +281,28 @@ fun PlanListScreen(
                                 navController.popBackStack()
                             }
                         ) {
-                            var showDropdownMenu by remember {
-                                mutableStateOf(false)
-                            }
-                            IconButton(onClick = { showDropdownMenu = true }) {
-                                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
-                            }
-                            NormalPlanDropdownMenu(
-                                expanded = showDropdownMenu,
-                                onDismissRequest = { showDropdownMenu = false },
-                                onRename = {
-                                    showRenameDialog = planData
-                                },
-                                onDelete = {
-                                    vm.deletePlans(listOf(planData))
+                            AnimatedVisibility(
+                                visible = !plans.selection,
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            ) {
+                                var showDropdownMenu by remember {
+                                    mutableStateOf(false)
                                 }
-                            )
+                                IconButton(onClick = { showDropdownMenu = true }) {
+                                    Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                                }
+                                NormalPlanDropdownMenu(
+                                    expanded = showDropdownMenu,
+                                    onDismissRequest = { showDropdownMenu = false },
+                                    onRename = {
+                                        showRenameDialog = planData
+                                    },
+                                    onDelete = {
+                                        vm.deletePlans(listOf(planData))
+                                    }
+                                )
+                            }
                         }
                     }
                 }
