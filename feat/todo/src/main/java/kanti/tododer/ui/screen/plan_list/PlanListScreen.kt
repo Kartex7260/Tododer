@@ -51,8 +51,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.DeleteAnimationVisible
+import kanti.tododer.ui.components.PlanFloatingActionButton
 import kanti.tododer.ui.components.ScreenBottomCaption
-import kanti.tododer.ui.components.TodoFloatingActionButton
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.menu.NormalPlanDropdownMenu
@@ -209,7 +209,7 @@ fun PlanListScreen(
         },
 
         floatingActionButton = {
-            TodoFloatingActionButton(
+            PlanFloatingActionButton(
                 selection = plans.selection,
                 onClick = { showCreateDialog = true },
                 onDelete = { vm.deleteSelected() }

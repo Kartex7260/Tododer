@@ -44,3 +44,30 @@ fun TodoFloatingActionButton(
 		Icon(imageVector = Icons.Default.Add, contentDescription = null)
 	}
 )
+
+@Composable
+fun PlanFloatingActionButton(
+	selection: Boolean = false,
+	onClick: () -> Unit = {},
+	onDelete: () -> Unit = {}
+) = MultiFloatingActionButton(
+	altFab = selection,
+	initExpandSmallFabState = true,
+	onClick = onClick,
+	smallFabContent = { spacerBetweenSmallFab ->
+		spacerBetweenSmallFab()
+		SmallFloatingActionButton(
+			onClick = onDelete,
+			containerColor = MaterialTheme.colorScheme.secondaryContainer
+		) {
+			Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+		}
+	},
+	containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+	altFabContent = {
+		Icon(painter = painterResource(id = R.drawable.multi_select), contentDescription = null)
+	},
+	fabContent = {
+		Icon(imageVector = Icons.Default.Add, contentDescription = null)
+	}
+)
