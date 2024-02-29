@@ -220,12 +220,14 @@ class TodoListViewModelImpl @Inject constructor(
     override fun changeDoneSelected() {
         viewModelScope.launch {
             val selected = selectionController.selected
+            if (selected.isEmpty())
+                return@launch
             val todosDone = currentPlan.value.children.todos
                 .filter { selected.contains(it.data.id) }
                 .map { it.data }
             val totalDone = todosDone.fold(true) { acc, todoData -> acc and todoData.isDone }
             todoRepository.changeDone(
-                todoIds = todosDone.map { it.id },
+                todoIds = selected,
                 isDone = !totalDone
             )
             updateUiState.value = Any()
@@ -235,6 +237,8 @@ class TodoListViewModelImpl @Inject constructor(
     override fun deleteSelected() {
         viewModelScope.launch {
             val selected = selectionController.selected
+            if (selected.isEmpty())
+                return@launch
             selectionController.clear()
             val todos = currentPlan.value.children.todos
                 .filter { selected.contains(it.data.id) }

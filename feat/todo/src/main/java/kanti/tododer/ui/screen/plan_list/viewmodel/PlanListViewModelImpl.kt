@@ -210,6 +210,8 @@ class PlanListViewModelImpl @Inject constructor(
 	override fun deleteSelected() {
 		viewModelScope.launch {
 			val selected = selectionController.selected
+			if (selected.isEmpty())
+				return@launch
 			selectionController.clear()
 			val plans = plans.value.plans.filter { selected.contains(it.data.id) }
 				.map { it.data }

@@ -264,6 +264,8 @@ class TodoDetailViewModelImpl @Inject constructor(
     override fun deleteSelected() {
         viewModelScope.launch {
             val selected = selectionController.selected
+            if (selected.isEmpty())
+                return@launch
             selectionController.clear()
             val children = todoChildren.value.todos
                 .filter { selected.contains(it.data.id) }
