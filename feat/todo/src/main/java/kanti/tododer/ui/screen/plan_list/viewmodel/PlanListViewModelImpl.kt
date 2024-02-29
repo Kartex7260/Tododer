@@ -207,6 +207,16 @@ class PlanListViewModelImpl @Inject constructor(
 		selectionController.setSelect(planId, selected)
 	}
 
+	override fun deleteSelected() {
+		viewModelScope.launch {
+			val selected = selectionController.selected
+			selectionController.clear()
+			val plans = plans.value.plans.filter { selected.contains(it.data.id) }
+				.map { it.data }
+			deletePlans(plans)
+		}
+	}
+
 	companion object {
 
 		private const val LOG_TAG = "PlanListViewModelImpl"

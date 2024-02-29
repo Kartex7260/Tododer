@@ -211,7 +211,8 @@ fun PlanListScreen(
         floatingActionButton = {
             TodoFloatingActionButton(
                 selection = plans.selection,
-                onClick = { showCreateDialog = true }
+                onClick = { showCreateDialog = true },
+                onDelete = { vm.deleteSelected() }
             )
         }
     ) { paddingValues ->

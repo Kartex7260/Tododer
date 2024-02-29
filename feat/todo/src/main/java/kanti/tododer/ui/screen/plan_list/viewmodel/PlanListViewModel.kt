@@ -49,6 +49,8 @@ interface PlanListViewModel {
 
     fun setSelect(planId: Long, selected: Boolean)
 
+    fun deleteSelected()
+
     companion object : PlanListViewModel {
 
         private const val logTag = "PlanListViewModel"
@@ -134,6 +136,9 @@ interface PlanListViewModel {
         }
 
         override fun setSelect(planId: Long, selected: Boolean) {
+        }
+
+        override fun deleteSelected() {
         }
     }
 }
