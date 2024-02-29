@@ -190,6 +190,10 @@ class PlanListViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun switchSelection() {
+		selectionController.switchSelection()
+	}
+
 	override fun selection(planId: Long) {
 		selectionController.selection = true
 		selectionController.setSelect(planId, true)

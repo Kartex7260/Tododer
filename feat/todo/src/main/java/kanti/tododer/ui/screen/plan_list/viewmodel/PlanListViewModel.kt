@@ -43,6 +43,8 @@ interface PlanListViewModel {
 
     fun rejectCancelChance()
 
+    fun switchSelection()
+
     fun selection(planId: Long)
 
     fun selectionOff(): Boolean
@@ -126,6 +128,9 @@ interface PlanListViewModel {
         }
 
         override fun rejectCancelChance() {
+        }
+
+        override fun switchSelection() {
         }
 
         override fun selection(planId: Long) {

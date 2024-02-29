@@ -201,11 +201,7 @@ class TodoListViewModelImpl @Inject constructor(
     }
 
     override fun switchSelection() {
-        if (selectionController.selection) {
-            selectionOff()
-        } else {
-            selection(0)
-        }
+        selectionController.switchSelection()
     }
 
     override fun selection(todoId: Long) {
