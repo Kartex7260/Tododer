@@ -312,6 +312,7 @@ fun TodoListScreen(
             TodoFloatingActionButton(
                 selection = children.selection,
                 onClick = { showCreateDialog = true },
+                onCheck = { vm.changeDoneSelected() },
                 onDelete = { vm.deleteSelected() }
             )
         }
