@@ -182,8 +182,9 @@ class TodoListViewModelImpl @Inject constructor(
         if (todos.isEmpty())
             return
         viewModelScope.launch {
-            deleteCancelManager.delete(todos.map { TodoDeletion(it, false) })
-            _todosDeleted.emit(todos.map { TodoDeletion(it, false) })
+            val todoDeletions = todos.map { TodoDeletion(it, false) }
+            deleteCancelManager.delete(todoDeletions)
+            _todosDeleted.emit(todoDeletions)
         }
     }
 
@@ -214,6 +215,17 @@ class TodoListViewModelImpl @Inject constructor(
 
     override fun setSelect(todoId: Long, selected: Boolean) {
         selectionController.setSelect(todoId, selected)
+    }
+
+    override fun deleteSelected() {
+        viewModelScope.launch {
+            val selected = selectionController.selected
+            selectionController.clear()
+            val todos = currentPlan.value.children.todos
+                .filter { selected.contains(it.data.id) }
+                .map { it.data }
+            deleteTodos(todos)
+        }
     }
 
     override fun onStop() {

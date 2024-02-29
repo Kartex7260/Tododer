@@ -311,7 +311,8 @@ fun TodoListScreen(
         floatingActionButton = {
             TodoFloatingActionButton(
                 selection = children.selection,
-                onClick = { showCreateDialog = true }
+                onClick = { showCreateDialog = true },
+                onDelete = { vm.deleteSelected() }
             )
         }
     ) { paddingValues ->
