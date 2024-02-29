@@ -1,6 +1,7 @@
 package kanti.tododer.ui.components.todo
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
@@ -23,6 +24,7 @@ fun TodoEditor(
 	onTitleChanged: (title: String) -> Unit = {},
 	onRemarkChanged: (remark: String) -> Unit = {},
 	onDoneChanged: (isDone: Boolean) -> Unit = {},
+	preAction: @Composable RowScope.() -> Unit = {},
 //	onArchive: () -> Unit = {},
 	onDelete: () -> Unit = {}
 ) {
@@ -77,6 +79,7 @@ fun TodoEditor(
 				.fillMaxWidth(),
 			state = initialState,
 			onDoneChanged = onDoneChanged,
+			preAction = preAction,
 //			onArchive = onArchive
 			onDelete = onDelete
 		)

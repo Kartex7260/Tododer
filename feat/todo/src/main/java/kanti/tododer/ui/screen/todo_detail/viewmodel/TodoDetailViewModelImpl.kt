@@ -227,6 +227,10 @@ class TodoDetailViewModelImpl @Inject constructor(
         }
     }
 
+    override fun switchSelection() {
+        selectionController.switchSelection()
+    }
+
     override fun selection(todoId: Long) {
         selectionController.selection = true
         selectionController.setSelect(todoId, true)

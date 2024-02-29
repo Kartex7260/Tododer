@@ -50,6 +50,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,6 +93,7 @@ fun TodoDetailTopBar(
 	editorSize: IntSize,
 	state: TodoData,
 	onDoneChange: (isDone: Boolean) -> Unit,
+	onMultiSelection: () -> Unit,
 //	onArchive: () -> Unit,
 	onDelete: () -> Unit
 ) {
@@ -157,12 +159,25 @@ fun TodoDetailTopBar(
 					.alpha(alpha = alphaAnim),
 				state = state,
 				onDoneChanged = onDoneChange,
+				preAction = { PreAction(onMultiSelection = onMultiSelection) },
 //				onArchive = onArchive,
 				onDelete = onDelete
 			)
 		},
 		scrollBehavior = scrollBehavior
 	)
+}
+
+@Composable
+private fun PreAction(
+	onMultiSelection: () -> Unit,
+) {
+	IconButton(onClick = onMultiSelection) {
+		Icon(
+			painter = painterResource(id = R.drawable.multi_select),
+			contentDescription = null
+		)
+	}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -275,6 +290,9 @@ fun TodoDetailScreen(
 	var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 	var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
 
+	val onMultiSelection = { vm.switchSelection() }
+	val onDelete = { showDeleteDialog = true }
+
 	Scaffold(
 		modifier = Modifier
 			.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -296,9 +314,8 @@ fun TodoDetailScreen(
 					vm.changeDoneCurrent(it)
 				},
 //				onArchive = {},
-				onDelete = {
-					showDeleteDialog = true
-				}
+				onMultiSelection = onMultiSelection,
+				onDelete = onDelete
 			)
 		},
 
@@ -352,10 +369,9 @@ fun TodoDetailScreen(
 					onDoneChanged = { isDone ->
 						vm.changeDoneCurrent(isDone)
 					},
+					preAction = { PreAction(onMultiSelection) },
 //					onArchive = {},
-					onDelete = {
-						showDeleteDialog = true
-					}
+					onDelete = onDelete
 				)
 
 				Divider(

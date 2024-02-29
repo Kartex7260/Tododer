@@ -50,6 +50,8 @@ interface TodoDetailViewModel {
 
     fun rejectCancelDelete()
 
+    fun switchSelection()
+
     fun selection(todoId: Long)
 
     fun selectionOff(): Boolean
@@ -169,6 +171,10 @@ interface TodoDetailViewModel {
 
         override fun rejectCancelDelete() {
             Log.d(logTag, "rejectCancelDelete()")
+        }
+
+        override fun switchSelection() {
+            Log.d(logTag, "switchSelection()")
         }
 
         override fun selection(todoId: Long) {
