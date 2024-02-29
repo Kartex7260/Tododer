@@ -41,6 +41,8 @@ interface TodoListViewModel {
 
     fun rejectCancelChance()
 
+    fun switchSelection()
+
     fun selection(todoId: Long)
 
     fun selectionOff(): Boolean
@@ -124,6 +126,10 @@ interface TodoListViewModel {
 
         override fun rejectCancelChance() {
             Log.d(logTag, "rejectCancelChance()")
+        }
+
+        override fun switchSelection() {
+            Log.d(logTag, "switchSelection()")
         }
 
         override fun selection(todoId: Long) {

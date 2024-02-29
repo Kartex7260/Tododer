@@ -32,6 +32,10 @@ class SelectionController @Inject constructor(
 
     val selected: List<Long> get() = mSelected.toList()
 
+    fun switchSelection() {
+        selection = !selection
+    }
+
     fun setSelect(id: Long, select: Boolean) {
         logger.d(LOG_TAG, "setSelect(Long = $id, Boolean = $select)")
         if (select) {

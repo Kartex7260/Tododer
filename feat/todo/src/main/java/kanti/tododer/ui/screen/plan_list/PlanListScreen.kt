@@ -44,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
@@ -74,7 +75,8 @@ private fun PlanListTopBar(
 	multiSelection: Boolean,
 	navIconClick: () -> Unit,
 	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?,
-	scrollBehavior: TopAppBarScrollBehavior
+	scrollBehavior: TopAppBarScrollBehavior,
+	menuOnMultiSelection: () -> Unit,
 ) {
 	CenterAlignedTopAppBar(
 		title = {
@@ -102,6 +104,7 @@ private fun PlanListTopBar(
 		actions = {
 			if (optionMenuItems != null) {
 				var expandOptionMenu by rememberSaveable { mutableStateOf(false) }
+				val onCloseMenu = { expandOptionMenu = false }
 				IconButton(onClick = { expandOptionMenu = !expandOptionMenu }) {
 					Icon(
 						imageVector = Icons.Default.MoreVert,
@@ -113,9 +116,20 @@ private fun PlanListTopBar(
 					expanded = expandOptionMenu,
 					onDismissRequest = { expandOptionMenu = false }
 				) {
-					optionMenuItems {
-						expandOptionMenu = false
-					}
+					DropdownMenuItem(
+						text = { Text(text = stringResource(id = R.string.multi_selection)) },
+						leadingIcon = {
+							Icon(
+								painter = painterResource(id = R.drawable.multi_select),
+								contentDescription = null
+							)
+						},
+						onClick = {
+							menuOnMultiSelection()
+							onCloseMenu()
+						}
+					)
+					optionMenuItems(onCloseMenu)
 				}
 			}
 		},
@@ -209,7 +223,8 @@ fun PlanListScreen(
 						navController.popBackStack()
 				},
 				optionMenuItems = optionMenuItems,
-				scrollBehavior = scrollBehavior
+				scrollBehavior = scrollBehavior,
+				menuOnMultiSelection = { vm.switchSelection() }
 			)
 		},
 
@@ -334,8 +349,8 @@ fun PlanListScreen(
 			item {
 				Box(
 					modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
+						.fillMaxWidth()
+						.height(56.dp)
 				) {
 					val captionStg = stringResource(id = R.string.caption_plan_list)
 					val todosCount by vm.todosCount.collectAsState()

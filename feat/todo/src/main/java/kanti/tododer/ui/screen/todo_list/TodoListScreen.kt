@@ -50,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
@@ -87,6 +88,7 @@ private fun TodoListTopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?,
     isEditablePlan: Boolean,
+    menuOnMultiSelection: () -> Unit,
     menuOnRename: () -> Unit,
     menuOnDelete: () -> Unit
 ) {
@@ -137,6 +139,19 @@ private fun TodoListTopBar(
                     expanded = expandOptionMenu,
                     onDismissRequest = { closeMenu() }
                 ) {
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(id = R.string.multi_selection)) },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.multi_select),
+                                contentDescription = null
+                            )
+                        },
+                        onClick = {
+                            menuOnMultiSelection()
+                            closeMenu()
+                        }
+                    )
                     if (isEditablePlan) {
                         DropdownMenuItem(
                             text = { Text(text = stringResource(id = R.string.rename_plan)) },
@@ -310,6 +325,7 @@ fun TodoListScreen(
                 },
                 optionMenuItems = optionMenuItems,
                 isEditablePlan = todoListUiState.isEditablePlan,
+                menuOnMultiSelection = { vm.switchSelection() },
                 menuOnRename = { showRenamePlanDialog = plan },
                 menuOnDelete = { showDeletePlanDialog = true }
             )
