@@ -56,6 +56,8 @@ interface TodoDetailViewModel {
 
     fun setSelect(todoId: Long, selected: Boolean)
 
+    fun changeDoneSelected()
+
     fun deleteSelected()
 
     fun onStop()
@@ -180,6 +182,10 @@ interface TodoDetailViewModel {
 
         override fun setSelect(todoId: Long, selected: Boolean) {
             Log.d(logTag, "setSelect(Long = $todoId, Boolean = $selected)")
+        }
+
+        override fun changeDoneSelected() {
+            Log.d(logTag, "changeDoneSelected()")
         }
 
         override fun deleteSelected() {

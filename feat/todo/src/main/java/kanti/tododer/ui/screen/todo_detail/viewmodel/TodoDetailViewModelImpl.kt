@@ -244,6 +244,23 @@ class TodoDetailViewModelImpl @Inject constructor(
         selectionController.setSelect(todoId, selected)
     }
 
+    override fun changeDoneSelected() {
+        viewModelScope.launch {
+            val selected = selectionController.selected
+            if (selected.isEmpty())
+                return@launch
+            val children = todoChildren.value.todos
+                .filter { selected.contains(it.data.id) }
+                .map { it.data }
+            val totalDone = children.fold(true) { acc, todoData -> acc and todoData.isDone }
+            todoRepository.changeDone(
+                todoIds = selected,
+                isDone = !totalDone
+            )
+            _updateTodoChildren.value = Any()
+        }
+    }
+
     override fun deleteSelected() {
         viewModelScope.launch {
             val selected = selectionController.selected
