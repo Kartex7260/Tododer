@@ -6,7 +6,9 @@ import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.colorstyle.ColorStyleRepository
 import kanti.tododer.data.colorstyle.ColorStyleType
+import kanti.tododer.data.model.settings.SelectionStyle
 import kanti.tododer.data.model.settings.SettingsRepository
+import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.components.colorstyle.ColorStyleItemUiState
 import kanti.tododer.ui.components.theme.ThemeSettingsUiState
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +42,10 @@ class SettingsMainViewModelImpl @Inject constructor(
                         .map {
                             it.toUiState()
                         }
-                )
+                ),
+                selectionStyles = settingsData.multiSelectionStyleFlags.map {
+                    MultiSelectionStyle.valueOf(it.name)
+                }.toSet()
             )
         }
         .flowOn(Dispatchers.Default)
@@ -59,6 +64,15 @@ class SettingsMainViewModelImpl @Inject constructor(
     override fun changeColorStyle(colorStyleId: Int) {
         viewModelScope.launch {
             settingsRepository.setColorStyle(colorStyleId)
+        }
+    }
+
+    override fun changeSelectionStyles(styles: Set<MultiSelectionStyle>) {
+        viewModelScope.launch {
+            settingsRepository.setMultiSelectionStyles(
+                selection = styles.map { SelectionStyle.valueOf(it.name) }.toSet()
+            )
+
         }
     }
 }

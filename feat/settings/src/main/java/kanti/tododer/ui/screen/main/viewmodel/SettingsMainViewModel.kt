@@ -1,5 +1,6 @@
 package kanti.tododer.ui.screen.main.viewmodel
 
+import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.components.colorstyle.ColorStyleDataType
 import kanti.tododer.ui.components.colorstyle.ColorStyleDataUiState
 import kanti.tododer.ui.components.colorstyle.ColorStyleItemUiState
@@ -16,6 +17,8 @@ interface SettingsMainViewModel {
 	fun changeAppTheme(theme: ThemeSettingsUiState)
 
 	fun changeColorStyle(colorStyleId: Int)
+
+	fun changeSelectionStyles(styles: Set<MultiSelectionStyle>)
 
 	companion object : SettingsMainViewModel {
 
@@ -49,6 +52,9 @@ interface SettingsMainViewModel {
 					)
 				)
 			}
+		}
+
+		override fun changeSelectionStyles(styles: Set<MultiSelectionStyle>) {
 		}
 	}
 }

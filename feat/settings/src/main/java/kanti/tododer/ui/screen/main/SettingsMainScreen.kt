@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.settings.R
 import kanti.tododer.ui.components.colorstyle.ChangeColorStyleItem
 import kanti.tododer.ui.components.colorstyle.ChangeColorStyleItemDefaults
+import kanti.tododer.ui.components.multiselection.SelectionItem
 import kanti.tododer.ui.components.theme.ChangeThemeItem
 import kanti.tododer.ui.components.theme.ChangeThemeItemDefaults
 import kanti.tododer.ui.screen.main.viewmodel.SettingsMainViewModel
@@ -97,6 +98,12 @@ fun SettingsMainScreen(
 						purple = stringResource(id = R.string.color_style_purple)
 					),
 					onChangeStyle = { id ->  vm.changeColorStyle(id) }
+				)
+			}
+			item {
+				SelectionItem(
+					selectionStyles = uiState.selectionStyles,
+					onSetSelectionStyles = { vm.changeSelectionStyles(it) }
 				)
 			}
 		}

@@ -10,14 +10,14 @@ interface SettingsRepository {
 
 	suspend fun setColorStyle(colorStyleId: Int)
 
-	suspend fun setMultiSelectionStyleFlags(selection: Set<SelectionStyle>)
+	suspend fun setMultiSelectionStyles(selection: Set<SelectionStyle>)
 
 	suspend fun resetColorStyle() {
 		setColorStyle(COLOR_STYLE_DEFAULT)
 	}
 
 	suspend fun resetMultiSelectionStyle() {
-		setMultiSelectionStyleFlags(setOf(SelectionStyle.ColorFill))
+		setMultiSelectionStyles(setOf(SelectionStyle.ColorFill))
 	}
 
 	companion object {

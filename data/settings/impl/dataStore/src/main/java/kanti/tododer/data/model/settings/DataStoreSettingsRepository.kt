@@ -22,7 +22,8 @@ class DataStoreSettingsRepository @Inject constructor(
 
 	private val appThemeKey = stringPreferencesKey("appTheme")
 	private val colorStyleKey = intPreferencesKey("colorStyle")
-	private val selectionStyleKey = intPreferencesKey("selectionStyle")
+	private val selectionStyleKey = stringPreferencesKey("selectionStyles")
+	private val selectionStylesSeparator = ","
 
 	override val settings: Flow<SettingsData> = context.dataStore.data
 		.map { preferences ->
@@ -39,8 +40,8 @@ class DataStoreSettingsRepository @Inject constructor(
 				0
 			}
 
-			val selectionStyle = preferences[selectionStyleKey] ?: run { 0 }.also { style ->
-				if (style == 0) {
+			val selectionStyle = preferences[selectionStyleKey] ?: run { "" }.also { style ->
+				if (style.isBlank()) {
 					resetMultiSelectionStyle()
 					returnNull = true
 				}
@@ -52,6 +53,8 @@ class DataStoreSettingsRepository @Inject constructor(
 				appTheme = AppTheme.valueOf(appThemeStg),
 				colorStyleId = colorStyleId,
 				multiSelectionStyleFlags = selectionStyle
+					.split(selectionStylesSeparator)
+					.map { SelectionStyle.valueOf(it) }.toSet()
 			)
 		}
 		.filterNotNull()
@@ -69,9 +72,10 @@ class DataStoreSettingsRepository @Inject constructor(
 		}
 	}
 
-	override suspend fun setMultiSelectionStyleFlags(flags: Int) {
+	override suspend fun setMultiSelectionStyles(selection: Set<SelectionStyle>) {
 		context.dataStore.edit { preferences ->
-			preferences[selectionStyleKey] = flags
+			preferences[selectionStyleKey] = selection
+				.joinToString(separator = selectionStylesSeparator) { it.name }
 		}
 	}
 }

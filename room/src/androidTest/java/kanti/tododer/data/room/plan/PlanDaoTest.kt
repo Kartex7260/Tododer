@@ -579,7 +579,7 @@ class PlanDaoTest {
         ))
         val expected = 0
 
-        val actual = planDao.deleteIfNameEmpty(1)
+        val actual = planDao.deleteIfNameEmpty(1, "")
         assertEquals(expected, actual)
     }
 
@@ -591,7 +591,7 @@ class PlanDaoTest {
         ))
         val expected = 1
 
-        val actual = planDao.deleteIfNameEmpty(2)
+        val actual = planDao.deleteIfNameEmpty(2, "")
         assertEquals(expected, actual)
     }
 
