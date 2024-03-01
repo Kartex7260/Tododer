@@ -1,8 +1,5 @@
 package kanti.tododer.ui.screen.plan_list
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,15 +53,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.components.ContentSwitcher
-import kanti.tododer.ui.components.DeleteAnimationVisible
 import kanti.tododer.ui.components.PlanFloatingActionButton
 import kanti.tododer.ui.components.ScreenBottomCaption
+import kanti.tododer.ui.components.SuperPlanCard
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
-import kanti.tododer.ui.components.menu.NormalPlanDropdownMenu
 import kanti.tododer.ui.components.plan.PlanCard
 import kanti.tododer.ui.components.plan.PlanData
-import kanti.tododer.ui.components.selection.SelectionBox
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModel
 import kanti.tododer.ui.screen.plan_list.viewmodel.PlanListViewModelImpl
 import kotlinx.coroutines.flow.collectLatest
@@ -215,7 +210,7 @@ fun PlanListScreen(
 
 		topBar = {
 			PlanListTopBar(
-                multiSelection = plans.selection,
+				multiSelection = plans.selection,
 				navIconClick = {
 					if (plans.selection)
 						vm.selectionOff()
@@ -297,53 +292,19 @@ fun PlanListScreen(
 				items = plans.plans,
 				key = { it.data.id }
 			) { planUiState ->
-				val planData = planUiState.data
-				DeleteAnimationVisible(visible = planUiState.visible) {
-					SelectionBox(
-						selection = plans.selection,
-						selected = planUiState.selected,
-						onChangeSelected = { vm.setSelect(planData.id, it) }
-					) {
-						PlanCard(
-							modifier = Modifier.padding(bottom = 8.dp),
-							planData = planData,
-							onLongClick = { vm.selection(planData.id) },
-							onClick = {
-								val unselectResult = vm.selectionOff()
-								if (unselectResult)
-									return@PlanCard
-								vm.setCurrentPlan(planData.id)
-								navController.popBackStack()
-							}
-						) {
-							AnimatedVisibility(
-								visible = !plans.selection,
-								enter = fadeIn(),
-								exit = fadeOut()
-							) {
-								var showDropdownMenu by remember {
-									mutableStateOf(false)
-								}
-								IconButton(onClick = { showDropdownMenu = true }) {
-									Icon(
-										imageVector = Icons.Default.MoreVert,
-										contentDescription = null
-									)
-								}
-								NormalPlanDropdownMenu(
-									expanded = showDropdownMenu,
-									onDismissRequest = { showDropdownMenu = false },
-									onRename = {
-										showRenameDialog = planData
-									},
-									onDelete = {
-										vm.deletePlans(listOf(planData))
-									}
-								)
-							}
-						}
-					}
-				}
+				SuperPlanCard(
+					modifier = Modifier.padding(bottom = 8.dp),
+					selection = plans.selection,
+					planUiState = planUiState,
+					onLongClick = { planData -> vm.selection(planData.id) },
+					onClick = { planData ->
+						vm.setCurrentPlan(planData.id)
+						navController.popBackStack()
+					},
+					onChangeSelect = { planData, selected -> vm.setSelect(planData.id, selected) },
+					menuOnRename = { planData -> showRenameDialog = planData },
+					menuOnDelete = { planData -> vm.deletePlans(listOf(planData)) }
+				)
 			}
 
 			item {
