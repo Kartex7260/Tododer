@@ -14,4 +14,10 @@
     <string name="color_style_light_blue">Голубой</string>
     <string name="color_style_blue">Синий</string>
     <string name="color_style_purple">Фиолетовый</string>
+
+    <string name="multi_selection_style">Стиль мульти выбора</string>
+    <string name="color_fill">Закрашивание цветом</string>
+    <string name="checkbox">Чекбокс</string>
+    <string name="set_multi_selection_style">Установка стиля мульти выбора</string>
+    <string name="close">Закрыть</string>
 </resources>

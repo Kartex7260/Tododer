@@ -19,4 +19,10 @@
     <string name="color_style_light_blue">Light blue</string>
     <string name="color_style_blue">Blue</string>
     <string name="color_style_purple">Purple</string>
+
+    <string name="multi_selection_style">Multi selection style</string>
+    <string name="color_fill">Color filling</string>
+    <string name="checkbox">Checkbox</string>
+    <string name="set_multi_selection_style">Set multi selection style</string>
+    <string name="close">Close</string>
 </resources>

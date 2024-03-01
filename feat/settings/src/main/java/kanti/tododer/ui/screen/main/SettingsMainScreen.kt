@@ -26,6 +26,7 @@ import kanti.tododer.feat.settings.R
 import kanti.tododer.ui.components.colorstyle.ChangeColorStyleItem
 import kanti.tododer.ui.components.colorstyle.ChangeColorStyleItemDefaults
 import kanti.tododer.ui.components.multiselection.SelectionItem
+import kanti.tododer.ui.components.multiselection.SelectionMenuItemsDefaults
 import kanti.tododer.ui.components.theme.ChangeThemeItem
 import kanti.tododer.ui.components.theme.ChangeThemeItemDefaults
 import kanti.tododer.ui.screen.main.viewmodel.SettingsMainViewModel
@@ -102,6 +103,13 @@ fun SettingsMainScreen(
 			}
 			item {
 				SelectionItem(
+					strings = SelectionMenuItemsDefaults.strings(
+						selectionStyle = stringResource(id = R.string.multi_selection_style),
+						colorFill = stringResource(id = R.string.color_fill),
+						checkbox = stringResource(id = R.string.checkbox),
+						setSelectionStyle = stringResource(id = R.string.set_multi_selection_style),
+						close = stringResource(id = R.string.close)
+					),
 					selectionStyles = uiState.selectionStyles,
 					onSetSelectionStyles = { vm.changeSelectionStyles(it) }
 				)
