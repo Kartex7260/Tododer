@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import kanti.fillingprogressbar.FPBDefaults
 import kanti.fillingprogressbar.FillingProgressBar
+import kanti.fillingprogressbar.FillingProgressBarColors
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -37,6 +41,8 @@ fun PlanCard(
 	planData: PlanData,
 	onLongClick: () -> Unit = {},
 	onClick: () -> Unit = {},
+	cardColors: CardColors = CardDefaults.cardColors(),
+	fpbColors: FillingProgressBarColors = FPBDefaults.fpbColors(),
 	endButton: @Composable () -> Unit = {}
 ) = Card(
 	modifier = modifier
@@ -44,7 +50,8 @@ fun PlanCard(
 			onLongClick = onLongClick,
 			onClick = onClick
 		)
-		.height(56.dp)
+		.height(56.dp),
+	colors = cardColors
 ) {
 	Column(
 		modifier = Modifier
@@ -67,7 +74,7 @@ fun PlanCard(
 					start = 24.dp,
 					end = 24.dp
 				),
-
+				colors = fpbColors
 			)
 
 			Spacer(modifier = Modifier.width(width = 4.dp))
