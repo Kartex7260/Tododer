@@ -5,7 +5,7 @@ import javax.annotation.concurrent.Immutable
 
 @Immutable
 data class PlanUiState(
-    val selected: Boolean = false,
-    val visible: Boolean = true,
+    override val selected: Boolean = false,
+    override val visible: Boolean = true,
     val data: PlanData = PlanData()
-)
+) : Visible, Selectable

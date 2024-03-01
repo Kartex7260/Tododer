@@ -223,6 +223,10 @@ class TodoListViewModelImpl @Inject constructor(
         selectionController.setSelect(todoId, selected)
     }
 
+    override fun switchSelected(todoId: Long) {
+        selectionController.switchSelected(todoId)
+    }
+
     override fun changeDoneSelected() {
         viewModelScope.launch {
             val selected = selectionController.selected

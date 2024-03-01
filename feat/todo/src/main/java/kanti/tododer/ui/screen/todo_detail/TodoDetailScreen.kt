@@ -1,12 +1,9 @@
 package kanti.tododer.ui.screen.todo_detail
 
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +15,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -66,15 +62,12 @@ import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
 import kanti.tododer.ui.components.ContentSwitcher
-import kanti.tododer.ui.components.DeleteAnimationVisible
 import kanti.tododer.ui.components.ScreenBottomCaption
+import kanti.tododer.ui.components.SuperTodoCard
 import kanti.tododer.ui.components.TodoFloatingActionButton
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
-import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
-import kanti.tododer.ui.components.selection.SelectionBox
-import kanti.tododer.ui.components.todo.TodoCard
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodoEditor
 import kanti.tododer.ui.components.todo.TodoEditorControllers
@@ -393,65 +386,30 @@ fun TodoDetailScreen(
 				items = todoChildren.todos,
 				key = { it.data.id }
 			) { todoUiState ->
-				val todoData = todoUiState.data
-				DeleteAnimationVisible(
+				SuperTodoCard(
 					modifier = Modifier
 						.padding(
 							start = 16.dp,
 							end = 16.dp,
-							bottom = 12.dp
+							bottom = 8.dp
 						),
-					visible = todoUiState.visible
-				) {
-					SelectionBox(
-						selection = todoChildren.selection,
-						selected = todoUiState.selected,
-						onChangeSelected = { vm.setSelect(todoData.id, it) }
-					) {
-						TodoCard(
-							modifier = Modifier,
-							todoData = todoData,
-							onDoneChange = { isDone ->
-								vm.changeDoneChild(todoData.id, isDone)
-							},
-							onLongClick = { vm.selection(todoData.id) },
-							onClick = {
-								val unselectResult = vm.selectionOff()
-								if (unselectResult)
-									return@TodoCard
-								navController.navigate(
-									route = todoDetailRoute(todoData.id)
-								)
-							}
-						) {
-							AnimatedVisibility(
-								visible = !todoChildren.selection,
-								enter = fadeIn(),
-								exit = fadeOut()
-							) {
-								var expanded by remember {
-									mutableStateOf(false)
-								}
-								IconButton(
-									onClick = { expanded = !expanded }
-								) {
-									Icon(
-										imageVector = Icons.Default.MoreVert,
-										contentDescription = null
-									)
-								}
-								NormalTodoDropdownMenu(
-									expanded = expanded,
-									onDismissRequest = { expanded = false },
-									onRename = {
-										showRenameDialog = todoData
-									},
-									onDelete = { vm.deleteChildren(listOf(todoData)) }
-								)
-							}
+					selection = todoChildren.selection,
+					todoUiState = todoUiState,
+					onLongClick = { todoData -> vm.selection(todoData.id) },
+					onClick = { todoData ->
+						if (todoChildren.selection)
+							vm.switchSelected(todoData.id)
+						else {
+							navController.navigate(
+								route = todoDetailRoute(todoData.id)
+							)
 						}
-					}
-				}
+					},
+					onDoneChange = { todoData, isDone -> vm.changeDoneChild(todoData.id, isDone) },
+					onSelectChange = { todoData, selected -> vm.setSelect(todoData.id, selected) },
+					menuOnRename = { todoData -> showRenameDialog = todoData },
+					menuOnDelete = { todoData -> vm.deleteChildren(listOf(todoData)) }
+				)
 			}
 
 			item {
