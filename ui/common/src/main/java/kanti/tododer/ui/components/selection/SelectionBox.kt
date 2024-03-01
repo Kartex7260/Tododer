@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxColors
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +29,7 @@ fun SelectionBox(
     selection: Boolean = false,
     selected: Boolean = false,
     onChangeSelected: (Boolean) -> Unit = {},
+    checkboxColors: CheckboxColors = CheckboxDefaults.colors(),
     content: @Composable () -> Unit
 ) = Box(
     modifier = modifier
@@ -41,7 +44,8 @@ fun SelectionBox(
             modifier = Modifier
                 .padding(start = 4.dp),
             checked = selected,
-            onCheckedChange = onChangeSelected
+            onCheckedChange = onChangeSelected,
+            colors = checkboxColors
         )
     }
 

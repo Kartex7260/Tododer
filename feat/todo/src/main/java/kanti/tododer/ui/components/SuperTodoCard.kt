@@ -5,15 +5,21 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.common.TodoUiState
+import kanti.tododer.ui.common.anim.allowSelectionColor
 import kanti.tododer.ui.components.menu.NormalTodoDropdownMenu
 import kanti.tododer.ui.components.todo.TodoCard
 import kanti.tododer.ui.components.todo.TodoData
@@ -21,6 +27,7 @@ import kanti.tododer.ui.components.todo.TodoData
 @Composable
 fun SuperTodoCard(
 	modifier: Modifier = Modifier,
+	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
 	selection: Boolean = false,
 	todoUiState: TodoUiState,
 	onLongClick: (TodoData) -> Unit = {},
@@ -29,44 +36,106 @@ fun SuperTodoCard(
 	onChangeSelect: (TodoData, Boolean) -> Unit = { _, _ -> },
 	menuOnRename: (TodoData) -> Unit = {},
 	menuOnDelete: (TodoData) -> Unit = {}
-) = CommonCard(
-	modifier = modifier,
-	selection = selection,
-	state = todoUiState,
-	onChangeSelect = { onChangeSelect(todoUiState.data, it) }
 ) {
-	val todoData = todoUiState.data
-	TodoCard(
-		onLongClick = { onLongClick(todoData) },
-		onClick = {
-			if (selection)
-				onChangeSelect(todoData, !todoUiState.selected)
-			else
-				onClick(todoData)
-		},
-		onDoneChange = { onDoneChange(todoData, it) },
-		todoData = todoData
+	val colorFillEnable = selectionStyle.contains(MultiSelectionStyle.ColorFill)
+	val checkboxEnable = selectionStyle.contains(MultiSelectionStyle.Checkbox)
+	val selected = selection && todoUiState.selected
+
+	CommonCard(
+		modifier = modifier,
+		selection = selection && checkboxEnable,
+		state = todoUiState,
+		onChangeSelect = { onChangeSelect(todoUiState.data, it) },
+		checkboxColors = CheckboxDefaults.colors(
+			checkedColor = allowSelectionColor(
+				allow = colorFillEnable,
+				selected = selected,
+				selectedColor = MaterialTheme.colorScheme.tertiary,
+				normalColor = MaterialTheme.colorScheme.primary
+			),
+			checkmarkColor = MaterialTheme.colorScheme.surface
+		)
 	) {
-		AnimatedVisibility(
-			visible = !selection,
-			enter = fadeIn(),
-			exit = fadeOut()
+		val todoData = todoUiState.data
+
+		TodoCard(
+			checkboxColors = CheckboxDefaults.colors(
+				checkedColor = allowSelectionColor(
+					allow = colorFillEnable,
+					selected = selected,
+					selectedColor = MaterialTheme.colorScheme.tertiary,
+					normalColor = MaterialTheme.colorScheme.primary
+				),
+				checkmarkColor = allowSelectionColor(
+					allow = colorFillEnable,
+					selected = selected,
+					selectedColor = MaterialTheme.colorScheme.tertiaryContainer,
+					normalColor = MaterialTheme.colorScheme.surfaceVariant
+				)
+			),
+			cardColors = CardDefaults.cardColors(
+				containerColor = allowSelectionColor(
+					allow = colorFillEnable,
+					selected = selected,
+					selectedColor = MaterialTheme.colorScheme.tertiaryContainer,
+					normalColor = MaterialTheme.colorScheme.surfaceVariant
+				)
+			),
+			onLongClick = { onLongClick(todoData) },
+			onClick = {
+				if (selection)
+					onChangeSelect(todoData, !todoUiState.selected)
+				else
+					onClick(todoData)
+			},
+			onDoneChange = { onDoneChange(todoData, it) },
+			todoData = todoData
 		) {
-			var showDropdownMenu by remember {
-				mutableStateOf(false)
-			}
-			IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
-				Icon(
-					imageVector = Icons.Default.MoreVert,
-					contentDescription = null
+			AnimatedVisibility(
+				visible = !selection,
+				enter = fadeIn(),
+				exit = fadeOut()
+			) {
+				var showDropdownMenu by remember {
+					mutableStateOf(false)
+				}
+				IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
+					Icon(
+						imageVector = Icons.Default.MoreVert,
+						contentDescription = null
+					)
+				}
+				NormalTodoDropdownMenu(
+					expanded = showDropdownMenu,
+					onDismissRequest = { showDropdownMenu = false },
+					onRename = { menuOnRename(todoData) },
+					onDelete = { menuOnDelete(todoData) }
 				)
 			}
-			NormalTodoDropdownMenu(
-				expanded = showDropdownMenu,
-				onDismissRequest = { showDropdownMenu = false },
-				onRename = { menuOnRename(todoData) },
-				onDelete = { menuOnDelete(todoData) }
-			)
 		}
 	}
+}
+
+@Preview
+@Composable
+private fun PreviewSuperTodoCard() {
+	var selection by remember { mutableStateOf(false) }
+	var todoUiState by remember {
+		mutableStateOf(
+			TodoUiState(
+				data = TodoData(id = 1, title = "Test", isDone = true)
+			)
+		)
+	}
+	SuperTodoCard(
+		todoUiState = todoUiState,
+		selection = selection,
+		onChangeSelect = { _, selected ->
+			todoUiState = todoUiState.copy(selected = selected)
+		},
+		onLongClick = { selection = !selection },
+		onDoneChange = { _, isDone ->
+			todoUiState = todoUiState.copy(data = todoUiState.data.copy(isDone = isDone))
+		}
+	)
 }
