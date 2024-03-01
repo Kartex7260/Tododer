@@ -66,6 +66,12 @@ fun SuperTodoCard(
 					selectedColor = MaterialTheme.colorScheme.tertiary,
 					normalColor = MaterialTheme.colorScheme.primary
 				),
+				uncheckedColor = allowSelectionColor(
+					allow = colorFillEnable,
+					selected = selected,
+					selectedColor = MaterialTheme.colorScheme.onTertiaryContainer,
+					normalColor = MaterialTheme.colorScheme.onSurfaceVariant
+				),
 				checkmarkColor = allowSelectionColor(
 					allow = colorFillEnable,
 					selected = selected,
