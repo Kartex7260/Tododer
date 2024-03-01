@@ -33,7 +33,11 @@ class SelectionController @Inject constructor(
     val selected: List<Long> get() = mSelected.toList()
 
     fun switchSelection() {
-        selection = !selection
+        if (selection) {
+            clear()
+        } else {
+            selection = true
+        }
     }
 
     fun setSelect(id: Long, select: Boolean) {
