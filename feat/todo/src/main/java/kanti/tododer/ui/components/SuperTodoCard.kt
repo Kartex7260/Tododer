@@ -26,19 +26,24 @@ fun SuperTodoCard(
 	onLongClick: (TodoData) -> Unit = {},
 	onClick: (TodoData) -> Unit = {},
 	onDoneChange: (TodoData, Boolean) -> Unit = { _, _ -> },
-	onSelectChange: (TodoData, Boolean) -> Unit = { _, _ -> },
+	onChangeSelect: (TodoData, Boolean) -> Unit = { _, _ -> },
 	menuOnRename: (TodoData) -> Unit = {},
 	menuOnDelete: (TodoData) -> Unit = {}
 ) = CommonCard(
 	modifier = modifier,
 	selection = selection,
 	state = todoUiState,
-	onChangeSelect = { onSelectChange(todoUiState.data, it) }
+	onChangeSelect = { onChangeSelect(todoUiState.data, it) }
 ) {
 	val todoData = todoUiState.data
 	TodoCard(
 		onLongClick = { onLongClick(todoData) },
-		onClick = { onClick(todoData) },
+		onClick = {
+			if (selection)
+				onChangeSelect(todoData, !todoUiState.selected)
+			else
+				onClick(todoData)
+		},
 		onDoneChange = { onDoneChange(todoData, it) },
 		todoData = todoData
 	) {

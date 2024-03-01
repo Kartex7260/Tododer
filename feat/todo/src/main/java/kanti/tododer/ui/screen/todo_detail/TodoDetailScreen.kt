@@ -397,16 +397,12 @@ fun TodoDetailScreen(
 					todoUiState = todoUiState,
 					onLongClick = { todoData -> vm.selection(todoData.id) },
 					onClick = { todoData ->
-						if (todoChildren.selection)
-							vm.switchSelected(todoData.id)
-						else {
-							navController.navigate(
-								route = todoDetailRoute(todoData.id)
-							)
-						}
+						navController.navigate(
+							route = todoDetailRoute(todoData.id)
+						)
 					},
 					onDoneChange = { todoData, isDone -> vm.changeDoneChild(todoData.id, isDone) },
-					onSelectChange = { todoData, selected -> vm.setSelect(todoData.id, selected) },
+					onChangeSelect = { todoData, selected -> vm.setSelect(todoData.id, selected) },
 					menuOnRename = { todoData -> showRenameDialog = todoData },
 					menuOnDelete = { todoData -> vm.deleteChildren(listOf(todoData)) }
 				)

@@ -50,11 +50,6 @@ class SelectionController @Inject constructor(
         updateState()
     }
 
-    fun switchSelected(id: Long) {
-        val contains = mSelected.contains(id)
-        setSelect(id, !contains)
-    }
-
     fun clear() {
         mSelected.clear()
         _selectionState.update {
