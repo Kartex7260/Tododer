@@ -27,7 +27,7 @@ import kanti.tododer.ui.components.plan.PlanData
 @Composable
 fun SuperPlanCard(
 	modifier: Modifier = Modifier,
-	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
+	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
 	selection: Boolean = false,
 	planUiState: PlanUiState,
 	onLongClick: (PlanData) -> Unit = {},

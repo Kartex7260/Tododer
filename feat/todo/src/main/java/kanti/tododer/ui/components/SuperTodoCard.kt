@@ -27,7 +27,7 @@ import kanti.tododer.ui.components.todo.TodoData
 @Composable
 fun SuperTodoCard(
 	modifier: Modifier = Modifier,
-	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
+	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
 	selection: Boolean = false,
 	todoUiState: TodoUiState,
 	onLongClick: (TodoData) -> Unit = {},

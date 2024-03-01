@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainActivityContent(
 	darkTheme: Boolean = isSystemInDarkTheme(),
-	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
+	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
 	colorStyle: ColorStyle? = null
 ) {
 	TododerTheme(

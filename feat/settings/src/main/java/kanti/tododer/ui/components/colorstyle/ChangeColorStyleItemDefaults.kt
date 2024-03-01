@@ -1,4 +1,4 @@
-package kanti.tododer.ui.components.settings.colorstyle
+package kanti.tododer.ui.components.colorstyle
 
 object ChangeColorStyleItemDefaults {
 

@@ -143,5 +143,7 @@ dependencies {
 	implementation(project(":data:settings:api"))
 	implementation(project(":data:settings:impl:dataStore"))
 
+	implementation(project(":ui:common"))
+
 //	implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
 }

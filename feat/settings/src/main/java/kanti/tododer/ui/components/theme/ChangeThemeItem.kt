@@ -1,4 +1,4 @@
-package kanti.tododer.ui.components.settings.theme
+package kanti.tododer.ui.components.theme
 
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -11,15 +11,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import kanti.tododer.ui.components.settings.R
-import kanti.tododer.ui.components.settings.SettingsMenuItem
+import kanti.tododer.feat.settings.R
+import kanti.tododer.ui.components.SettingsMenuItem
 
 @Composable
 fun ChangeThemeItem(
-    modifier: Modifier = Modifier,
-    state: ThemeSettingsUiState,
-    strings: ChangeThemeItemStrings = ChangeThemeItemDefaults.strings(),
-    onThemeChanged: ((ThemeSettingsUiState) -> Unit) = {}
+	modifier: Modifier = Modifier,
+	state: ThemeSettingsUiState,
+	strings: ChangeThemeItemStrings = ChangeThemeItemDefaults.strings(),
+	onThemeChanged: ((ThemeSettingsUiState) -> Unit) = {}
 ) = SettingsMenuItem(
     modifier = modifier,
     headlineContent = { Text(text = strings.appTheme) },

@@ -64,4 +64,6 @@ dependencies {
 	implementation(project(":ui:settings"))
 	implementation(project(":data:settings:api"))
 	implementation(project(":data:colorStyle:api"))
+
+	implementation(project(":ui:common"))
 }

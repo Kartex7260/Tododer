@@ -1,4 +1,4 @@
-package kanti.tododer.ui.components.settings
+package kanti.tododer.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ColumnScope
@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import kanti.tododer.feat.settings.R
 
 @Composable
 fun SettingsMenuItem(

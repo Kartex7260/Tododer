@@ -137,7 +137,7 @@ private fun PlanListTopBar(
 @Composable
 fun PlanListScreen(
 	navController: NavController = rememberNavController(),
-	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
+	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
 	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
 	deletedPlan: Long = 0,
 	vm: PlanListViewModel = hiltViewModel<PlanListViewModelImpl>()

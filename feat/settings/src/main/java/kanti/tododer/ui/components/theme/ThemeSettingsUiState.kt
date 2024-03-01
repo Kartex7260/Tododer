@@ -1,4 +1,4 @@
-package kanti.tododer.ui.components.settings.theme
+package kanti.tododer.ui.components.theme
 
 enum class ThemeSettingsUiState {
 	LIGHT,

@@ -1,9 +1,9 @@
 package kanti.tododer.ui.screen.main.viewmodel
 
-import kanti.tododer.ui.components.settings.colorstyle.ColorStyleDataType
-import kanti.tododer.ui.components.settings.colorstyle.ColorStyleDataUiState
-import kanti.tododer.ui.components.settings.colorstyle.ColorStyleItemUiState
-import kanti.tododer.ui.components.settings.theme.ThemeSettingsUiState
+import kanti.tododer.ui.components.colorstyle.ColorStyleDataType
+import kanti.tododer.ui.components.colorstyle.ColorStyleDataUiState
+import kanti.tododer.ui.components.colorstyle.ColorStyleItemUiState
+import kanti.tododer.ui.components.theme.ThemeSettingsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

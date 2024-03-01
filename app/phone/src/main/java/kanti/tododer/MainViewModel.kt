@@ -47,13 +47,15 @@ class MainViewModel @Inject constructor(
 			initialValue = null
 		)
 
-	val selectionStyle: StateFlow<MultiSelectionStyle> = settingsRepository.settings
+	val selectionStyle: StateFlow<Set<MultiSelectionStyle>> = settingsRepository.settings
 		.map { settingsData ->
-			MultiSelectionStyle(settingsData.multiSelectionStyleFlags)
+			settingsData.multiSelectionStyleFlags
+				.map { MultiSelectionStyle.valueOf(it.name) }
+				.toSet()
 		}
 		.stateIn(
 			scope = viewModelScope,
 			started = SharingStarted.Lazily,
-			initialValue = MultiSelectionStyle.ColorFill
+			initialValue = setOf(MultiSelectionStyle.ColorFill)
 		)
 }

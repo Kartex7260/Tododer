@@ -183,10 +183,10 @@ private fun TodoListTopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoListScreen(
-    navController: NavController,
-    selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
-    optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
-    vm: TodoListViewModel = hiltViewModel<TodoListViewModelImpl>()
+	navController: NavController,
+	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
+	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
+	vm: TodoListViewModel = hiltViewModel<TodoListViewModelImpl>()
 ) {
     val todoChildrenRoute = stringResource(id = R.string.nav_destination_todo_detail)
     fun todoDetailRoute(todoId: Long): String {

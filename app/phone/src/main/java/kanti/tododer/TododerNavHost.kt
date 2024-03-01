@@ -16,7 +16,7 @@ import kanti.tododer.ui.screen.settingsNavGraph
 
 @Composable
 fun TododerNavHost(
-	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill
+	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill)
 ) {
 	val navController = rememberNavController()
 	val context = LocalContext.current

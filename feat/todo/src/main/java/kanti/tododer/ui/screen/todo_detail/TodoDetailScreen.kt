@@ -178,7 +178,7 @@ private fun PreAction(
 @Composable
 fun TodoDetailScreen(
 	navController: NavController = rememberNavController(),
-	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
+	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
 	vm: TodoDetailViewModel = hiltViewModel<TodoDetailViewModelImpl>(),
 	todoId: Long = 0
 ) {

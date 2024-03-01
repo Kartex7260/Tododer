@@ -19,7 +19,7 @@ import kanti.tododer.ui.screen.todo_list.TodoListScreen
 
 fun NavGraphBuilder.addTodoNavGraph(
 	navController: NavController,
-	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
+	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
 	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
 	context: Context
 ) {

@@ -3,9 +3,9 @@ package kanti.tododer.ui.screen.main.viewmodel
 import kanti.tododer.data.colorstyle.ColorStyleData
 import kanti.tododer.data.colorstyle.ColorStyleType
 import kanti.tododer.data.model.settings.AppTheme
-import kanti.tododer.ui.components.settings.colorstyle.ColorStyleDataType
-import kanti.tododer.ui.components.settings.colorstyle.ColorStyleDataUiState
-import kanti.tododer.ui.components.settings.theme.ThemeSettingsUiState
+import kanti.tododer.ui.components.colorstyle.ColorStyleDataType
+import kanti.tododer.ui.components.colorstyle.ColorStyleDataUiState
+import kanti.tododer.ui.components.theme.ThemeSettingsUiState
 
 fun AppTheme.toUiState(): ThemeSettingsUiState {
 	return when (this) {

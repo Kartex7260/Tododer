@@ -7,8 +7,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kanti.tododer.data.colorstyle.ColorStyleRepository
 import kanti.tododer.data.colorstyle.ColorStyleType
 import kanti.tododer.data.model.settings.SettingsRepository
-import kanti.tododer.ui.components.settings.colorstyle.ColorStyleItemUiState
-import kanti.tododer.ui.components.settings.theme.ThemeSettingsUiState
+import kanti.tododer.ui.components.colorstyle.ColorStyleItemUiState
+import kanti.tododer.ui.components.theme.ThemeSettingsUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
