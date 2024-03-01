@@ -264,6 +264,8 @@ fun PlanListScreen(
 				PlanCard(
 					planData = planAll,
 					onClick = {
+						if (plans.selection)
+							return@PlanCard
 						vm.setCurrentPlan(planAll.id)
 						navController.popBackStack()
 					}
@@ -274,6 +276,8 @@ fun PlanListScreen(
 						.padding(top = 8.dp),
 					planData = planDefault,
 					onClick = {
+						if (plans.selection)
+							return@PlanCard
 						vm.setCurrentPlan(planDefault.id)
 						navController.popBackStack()
 					}
