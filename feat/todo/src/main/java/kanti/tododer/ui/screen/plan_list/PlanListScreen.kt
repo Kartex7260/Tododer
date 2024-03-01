@@ -52,6 +52,7 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.components.ContentSwitcher
 import kanti.tododer.ui.components.PlanFloatingActionButton
 import kanti.tododer.ui.components.ScreenBottomCaption
@@ -136,6 +137,7 @@ private fun PlanListTopBar(
 @Composable
 fun PlanListScreen(
 	navController: NavController = rememberNavController(),
+	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
 	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
 	deletedPlan: Long = 0,
 	vm: PlanListViewModel = hiltViewModel<PlanListViewModelImpl>()
@@ -294,6 +296,7 @@ fun PlanListScreen(
 			) { planUiState ->
 				SuperPlanCard(
 					modifier = Modifier.padding(bottom = 8.dp),
+					selectionStyle = selectionStyle,
 					selection = plans.selection,
 					planUiState = planUiState,
 					onLongClick = { planData -> vm.selection(planData.id) },

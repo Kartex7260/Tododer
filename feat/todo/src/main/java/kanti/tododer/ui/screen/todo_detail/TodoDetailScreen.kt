@@ -61,6 +61,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
+import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.components.ContentSwitcher
 import kanti.tododer.ui.components.ScreenBottomCaption
 import kanti.tododer.ui.components.SuperTodoCard
@@ -177,6 +178,7 @@ private fun PreAction(
 @Composable
 fun TodoDetailScreen(
 	navController: NavController = rememberNavController(),
+	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
 	vm: TodoDetailViewModel = hiltViewModel<TodoDetailViewModelImpl>(),
 	todoId: Long = 0
 ) {
@@ -393,6 +395,7 @@ fun TodoDetailScreen(
 							end = 16.dp,
 							bottom = 8.dp
 						),
+					selectionStyle = selectionStyle,
 					selection = todoChildren.selection,
 					todoUiState = todoUiState,
 					onLongClick = { todoData -> vm.selection(todoData.id) },

@@ -1,5 +1,8 @@
 package kanti.tododer.ui.common
 
+import javax.annotation.concurrent.Immutable
+
+@Immutable
 class MultiSelectionStyle(
 	private val flag: Int
 ) {

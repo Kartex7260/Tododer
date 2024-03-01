@@ -61,6 +61,7 @@ import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
+import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.components.ContentSwitcher
 import kanti.tododer.ui.components.ScreenBottomCaption
 import kanti.tododer.ui.components.SuperTodoCard
@@ -183,6 +184,7 @@ private fun TodoListTopBar(
 @Composable
 fun TodoListScreen(
     navController: NavController,
+    selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
     optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
     vm: TodoListViewModel = hiltViewModel<TodoListViewModelImpl>()
 ) {
@@ -370,6 +372,7 @@ fun TodoListScreen(
             ) { todoUiState ->
                 SuperTodoCard(
                     modifier = Modifier.padding(bottom = 8.dp),
+                    selectionStyle = selectionStyle,
                     selection = children.selection,
                     todoUiState = todoUiState,
                     onLongClick = { vm.selection(todoUiState.data.id) },

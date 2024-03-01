@@ -8,6 +8,7 @@ import kanti.tododer.data.colorstyle.ColorStyleRepository
 import kanti.tododer.data.colorstyle.ColorStyleType
 import kanti.tododer.data.model.settings.AppTheme
 import kanti.tododer.data.model.settings.SettingsRepository
+import kanti.tododer.ui.common.MultiSelectionStyle
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -44,5 +45,15 @@ class MainViewModel @Inject constructor(
 			scope = viewModelScope,
 			started = SharingStarted.Lazily,
 			initialValue = null
+		)
+
+	val selectionStyle: StateFlow<MultiSelectionStyle> = settingsRepository.settings
+		.map { settingsData ->
+			MultiSelectionStyle(settingsData.multiSelectionStyleFlags)
+		}
+		.stateIn(
+			scope = viewModelScope,
+			started = SharingStarted.Lazily,
+			initialValue = MultiSelectionStyle.ColorFill
 		)
 }

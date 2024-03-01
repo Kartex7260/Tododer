@@ -1,23 +1,25 @@
 package kanti.tododer
 
-import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.screen.addTodoNavGraph
 import kanti.tododer.ui.screen.settingsNavGraph
 
 @Composable
 fun TododerNavHost(
-	context: Context
+	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill
 ) {
 	val navController = rememberNavController()
+	val context = LocalContext.current
 
 	NavHost(
 		navController = navController,
@@ -25,6 +27,7 @@ fun TododerNavHost(
 	) {
 		addTodoNavGraph(
 			navController = navController,
+			selectionStyle = selectionStyle,
 			optionMenuItems = { closeMenu ->
 				DropdownMenuItem(
 					text = {

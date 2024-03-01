@@ -12,12 +12,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import kanti.tododer.feat.todo.R
+import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.screen.plan_list.PlanListScreen
 import kanti.tododer.ui.screen.todo_detail.TodoDetailScreen
 import kanti.tododer.ui.screen.todo_list.TodoListScreen
 
 fun NavGraphBuilder.addTodoNavGraph(
 	navController: NavController,
+	selectionStyle: MultiSelectionStyle = MultiSelectionStyle.ColorFill,
 	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
 	context: Context
 ) {
@@ -30,6 +32,7 @@ fun NavGraphBuilder.addTodoNavGraph(
 		) {
 			TodoListScreen(
 				navController = navController,
+				selectionStyle = selectionStyle,
 				optionMenuItems = optionMenuItems
 			)
 		}
@@ -46,6 +49,7 @@ fun NavGraphBuilder.addTodoNavGraph(
 		) {
 			TodoDetailScreen(
 				navController = navController,
+				selectionStyle = selectionStyle,
 				todoId = it.arguments?.getLong(todoDetailTodoIdParam) ?: 0
 			)
 		}
@@ -62,6 +66,7 @@ fun NavGraphBuilder.addTodoNavGraph(
 		) {
 			PlanListScreen(
 				navController = navController,
+				selectionStyle = selectionStyle,
 				optionMenuItems = optionMenuItems,
 				deletedPlan = it.arguments?.getLong(planListRouteIdParam) ?: 0
 			)
