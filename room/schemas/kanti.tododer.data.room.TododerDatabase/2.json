@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "291d3034293d9234b9ec6997e02fc98e",
+    "identityHash": "9cae80c42378f4a022fd988abef8f460",
     "entities": [
       {
         "tableName": "color_style",
@@ -352,7 +352,7 @@
       },
       {
         "tableName": "todos",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parent_id` TEXT NOT NULL, `title` TEXT NOT NULL, `remark` TEXT NOT NULL, `done` INTEGER NOT NULL, `state` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parent_id` TEXT NOT NULL, `group` TEXT, `title` TEXT NOT NULL, `remark` TEXT NOT NULL, `done` INTEGER NOT NULL, `state` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -365,6 +365,12 @@
             "columnName": "parent_id",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "group",
+            "columnName": "group",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "title",
@@ -430,7 +436,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '291d3034293d9234b9ec6997e02fc98e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9cae80c42378f4a022fd988abef8f460')"
     ]
   }
 }

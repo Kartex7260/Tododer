@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class TodoEntity(
 	@PrimaryKey(autoGenerate = true) val id: Long = 0,
 	@ColumnInfo(name = "parent_id") val parentId: String = "",
+	val group: String? = null,
 	val title: String = "",
 	val remark: String = "",
 	val done: Boolean = false,
