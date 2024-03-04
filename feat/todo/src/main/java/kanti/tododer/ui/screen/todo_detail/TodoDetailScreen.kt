@@ -140,12 +140,12 @@ fun TodoDetailTopBar(
 			val offsetYAnim by animateFloatAsState(
 				targetValue = offsetYFraction * 64,
 				animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-				label = ""
+				label = "offsetYAnim"
 			)
 			val alphaAnim by animateFloatAsState(
 				targetValue = alphaFraction,
 				animationSpec = spring(stiffness = Spring.StiffnessMedium),
-				label = ""
+				label = "alphaAnim"
 			)
 			TodoEditorControllers(
 				modifier = Modifier
@@ -278,7 +278,7 @@ fun TodoDetailScreen(
 
 	val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 	var editorSize by remember {
-		mutableStateOf(IntSize(0, 0))
+		mutableStateOf(IntSize(0, 400))
 	}
 
 	var showCreateDialog by rememberSaveable { mutableStateOf(false) }
