@@ -2,6 +2,9 @@ package kanti.tododer.ui.screen
 
 import android.content.Context
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
@@ -28,7 +31,11 @@ fun NavGraphBuilder.addTodoNavGraph(
 		route = context.getString(R.string.nav_destination_todo)
 	) {
 		composable(
-			route = context.getString(R.string.nav_destination_todos)
+			route = context.getString(R.string.nav_destination_todos),
+			enterTransition = { EnterTransition.None },
+			exitTransition = { fadeOut() },
+			popEnterTransition = { fadeIn() },
+			popExitTransition = { ExitTransition.None }
 		) {
 			TodoListScreen(
 				navController = navController,
@@ -44,8 +51,9 @@ fun NavGraphBuilder.addTodoNavGraph(
 				navArgument(todoDetailTodoIdParam) { type = NavType.LongType }
 			),
 			enterTransition = { slideInHorizontally { it } },
-			exitTransition = { slideOutHorizontally { it } },
-			popEnterTransition = { EnterTransition.None }
+			exitTransition = { fadeOut() },
+			popEnterTransition = { fadeIn() },
+			popExitTransition = { slideOutHorizontally { it } }
 		) {
 			TodoDetailScreen(
 				navController = navController,
@@ -62,7 +70,9 @@ fun NavGraphBuilder.addTodoNavGraph(
 				navArgument(planListRouteIdParam) { defaultValue = 0L }
 			),
 			enterTransition = { slideInHorizontally { -it } },
-			exitTransition = { slideOutHorizontally { -it } }
+			exitTransition = { slideOutHorizontally { -it } },
+			popEnterTransition = { EnterTransition.None },
+			popExitTransition = { slideOutHorizontally { -it } }
 		) {
 			PlanListScreen(
 				navController = navController,
