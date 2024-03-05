@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
@@ -64,8 +63,8 @@ import kanti.tododer.ui.UiConst
 import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.components.ContentSwitcher
 import kanti.tododer.ui.components.ScreenBottomCaption
-import kanti.tododer.ui.components.SuperTodoCard
 import kanti.tododer.ui.components.TodoFloatingActionButton
+import kanti.tododer.ui.components.TodoGroupPanel
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
@@ -385,29 +384,35 @@ fun TodoDetailScreen(
 			}
 
 			items(
-				items = todoChildren.todos,
-				key = { it.data.id }
-			) { todoUiState ->
-				SuperTodoCard(
+				count = todoChildren.groups.size,
+				key = { index -> todoChildren.groups[index].name ?: "" }
+			) { index ->
+				TodoGroupPanel(
 					modifier = Modifier
 						.padding(
+							top = 0.dp,
+							bottom = if (index == todoChildren.groups.size - 1) 0.dp else 16.dp,
 							start = 16.dp,
-							end = 16.dp,
-							bottom = 8.dp
+							end = 16.dp
 						),
-					selectionStyle = selectionStyle,
 					selection = todoChildren.selection,
-					todoUiState = todoUiState,
-					onLongClick = { todoData -> vm.selection(todoData.id) },
-					onClick = { todoData ->
+					isSingleGroup = todoChildren.groups.size == 1,
+					group = todoChildren.groups[index],
+					selectionStyle = selectionStyle,
+					itemOnLongClick = { todoData -> vm.selection(todoData.id) },
+					itemOnClick = { todoData ->
 						navController.navigate(
 							route = todoDetailRoute(todoData.id)
 						)
 					},
-					onDoneChange = { todoData, isDone -> vm.changeDoneChild(todoData.id, isDone) },
-					onChangeSelect = { todoData, selected -> vm.setSelect(todoData.id, selected) },
-					menuOnRename = { todoData -> showRenameDialog = todoData },
-					menuOnDelete = { todoData -> vm.deleteChildren(listOf(todoData)) }
+					itemOnDoneChange = { todoData, selected ->
+						vm.changeDoneChild(todoData.id, selected)
+					},
+					itemOnChangeSelect = { todoData, selected ->
+						vm.setSelect(todoData.id, selected)
+					},
+					itemMenuOnRename = { todoData -> showRenameDialog = todoData },
+					itemMenuOnDelete = { todoData -> vm.deleteChildren(listOf(todoData)) }
 				)
 			}
 
@@ -419,17 +424,18 @@ fun TodoDetailScreen(
 						.height(56.dp)
 				) {
 					val captionStg = stringResource(id = R.string.caption_todo_detail)
+					val allTodos = todoChildren.groups.asSequence().flatMap { it.todos }
 					ScreenBottomCaption(
 						modifier = Modifier.align(Alignment.BottomCenter),
 						text = captionStg
 							.replace("{1}", todoDetail.title)
 							.replace(
 								"{2}",
-								todoChildren.todos.filter { it.visible }.size.toString()
+								allTodos.filter { it.visible }.count().toString()
 							)
 							.replace(
 								"{3}",
-								todoChildren.todos.filter { it.data.isDone && it.visible }.size.toString()
+								allTodos.filter { it.data.isDone && it.visible }.count().toString()
 							)
 					)
 				}

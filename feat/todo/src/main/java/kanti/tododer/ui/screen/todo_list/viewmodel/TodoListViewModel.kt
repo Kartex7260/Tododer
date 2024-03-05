@@ -3,6 +3,7 @@ package kanti.tododer.ui.screen.todo_list.viewmodel
 import android.util.Log
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
+import kanti.tododer.ui.common.GroupUiState
 import kanti.tododer.ui.common.TodoUiState
 import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.components.todo.TodoData
@@ -65,21 +66,39 @@ interface TodoListViewModel {
             TodoListUiState(
                 plan = Plan(1, title = "Test", type = PlanType.Custom),
                 children = TodosUiState(
-                    todos = listOf(
-                        TodoUiState(data = TodoData(1, "Test 1")),
-                        TodoUiState(data = TodoData(2, "Test 2")),
-                        TodoUiState(data = TodoData(3, "Test 3")),
-                        TodoUiState(data = TodoData(4, "Test 4")),
-                        TodoUiState(data = TodoData(5, "Test 5")),
-                        TodoUiState(data = TodoData(6, "Test 6")),
-                        TodoUiState(data = TodoData(7, "Test 7")),
-                        TodoUiState(data = TodoData(8, "Test 8")),
-                        TodoUiState(data = TodoData(9, "Test 9")),
-                        TodoUiState(data = TodoData(10, "Test 10")),
-                        TodoUiState(data = TodoData(11, "Test 11")),
-                        TodoUiState(data = TodoData(12, "Test 12")),
-                        TodoUiState(data = TodoData(13, "Test 13")),
-                        TodoUiState(data = TodoData(14, "Test 14"))
+                    groups = listOf(
+                        GroupUiState(
+                            name = "Group 1",
+                            expand = true,
+                            todos = listOf(
+                                TodoUiState(data = TodoData(1, "Test 1")),
+                                TodoUiState(data = TodoData(2, "Test 2")),
+                                TodoUiState(data = TodoData(3, "Test 3"))
+                            )
+                        ),
+                        GroupUiState(
+                            name = "Group 2",
+                            expand = true,
+                            todos = listOf(
+                                TodoUiState(data = TodoData(4, "Test 4")),
+                                TodoUiState(data = TodoData(5, "Test 5")),
+                                TodoUiState(data = TodoData(6, "Test 6")),
+                                TodoUiState(data = TodoData(7, "Test 7")),
+                                TodoUiState(data = TodoData(8, "Test 8"))
+                            )
+                        ),
+                        GroupUiState(
+                            name = null,
+                            expand = true,
+                            todos = listOf(
+                                TodoUiState(data = TodoData(9, "Test 9")),
+                                TodoUiState(data = TodoData(10, "Test 10")),
+                                TodoUiState(data = TodoData(11, "Test 11")),
+                                TodoUiState(data = TodoData(12, "Test 12")),
+                                TodoUiState(data = TodoData(13, "Test 13")),
+                                TodoUiState(data = TodoData(14, "Test 14"))
+                            )
+                        )
                     )
                 )
             )

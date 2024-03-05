@@ -1,6 +1,7 @@
 package kanti.tododer.ui.screen.todo_detail.viewmodel
 
 import android.util.Log
+import kanti.tododer.ui.common.GroupUiState
 import kanti.tododer.ui.common.TodoUiState
 import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.components.todo.TodoData
@@ -81,19 +82,29 @@ interface TodoDetailViewModel {
 
         private val _todoChildren = MutableStateFlow(
             TodosUiState(
-                todos = listOf(
-                    TodoUiState(data = TodoData(id = 2, title = "Test 1")),
-                    TodoUiState(data = TodoData(id = 3, title = "Test 2")),
-                    TodoUiState(data = TodoData(id = 4, title = "Test 3")),
-                    TodoUiState(data = TodoData(id = 5, title = "Test 4")),
-                    TodoUiState(data = TodoData(id = 6, title = "Test 5")),
-                    TodoUiState(data = TodoData(id = 7, title = "Test 6")),
-                    TodoUiState(data = TodoData(id = 8, title = "Test 7")),
-                    TodoUiState(data = TodoData(id = 9, title = "Test 8")),
-                    TodoUiState(data = TodoData(id = 10, title = "Test 9")),
-                    TodoUiState(data = TodoData(id = 11, title = "Test 10")),
-                    TodoUiState(data = TodoData(id = 12, title = "Test 11")),
-                    TodoUiState(data = TodoData(id = 13, title = "Test 12")),
+                groups = listOf(
+                    GroupUiState(
+                        name = "Group 1",
+                        todos = listOf(
+                            TodoUiState(data = TodoData(id = 2, title = "Test 1")),
+                            TodoUiState(data = TodoData(id = 3, title = "Test 2")),
+                            TodoUiState(data = TodoData(id = 4, title = "Test 3")),
+                            TodoUiState(data = TodoData(id = 5, title = "Test 4"))
+                        )
+                    ),
+                    GroupUiState(
+                        name = null,
+                        todos = listOf(
+                            TodoUiState(data = TodoData(id = 6, title = "Test 5")),
+                            TodoUiState(data = TodoData(id = 7, title = "Test 6")),
+                            TodoUiState(data = TodoData(id = 8, title = "Test 7")),
+                            TodoUiState(data = TodoData(id = 9, title = "Test 8")),
+                            TodoUiState(data = TodoData(id = 10, title = "Test 9")),
+                            TodoUiState(data = TodoData(id = 11, title = "Test 10")),
+                            TodoUiState(data = TodoData(id = 12, title = "Test 11")),
+                            TodoUiState(data = TodoData(id = 13, title = "Test 12")),
+                        )
+                    )
                 )
             )
         )

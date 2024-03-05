@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Create
@@ -64,8 +63,8 @@ import kanti.tododer.ui.UiConst
 import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.components.ContentSwitcher
 import kanti.tododer.ui.components.ScreenBottomCaption
-import kanti.tododer.ui.components.SuperTodoCard
 import kanti.tododer.ui.components.TodoFloatingActionButton
+import kanti.tododer.ui.components.TodoGroupPanel
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
@@ -361,30 +360,37 @@ fun TodoListScreen(
             },
             contentPadding = PaddingValues(
                 top = 12.dp,
-                bottom = 16.dp,
-                start = 16.dp,
-                end = 16.dp
+                bottom = 16.dp
             )
         ) {
             items(
-                items = children.todos,
-                key = { it.data.id }
-            ) { todoUiState ->
-                SuperTodoCard(
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    selectionStyle = selectionStyle,
+                count = children.groups.size,
+                key = { index -> children.groups[index].name ?: "" }
+            ) { index ->
+                TodoGroupPanel(
+                    modifier = Modifier
+                        .padding(
+                            top = 0.dp,
+                            bottom = if (children.groups.size - 1 == index) 0.dp else 16.dp,
+                            start = 16.dp,
+                            end = 16.dp,
+                        ),
                     selection = children.selection,
-                    todoUiState = todoUiState,
-                    onLongClick = { vm.selection(todoUiState.data.id) },
-                    onClick = { todoData ->
+                    isSingleGroup = children.groups.size == 1,
+                    group = children.groups[index],
+                    selectionStyle = selectionStyle,
+                    itemOnLongClick = { todoData -> vm.selection(todoData.id) },
+                    itemOnClick = { todoData ->
                         navController.navigate(
                             route = todoDetailRoute(todoData.id)
                         )
                     },
-                    onDoneChange = { todoData, isDone -> vm.changeDone(todoData.id, isDone) },
-                    onChangeSelect = { todoData, selected -> vm.setSelect(todoData.id, selected) },
-                    menuOnRename = { todoData -> showRenameTodoDialog = todoData },
-                    menuOnDelete = { todoData -> vm.deleteTodos(listOf(todoData)) }
+                    itemOnDoneChange = { todoData, isDone -> vm.changeDone(todoData.id, isDone) },
+                    itemOnChangeSelect = { todoData, selected ->
+                        vm.setSelect(todoData.id, selected)
+                    },
+                    itemMenuOnRename = { todoData -> showRenameTodoDialog = todoData },
+                    itemMenuOnDelete = { todoData -> vm.deleteTodos(listOf(todoData)) }
                 )
             }
 
@@ -395,15 +401,18 @@ fun TodoListScreen(
                         .fillMaxWidth()
                 ) {
                     val captionStg = stringResource(id = R.string.caption_todo_list)
+                    val allTodos = children.groups.asSequence()
+                        .flatMap { it.todos }
                     ScreenBottomCaption(
                         modifier = Modifier
                             .align(Alignment.BottomCenter),
                         text = captionStg
                             .replace("{1}", plan.title)
-                            .replace("{2}", children.todos.filter { it.visible } .size.toString())
+                            .replace("{2}", allTodos.filter { it.visible }.count().toString()
+                            )
                             .replace(
                                 "{3}",
-                                children.todos.filter { it.data.isDone && it.visible }.size.toString()
+                                allTodos.filter { it.data.isDone && it.visible }.count().toString()
                             )
                     )
                 }
