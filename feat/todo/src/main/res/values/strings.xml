@@ -45,4 +45,8 @@
     <string name="multi_selection">Multi selection</string>
 
     <string name="ungroup">Ungroup</string>
+    <string name="set_group">Set group</string>
+    <string name="group_name">Group name</string>
+    <string name="remove">Remove</string>
+    <string name="set">Set</string>
 </resources>
