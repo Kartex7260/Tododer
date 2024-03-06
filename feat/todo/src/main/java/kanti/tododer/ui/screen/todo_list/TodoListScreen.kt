@@ -284,6 +284,12 @@ fun TodoListScreen(
         }
     }
 
+    LaunchedEffect(key1 = vm) {
+        vm.groupingSelection.collectLatest {
+            showSetGroupDialog = it
+        }
+    }
+
     @Composable
     fun <T : Any> rememberSaveableByPlan(
         saver: Saver<T, out Any> = autoSaver(),
@@ -349,6 +355,7 @@ fun TodoListScreen(
             TodoFloatingActionButton(
                 selection = children.selection,
                 onClick = { showCreateDialog = true },
+                onGroup = { vm.groupingSelection() },
                 onCheck = { vm.changeDoneSelected() },
                 onDelete = { vm.deleteSelected() }
             )
@@ -463,6 +470,7 @@ fun TodoListScreen(
             groups = children.groups.map { it.name }.toSet(),
             onSetGroup = { groupName ->
                 vm.setGroup(groupingTodos.map { it.todoData.id }.toList(), groupName)
+                vm.selectionOff()
             }
         )
     }

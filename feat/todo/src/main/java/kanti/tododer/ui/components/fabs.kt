@@ -14,6 +14,7 @@ import kanti.tododer.feat.todo.R
 fun TodoFloatingActionButton(
 	selection: Boolean = false,
 	onClick: () -> Unit = {},
+	onGroup: () -> Unit = {},
 	onCheck: () -> Unit = {},
 	onDelete: () -> Unit = {}
 ) = MultiFloatingActionButton(
@@ -22,6 +23,13 @@ fun TodoFloatingActionButton(
 	onClick = onClick,
 	smallFabContent = { spacerBetweenSmallFab ->
 		val containerColor = MaterialTheme.colorScheme.secondaryContainer
+		SmallFloatingActionButton(
+			onClick = onGroup,
+			containerColor = containerColor
+		) {
+			Icon(painter = painterResource(id = R.drawable.segment), contentDescription = null)
+		}
+		spacerBetweenSmallFab()
 		SmallFloatingActionButton(
 			onClick = onCheck,
 			containerColor = containerColor

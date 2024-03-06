@@ -4,6 +4,7 @@ import android.util.Log
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.ui.common.GroupUiState
+import kanti.tododer.ui.common.TodoDataWithGroup
 import kanti.tododer.ui.common.TodoUiState
 import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.components.todo.TodoData
@@ -25,6 +26,8 @@ interface TodoListViewModel {
     val blankTodoDeleted: SharedFlow<Unit>
 
     val goToTodo: SharedFlow<Long>
+
+    val groupingSelection: SharedFlow<List<TodoDataWithGroup>>
 
     fun updateUiState(deletedTodoId: Long?)
 
@@ -51,6 +54,8 @@ interface TodoListViewModel {
     fun selectionOff(): Boolean
 
     fun setSelect(todoId: Long, selected: Boolean)
+
+    fun groupingSelection()
 
     fun changeDoneSelected()
 
@@ -115,6 +120,8 @@ interface TodoListViewModel {
         private val _newTodoCreated = MutableSharedFlow<Long>()
         override val goToTodo: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
 
+        override val groupingSelection: SharedFlow<List<TodoDataWithGroup>> = MutableSharedFlow()
+
         override fun updateUiState(deletedTodoId: Long?) {
         }
 
@@ -167,6 +174,10 @@ interface TodoListViewModel {
 
         override fun setSelect(todoId: Long, selected: Boolean) {
             Log.d(logTag, "setSelect(Long = $todoId, Boolean = $selected)")
+        }
+
+        override fun groupingSelection() {
+            Log.d(logTag, "groupingSelection()")
         }
 
         override fun changeDoneSelected() {

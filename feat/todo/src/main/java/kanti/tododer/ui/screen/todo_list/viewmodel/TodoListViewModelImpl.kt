@@ -18,6 +18,7 @@ import kanti.tododer.domain.plandeletebehaviour.DeletePlanIfBlank
 import kanti.tododer.domain.todo.delete.DeleteBlankTodoWithFlow
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.common.GroupUiState
+import kanti.tododer.ui.common.TodoDataWithGroup
 import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.common.toData
 import kanti.tododer.ui.common.toUiState
@@ -130,6 +131,9 @@ class TodoListViewModelImpl @Inject constructor(
 	private val _goToTodo = MutableSharedFlow<Long>()
 	override val goToTodo: SharedFlow<Long> = _goToTodo.asSharedFlow()
 
+	private val _selectionGrouping = MutableSharedFlow<List<TodoDataWithGroup>>()
+	override val groupingSelection = _selectionGrouping.asSharedFlow()
+
 	init {
 		viewModelScope.launch {
 			deleteBlankTodoWithFlow.blankTodoDeleted.collectLatest {
@@ -226,6 +230,20 @@ class TodoListViewModelImpl @Inject constructor(
 		selectionController.selection = true
 		if (todoId != 0L) {
 			selectionController.setSelect(todoId, true)
+		}
+	}
+
+	override fun groupingSelection() {
+		viewModelScope.launch {
+			val selected = selectionController.selected
+			val todos = currentPlan.value.children.groups.asSequence()
+				.flatMap { groupUiState ->
+					groupUiState.todos.map { todoUiState ->
+						TodoDataWithGroup(todoData = todoUiState.data, group = groupUiState.name)
+					}
+				}
+				.filter { selected.contains(it.todoData.id) }
+			_selectionGrouping.emit(todos.toList())
 		}
 	}
 
