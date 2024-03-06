@@ -37,7 +37,7 @@ fun TodoGroupPanel(
 		modifier = modifier
 	) {
 		if ((!isSingleGroup || group.name != null) && group.todos.map { it.visible }
-				.fold(true) { acc, todoData -> acc and todoData }) {
+				.fold(false) { acc, todoData -> acc or todoData }) {
 			GroupHeader(
 				title = group.name ?: stringResource(id = R.string.ungroup),
 				expanded = group.expand
