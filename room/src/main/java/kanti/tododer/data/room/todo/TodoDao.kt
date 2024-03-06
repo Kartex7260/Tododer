@@ -29,6 +29,9 @@ interface TodoDao {
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	suspend fun insert(todos: List<TodoEntity>): List<Long>
 
+	@Query("UPDATE todos SET `group` = :group WHERE id IN (:todoIds)")
+	suspend fun updateGroup(todoIds: List<Long>, group: String?)
+
 	@Query("SELECT * FROM todos WHERE rowId = :rowId LIMIT 1")
 	suspend fun getByRowId(rowId: Long): TodoEntity?
 

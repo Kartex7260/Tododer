@@ -34,6 +34,7 @@ fun SuperTodoCard(
 	onClick: (TodoData) -> Unit = {},
 	onDoneChange: (TodoData, Boolean) -> Unit = { _, _ -> },
 	onChangeSelect: (TodoData, Boolean) -> Unit = { _, _ -> },
+	menuOnAddToGroup: (TodoData) -> Unit = {},
 	menuOnRename: (TodoData) -> Unit = {},
 	menuOnDelete: (TodoData) -> Unit = {}
 ) {
@@ -114,6 +115,7 @@ fun SuperTodoCard(
 				NormalTodoDropdownMenu(
 					expanded = showDropdownMenu,
 					onDismissRequest = { showDropdownMenu = false },
+					onAddToGroup = { menuOnAddToGroup(todoData) },
 					onRename = { menuOnRename(todoData) },
 					onDelete = { menuOnDelete(todoData) }
 				)

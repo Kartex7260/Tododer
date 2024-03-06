@@ -167,6 +167,13 @@ class TodoListViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun setGroup(todoIds: List<Long>, group: String?) {
+		viewModelScope.launch {
+			todoRepository.setGroup(todoIds, group)
+			updateUiState.value = Any()
+		}
+	}
+
 	override fun renamePlan(newTitle: String) {
 		viewModelScope.launch {
 			val plan = currentPlan.value.plan

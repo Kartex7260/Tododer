@@ -16,6 +16,8 @@ interface TodoLocalDataSource {
 
 	suspend fun insert(todo: Todo): Long
 
+	suspend fun setGroup(todoIds: List<Long>, group: String?)
+
 	suspend fun updateTitle(todoId: Long, title: String)
 
 	suspend fun updateRemark(todoId: Long, remark: String)

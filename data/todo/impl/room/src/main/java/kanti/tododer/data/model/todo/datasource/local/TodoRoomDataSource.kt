@@ -65,6 +65,11 @@ class TodoRoomDataSource @Inject constructor(
 		return result
 	}
 
+	override suspend fun setGroup(todoIds: List<Long>, group: String?) {
+		todoDao.updateGroup(todoIds, group)
+		logger.d(LOG_TAG, "setGroup(List<Long> = $todoIds, String? = $group)")
+	}
+
 	override suspend fun updateTitle(todoId: Long, title: String) {
 		todoDao.updateTitle(todoId, title)
 		logger.d(LOG_TAG, "updateTitle(Long = $todoId, String = $title)")

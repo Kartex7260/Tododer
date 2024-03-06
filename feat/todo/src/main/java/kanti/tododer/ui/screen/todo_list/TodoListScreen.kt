@@ -61,6 +61,7 @@ import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
 import kanti.tododer.ui.common.MultiSelectionStyle
+import kanti.tododer.ui.common.TodoDataWithGroup
 import kanti.tododer.ui.components.ContentSwitcher
 import kanti.tododer.ui.components.ScreenBottomCaption
 import kanti.tododer.ui.components.TodoFloatingActionButton
@@ -68,6 +69,7 @@ import kanti.tododer.ui.components.TodoGroupPanel
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
+import kanti.tododer.ui.components.dialogs.SetGroupDialog
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModelImpl
@@ -200,6 +202,7 @@ fun TodoListScreen(
 
     var showDeletePlanDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     var showRenamePlanDialog: Plan? by rememberSaveable { mutableStateOf(null) }
+    var showSetGroupDialog: List<TodoDataWithGroup>? by rememberSaveable { mutableStateOf(null) }
     var showRenameTodoDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
     var showCreateDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
@@ -389,6 +392,14 @@ fun TodoListScreen(
                     itemOnChangeSelect = { todoData, selected ->
                         vm.setSelect(todoData.id, selected)
                     },
+                    itemMenuOnAddToGroup = { todoData ->
+                        showSetGroupDialog = listOf(
+                            TodoDataWithGroup(
+                                todoData = todoData,
+                                group = children.groups[index].name
+                            )
+                        )
+                    },
                     itemMenuOnRename = { todoData -> showRenameTodoDialog = todoData },
                     itemMenuOnDelete = { todoData -> vm.deleteTodos(listOf(todoData)) }
                 )
@@ -438,6 +449,20 @@ fun TodoListScreen(
             name = curPlan.title,
             onRename = { title ->
                 vm.renamePlan(title)
+            }
+        )
+    }
+
+    if (showSetGroupDialog != null) {
+        val groupingTodos = showSetGroupDialog!!.asSequence()
+        val initialGroup = groupingTodos.map { it.group }
+            .reduce { acc, s -> if (acc == s) acc else null }
+        SetGroupDialog(
+            onDismissRequest = { showSetGroupDialog = null },
+            initialGroup = initialGroup,
+            groups = children.groups.map { it.name }.toSet(),
+            onSetGroup = { groupName ->
+                vm.setGroup(groupingTodos.map { it.todoData.id }.toList(), groupName)
             }
         )
     }

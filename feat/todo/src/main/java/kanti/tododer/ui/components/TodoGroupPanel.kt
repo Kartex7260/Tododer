@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.common.GroupUiState
@@ -28,13 +29,15 @@ fun TodoGroupPanel(
 	itemOnClick: (TodoData) -> Unit = {},
 	itemOnDoneChange: (TodoData, Boolean) -> Unit = { _, _ -> },
 	itemOnChangeSelect: (TodoData, Boolean) -> Unit = { _, _ -> },
+	itemMenuOnAddToGroup: (TodoData) -> Unit = {},
 	itemMenuOnRename: (TodoData) -> Unit = {},
 	itemMenuOnDelete: (TodoData) -> Unit = {}
 ) {
 	Column(
 		modifier = modifier
 	) {
-		if (!isSingleGroup) {
+		if ((!isSingleGroup || group.name != null) && group.todos.map { it.visible }
+				.fold(true) { acc, todoData -> acc and todoData }) {
 			GroupHeader(
 				title = group.name ?: stringResource(id = R.string.ungroup),
 				expanded = group.expand
@@ -57,6 +60,7 @@ fun TodoGroupPanel(
 						onClick = itemOnClick,
 						onDoneChange = itemOnDoneChange,
 						onChangeSelect = itemOnChangeSelect,
+						menuOnAddToGroup = itemMenuOnAddToGroup,
 						menuOnRename = itemMenuOnRename,
 						menuOnDelete = itemMenuOnDelete
 					)
@@ -64,4 +68,10 @@ fun TodoGroupPanel(
 			}
 		}
 	}
+}
+
+@Preview
+@Composable
+private fun PreviewTodoGroupPanel() {
+	TodoGroupPanel(group = GroupUiState())
 }

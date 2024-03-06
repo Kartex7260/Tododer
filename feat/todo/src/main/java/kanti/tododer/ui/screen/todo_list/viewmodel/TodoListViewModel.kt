@@ -30,6 +30,8 @@ interface TodoListViewModel {
 
     fun createNewTodo(title: String, goTo: Boolean)
 
+    fun setGroup(todoIds: List<Long>, group: String?)
+
     fun renamePlan(newTitle: String)
 
     fun renameTodo(todoId: Long, newTitle: String)
@@ -120,6 +122,9 @@ interface TodoListViewModel {
             coroutineScope.launch {
                 _newTodoCreated.emit(0L)
             }
+        }
+
+        override fun setGroup(todoIds: List<Long>, group: String?) {
         }
 
         override fun renamePlan(newTitle: String) {
