@@ -55,6 +55,8 @@ interface TodoListViewModel {
 
     fun setSelect(todoId: Long, selected: Boolean)
 
+    fun setSelect(group: String?, selected: Boolean)
+
     fun groupingSelection()
 
     fun changeDoneSelected()
@@ -174,6 +176,10 @@ interface TodoListViewModel {
 
         override fun setSelect(todoId: Long, selected: Boolean) {
             Log.d(logTag, "setSelect(Long = $todoId, Boolean = $selected)")
+        }
+
+        override fun setSelect(group: String?, selected: Boolean) {
+            Log.d(logTag, "setSelect(String? = $group, Boolean = $selected)")
         }
 
         override fun groupingSelection() {

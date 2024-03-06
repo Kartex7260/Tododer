@@ -2,12 +2,19 @@ package kanti.tododer.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Checkbox
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +32,7 @@ fun TodoGroupPanel(
 	isSingleGroup: Boolean = false,
 	group: GroupUiState,
 	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
+	groupOnChangeSelect: (String?, Boolean) -> Unit = { _, _ -> },
 	itemOnLongClick: (TodoData) -> Unit = {},
 	itemOnClick: (TodoData) -> Unit = {},
 	itemOnDoneChange: (TodoData, Boolean) -> Unit = { _, _ -> },
@@ -38,10 +46,30 @@ fun TodoGroupPanel(
 	) {
 		if ((!isSingleGroup || group.name != null) && group.todos.map { it.visible }
 				.fold(false) { acc, todoData -> acc or todoData }) {
-			GroupHeader(
-				title = group.name ?: stringResource(id = R.string.ungroup),
-				expanded = group.expand
-			)
+			Row {
+				GroupHeader(
+					title = group.name ?: stringResource(id = R.string.ungroup),
+					expanded = group.expand
+				)
+				Box(
+					modifier = Modifier.weight(1f),
+					contentAlignment = Alignment.CenterEnd
+				) {
+					androidx.compose.animation.AnimatedVisibility(
+						visible = selection,
+						enter = fadeIn(),
+						exit = fadeOut()
+					) {
+						Checkbox(
+							modifier = Modifier.size(40.dp),
+							checked = group.selected,
+							onCheckedChange = { selected ->
+								groupOnChangeSelect(group.name, selected)
+							}
+						)
+					}
+				}
+			}
 			Spacer(modifier = Modifier.height(height = 8.dp))
 		}
 		AnimatedVisibility(

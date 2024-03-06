@@ -50,6 +50,18 @@ class SelectionController @Inject constructor(
         updateState()
     }
 
+    fun setSelect(ids: List<Long>, select: Boolean) {
+        logger.d(LOG_TAG, "setSelect(List<Long> = $ids, Boolean = $select)")
+        for (id in ids) {
+            if (select) {
+                mSelected.add(id)
+            } else {
+                mSelected.remove(id)
+            }
+        }
+        updateState()
+    }
+
     fun clear() {
         mSelected.clear()
         _selectionState.update {

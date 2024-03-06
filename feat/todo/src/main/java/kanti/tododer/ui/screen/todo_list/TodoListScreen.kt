@@ -389,6 +389,9 @@ fun TodoListScreen(
                     isSingleGroup = children.groups.size == 1,
                     group = children.groups[index],
                     selectionStyle = selectionStyle,
+                    groupOnChangeSelect = { groupName, selected ->
+                        vm.setSelect(group = groupName, selected = selected)
+                    },
                     itemOnLongClick = { todoData -> vm.selection(todoData.id) },
                     itemOnClick = { todoData ->
                         navController.navigate(
