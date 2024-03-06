@@ -13,6 +13,7 @@ import kanti.tododer.ui.common.TodoDataWithGroup
 import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.common.toData
 import kanti.tododer.ui.common.toUiState
+import kanti.tododer.ui.components.grouping.GroupExpandingController
 import kanti.tododer.ui.components.selection.SelectionController
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoDeletion
@@ -39,7 +40,8 @@ import javax.inject.Inject
 class TodoDetailViewModelImpl @Inject constructor(
 	private val todoRepository: TodoRepository,
 	private val deleteBlankTodoWithFlow: DeleteBlankTodoWithFlow,
-	private val selectionController: SelectionController
+	private val selectionController: SelectionController,
+	private val groupExpandingController: GroupExpandingController
 ) : ViewModel(), TodoDetailViewModel {
 
 	private val logTag = "TodoDetailViewModelImpl"
@@ -92,6 +94,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 						.map { groupWithTodos ->
 							GroupUiState(
 								name = groupWithTodos.key,
+								expand = groupExpandingController.visit(groupWithTodos.key),
 								todos = groupWithTodos.value
 									.map { todo ->
 										todo.toUiState(
@@ -172,6 +175,11 @@ class TodoDetailViewModelImpl @Inject constructor(
 			todoRepository.setGroup(todoIds, group)
 			_updateTodoChildren.value = Any()
 		}
+	}
+
+	override fun setGroupExpand(group: String?, expand: Boolean) {
+		groupExpandingController.setExpand(group, expand)
+		_updateTodoChildren.value = Any()
 	}
 
 	override fun renameTodo(todoId: Long, newTitle: String) {

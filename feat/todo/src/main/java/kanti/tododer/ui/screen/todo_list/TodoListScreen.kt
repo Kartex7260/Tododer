@@ -78,107 +78,107 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TodoListTopBar(
-    plan: Plan?,
-    multiSelection: Boolean,
-    navIconClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior,
-    optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?,
-    isEditablePlan: Boolean,
-    menuOnMultiSelection: () -> Unit,
-    menuOnRename: () -> Unit,
-    menuOnDelete: () -> Unit
+	plan: Plan?,
+	multiSelection: Boolean,
+	navIconClick: () -> Unit,
+	scrollBehavior: TopAppBarScrollBehavior,
+	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)?,
+	isEditablePlan: Boolean,
+	menuOnMultiSelection: () -> Unit,
+	menuOnRename: () -> Unit,
+	menuOnDelete: () -> Unit
 ) {
-    val title = when (plan?.type) {
-        PlanType.All -> stringResource(id = R.string.plan_all)
-        PlanType.Default -> stringResource(id = R.string.plan_default)
-        PlanType.Custom -> plan.title
-        else -> ""
-    }
+	val title = when (plan?.type) {
+		PlanType.All -> stringResource(id = R.string.plan_all)
+		PlanType.Default -> stringResource(id = R.string.plan_default)
+		PlanType.Custom -> plan.title
+		else -> ""
+	}
 
-    CenterAlignedTopAppBar(
-        title = {
-            Text(text = title)
-        },
-        navigationIcon = {
-            IconButton(onClick = navIconClick) {
-                ContentSwitcher(
-                    state = multiSelection,
-                    trueContent = {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = null
-                        )
-                    },
-                    falseContent = {
-                        Icon(
-                            imageVector = Icons.Default.List,
-                            contentDescription = null
-                        )
-                    }
-                )
-            }
-        },
-        actions = {
-            if (optionMenuItems != null) {
-                var expandOptionMenu by rememberSaveable { mutableStateOf(false) }
-                fun closeMenu() {
-                    expandOptionMenu = false
-                }
-                IconButton(onClick = { expandOptionMenu = !expandOptionMenu }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = null,
-                    )
-                }
-                DropdownMenu(
-                    offset = DpOffset(12.dp, 0.dp),
-                    expanded = expandOptionMenu,
-                    onDismissRequest = { closeMenu() }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(id = R.string.multi_selection)) },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.multi_select),
-                                contentDescription = null
-                            )
-                        },
-                        onClick = {
-                            menuOnMultiSelection()
-                            closeMenu()
-                        }
-                    )
-                    if (isEditablePlan) {
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.rename_plan)) },
-                            leadingIcon = {
-                                Icon(imageVector = Icons.Default.Create, contentDescription = null)
-                            },
-                            onClick = {
-                                menuOnRename()
-                                closeMenu()
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.delete_plan)) },
-                            leadingIcon = {
-                                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-                            },
-                            onClick = {
-                                menuOnDelete()
-                                closeMenu()
-                            }
-                        )
-                    }
+	CenterAlignedTopAppBar(
+		title = {
+			Text(text = title)
+		},
+		navigationIcon = {
+			IconButton(onClick = navIconClick) {
+				ContentSwitcher(
+					state = multiSelection,
+					trueContent = {
+						Icon(
+							imageVector = Icons.Default.Clear,
+							contentDescription = null
+						)
+					},
+					falseContent = {
+						Icon(
+							imageVector = Icons.Default.List,
+							contentDescription = null
+						)
+					}
+				)
+			}
+		},
+		actions = {
+			if (optionMenuItems != null) {
+				var expandOptionMenu by rememberSaveable { mutableStateOf(false) }
+				fun closeMenu() {
+					expandOptionMenu = false
+				}
+				IconButton(onClick = { expandOptionMenu = !expandOptionMenu }) {
+					Icon(
+						imageVector = Icons.Default.MoreVert,
+						contentDescription = null,
+					)
+				}
+				DropdownMenu(
+					offset = DpOffset(12.dp, 0.dp),
+					expanded = expandOptionMenu,
+					onDismissRequest = { closeMenu() }
+				) {
+					DropdownMenuItem(
+						text = { Text(text = stringResource(id = R.string.multi_selection)) },
+						leadingIcon = {
+							Icon(
+								painter = painterResource(id = R.drawable.multi_select),
+								contentDescription = null
+							)
+						},
+						onClick = {
+							menuOnMultiSelection()
+							closeMenu()
+						}
+					)
+					if (isEditablePlan) {
+						DropdownMenuItem(
+							text = { Text(text = stringResource(id = R.string.rename_plan)) },
+							leadingIcon = {
+								Icon(imageVector = Icons.Default.Create, contentDescription = null)
+							},
+							onClick = {
+								menuOnRename()
+								closeMenu()
+							}
+						)
+						DropdownMenuItem(
+							text = { Text(text = stringResource(id = R.string.delete_plan)) },
+							leadingIcon = {
+								Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+							},
+							onClick = {
+								menuOnDelete()
+								closeMenu()
+							}
+						)
+					}
 
-                    optionMenuItems {
-                        closeMenu()
-                    }
-                }
-            }
-        },
-        scrollBehavior = scrollBehavior
-    )
+					optionMenuItems {
+						closeMenu()
+					}
+				}
+			}
+		},
+		scrollBehavior = scrollBehavior
+	)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -189,337 +189,339 @@ fun TodoListScreen(
 	optionMenuItems: (@Composable (closeMenu: () -> Unit) -> Unit)? = null,
 	vm: TodoListViewModel = hiltViewModel<TodoListViewModelImpl>()
 ) {
-    val todoChildrenRoute = stringResource(id = R.string.nav_destination_todo_detail)
-    fun todoDetailRoute(todoId: Long): String {
-        return "$todoChildrenRoute/$todoId"
-    }
+	val todoChildrenRoute = stringResource(id = R.string.nav_destination_todo_detail)
+	fun todoDetailRoute(todoId: Long): String {
+		return "$todoChildrenRoute/$todoId"
+	}
 
-    val planListRoute = stringResource(id = R.string.nav_destination_plans)
-    val planListRouteIdParam = stringResource(id = R.string.nav_destination_plans_id_param)
-    fun planListRoute(deleted: Long? = null): String {
-        return "$planListRoute${if (deleted == null) "" else "?$planListRouteIdParam=$deleted"}"
-    }
+	val planListRoute = stringResource(id = R.string.nav_destination_plans)
+	val planListRouteIdParam = stringResource(id = R.string.nav_destination_plans_id_param)
+	fun planListRoute(deleted: Long? = null): String {
+		return "$planListRoute${if (deleted == null) "" else "?$planListRouteIdParam=$deleted"}"
+	}
 
-    var showDeletePlanDialog: Boolean by rememberSaveable { mutableStateOf(false) }
-    var showRenamePlanDialog: Plan? by rememberSaveable { mutableStateOf(null) }
-    var showSetGroupDialog: List<TodoDataWithGroup>? by rememberSaveable { mutableStateOf(null) }
-    var showRenameTodoDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
-    var showCreateDialog: Boolean by rememberSaveable { mutableStateOf(false) }
+	var showDeletePlanDialog: Boolean by rememberSaveable { mutableStateOf(false) }
+	var showRenamePlanDialog: Plan? by rememberSaveable { mutableStateOf(null) }
+	var showSetGroupDialog: List<TodoDataWithGroup>? by rememberSaveable { mutableStateOf(null) }
+	var showRenameTodoDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
+	var showCreateDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
+	val snackbarHostState = remember {
+		SnackbarHostState()
+	}
 
-    val todoListUiState by vm.currentPlan.collectAsState()
-    val plan = todoListUiState.plan
-    val children = todoListUiState.children
+	val todoListUiState by vm.currentPlan.collectAsState()
+	val plan = todoListUiState.plan
+	val children = todoListUiState.children
 
-    val context = LocalContext.current
-    LaunchedEffect(key1 = vm) {
-        vm.todosDeleted.collectLatest { deletedTodos ->
-            if (deletedTodos.isEmpty())
-                return@collectLatest
+	val context = LocalContext.current
+	LaunchedEffect(key1 = vm) {
+		vm.todosDeleted.collectLatest { deletedTodos ->
+			if (deletedTodos.isEmpty())
+				return@collectLatest
 
-            val size = deletedTodos.size
-            val isSoloTodo = size == 1
-            val message = if (isSoloTodo) {
-                val regexName = context.getString(R.string.regex_name)
-                val todoDeleted = context.getString(R.string.todo_deleted)
-                todoDeleted.replace(regexName, deletedTodos[0].todoData.title)
-            } else {
-                context.resources.getQuantityString(R.plurals.todos_deleted, size, size)
-            }
+			val size = deletedTodos.size
+			val isSoloTodo = size == 1
+			val message = if (isSoloTodo) {
+				val regexName = context.getString(R.string.regex_name)
+				val todoDeleted = context.getString(R.string.todo_deleted)
+				todoDeleted.replace(regexName, deletedTodos[0].todoData.title)
+			} else {
+				context.resources.getQuantityString(R.plurals.todos_deleted, size, size)
+			}
 
-            val result = snackbarHostState.showSnackbar(
-                message = message,
-                actionLabel = context.getString(R.string.cancel),
-                duration = SnackbarDuration.Short
-            )
-            when (result) {
-                SnackbarResult.ActionPerformed -> {
-                    vm.cancelDelete()
-                    if (isSoloTodo && deletedTodos[0].returnToChild) {
-                        navController.navigate(
-                            route = todoDetailRoute(deletedTodos[0].todoData.id)
-                        )
-                    }
-                }
+			val result = snackbarHostState.showSnackbar(
+				message = message,
+				actionLabel = context.getString(R.string.cancel),
+				duration = SnackbarDuration.Short
+			)
+			when (result) {
+				SnackbarResult.ActionPerformed -> {
+					vm.cancelDelete()
+					if (isSoloTodo && deletedTodos[0].returnToChild) {
+						navController.navigate(
+							route = todoDetailRoute(deletedTodos[0].todoData.id)
+						)
+					}
+				}
 
-                SnackbarResult.Dismissed -> vm.rejectCancelChance()
-            }
-        }
-    }
+				SnackbarResult.Dismissed -> vm.rejectCancelChance()
+			}
+		}
+	}
 
-    val blankTodoDeleted = stringResource(id = R.string.deleted_blank_todo)
-    LaunchedEffect(key1 = vm) {
-        vm.blankTodoDeleted.collectLatest {
-            snackbarHostState.showSnackbar(
-                message = blankTodoDeleted
-            )
-        }
-    }
+	val blankTodoDeleted = stringResource(id = R.string.deleted_blank_todo)
+	LaunchedEffect(key1 = vm) {
+		vm.blankTodoDeleted.collectLatest {
+			snackbarHostState.showSnackbar(
+				message = blankTodoDeleted
+			)
+		}
+	}
 
-    LifecycleStartEffect(key1 = vm) {
-        onStopOrDispose {
-            vm.onStop()
-        }
-    }
+	LifecycleStartEffect(key1 = vm) {
+		onStopOrDispose {
+			vm.onStop()
+		}
+	}
 
-    LifecycleResumeEffect(key1 = vm) {
-        val deletedTodoId = navController.currentBackStackEntry?.savedStateHandle
-            ?.get<Long>(UiConst.BackStackKeys.DELETED)
-        vm.updateUiState(deletedTodoId)
-        navController.currentBackStackEntry?.savedStateHandle?.set(
-            UiConst.BackStackKeys.DELETED,
-            null
-        )
-        onPauseOrDispose { }
-    }
+	LifecycleResumeEffect(key1 = vm) {
+		val deletedTodoId = navController.currentBackStackEntry?.savedStateHandle
+			?.get<Long>(UiConst.BackStackKeys.DELETED)
+		vm.updateUiState(deletedTodoId)
+		navController.currentBackStackEntry?.savedStateHandle?.set(
+			UiConst.BackStackKeys.DELETED,
+			null
+		)
+		onPauseOrDispose { }
+	}
 
-    LaunchedEffect(key1 = vm) {
-        vm.goToTodo.collect { todoId ->
-            navController.navigate(
-                route = todoDetailRoute(todoId)
-            )
-        }
-    }
+	LaunchedEffect(key1 = vm) {
+		vm.goToTodo.collect { todoId ->
+			navController.navigate(
+				route = todoDetailRoute(todoId)
+			)
+		}
+	}
 
-    LaunchedEffect(key1 = vm) {
-        vm.groupingSelection.collectLatest {
-            showSetGroupDialog = it
-        }
-    }
+	LaunchedEffect(key1 = vm) {
+		vm.groupingSelection.collectLatest {
+			showSetGroupDialog = it
+		}
+	}
 
-    @Composable
-    fun <T : Any> rememberSaveableByPlan(
-        saver: Saver<T, out Any> = autoSaver(),
-        init: () -> T
-    ): T {
-        return rememberSaveable(
-            inputs = arrayOf(plan),
-            saver = saver,
-            key = plan.id.toString(),
-            init = init
-        )
-    }
+	@Composable
+	fun <T : Any> rememberSaveableByPlan(
+		saver: Saver<T, out Any> = autoSaver(),
+		init: () -> T
+	): T {
+		return rememberSaveable(
+			inputs = arrayOf(plan),
+			saver = saver,
+			key = plan.id.toString(),
+			init = init
+		)
+	}
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
-        state = rememberSaveableByPlan(saver = TopAppBarState.Saver) {
-            TopAppBarState(
-                initialHeightOffsetLimit = -Float.MAX_VALUE,
-                initialHeightOffset = 0f,
-                initialContentOffset = 0f
-            )
-        }
-    )
-    Scaffold(
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+	val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
+		state = rememberSaveableByPlan(saver = TopAppBarState.Saver) {
+			TopAppBarState(
+				initialHeightOffsetLimit = -Float.MAX_VALUE,
+				initialHeightOffset = 0f,
+				initialContentOffset = 0f
+			)
+		}
+	)
+	Scaffold(
+		modifier = Modifier
+			.nestedScroll(scrollBehavior.nestedScrollConnection),
 
-        topBar = {
-            TodoListTopBar(
-                plan = plan,
-                multiSelection = children.selection,
-                scrollBehavior = scrollBehavior,
-                navIconClick = {
-                    if (children.selection)
-                        vm.selectionOff()
-                    else
-                        navController.navigate(route = planListRoute())
-                },
-                optionMenuItems = optionMenuItems,
-                isEditablePlan = todoListUiState.isEditablePlan,
-                menuOnMultiSelection = { vm.switchSelection() },
-                menuOnRename = { showRenamePlanDialog = plan },
-                menuOnDelete = { showDeletePlanDialog = true }
-            )
-        },
+		topBar = {
+			TodoListTopBar(
+				plan = plan,
+				multiSelection = children.selection,
+				scrollBehavior = scrollBehavior,
+				navIconClick = {
+					if (children.selection)
+						vm.selectionOff()
+					else
+						navController.navigate(route = planListRoute())
+				},
+				optionMenuItems = optionMenuItems,
+				isEditablePlan = todoListUiState.isEditablePlan,
+				menuOnMultiSelection = { vm.switchSelection() },
+				menuOnRename = { showRenamePlanDialog = plan },
+				menuOnDelete = { showDeletePlanDialog = true }
+			)
+		},
 
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) { snackbarData ->
-                val dismissState = rememberDismissState(
-                    confirmValueChange = {
-                        snackbarData.dismiss()
-                        true
-                    }
-                )
-                SwipeToDismiss(
-                    state = dismissState,
-                    background = {},
-                    dismissContent = { Snackbar(snackbarData = snackbarData) }
-                )
-            }
-        },
+		snackbarHost = {
+			SnackbarHost(hostState = snackbarHostState) { snackbarData ->
+				val dismissState = rememberDismissState(
+					confirmValueChange = {
+						snackbarData.dismiss()
+						true
+					}
+				)
+				SwipeToDismiss(
+					state = dismissState,
+					background = {},
+					dismissContent = { Snackbar(snackbarData = snackbarData) }
+				)
+			}
+		},
 
-        floatingActionButton = {
-            TodoFloatingActionButton(
-                selection = children.selection,
-                onClick = { showCreateDialog = true },
-                onGroup = { vm.groupingSelection() },
-                onCheck = { vm.changeDoneSelected() },
-                onDelete = { vm.deleteSelected() }
-            )
-        }
-    ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            state = rememberSaveableByPlan(saver = LazyListState.Saver) {
-                LazyListState(0, 0)
-            },
-            contentPadding = PaddingValues(
-                top = 12.dp,
-                bottom = 16.dp
-            )
-        ) {
-            items(
-                count = children.groups.size,
-                key = { index -> children.groups[index].name ?: "" }
-            ) { index ->
-                TodoGroupPanel(
-                    modifier = Modifier
-                        .padding(
-                            top = 0.dp,
-                            bottom = if (children.groups.size - 1 == index) 0.dp else 16.dp,
-                            start = 16.dp,
-                            end = 16.dp,
-                        ),
-                    selection = children.selection,
-                    isSingleGroup = children.groups.size == 1,
-                    group = children.groups[index],
-                    selectionStyle = selectionStyle,
-                    groupOnChangeSelect = { groupName, selected ->
-                        vm.setSelect(group = groupName, selected = selected)
-                    },
-                    itemOnLongClick = { todoData -> vm.selection(todoData.id) },
-                    itemOnClick = { todoData ->
-                        navController.navigate(
-                            route = todoDetailRoute(todoData.id)
-                        )
-                    },
-                    itemOnDoneChange = { todoData, isDone -> vm.changeDone(todoData.id, isDone) },
-                    itemOnChangeSelect = { todoData, selected ->
-                        vm.setSelect(todoData.id, selected)
-                    },
-                    itemMenuOnAddToGroup = { todoData ->
-                        showSetGroupDialog = listOf(
-                            TodoDataWithGroup(
-                                todoData = todoData,
-                                group = children.groups[index].name
-                            )
-                        )
-                    },
-                    itemMenuOnRename = { todoData -> showRenameTodoDialog = todoData },
-                    itemMenuOnDelete = { todoData -> vm.deleteTodos(listOf(todoData)) }
-                )
-            }
+		floatingActionButton = {
+			TodoFloatingActionButton(
+				selection = children.selection,
+				onClick = { showCreateDialog = true },
+				onGroup = { vm.groupingSelection() },
+				onCheck = { vm.changeDoneSelected() },
+				onDelete = { vm.deleteSelected() }
+			)
+		}
+	) { paddingValues ->
+		LazyColumn(
+			modifier = Modifier
+				.padding(paddingValues)
+				.fillMaxSize(),
+			state = rememberSaveableByPlan(saver = LazyListState.Saver) {
+				LazyListState(0, 0)
+			},
+			contentPadding = PaddingValues(
+				top = 12.dp,
+				bottom = 16.dp
+			)
+		) {
+			items(
+				count = children.groups.size,
+				key = { index -> children.groups[index].name ?: "" }
+			) { index ->
+				TodoGroupPanel(
+					modifier = Modifier
+						.padding(
+							top = 0.dp,
+							bottom = if (children.groups.size - 1 == index) 0.dp else 16.dp,
+							start = 16.dp,
+							end = 16.dp,
+						),
+					selection = children.selection,
+					isSingleGroup = children.groups.size == 1,
+					group = children.groups[index],
+					selectionStyle = selectionStyle,
+					groupOnChangeExpand = { group, expand -> vm.setGroupExpand(group, expand) },
+					groupOnChangeSelect = { groupName, selected ->
+						vm.setSelect(group = groupName, selected = selected)
+					},
+					itemOnLongClick = { todoData -> vm.selection(todoData.id) },
+					itemOnClick = { todoData ->
+						navController.navigate(
+							route = todoDetailRoute(todoData.id)
+						)
+					},
+					itemOnDoneChange = { todoData, isDone -> vm.changeDone(todoData.id, isDone) },
+					itemOnChangeSelect = { todoData, selected ->
+						vm.setSelect(todoData.id, selected)
+					},
+					itemMenuOnAddToGroup = { todoData ->
+						showSetGroupDialog = listOf(
+							TodoDataWithGroup(
+								todoData = todoData,
+								group = children.groups[index].name
+							)
+						)
+					},
+					itemMenuOnRename = { todoData -> showRenameTodoDialog = todoData },
+					itemMenuOnDelete = { todoData -> vm.deleteTodos(listOf(todoData)) }
+				)
+			}
 
-            item {
-                Box(
-                    modifier = Modifier
-                        .height(56.dp)
-                        .fillMaxWidth()
-                ) {
-                    val captionStg = stringResource(id = R.string.caption_todo_list)
-                    val allTodos = children.groups.asSequence()
-                        .flatMap { it.todos }
-                    ScreenBottomCaption(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter),
-                        text = captionStg
-                            .replace("{1}", plan.title)
-                            .replace("{2}", allTodos.filter { it.visible }.count().toString()
-                            )
-                            .replace(
-                                "{3}",
-                                allTodos.filter { it.data.isDone && it.visible }.count().toString()
-                            )
-                    )
-                }
-            }
-        }
-    }
+			item {
+				Box(
+					modifier = Modifier
+						.height(56.dp)
+						.fillMaxWidth()
+				) {
+					val captionStg = stringResource(id = R.string.caption_todo_list)
+					val allTodos = children.groups.asSequence()
+						.flatMap { it.todos }
+					ScreenBottomCaption(
+						modifier = Modifier
+							.align(Alignment.BottomCenter),
+						text = captionStg
+							.replace("{1}", plan.title)
+							.replace(
+								"{2}", allTodos.filter { it.visible }.count().toString()
+							)
+							.replace(
+								"{3}",
+								allTodos.filter { it.data.isDone && it.visible }.count().toString()
+							)
+					)
+				}
+			}
+		}
+	}
 
-    if (showDeletePlanDialog) {
-        DeleteDialog(
-            onCloseDialog = { showDeletePlanDialog = false },
-            title = { Text(text = stringResource(id = R.string.delete_plan_ask)) },
-            delete = {
-                navController.navigate(route = planListRoute(deleted = plan.id))
-            }
-        )
-    }
+	if (showDeletePlanDialog) {
+		DeleteDialog(
+			onCloseDialog = { showDeletePlanDialog = false },
+			title = { Text(text = stringResource(id = R.string.delete_plan_ask)) },
+			delete = {
+				navController.navigate(route = planListRoute(deleted = plan.id))
+			}
+		)
+	}
 
-    if (showRenamePlanDialog != null) {
-        val curPlan = showRenamePlanDialog!!
-        RenameDialog(
-            onCloseDialog = { showRenamePlanDialog = null },
-            label = { Text(text = stringResource(id = R.string.new_title)) },
-            name = curPlan.title,
-            onRename = { title ->
-                vm.renamePlan(title)
-            }
-        )
-    }
+	if (showRenamePlanDialog != null) {
+		val curPlan = showRenamePlanDialog!!
+		RenameDialog(
+			onCloseDialog = { showRenamePlanDialog = null },
+			label = { Text(text = stringResource(id = R.string.new_title)) },
+			name = curPlan.title,
+			onRename = { title ->
+				vm.renamePlan(title)
+			}
+		)
+	}
 
-    if (showSetGroupDialog != null) {
-        val groupingTodos = showSetGroupDialog!!.asSequence()
-        val initialGroup = groupingTodos.map { it.group }
-            .reduce { acc, s -> if (acc == s) acc else null }
-        SetGroupDialog(
-            onDismissRequest = { showSetGroupDialog = null },
-            initialGroup = initialGroup,
-            groups = children.groups.map { it.name }.toSet(),
-            onSetGroup = { groupName ->
-                vm.setGroup(groupingTodos.map { it.todoData.id }.toList(), groupName)
-                vm.selectionOff()
-            }
-        )
-    }
+	if (showSetGroupDialog != null) {
+		val groupingTodos = showSetGroupDialog!!.asSequence()
+		val initialGroup = groupingTodos.map { it.group }
+			.reduce { acc, s -> if (acc == s) acc else null }
+		SetGroupDialog(
+			onDismissRequest = { showSetGroupDialog = null },
+			initialGroup = initialGroup,
+			groups = children.groups.map { it.name }.toSet(),
+			onSetGroup = { groupName ->
+				vm.setGroup(groupingTodos.map { it.todoData.id }.toList(), groupName)
+				vm.selectionOff()
+			}
+		)
+	}
 
-    if (showRenameTodoDialog != null) {
-        val renamedTodo = showRenameTodoDialog!!
-        RenameDialog(
-            onCloseDialog = {
-                showRenameTodoDialog = null
-            },
-            label = { Text(text = stringResource(id = R.string.new_title)) },
-            name = renamedTodo.title,
-            onRename = { newTitle ->
-                vm.renameTodo(renamedTodo.id, newTitle)
-            }
-        )
-    }
+	if (showRenameTodoDialog != null) {
+		val renamedTodo = showRenameTodoDialog!!
+		RenameDialog(
+			onCloseDialog = {
+				showRenameTodoDialog = null
+			},
+			label = { Text(text = stringResource(id = R.string.new_title)) },
+			name = renamedTodo.title,
+			onRename = { newTitle ->
+				vm.renameTodo(renamedTodo.id, newTitle)
+			}
+		)
+	}
 
-    if (showCreateDialog) {
-        CreateDialog(
-            onCloseDialog = { showCreateDialog = false },
-            title = { Text(text = stringResource(id = R.string.create_new_todo)) },
-            textFieldLabel = { Text(text = stringResource(id = R.string.todo_name)) },
-            add = { title ->
-                vm.createNewTodo(title = title, goTo = false)
-            },
-            create = { title ->
-                vm.createNewTodo(title = title, goTo = false)
-            }
-        )
-    }
+	if (showCreateDialog) {
+		CreateDialog(
+			onCloseDialog = { showCreateDialog = false },
+			title = { Text(text = stringResource(id = R.string.create_new_todo)) },
+			textFieldLabel = { Text(text = stringResource(id = R.string.todo_name)) },
+			add = { title ->
+				vm.createNewTodo(title = title, goTo = false)
+			},
+			create = { title ->
+				vm.createNewTodo(title = title, goTo = false)
+			}
+		)
+	}
 }
 
 @Preview(
-    showBackground = true
+	showBackground = true
 )
 @Composable
 fun PreviewTodoListScreen() {
-    TodoListScreen(
-        navController = rememberNavController(),
-        vm = TodoListViewModel,
-        optionMenuItems = { closeMenu ->
-            DropdownMenuItem(
-                text = { Text(text = "Test menu item") },
-                onClick = { closeMenu() }
-            )
-        }
-    )
+	TodoListScreen(
+		navController = rememberNavController(),
+		vm = TodoListViewModel,
+		optionMenuItems = { closeMenu ->
+			DropdownMenuItem(
+				text = { Text(text = "Test menu item") },
+				onClick = { closeMenu() }
+			)
+		}
+	)
 }

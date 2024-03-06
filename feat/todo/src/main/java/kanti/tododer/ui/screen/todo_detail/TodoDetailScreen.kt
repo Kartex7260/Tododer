@@ -410,6 +410,9 @@ fun TodoDetailScreen(
 					isSingleGroup = todoChildren.groups.size == 1,
 					group = todoChildren.groups[index],
 					selectionStyle = selectionStyle,
+					groupOnChangeExpand = { group, expand ->
+						vm.setGroupExpand(group, expand)
+					},
 					groupOnChangeSelect = { group, selected ->
 						vm.setSelect(group = group, selected = selected)
 					},

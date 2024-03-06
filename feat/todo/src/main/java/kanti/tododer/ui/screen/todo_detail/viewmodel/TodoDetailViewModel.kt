@@ -38,6 +38,8 @@ interface TodoDetailViewModel {
 
     fun setGroup(todoIds: List<Long>, group: String?)
 
+    fun setGroupExpand(group: String?, expand: Boolean)
+
     fun renameTodo(todoId: Long, newTitle: String)
 
     fun changeTitle(title: String)
@@ -137,7 +139,11 @@ interface TodoDetailViewModel {
         }
 
         override fun setGroup(todoIds: List<Long>, group: String?) {
-            Log.d(logTag, "setGrgoup(List<Long> = $todoIds, String? = $group)")
+            Log.d(logTag, "setGroup(List<Long> = $todoIds, String? = $group)")
+        }
+
+        override fun setGroupExpand(group: String?, expand: Boolean) {
+            Log.d(logTag, "setGroupExpand(String = $group, Boolean = $expand")
         }
 
         override fun renameTodo(todoId: Long, newTitle: String) {

@@ -22,6 +22,7 @@ import kanti.tododer.ui.common.TodoDataWithGroup
 import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.common.toData
 import kanti.tododer.ui.common.toUiState
+import kanti.tododer.ui.components.grouping.GroupExpandingController
 import kanti.tododer.ui.components.selection.SelectionController
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.services.deleter.DeleteCancelManager
@@ -54,6 +55,7 @@ class TodoListViewModelImpl @Inject constructor(
 	private val deletePlanIfBlank: DeletePlanIfBlank,
 	deleteBlankTodoWithFlow: DeleteBlankTodoWithFlow,
 	private val selectionController: SelectionController,
+	private val groupExpandingController: GroupExpandingController,
 	@ApplicationContext context: Context,
 	@StandardLog private val logger: Logger
 ) : ViewModel(), TodoListViewModel {
@@ -68,7 +70,10 @@ class TodoListViewModelImpl @Inject constructor(
 
 	private val updateUiState = MutableStateFlow(Any())
 	override val currentPlan: StateFlow<TodoListUiState> = appDataRepository.currentPlanId
-		.onEach { selectionController.clear() }
+		.onEach {
+			selectionController.clear()
+			groupExpandingController.clear()
+		}
 		.combine(updateUiState) { planId, _ -> planId }
 		.map { currentPlanId ->
 			var plan = planRepository.getPlanOrDefault(currentPlanId)
@@ -103,6 +108,7 @@ class TodoListViewModelImpl @Inject constructor(
 							.map { groupWithTodos ->
 								GroupUiState(
 									name = groupWithTodos.key,
+									expand = groupExpandingController.visit(groupWithTodos.key),
 									todos = groupWithTodos.value.map { todo ->
 										todo.toUiState(
 											selected = selectionState.selected.contains(todo.id),
@@ -178,6 +184,11 @@ class TodoListViewModelImpl @Inject constructor(
 			todoRepository.setGroup(todoIds, group)
 			updateUiState.value = Any()
 		}
+	}
+
+	override fun setGroupExpand(group: String?, expand: Boolean) {
+		groupExpandingController.setExpand(group, expand)
+		updateUiState.value = Any()
 	}
 
 	override fun renamePlan(newTitle: String) {

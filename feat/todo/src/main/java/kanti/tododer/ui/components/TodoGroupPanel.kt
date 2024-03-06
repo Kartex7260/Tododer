@@ -32,6 +32,7 @@ fun TodoGroupPanel(
 	isSingleGroup: Boolean = false,
 	group: GroupUiState,
 	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
+	groupOnChangeExpand: (String?, Boolean) -> Unit = { _, _ -> },
 	groupOnChangeSelect: (String?, Boolean) -> Unit = { _, _ -> },
 	itemOnLongClick: (TodoData) -> Unit = {},
 	itemOnClick: (TodoData) -> Unit = {},
@@ -49,7 +50,10 @@ fun TodoGroupPanel(
 			Row {
 				GroupHeader(
 					title = group.name ?: stringResource(id = R.string.ungroup),
-					expanded = group.expand
+					expanded = group.expand,
+					onChangeExpand = { expand ->
+						groupOnChangeExpand(group.name, expand)
+					}
 				)
 				Box(
 					modifier = Modifier.weight(1f),
@@ -74,8 +78,9 @@ fun TodoGroupPanel(
 		}
 		AnimatedVisibility(
 			visible = group.expand || isSingleGroup,
-			enter = expandVertically(),
-			exit = shrinkVertically()
+			enter = expandVertically() + fadeIn(),
+			exit = shrinkVertically() + fadeOut(),
+			label = group.name ?: "null"
 		) {
 			Column {
 				for (todoUiState in group.todos) {

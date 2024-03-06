@@ -35,6 +35,8 @@ interface TodoListViewModel {
 
     fun setGroup(todoIds: List<Long>, group: String?)
 
+    fun setGroupExpand(group: String?, expand: Boolean)
+
     fun renamePlan(newTitle: String)
 
     fun renameTodo(todoId: Long, newTitle: String)
@@ -134,6 +136,9 @@ interface TodoListViewModel {
         }
 
         override fun setGroup(todoIds: List<Long>, group: String?) {
+        }
+
+        override fun setGroupExpand(group: String?, expand: Boolean) {
         }
 
         override fun renamePlan(newTitle: String) {
