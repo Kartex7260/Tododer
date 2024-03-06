@@ -184,6 +184,14 @@ fun TodoDetailScreen(
 	todoId: Long = 0
 ) {
 	val logTag = "TodoDetailScreen"
+
+	var showCreateDialog by rememberSaveable { mutableStateOf(false) }
+	var showSetGroupDialog: List<TodoDataWithGroup>? by rememberSaveable {
+		mutableStateOf(null)
+	}
+	var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+	var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
+
 	LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
 		Log.d(logTag, "onCreate($todoId): vm.show()")
 		vm.show(todoId)
@@ -274,6 +282,10 @@ fun TodoDetailScreen(
 		}
 	}
 
+	LaunchedEffect(key1 = vm) {
+		vm.groupSelected.collectLatest { showSetGroupDialog = it }
+	}
+
 	val todoDetail by vm.todoDetail.collectAsState()
 	val todoChildren by vm.todoChildren.collectAsState()
 
@@ -281,13 +293,6 @@ fun TodoDetailScreen(
 	var editorSize by remember {
 		mutableStateOf(IntSize(0, 400))
 	}
-
-	var showCreateDialog by rememberSaveable { mutableStateOf(false) }
-	var showSetGroupDialog: List<TodoDataWithGroup>? by rememberSaveable {
-		mutableStateOf(null)
-	}
-	var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
-	var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
 
 	val onMultiSelection = { vm.switchSelection() }
 	val onDelete = { showDeleteDialog = true }
@@ -338,6 +343,7 @@ fun TodoDetailScreen(
 			TodoFloatingActionButton(
 				selection = todoChildren.selection,
 				onClick = { showCreateDialog = true },
+				onGroup = { vm.groupSelected() },
 				onCheck = { vm.changeDoneSelected() },
 				onDelete = { vm.deleteSelected() }
 			)
@@ -480,6 +486,7 @@ fun TodoDetailScreen(
 			groups = todoChildren.groups.map { it.name }.toSet(),
 			onSetGroup = { groupName ->
 				vm.setGroup(groupingTodos.map { it.todoData.id }.toList(), groupName)
+				vm.selectionOff()
 			}
 		)
 	}

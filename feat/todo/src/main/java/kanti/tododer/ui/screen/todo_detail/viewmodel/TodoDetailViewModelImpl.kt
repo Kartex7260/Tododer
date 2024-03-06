@@ -9,6 +9,7 @@ import kanti.tododer.data.model.FullIdType
 import kanti.tododer.data.model.todo.TodoRepository
 import kanti.tododer.domain.todo.delete.DeleteBlankTodoWithFlow
 import kanti.tododer.ui.common.GroupUiState
+import kanti.tododer.ui.common.TodoDataWithGroup
 import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.common.toData
 import kanti.tododer.ui.common.toUiState
@@ -128,6 +129,9 @@ class TodoDetailViewModelImpl @Inject constructor(
 
 	private val _onExit = MutableSharedFlow<TodoData?>()
 	override val onExit: SharedFlow<TodoData?> = _onExit.asSharedFlow()
+
+	private val _groupSelected = MutableSharedFlow<List<TodoDataWithGroup>>()
+	override val groupSelected: SharedFlow<List<TodoDataWithGroup>> = _groupSelected.asSharedFlow()
 
 	override fun show(todoId: Long) {
 		_currentTodo.value = todoId
@@ -261,6 +265,20 @@ class TodoDetailViewModelImpl @Inject constructor(
 
 	override fun setSelect(todoId: Long, selected: Boolean) {
 		selectionController.setSelect(todoId, selected)
+	}
+
+	override fun groupSelected() {
+		viewModelScope.launch {
+			val selected = selectionController.selected
+			val todos = todoChildren.value.groups.asSequence()
+				.flatMap { groupUiState ->
+					groupUiState.todos.map { todoUiState ->
+						TodoDataWithGroup(todoData = todoUiState.data, group = groupUiState.name)
+					}
+				}
+				.filter { selected.contains(it.todoData.id) }
+			_groupSelected.emit(todos.toList())
+		}
 	}
 
 	override fun changeDoneSelected() {
