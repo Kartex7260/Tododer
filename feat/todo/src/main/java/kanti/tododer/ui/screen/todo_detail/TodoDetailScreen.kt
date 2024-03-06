@@ -410,6 +410,9 @@ fun TodoDetailScreen(
 					isSingleGroup = todoChildren.groups.size == 1,
 					group = todoChildren.groups[index],
 					selectionStyle = selectionStyle,
+					groupOnChangeSelect = { group, selected ->
+						vm.setSelect(group = group, selected = selected)
+					},
 					itemOnLongClick = { todoData -> vm.selection(todoData.id) },
 					itemOnClick = { todoData ->
 						navController.navigate(

@@ -267,6 +267,17 @@ class TodoDetailViewModelImpl @Inject constructor(
 		selectionController.setSelect(todoId, selected)
 	}
 
+	override fun setSelect(group: String?, selected: Boolean) {
+		viewModelScope.launch {
+			val groupUiState = todoChildren.value.groups
+				.firstOrNull { it.name == group } ?: return@launch
+			selectionController.setSelect(
+				ids = groupUiState.todos.map { it.data.id },
+				select = selected
+			)
+		}
+	}
+
 	override fun groupSelected() {
 		viewModelScope.launch {
 			val selected = selectionController.selected
