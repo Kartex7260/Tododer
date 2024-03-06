@@ -161,6 +161,13 @@ class TodoDetailViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun setGroup(todoIds: List<Long>, group: String?) {
+		viewModelScope.launch {
+			todoRepository.setGroup(todoIds, group)
+			_updateTodoChildren.value = Any()
+		}
+	}
+
 	override fun renameTodo(todoId: Long, newTitle: String) {
 		viewModelScope.launch {
 			todoRepository.updateTitle(todoId, newTitle)

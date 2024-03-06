@@ -33,6 +33,8 @@ interface TodoDetailViewModel {
 
     fun createNewTodo(title: String, goTo: Boolean)
 
+    fun setGroup(todoIds: List<Long>, group: String?)
+
     fun renameTodo(todoId: Long, newTitle: String)
 
     fun changeTitle(title: String)
@@ -123,6 +125,10 @@ interface TodoDetailViewModel {
 
         override fun createNewTodo(title: String, goTo: Boolean) {
             Log.d(logTag, "createNewTodo(String = $title, Boolean = $goTo)")
+        }
+
+        override fun setGroup(todoIds: List<Long>, group: String?) {
+            Log.d(logTag, "setGrgoup(List<Long> = $todoIds, String? = $group)")
         }
 
         override fun renameTodo(todoId: Long, newTitle: String) {

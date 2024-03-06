@@ -61,6 +61,7 @@ import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.todo.R
 import kanti.tododer.ui.UiConst
 import kanti.tododer.ui.common.MultiSelectionStyle
+import kanti.tododer.ui.common.TodoDataWithGroup
 import kanti.tododer.ui.components.ContentSwitcher
 import kanti.tododer.ui.components.ScreenBottomCaption
 import kanti.tododer.ui.components.TodoFloatingActionButton
@@ -68,6 +69,7 @@ import kanti.tododer.ui.components.TodoGroupPanel
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
+import kanti.tododer.ui.components.dialogs.SetGroupDialog
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodoEditor
 import kanti.tododer.ui.components.todo.TodoEditorControllers
@@ -281,6 +283,9 @@ fun TodoDetailScreen(
 	}
 
 	var showCreateDialog by rememberSaveable { mutableStateOf(false) }
+	var showSetGroupDialog: List<TodoDataWithGroup>? by rememberSaveable {
+		mutableStateOf(null)
+	}
 	var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 	var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
 
@@ -411,6 +416,14 @@ fun TodoDetailScreen(
 					itemOnChangeSelect = { todoData, selected ->
 						vm.setSelect(todoData.id, selected)
 					},
+					itemMenuOnAddToGroup = { todoData ->
+						showSetGroupDialog = listOf(
+							TodoDataWithGroup(
+								todoData = todoData,
+								group = todoChildren.groups[index].name
+							)
+						)
+					},
 					itemMenuOnRename = { todoData -> showRenameDialog = todoData },
 					itemMenuOnDelete = { todoData -> vm.deleteChildren(listOf(todoData)) }
 				)
@@ -453,6 +466,20 @@ fun TodoDetailScreen(
 			},
 			create = { title ->
 				vm.createNewTodo(title = title, goTo = false)
+			}
+		)
+	}
+
+	if (showSetGroupDialog != null) {
+		val groupingTodos = showSetGroupDialog!!.asSequence()
+		val initialGroup = groupingTodos.map { it.group }
+			.reduce { acc, group -> if (acc == group) acc else null }
+		SetGroupDialog(
+			onDismissRequest = { showSetGroupDialog = null },
+			initialGroup = initialGroup,
+			groups = todoChildren.groups.map { it.name }.toSet(),
+			onSetGroup = { groupName ->
+				vm.setGroup(groupingTodos.map { it.todoData.id }.toList(), groupName)
 			}
 		)
 	}
