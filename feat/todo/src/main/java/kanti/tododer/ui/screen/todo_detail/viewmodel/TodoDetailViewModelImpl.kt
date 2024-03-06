@@ -88,7 +88,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 			) { children, deletedChildren, selectionState ->
 				TodosUiState(
 					selection = selectionState.selection,
-					groups = children.groupBy { it.group }
+					groups = children.groupBy { it.group }.asSequence()
 						.map { groupWithTodos ->
 							GroupUiState(
 								name = groupWithTodos.key,
@@ -101,6 +101,8 @@ class TodoDetailViewModelImpl @Inject constructor(
 									}
 							)
 						}
+						.sortedWith(comparator = GroupUiState.COMPARATOR)
+						.toList()
 				)
 			}
 		}

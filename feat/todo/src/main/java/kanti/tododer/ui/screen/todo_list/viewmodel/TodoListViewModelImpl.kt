@@ -99,7 +99,7 @@ class TodoListViewModelImpl @Inject constructor(
 					children = TodosUiState(
 						selection = selectionState.selection,
 						groups = planWithChildren.second
-							.groupBy { it.group }
+							.groupBy { it.group }.asSequence()
 							.map { groupWithTodos ->
 								GroupUiState(
 									name = groupWithTodos.key,
@@ -111,6 +111,8 @@ class TodoListViewModelImpl @Inject constructor(
 									}
 								)
 							}
+							.sortedWith(comparator = GroupUiState.COMPARATOR)
+							.toList()
 					)
 				)
 			}
