@@ -409,6 +409,7 @@ fun TodoDetailScreen(
 					selection = todoChildren.selection,
 					isSingleGroup = todoChildren.groups.size == 1,
 					group = todoChildren.groups[index],
+					allowGrouping = true,
 					selectionStyle = selectionStyle,
 					groupOnChangeExpand = { group, expand ->
 						vm.setGroupExpand(group, expand)
@@ -416,6 +417,13 @@ fun TodoDetailScreen(
 					groupOnChangeSelect = { group, selected ->
 						vm.setSelect(group = group, selected = selected)
 					},
+					groupMenuOnChangeDone = { group, isDone ->
+						vm.changeGroupDone(group, isDone)
+					},
+					groupMenuOnRename = { vm.renameGroup(it) },
+					groupMenuOnUngroup = { /* TODO: dialog */ },
+					groupMenuOnSelect = { vm.selection(it) },
+					groupMenuOnDeleteGroup = { vm.deleteGroup(it) },
 					itemOnLongClick = { todoData -> vm.selection(todoData.id) },
 					itemOnClick = { todoData ->
 						navController.navigate(

@@ -42,7 +42,7 @@ fun TodoGroupPanel(
 	groupOnChangeSelect: (String?, Boolean) -> Unit = { _, _ -> },
 	groupMenuOnChangeDone: (String?, Boolean) -> Unit = { _, _ -> },
 	groupMenuOnRename: (String?) -> Unit = {},
-	groupMenuOnUngroup: (String?) -> Unit = {},
+	groupMenuOnUngroup: (String) -> Unit = {},
 	groupMenuOnSelect: (String?) -> Unit = {},
 	groupMenuOnDeleteGroup: (String?) -> Unit = {},
 	itemOnLongClick: (TodoData) -> Unit = {},
@@ -82,7 +82,10 @@ fun TodoGroupPanel(
 						onDismissRequest = { expandMenu = false },
 						onChangeDone = { groupMenuOnChangeDone(group.name, it) },
 						onRenameGroup = { groupMenuOnRename(group.name) },
-						onUngroup = { groupMenuOnUngroup(group.name) },
+						onUngroup = {
+							if (group.name != null)
+								groupMenuOnUngroup(group.name)
+						},
 						onSelect = { groupMenuOnSelect(group.name) },
 						onDeleteGroup = { groupMenuOnDeleteGroup(group.name) }
 					)

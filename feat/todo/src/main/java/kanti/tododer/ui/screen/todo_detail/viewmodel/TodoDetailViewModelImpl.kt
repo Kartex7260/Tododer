@@ -225,6 +225,14 @@ class TodoDetailViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun changeGroupDone(group: String?, isDone: Boolean) {
+		viewModelScope.launch {
+			val fullId = FullId(todoDetail.value.id, FullIdType.Todo)
+			todoRepository.changeGroupDone(fullId, group, isDone)
+			_updateTodoChildren.value = Any()
+		}
+	}
+
 	override fun deleteCurrent() {
 		viewModelScope.launch(NonCancellable) {
 			val currentTodoId = _currentTodo.value
