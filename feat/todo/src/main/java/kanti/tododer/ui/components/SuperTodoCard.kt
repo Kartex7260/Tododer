@@ -30,6 +30,7 @@ fun SuperTodoCard(
 	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
 	selection: Boolean = false,
 	todoUiState: TodoUiState,
+	allowGrouping: Boolean = true,
 	onLongClick: (TodoData) -> Unit = {},
 	onClick: (TodoData) -> Unit = {},
 	onDoneChange: (TodoData, Boolean) -> Unit = { _, _ -> },
@@ -114,6 +115,7 @@ fun SuperTodoCard(
 				}
 				NormalTodoDropdownMenu(
 					expanded = showDropdownMenu,
+					allowGrouping = allowGrouping,
 					onDismissRequest = { showDropdownMenu = false },
 					onAddToGroup = { menuOnAddToGroup(todoData) },
 					onRename = { menuOnRename(todoData) },

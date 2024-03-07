@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kanti.tododer.common.Const
 import kanti.tododer.data.model.FullId
 import kanti.tododer.data.model.FullIdType
+import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanRepository
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.data.model.plan.toFullId
@@ -101,12 +102,34 @@ class TodoListViewModelImpl @Inject constructor(
 					LOG_TAG,
 					"currentPlan: combine($planWithChildren, $deletedChildren, $selectionState)"
 				)
+				val plansCache = HashMap<Long, Plan>()
+				suspend fun getPlanTitle(planId: FullId): String? {
+					fun getTitle(plan: Plan?): String? {
+						if (plan == null)
+							return null
+						if (plan.type == PlanType.Default)
+							return context.getString(R.string.plan_default)
+						return plan.title
+					}
+					var plan = plansCache[planId.id]
+					if (plan != null)
+						return getTitle(plan)
+					plan = planRepository.getPlan(planId.id)
+					if (plan != null)
+						plansCache[planId.id] = plan!!
+					return getTitle(plan)
+				}
 				TodoListUiState(
 					plan = planWithChildren.first,
 					children = TodosUiState(
 						selection = selectionState.selection,
 						groups = planWithChildren.second
-							.groupBy { it.group }.entries.asFlow()
+							.groupBy {
+								when (planWithChildren.first.type) {
+									PlanType.All -> getPlanTitle(it.parentId)
+									else -> it.group
+								}
+							}.entries.asFlow()
 							.map { groupWithTodos ->
 								GroupUiState(
 									name = groupWithTodos.key,

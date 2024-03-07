@@ -13,6 +13,7 @@ import kanti.tododer.feat.todo.R
 @Composable
 fun TodoFloatingActionButton(
 	selection: Boolean = false,
+	allowGrouping: Boolean = true,
 	onClick: () -> Unit = {},
 	onGroup: () -> Unit = {},
 	onCheck: () -> Unit = {},
@@ -23,13 +24,15 @@ fun TodoFloatingActionButton(
 	onClick = onClick,
 	smallFabContent = { spacerBetweenSmallFab ->
 		val containerColor = MaterialTheme.colorScheme.secondaryContainer
-		SmallFloatingActionButton(
-			onClick = onGroup,
-			containerColor = containerColor
-		) {
-			Icon(painter = painterResource(id = R.drawable.segment), contentDescription = null)
+		if (allowGrouping) {
+			SmallFloatingActionButton(
+				onClick = onGroup,
+				containerColor = containerColor
+			) {
+				Icon(painter = painterResource(id = R.drawable.segment), contentDescription = null)
+			}
+			spacerBetweenSmallFab()
 		}
-		spacerBetweenSmallFab()
 		SmallFloatingActionButton(
 			onClick = onCheck,
 			containerColor = containerColor

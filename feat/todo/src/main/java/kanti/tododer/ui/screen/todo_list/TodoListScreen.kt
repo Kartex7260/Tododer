@@ -212,6 +212,7 @@ fun TodoListScreen(
 
 	val todoListUiState by vm.currentPlan.collectAsState()
 	val plan = todoListUiState.plan
+	val isALlPlan = plan.type == PlanType.All
 	val children = todoListUiState.children
 
 	val context = LocalContext.current
@@ -354,6 +355,7 @@ fun TodoListScreen(
 		floatingActionButton = {
 			TodoFloatingActionButton(
 				selection = children.selection,
+				allowGrouping = !isALlPlan,
 				onClick = { showCreateDialog = true },
 				onGroup = { vm.groupingSelection() },
 				onCheck = { vm.changeDoneSelected() },
@@ -388,6 +390,7 @@ fun TodoListScreen(
 					selection = children.selection,
 					isSingleGroup = children.groups.size == 1,
 					group = children.groups[index],
+					allowGrouping = !isALlPlan,
 					selectionStyle = selectionStyle,
 					groupOnChangeExpand = { group, expand -> vm.setGroupExpand(group, expand) },
 					groupOnChangeSelect = { groupName, selected ->
