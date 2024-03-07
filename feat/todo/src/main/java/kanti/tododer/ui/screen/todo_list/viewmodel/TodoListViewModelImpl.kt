@@ -250,6 +250,14 @@ class TodoListViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun deleteGroup(group: String?) {
+		viewModelScope.launch {
+			val groupUiState = currentPlan.value.children.groups
+				.firstOrNull { it.name == group } ?: return@launch
+			deleteTodos(groupUiState.todos.map { it.data })
+		}
+	}
+
 	override fun renamePlan(newTitle: String) {
 		viewModelScope.launch {
 			val plan = currentPlan.value.plan
