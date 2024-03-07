@@ -2,6 +2,8 @@ package kanti.tododer.ui.components.dialogs
 
 import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
@@ -22,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import kanti.tododer.feat.todo.R
 
@@ -91,7 +95,17 @@ fun SetGroupDialog(
 					},
 					label = {
 						Text(text = stringResource(id = R.string.group_name))
-					}
+					},
+					keyboardOptions = KeyboardOptions(
+						capitalization = KeyboardCapitalization.Sentences,
+						imeAction = ImeAction.Done
+					),
+					keyboardActions = KeyboardActions(
+						onDone = {
+							onSetGroup(groupName)
+							onDismissRequest()
+						}
+					)
 				)
 
 				ExposedDropdownMenu(
