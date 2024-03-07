@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -43,6 +44,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -104,7 +106,7 @@ class TodoListViewModelImpl @Inject constructor(
 					children = TodosUiState(
 						selection = selectionState.selection,
 						groups = planWithChildren.second
-							.groupBy { it.group }.asSequence()
+							.groupBy { it.group }.entries.asFlow()
 							.map { groupWithTodos ->
 								GroupUiState(
 									name = groupWithTodos.key,
@@ -117,8 +119,8 @@ class TodoListViewModelImpl @Inject constructor(
 									}
 								)
 							}
-							.sortedWith(comparator = GroupUiState.COMPARATOR)
 							.toList()
+							.sortedWith(comparator = GroupUiState.COMPARATOR)
 					)
 				)
 			}

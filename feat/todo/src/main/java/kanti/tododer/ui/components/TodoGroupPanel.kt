@@ -77,7 +77,7 @@ fun TodoGroupPanel(
 			Spacer(modifier = Modifier.height(height = 8.dp))
 		}
 		AnimatedVisibility(
-			visible = group.expand || isSingleGroup,
+			visible = group.expand || (isSingleGroup && group.name == null),
 			enter = expandVertically() + fadeIn(),
 			exit = shrinkVertically() + fadeOut(),
 			label = group.name ?: "null"
