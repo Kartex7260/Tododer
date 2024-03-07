@@ -20,4 +20,6 @@
     <string name="checkbox">Чекбокс</string>
     <string name="set_multi_selection_style">Установка стиля мульти выбора</string>
     <string name="close">Закрыть</string>
+
+    <string name="group_expansion">По умолчанию группы раскрыты</string>
 </resources>

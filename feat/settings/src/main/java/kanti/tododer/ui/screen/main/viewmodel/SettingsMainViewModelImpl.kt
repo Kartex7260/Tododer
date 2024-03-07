@@ -45,7 +45,8 @@ class SettingsMainViewModelImpl @Inject constructor(
                 ),
                 selectionStyles = settingsData.multiSelectionStyleFlags.map {
                     MultiSelectionStyle.valueOf(it.name)
-                }.toSet()
+                }.toSet(),
+                groupExpandDefault = settingsData.groupExpandDefault
             )
         }
         .flowOn(Dispatchers.Default)
@@ -72,7 +73,12 @@ class SettingsMainViewModelImpl @Inject constructor(
             settingsRepository.setMultiSelectionStyles(
                 selection = styles.map { SelectionStyle.valueOf(it.name) }.toSet()
             )
+        }
+    }
 
+    override fun changeGroupExpandDefault(expandDefault: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setGroupExpandDefault(expandDefault)
         }
     }
 }

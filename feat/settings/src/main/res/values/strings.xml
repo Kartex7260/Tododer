@@ -25,4 +25,6 @@
     <string name="checkbox">Checkbox</string>
     <string name="set_multi_selection_style">Set multi selection style</string>
     <string name="close">Close</string>
+
+    <string name="group_expansion">By default, the groups are expanded</string>
 </resources>

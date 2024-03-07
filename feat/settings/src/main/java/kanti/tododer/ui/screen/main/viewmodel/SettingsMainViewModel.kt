@@ -20,6 +20,8 @@ interface SettingsMainViewModel {
 
 	fun changeSelectionStyles(styles: Set<MultiSelectionStyle>)
 
+	fun changeGroupExpandDefault(expandDefault: Boolean)
+
 	companion object : SettingsMainViewModel {
 
 		private val _uiState = MutableStateFlow(SettingsMainUiState(
@@ -55,6 +57,9 @@ interface SettingsMainViewModel {
 		}
 
 		override fun changeSelectionStyles(styles: Set<MultiSelectionStyle>) {
+		}
+
+		override fun changeGroupExpandDefault(expandDefault: Boolean) {
 		}
 	}
 }

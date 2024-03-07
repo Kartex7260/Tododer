@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import kanti.tododer.feat.settings.R
 import kanti.tododer.ui.components.colorstyle.ChangeColorStyleItem
 import kanti.tododer.ui.components.colorstyle.ChangeColorStyleItemDefaults
+import kanti.tododer.ui.components.groupexpand.GroupExpandItem
 import kanti.tododer.ui.components.multiselection.SelectionItem
 import kanti.tododer.ui.components.multiselection.SelectionMenuItemsDefaults
 import kanti.tododer.ui.components.theme.ChangeThemeItem
@@ -112,6 +113,14 @@ fun SettingsMainScreen(
 					),
 					selectionStyles = uiState.selectionStyles,
 					onSetSelectionStyles = { vm.changeSelectionStyles(it) }
+				)
+			}
+			item {
+				GroupExpandItem(
+					groupExpandDefault = uiState.groupExpandDefault,
+					onChangeExpandDefault = { groupExpandDefault ->
+						vm.changeGroupExpandDefault(groupExpandDefault)
+					}
 				)
 			}
 		}
