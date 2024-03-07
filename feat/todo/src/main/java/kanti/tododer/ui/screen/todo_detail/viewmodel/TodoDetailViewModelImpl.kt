@@ -298,6 +298,18 @@ class TodoDetailViewModelImpl @Inject constructor(
 		selectionController.setSelect(todoId, true)
 	}
 
+	override fun selection(group: String?) {
+		viewModelScope.launch(Dispatchers.Default) {
+			selectionController.selection = true
+			val groupUiState = todoChildren.value.groups
+				.firstOrNull { it.name == group } ?: return@launch
+			selectionController.setSelect(
+				ids = groupUiState.todos.map { it.data.id },
+				select = true
+			)
+		}
+	}
+
 	override fun selectionOff(): Boolean {
 		if (selectionController.selection) {
 			selectionController.clear()

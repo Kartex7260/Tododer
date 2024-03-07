@@ -40,6 +40,8 @@ interface TodoDetailViewModel {
 
     fun setGroupExpand(group: String?, expand: Boolean) {}
 
+    fun deleteGroup(group: String?) {}
+
     fun renameTodo(todoId: Long, newTitle: String) {}
 
     fun changeTitle(title: String) {}
@@ -51,8 +53,6 @@ interface TodoDetailViewModel {
     fun changeDoneChild(todoId: Long, isDone: Boolean) {}
 
     fun changeGroupDone(group: String?, isDone: Boolean) {}
-
-    fun deleteGroup(group: String?) {}
 
     fun deleteCurrent() {}
 
