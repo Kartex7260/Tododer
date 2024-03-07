@@ -64,7 +64,10 @@ fun TodoGroupPanel(
 					GroupHeader(
 						title = group.name ?: stringResource(id = R.string.without_group),
 						expanded = group.expand,
-						onLongClick = { expandMenu = true },
+						onLongClick = {
+							if (!selection)
+								expandMenu = true
+						},
 						onChangeExpand = { expand ->
 							groupOnChangeExpand(group.name, expand)
 						}
