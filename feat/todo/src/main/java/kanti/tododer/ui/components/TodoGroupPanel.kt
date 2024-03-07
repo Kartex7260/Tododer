@@ -75,6 +75,7 @@ fun TodoGroupPanel(
 							acc and todoUiState.data.isDone
 						},
 						allowGrouping = allowGrouping,
+						isGroup = group.name != null,
 						onDismissRequest = { expandMenu = false },
 						onChangeDone = { groupMenuOnChangeDone(group.name, it) },
 						onRenameGroup = { groupMenuOnRename(group.name) },

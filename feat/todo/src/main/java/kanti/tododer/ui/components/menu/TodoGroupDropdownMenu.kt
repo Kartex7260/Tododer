@@ -12,6 +12,7 @@ fun TodoGroupDropdownMenu(
 	expanded: Boolean,
 	todosDone: Boolean = false,
 	allowGrouping: Boolean = true,
+	isGroup: Boolean = true,
 	onDismissRequest: () -> Unit,
 	onChangeDone: (Boolean) -> Unit = {},
 	onRenameGroup: () -> Unit = {},
@@ -41,13 +42,15 @@ fun TodoGroupDropdownMenu(
 				onDismissRequest()
 			}
 		)
-		DropdownMenuItem(
-			text = { Text(text = stringResource(id = R.string.ungroup)) },
-			onClick = {
-				onUngroup()
-				onDismissRequest()
-			}
-		)
+		if (isGroup) {
+			DropdownMenuItem(
+				text = { Text(text = stringResource(id = R.string.ungroup)) },
+				onClick = {
+					onUngroup()
+					onDismissRequest()
+				}
+			)
+		}
 	}
 	DropdownMenuItem(
 		text = { Text(text = stringResource(id = R.string.select)) },

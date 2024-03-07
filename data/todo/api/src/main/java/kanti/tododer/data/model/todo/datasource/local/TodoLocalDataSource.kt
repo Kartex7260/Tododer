@@ -18,6 +18,8 @@ interface TodoLocalDataSource {
 
 	suspend fun setGroup(todoIds: List<Long>, group: String?)
 
+	suspend fun ungroup(parent: FullId, group: String)
+
 	suspend fun updateTitle(todoId: Long, title: String)
 
 	suspend fun updateRemark(todoId: Long, remark: String)

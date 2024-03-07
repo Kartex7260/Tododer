@@ -70,6 +70,7 @@ import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.dialogs.SetGroupDialog
+import kanti.tododer.ui.components.dialogs.UngroupDialog
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModelImpl
@@ -205,6 +206,7 @@ fun TodoListScreen(
 	var showSetGroupDialog: List<TodoDataWithGroup>? by rememberSaveable { mutableStateOf(null) }
 	var showRenameTodoDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
 	var showCreateDialog: Boolean by rememberSaveable { mutableStateOf(false) }
+	var showUngroupDialog: String? by rememberSaveable { mutableStateOf(null) }
 
 	val snackbarHostState = remember {
 		SnackbarHostState()
@@ -400,7 +402,7 @@ fun TodoListScreen(
 						vm.setGroupDone(group, isDone)
 					},
 					groupMenuOnRename = { vm.renameGroup(it) },
-					groupMenuOnUngroup = { /* TODO: ungroup dialog */ },
+					groupMenuOnUngroup = { showUngroupDialog = it },
 					groupMenuOnSelect = { vm.selection(it) },
 					groupMenuOnDeleteGroup = { vm.deleteGroup(it) },
 					itemOnLongClick = { todoData -> vm.selection(todoData.id) },
@@ -514,6 +516,17 @@ fun TodoListScreen(
 			},
 			create = { title ->
 				vm.createNewTodo(title = title, goTo = false)
+			}
+		)
+	}
+
+	if (showUngroupDialog != null) {
+		val group = showUngroupDialog!!
+		UngroupDialog(
+			onDismissRequest = { showUngroupDialog = null },
+			group = group,
+			onUngroup = {
+				vm.ungroup(group)
 			}
 		)
 	}

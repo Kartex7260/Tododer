@@ -11,11 +11,17 @@ import kanti.tododer.feat.todo.R
 @Composable
 fun UngroupDialog(
 	onDismissRequest: () -> Unit = {},
+	group: String,
 	onUngroup: () -> Unit = {}
 ) = AlertDialog(
 	onDismissRequest = onDismissRequest,
 	confirmButton = {
-		TextButton(onClick = onUngroup) {
+		TextButton(
+			onClick = {
+				onUngroup()
+				onDismissRequest()
+			}
+		) {
 			Text(text = stringResource(id = R.string.ungroup))
 		}
 	},
@@ -25,12 +31,17 @@ fun UngroupDialog(
 		}
 	},
 	title = {
-		Text(text = stringResource(id = R.string.ungroup_group_ask))
+		Text(
+			text = stringResource(id = R.string.ungroup_group_ask)
+				.replace("{1}", group)
+		)
 	}
 )
 
 @Preview
 @Composable
 private fun PreviewUngroupDialog() {
-	UngroupDialog()
+	UngroupDialog(
+		group = "Foo"
+	)
 }
