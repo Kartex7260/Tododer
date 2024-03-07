@@ -310,6 +310,7 @@ fun PlanListScreen(
 					},
 					onChangeSelect = { planData, selected -> vm.setSelect(planData.id, selected) },
 					menuOnRename = { planData -> showRenameDialog = planData },
+					menuOnSelect = { planData -> vm.selection(planData.id) },
 					menuOnDelete = { planData -> vm.deletePlans(listOf(planData)) }
 				)
 			}

@@ -424,6 +424,7 @@ fun TodoListScreen(
 						)
 					},
 					itemMenuOnRename = { todoData -> showRenameTodoDialog = todoData },
+					itemMenuOnSelect = { todoData -> vm.selection(todoData.id) },
 					itemMenuOnDelete = { todoData -> vm.deleteTodos(listOf(todoData)) }
 				)
 			}

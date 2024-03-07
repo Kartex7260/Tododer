@@ -34,6 +34,7 @@ fun SuperPlanCard(
 	onClick: (PlanData) -> Unit = {},
 	onChangeSelect: (PlanData, Boolean) -> Unit = { _, _ -> },
 	menuOnRename: (PlanData) -> Unit = {},
+	menuOnSelect: (PlanData) -> Unit = {},
 	menuOnDelete: (PlanData) -> Unit = {}
 ) {
 	val allowColorFill = selectionStyle.contains(MultiSelectionStyle.ColorFill)
@@ -106,6 +107,7 @@ fun SuperPlanCard(
 					expanded = showDropdownMenu,
 					onDismissRequest = { showDropdownMenu = false },
 					onRename = { menuOnRename(planData) },
+					onSelect = { menuOnSelect(planData) },
 					onDelete = { menuOnDelete(planData) }
 				)
 			}

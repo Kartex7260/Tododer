@@ -51,6 +51,7 @@ fun TodoGroupPanel(
 	itemOnChangeSelect: (TodoData, Boolean) -> Unit = { _, _ -> },
 	itemMenuOnAddToGroup: (TodoData) -> Unit = {},
 	itemMenuOnRename: (TodoData) -> Unit = {},
+	itemMenuOnSelect: (TodoData) -> Unit = {},
 	itemMenuOnDelete: (TodoData) -> Unit = {}
 ) {
 	Column(
@@ -131,6 +132,7 @@ fun TodoGroupPanel(
 						onChangeSelect = itemOnChangeSelect,
 						menuOnAddToGroup = itemMenuOnAddToGroup,
 						menuOnRename = itemMenuOnRename,
+						menuOnSelect = itemMenuOnSelect,
 						menuOnDelete = itemMenuOnDelete
 					)
 				}

@@ -37,6 +37,7 @@ fun SuperTodoCard(
 	onChangeSelect: (TodoData, Boolean) -> Unit = { _, _ -> },
 	menuOnAddToGroup: (TodoData) -> Unit = {},
 	menuOnRename: (TodoData) -> Unit = {},
+	menuOnSelect: (TodoData) -> Unit = {},
 	menuOnDelete: (TodoData) -> Unit = {}
 ) {
 	val colorFillEnable = selectionStyle.contains(MultiSelectionStyle.ColorFill)
@@ -119,6 +120,7 @@ fun SuperTodoCard(
 					onDismissRequest = { showDropdownMenu = false },
 					onAddToGroup = { menuOnAddToGroup(todoData) },
 					onRename = { menuOnRename(todoData) },
+					onSelect = { menuOnSelect(todoData) },
 					onDelete = { menuOnDelete(todoData) }
 				)
 			}

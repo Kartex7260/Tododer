@@ -13,6 +13,7 @@ fun NormalPlanDropdownMenu(
 	expanded: Boolean = true,
 	onDismissRequest: () -> Unit = {},
 	onRename: () -> Unit = {},
+	onSelect: () -> Unit = {},
 	onDelete: () -> Unit = {}
 ) {
 	DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
@@ -20,6 +21,13 @@ fun NormalPlanDropdownMenu(
 			text = { Text(text = stringResource(id = R.string.rename)) },
 			onClick = {
 				onRename()
+				onDismissRequest()
+			}
+		)
+		DropdownMenuItem(
+			text = { Text(text = stringResource(id = R.string.select)) },
+			onClick = {
+				onSelect()
 				onDismissRequest()
 			}
 		)

@@ -22,6 +22,7 @@ fun NormalTodoDropdownMenu(
 	offset: DpOffset = DpOffset(0.dp, 0.dp),
 	onAddToGroup: () -> Unit = {},
 	onRename: () -> Unit = {},
+	onSelect: () -> Unit = {},
 	onDelete: () -> Unit = {}
 ) {
 	DropdownMenu(
@@ -43,6 +44,13 @@ fun NormalTodoDropdownMenu(
 			text = { Text(text = stringResource(id = R.string.rename)) },
 			onClick = {
 				onRename()
+				onDismissRequest()
+			}
+		)
+		DropdownMenuItem(
+			text = { Text(text = stringResource(id = R.string.select)) },
+			onClick = {
+				onSelect()
 				onDismissRequest()
 			}
 		)
