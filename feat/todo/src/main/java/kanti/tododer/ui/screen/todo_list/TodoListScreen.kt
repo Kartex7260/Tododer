@@ -396,6 +396,13 @@ fun TodoListScreen(
 					groupOnChangeSelect = { groupName, selected ->
 						vm.setSelect(group = groupName, selected = selected)
 					},
+					groupMenuOnChangeDone = { group, isDone ->
+						vm.setGroupDone(group, isDone)
+					},
+					groupMenuOnRename = { vm.renameGroup(it) },
+					groupMenuOnUngroup = { /* TODO: ungroup dialog */ },
+					groupMenuOnSelect = { vm.selection(it) },
+					groupMenuOnDeleteGroup = { vm.deleteGroup(it) },
 					itemOnLongClick = { todoData -> vm.selection(todoData.id) },
 					itemOnClick = { todoData ->
 						navController.navigate(

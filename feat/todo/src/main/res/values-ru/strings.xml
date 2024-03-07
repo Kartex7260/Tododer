@@ -27,10 +27,15 @@
     <string name="caption_todo_detail">Tododer Апп\nЗадача: \"{1}\"\nЗадач: {2}, Выполненных задач: {3}</string>
     <string name="caption_plan_list">Tododer Апп\nПланов: \"{1}\", Полностью выполненных: {2}\nВсего задач: {3}</string>
     <string name="multi_selection">Мульти выбор</string>
-    <string name="ungroup">Без группы</string>
+    <string name="select">Выбрать</string>
+    <string name="without_group">Без группы</string>
     <string name="set_group">Добавить в группу</string>
     <string name="group_name">Имя группы</string>
     <string name="remove">Убрать</string>
     <string name="set">Установить</string>
     <string name="add_to_group">Добавить в группу</string>
+    <string name="mark_as_completed">Пометить выполненным</string>
+    <string name="mark_as_not_completed">Пометить невыполненным</string>
+    <string name="ungroup">Разгруппировать</string>
+    <string name="delete_group">Удалить группу</string>
 </resources>

@@ -1,7 +1,8 @@
 package kanti.tododer.ui.components.grouping
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -29,20 +30,23 @@ import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GroupHeader(
 	modifier: Modifier = Modifier,
 	title: String,
 	expanded: Boolean = false,
+	onLongClick: () -> Unit = {},
 	onChangeExpand: (Boolean) -> Unit = {}
 ) {
 	Row(
 		modifier = Modifier
 			.clip(ButtonDefaults.shape)
-			.clickable(
+			.combinedClickable (
 				interactionSource = remember { MutableInteractionSource() },
 				role = Role.Button,
 				indication = rememberRipple(),
+				onLongClick = onLongClick,
 				onClick = { onChangeExpand(!expanded) }
 			)
 			.then(modifier),

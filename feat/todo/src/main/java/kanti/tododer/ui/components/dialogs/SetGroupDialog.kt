@@ -102,7 +102,7 @@ fun SetGroupDialog(
 						DropdownMenuItem(
 							text = {
 								Text(
-									text = groupHint ?: stringResource(id = R.string.ungroup)
+									text = groupHint ?: stringResource(id = R.string.without_group)
 								)
 							},
 							onClick = {

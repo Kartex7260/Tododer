@@ -1,6 +1,5 @@
 package kanti.tododer.ui.screen.todo_list.viewmodel
 
-import android.util.Log
 import kanti.tododer.data.model.plan.Plan
 import kanti.tododer.data.model.plan.PlanType
 import kanti.tododer.ui.common.GroupUiState
@@ -8,15 +7,12 @@ import kanti.tododer.ui.common.TodoDataWithGroup
 import kanti.tododer.ui.common.TodoUiState
 import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.components.todo.TodoData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 interface TodoListViewModel {
 
@@ -29,49 +25,55 @@ interface TodoListViewModel {
 
     val groupingSelection: SharedFlow<List<TodoDataWithGroup>>
 
-    fun updateUiState(deletedTodoId: Long?)
+    fun updateUiState(deletedTodoId: Long?) {}
 
-    fun createNewTodo(title: String, goTo: Boolean)
+    fun createNewTodo(title: String, goTo: Boolean) {}
 
-    fun setGroup(todoIds: List<Long>, group: String?)
+    fun setGroup(todoIds: List<Long>, group: String?) {}
 
-    fun setGroupExpand(group: String?, expand: Boolean)
+    fun setGroupExpand(group: String?, expand: Boolean) {}
 
-    fun renamePlan(newTitle: String)
+    fun setGroupDone(group: String?, isDone: Boolean) {}
 
-    fun renameTodo(todoId: Long, newTitle: String)
+    fun renameGroup(group: String?) {}
 
-    fun changeDone(todoId: Long, isDone: Boolean)
+    fun ungroup(group: String) {}
 
-    fun deleteTodos(todos: List<TodoData>)
+    fun deleteGroup(group: String?) {}
 
-    fun cancelDelete()
+    fun renamePlan(newTitle: String) {}
 
-    fun rejectCancelChance()
+    fun renameTodo(todoId: Long, newTitle: String) {}
 
-    fun switchSelection()
+    fun changeDone(todoId: Long, isDone: Boolean) {}
 
-    fun selection(todoId: Long)
+    fun deleteTodos(todos: List<TodoData>) {}
 
-    fun selectionOff(): Boolean
+    fun cancelDelete() {}
 
-    fun setSelect(todoId: Long, selected: Boolean)
+    fun rejectCancelChance() {}
 
-    fun setSelect(group: String?, selected: Boolean)
+    fun switchSelection() {}
 
-    fun groupingSelection()
+    fun selection(todoId: Long) {}
 
-    fun changeDoneSelected()
+    fun selection(group: String?) {}
 
-    fun deleteSelected()
+    fun selectionOff(): Boolean { return false }
 
-    fun onStop()
+    fun setSelect(todoId: Long, selected: Boolean) {}
+
+    fun setSelect(group: String?, selected: Boolean) {}
+
+    fun groupingSelection() {}
+
+    fun changeDoneSelected() {}
+
+    fun deleteSelected() {}
+
+    fun onStop() {}
 
     companion object : TodoListViewModel {
-
-        private const val logTag = "TodoListViewModel"
-
-        private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
         private val _children = MutableStateFlow(
             TodoListUiState(
@@ -125,82 +127,5 @@ interface TodoListViewModel {
         override val goToTodo: SharedFlow<Long> = _newTodoCreated.asSharedFlow()
 
         override val groupingSelection: SharedFlow<List<TodoDataWithGroup>> = MutableSharedFlow()
-
-        override fun updateUiState(deletedTodoId: Long?) {
-        }
-
-        override fun createNewTodo(title: String, goTo: Boolean) {
-            coroutineScope.launch {
-                _newTodoCreated.emit(0L)
-            }
-        }
-
-        override fun setGroup(todoIds: List<Long>, group: String?) {
-        }
-
-        override fun setGroupExpand(group: String?, expand: Boolean) {
-        }
-
-        override fun renamePlan(newTitle: String) {
-        }
-
-        override fun renameTodo(todoId: Long, newTitle: String) {
-        }
-
-        override fun changeDone(todoId: Long, isDone: Boolean) {
-            Log.d(logTag, "changeDone(todoId: Int = $todoId, isDone: Boolean = $isDone)")
-        }
-
-        override fun deleteTodos(todos: List<TodoData>) {
-            Log.d(logTag, "deleteTodo(todoIds: List<TodoData> = $todos)")
-            coroutineScope.launch {
-                _todoDeleted.emit(listOf(TodoDeletion(TodoData(title = "Test todo"), false)))
-            }
-        }
-
-        override fun cancelDelete() {
-            Log.d(logTag, "undoDelete()")
-        }
-
-        override fun rejectCancelChance() {
-            Log.d(logTag, "rejectCancelChance()")
-        }
-
-        override fun switchSelection() {
-            Log.d(logTag, "switchSelection()")
-        }
-
-        override fun selection(todoId: Long) {
-            Log.d(logTag, "selection(Long = $todoId)")
-        }
-
-        override fun selectionOff(): Boolean {
-            Log.d(logTag, "selectionOff()")
-            return true
-        }
-
-        override fun setSelect(todoId: Long, selected: Boolean) {
-            Log.d(logTag, "setSelect(Long = $todoId, Boolean = $selected)")
-        }
-
-        override fun setSelect(group: String?, selected: Boolean) {
-            Log.d(logTag, "setSelect(String? = $group, Boolean = $selected)")
-        }
-
-        override fun groupingSelection() {
-            Log.d(logTag, "groupingSelection()")
-        }
-
-        override fun changeDoneSelected() {
-            Log.d(logTag, "changeDoneSelected()")
-        }
-
-        override fun deleteSelected() {
-            Log.d(logTag, "deleteSelected()")
-        }
-
-        override fun onStop() {
-            Log.d(logTag, "onStop()")
-        }
     }
 }
