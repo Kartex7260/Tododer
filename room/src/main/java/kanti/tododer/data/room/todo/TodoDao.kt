@@ -50,6 +50,12 @@ interface TodoDao {
 	@Query("UPDATE todos SET done = :isDone WHERE id IN (:todoIds)")
 	suspend fun changeDone(todoIds: List<Long>, isDone: Boolean)
 
+	@Query("UPDATE todos SET done = :isDone WHERE parent_id = :parent AND `group` = :group")
+	suspend fun changeGroupDone(parent: String, group: String, isDone: Boolean)
+
+	@Query("UPDATE todos SET done = :isDone WHERE parent_id = :parent AND `group` IS NULL")
+	suspend fun changeGroupNullDone(parent: String, isDone: Boolean)
+
 	@Query("SELECT * FROM todos WHERE id = :id LIMIT 1")
 	suspend fun getTodo(id: Long): TodoEntity?
 

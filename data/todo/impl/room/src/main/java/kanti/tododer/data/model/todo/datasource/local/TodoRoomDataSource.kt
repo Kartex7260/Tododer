@@ -90,6 +90,15 @@ class TodoRoomDataSource @Inject constructor(
 		logger.d(LOG_TAG, "changeDone(List<Long> = count(${todoIds.size}), Boolean = $isDone)")
 	}
 
+	override suspend fun changeGroupDone(parent: FullId, group: String?, isDone: Boolean) {
+		if (group == null) {
+			todoDao.changeGroupNullDone(parent.toString(), isDone)
+		} else {
+			todoDao.changeGroupDone(parent.toString(), group, isDone)
+		}
+		logger.d(LOG_TAG, "changeGroupDone(FullId = $parent, String? = $group, Boolean = $isDone)")
+	}
+
 	override suspend fun delete(todoIds: List<Long>) {
 		todoDao.delete(todoIds)
 		logger.d(LOG_TAG, "delete(List<Long> = count(${todoIds.size}))")

@@ -30,6 +30,8 @@ interface TodoRepository {
 
 	suspend fun changeDone(todoIds: List<Long>, isDone: Boolean)
 
+	suspend fun changeGroupDone(parent: FullId, group: String?, isDone: Boolean)
+
 	suspend fun delete(todoIds: List<Long>)
 
 	suspend fun deleteIfNameIsEmptyAndNoChild(todoId: Long): Boolean
