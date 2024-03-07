@@ -179,6 +179,21 @@ class TodoDetailViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun renameGroup(group: String?) {
+		viewModelScope.launch {
+			val groupUiState = todoChildren.value.groups
+				.firstOrNull { it.name == group } ?: return@launch
+			_groupSelected.emit(
+				value = groupUiState.todos.map { todoUiState ->
+					TodoDataWithGroup(
+						todoData = todoUiState.data,
+						group = group
+					)
+				}
+			)
+		}
+	}
+
 	override fun setGroupExpand(group: String?, expand: Boolean) {
 		groupExpandingController.setExpand(group, expand)
 		_updateTodoChildren.value = Any()
