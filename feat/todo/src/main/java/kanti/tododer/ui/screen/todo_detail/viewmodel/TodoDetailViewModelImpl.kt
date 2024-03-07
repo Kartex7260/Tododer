@@ -194,6 +194,14 @@ class TodoDetailViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun ungroup(group: String) {
+		viewModelScope.launch {
+			val fullId = FullId(todoDetail.value.id, FullIdType.Todo)
+			todoRepository.ungroup(fullId, group)
+			_updateTodoChildren.value = Any()
+		}
+	}
+
 	override fun setGroupExpand(group: String?, expand: Boolean) {
 		groupExpandingController.setExpand(group, expand)
 		_updateTodoChildren.value = Any()

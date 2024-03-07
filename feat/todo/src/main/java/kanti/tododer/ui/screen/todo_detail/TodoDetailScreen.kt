@@ -70,6 +70,7 @@ import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.dialogs.SetGroupDialog
+import kanti.tododer.ui.components.dialogs.UngroupDialog
 import kanti.tododer.ui.components.todo.TodoData
 import kanti.tododer.ui.components.todo.TodoEditor
 import kanti.tododer.ui.components.todo.TodoEditorControllers
@@ -191,6 +192,7 @@ fun TodoDetailScreen(
 	}
 	var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 	var showRenameDialog: TodoData? by rememberSaveable { mutableStateOf(null) }
+	var showUngroupDialog: String? by rememberSaveable { mutableStateOf(null) }
 
 	LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
 		Log.d(logTag, "onCreate($todoId): vm.show()")
@@ -421,7 +423,7 @@ fun TodoDetailScreen(
 						vm.changeGroupDone(group, isDone)
 					},
 					groupMenuOnRename = { vm.renameGroup(it) },
-					groupMenuOnUngroup = { /* TODO: dialog */ },
+					groupMenuOnUngroup = { showUngroupDialog = it },
 					groupMenuOnSelect = { vm.selection(it) },
 					groupMenuOnDeleteGroup = { vm.deleteGroup(it) },
 					itemOnLongClick = { todoData -> vm.selection(todoData.id) },
@@ -522,6 +524,15 @@ fun TodoDetailScreen(
 			onRename = { newTitle ->
 				vm.renameTodo(renamedTodo.id, newTitle)
 			}
+		)
+	}
+
+	if (showUngroupDialog != null) {
+		val groupName = showUngroupDialog!!
+		UngroupDialog(
+			onDismissRequest = { showUngroupDialog = null },
+			group = groupName,
+			onUngroup = { vm.ungroup(groupName) }
 		)
 	}
 }
