@@ -1,6 +1,7 @@
 package kanti.tododer.data.model.settings
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -24,6 +25,7 @@ class DataStoreSettingsRepository @Inject constructor(
 	private val colorStyleKey = intPreferencesKey("colorStyle")
 	private val selectionStyleKey = stringPreferencesKey("selectionStyles")
 	private val selectionStylesSeparator = ","
+	private val groupExpandDefaultKey = booleanPreferencesKey("groupExpandDefault")
 
 	override val settings: Flow<SettingsData> = context.dataStore.data
 		.map { preferences ->
@@ -47,6 +49,12 @@ class DataStoreSettingsRepository @Inject constructor(
 				}
 			}
 
+			val groupExpandDefault = preferences[groupExpandDefaultKey] ?: run {
+				resetGroupExpandDefault()
+				returnNull = true
+				true
+			}
+
 			if (returnNull)
 				return@map null
 			SettingsData(
@@ -54,7 +62,8 @@ class DataStoreSettingsRepository @Inject constructor(
 				colorStyleId = colorStyleId,
 				multiSelectionStyleFlags = selectionStyle
 					.split(selectionStylesSeparator)
-					.map { SelectionStyle.valueOf(it) }.toSet()
+					.map { SelectionStyle.valueOf(it) }.toSet(),
+				groupExpandDefault = groupExpandDefault
 			)
 		}
 		.filterNotNull()
@@ -76,6 +85,12 @@ class DataStoreSettingsRepository @Inject constructor(
 		context.dataStore.edit { preferences ->
 			preferences[selectionStyleKey] = selection
 				.joinToString(separator = selectionStylesSeparator) { it.name }
+		}
+	}
+
+	override suspend fun setGroupExpandDefault(expandDefault: Boolean) {
+		context.dataStore.edit { preferences ->
+			preferences[groupExpandDefaultKey] = expandDefault
 		}
 	}
 }
