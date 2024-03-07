@@ -207,6 +207,16 @@ class TodoDetailViewModelImpl @Inject constructor(
 		_updateTodoChildren.value = Any()
 	}
 
+	override fun deleteGroup(group: String?) {
+		viewModelScope.launch {
+			val groupUiState = todoChildren.value.groups
+				.firstOrNull { it.name == group } ?: return@launch
+			deleteChildren(
+				todos = groupUiState.todos.map { it.data }
+			)
+		}
+	}
+
 	override fun renameTodo(todoId: Long, newTitle: String) {
 		viewModelScope.launch {
 			todoRepository.updateTitle(todoId, newTitle)
