@@ -227,6 +227,22 @@ class TodoListViewModelImpl @Inject constructor(
 		}
 	}
 
+	override fun renameGroup(group: String?) {
+		viewModelScope.launch(Dispatchers.Default) {
+			val groupUiState = currentPlan.value.children.groups
+				.firstOrNull { it.name == group } ?: return@launch
+			_selectionGrouping.emit(
+				value = groupUiState.todos.map { todoUiState ->
+					TodoDataWithGroup(
+						todoData = todoUiState.data,
+						group = group
+					)
+				}
+			)
+			updateUiState.value = Any()
+		}
+	}
+
 	override fun renamePlan(newTitle: String) {
 		viewModelScope.launch {
 			val plan = currentPlan.value.plan
