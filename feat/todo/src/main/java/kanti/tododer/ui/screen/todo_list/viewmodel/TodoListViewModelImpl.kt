@@ -251,7 +251,7 @@ class TodoListViewModelImpl @Inject constructor(
 	}
 
 	override fun deleteGroup(group: String?) {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val groupUiState = currentPlan.value.children.groups
 				.firstOrNull { it.name == group } ?: return@launch
 			deleteTodos(groupUiState.todos.map { it.data })
@@ -283,7 +283,7 @@ class TodoListViewModelImpl @Inject constructor(
 	override fun deleteTodos(todos: List<TodoData>) {
 		if (todos.isEmpty())
 			return
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val todoDeletions = todos.map { TodoDeletion(it, false) }
 			deleteCancelManager.delete(todoDeletions)
 			_todosDeleted.emit(todoDeletions)
@@ -326,7 +326,7 @@ class TodoListViewModelImpl @Inject constructor(
 	}
 
 	override fun groupingSelection() {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val selected = selectionController.selected
 			val todos = currentPlan.value.children.groups.asSequence()
 				.flatMap { groupUiState ->
@@ -352,7 +352,7 @@ class TodoListViewModelImpl @Inject constructor(
 	}
 
 	override fun setSelect(group: String?, selected: Boolean) {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val groupUiState = currentPlan.value.children.groups
 				.firstOrNull { it.name == group } ?: return@launch
 			selectionController.setSelect(
@@ -363,15 +363,15 @@ class TodoListViewModelImpl @Inject constructor(
 	}
 
 	override fun changeDoneSelected() {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val selected = selectionController.selected
 			if (selected.isEmpty())
 				return@launch
-			val todosDone = currentPlan.value.children.groups
-				.flatMap { it.todos }
+			val totalDone = currentPlan.value.children.groups
+				.flatMap { it.todos }.asSequence()
 				.filter { selected.contains(it.data.id) }
 				.map { it.data }
-			val totalDone = todosDone.fold(true) { acc, todoData -> acc and todoData.isDone }
+				.fold(true) { acc, todoData -> acc and todoData.isDone }
 			todoRepository.changeDone(
 				todoIds = selected,
 				isDone = !totalDone
@@ -381,16 +381,16 @@ class TodoListViewModelImpl @Inject constructor(
 	}
 
 	override fun deleteSelected() {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val selected = selectionController.selected
 			if (selected.isEmpty())
 				return@launch
 			selectionController.clear()
 			val todos = currentPlan.value.children.groups
-				.flatMap { it.todos }
+				.flatMap { it.todos }.asSequence()
 				.filter { selected.contains(it.data.id) }
 				.map { it.data }
-			deleteTodos(todos)
+			deleteTodos(todos.toList())
 		}
 	}
 

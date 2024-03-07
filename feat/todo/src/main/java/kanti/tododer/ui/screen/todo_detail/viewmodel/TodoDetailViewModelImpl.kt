@@ -53,7 +53,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 	private val deleteCancelManager = DeleteCancelManager<TodoDeletion>(
 		toKey = { todoData.id },
 		onDelete = { todos ->
-			withContext(NonCancellable) {
+			withContext(NonCancellable + Dispatchers.Default) {
 				todoRepository.delete(todos.map { it.todoData.id })
 			}
 			_updateTodoChildren.value = Any()
@@ -124,7 +124,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 
 	override val blankTodoDeleted: SharedFlow<Unit> = deleteBlankTodoWithFlow.blankTodoDeleted
 		.apply {
-			viewModelScope.launch {
+			viewModelScope.launch(Dispatchers.Default) {
 				collectLatest {
 					_updateTodoChildren.value = Any()
 				}
@@ -180,7 +180,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun renameGroup(group: String?) {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val groupUiState = todoChildren.value.groups
 				.firstOrNull { it.name == group } ?: return@launch
 			_groupSelected.emit(
@@ -208,7 +208,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun deleteGroup(group: String?) {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val groupUiState = todoChildren.value.groups
 				.firstOrNull { it.name == group } ?: return@launch
 			deleteChildren(
@@ -278,7 +278,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun deleteChildren(todos: List<TodoData>) {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			if (todos.isEmpty())
 				return@launch
 			val todoDeletions = todos.map { TodoDeletion(it, false) }
@@ -333,7 +333,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun setSelect(group: String?, selected: Boolean) {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val groupUiState = todoChildren.value.groups
 				.firstOrNull { it.name == group } ?: return@launch
 			selectionController.setSelect(
@@ -344,7 +344,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun groupSelected() {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val selected = selectionController.selected
 			val todos = todoChildren.value.groups.asSequence()
 				.flatMap { groupUiState ->
@@ -358,7 +358,7 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun changeDoneSelected() {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val selected = selectionController.selected
 			if (selected.isEmpty())
 				return@launch
@@ -376,16 +376,16 @@ class TodoDetailViewModelImpl @Inject constructor(
 	}
 
 	override fun deleteSelected() {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.Default) {
 			val selected = selectionController.selected
 			if (selected.isEmpty())
 				return@launch
 			selectionController.clear()
 			val children = todoChildren.value.groups
-				.flatMap { it.todos }
+				.flatMap { it.todos }.asSequence()
 				.filter { selected.contains(it.data.id) }
 				.map { it.data }
-			deleteChildren(children)
+			deleteChildren(children.toList())
 		}
 	}
 
