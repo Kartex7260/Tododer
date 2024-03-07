@@ -21,6 +21,7 @@ fun TodoEditor(
 	modifier: Modifier = Modifier,
 	initialState: TodoData,
 	strings: TodoEditorStrings = TodoEditorDefaults.strings(),
+	enabledDeleting: Boolean = true,
 	onTitleChanged: (title: String) -> Unit = {},
 	onRemarkChanged: (remark: String) -> Unit = {},
 	onDoneChanged: (isDone: Boolean) -> Unit = {},
@@ -78,6 +79,7 @@ fun TodoEditor(
 				)
 				.fillMaxWidth(),
 			state = initialState,
+			enabledDeleting = enabledDeleting,
 			onDoneChanged = onDoneChanged,
 			preAction = preAction,
 //			onArchive = onArchive

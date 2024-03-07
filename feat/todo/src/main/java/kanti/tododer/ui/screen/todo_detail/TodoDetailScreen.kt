@@ -88,6 +88,7 @@ fun TodoDetailTopBar(
 	scrollBehavior: TopAppBarScrollBehavior,
 	editorSize: IntSize,
 	state: TodoData,
+	enabledDeleting: Boolean,
 	onDoneChange: (isDone: Boolean) -> Unit,
 	onMultiSelection: () -> Unit,
 //	onArchive: () -> Unit,
@@ -154,6 +155,7 @@ fun TodoDetailTopBar(
 					.offset(y = offsetYAnim.dp)
 					.alpha(alpha = alphaAnim),
 				state = state,
+				enabledDeleting = enabledDeleting,
 				onDoneChanged = onDoneChange,
 				preAction = { PreAction(onMultiSelection = onMultiSelection) },
 //				onArchive = onArchive,
@@ -316,6 +318,7 @@ fun TodoDetailScreen(
 				scrollBehavior = scrollBehavior,
 				editorSize = editorSize,
 				state = todoDetail,
+				enabledDeleting = !todoChildren.selection,
 				onDoneChange = {
 					vm.changeDoneCurrent(it)
 				},
@@ -367,6 +370,7 @@ fun TodoDetailScreen(
 						title = stringResource(id = R.string.title),
 						remark = stringResource(id = R.string.remark)
 					),
+					enabledDeleting = !todoChildren.selection,
 					onTitleChanged = { title ->
 						vm.changeTitle(title)
 					},

@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 fun TodoEditorControllers(
 	modifier: Modifier = Modifier,
 	state: TodoData,
+	enabledDeleting: Boolean = true,
 	onDoneChanged: (isDone: Boolean) -> Unit = {},
 	preAction: @Composable RowScope.() -> Unit = {},
 //	onArchive: () -> Unit = {},
@@ -43,7 +44,10 @@ fun TodoEditorControllers(
 //					contentDescription = null
 //				)
 //			}
-			IconButton(onClick = { onDelete() }) {
+			IconButton(
+				onClick = { onDelete() },
+				enabled = enabledDeleting
+			) {
 				Icon(
 					painter = painterResource(id = R.drawable.baseline_delete_forever_24),
 					contentDescription = null
