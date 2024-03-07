@@ -56,4 +56,5 @@
     <string name="mark_as_not_completed">Mark as not completed</string>
     <string name="ungroup">Ungroup</string>
     <string name="delete_group">Delete a group</string>
+    <string name="ungroup_group_ask">Ungroup the "Group" group?</string>
 </resources>
