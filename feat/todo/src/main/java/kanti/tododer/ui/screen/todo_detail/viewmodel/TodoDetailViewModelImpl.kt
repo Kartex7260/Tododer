@@ -346,6 +346,8 @@ class TodoDetailViewModelImpl @Inject constructor(
 	override fun groupSelected() {
 		viewModelScope.launch(Dispatchers.Default) {
 			val selected = selectionController.selected
+			if (selected.isEmpty())
+				return@launch
 			val todos = todoChildren.value.groups.asSequence()
 				.flatMap { groupUiState ->
 					groupUiState.todos.map { todoUiState ->
