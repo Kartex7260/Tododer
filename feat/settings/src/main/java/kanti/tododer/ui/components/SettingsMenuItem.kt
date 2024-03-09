@@ -1,6 +1,7 @@
 package kanti.tododer.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -15,6 +16,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 import kanti.tododer.feat.settings.R
 
 @Composable
@@ -26,24 +29,27 @@ fun SettingsMenuItem(
     dropdownMenuContent: @Composable ColumnScope.(onClose: () -> Unit) -> Unit = {}
 ) {
     var expandThemeMenu by rememberSaveable { mutableStateOf(false) }
-    ListItem(
-        modifier = Modifier
-            .clickable { expandThemeMenu = true }
-            .then(modifier),
-        headlineContent = headlineContent,
-        supportingContent = supportingContent,
-        leadingContent = leadingContent
-    )
-    val closeMenu = {
-        expandThemeMenu = false
-    }
-    DropdownMenu(
-        expanded = expandThemeMenu,
-        onDismissRequest = { closeMenu() },
-        content = {
-            dropdownMenuContent(closeMenu)
+    Column {
+        ListItem(
+            modifier = Modifier
+                .clickable { expandThemeMenu = true }
+                .then(modifier),
+            headlineContent = headlineContent,
+            supportingContent = supportingContent,
+            leadingContent = leadingContent
+        )
+        val closeMenu = {
+            expandThemeMenu = false
         }
-    )
+        DropdownMenu(
+            expanded = expandThemeMenu,
+            onDismissRequest = { closeMenu() },
+            content = {
+                dropdownMenuContent(closeMenu)
+            },
+            offset = DpOffset(x = 48.dp, y = (-16).dp)
+        )
+    }
 }
 
 @Preview
