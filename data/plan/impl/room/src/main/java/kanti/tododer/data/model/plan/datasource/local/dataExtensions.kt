@@ -12,7 +12,7 @@ fun Plan.toPlanEntity(sl: StateLanguage): PlanEntity {
 		id = id,
 		title = title,
 		state = sl.serialize(state),
-		type = type.toString()
+		type = type.name
 	)
 }
 

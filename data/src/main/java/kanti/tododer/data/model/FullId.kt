@@ -1,8 +1,8 @@
 package kanti.tododer.data.model
 
 data class FullId(
-	val id: Long,
-	val type: FullIdType
+	val id: Long = 0,
+	val type: FullIdType = FullIdType.Plan
 ) {
 	override fun toString(): String {
 		return "$type$SEPARATOR$id"

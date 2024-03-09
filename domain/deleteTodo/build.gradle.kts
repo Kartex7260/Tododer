@@ -9,6 +9,10 @@ android {
     namespace = "kanti.tododer.domain.todo.delete"
     compileSdk = 34
 
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
     defaultConfig {
         minSdk = 24
 
@@ -36,6 +40,7 @@ android {
 
 dependencies {
 
+    implementation(project(":core"))
     implementation(project(":data"))
     implementation(project(":data:todo:api"))
 
@@ -43,5 +48,12 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.48.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    testImplementation("org.mockito:mockito-core:4.11.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:4.11.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

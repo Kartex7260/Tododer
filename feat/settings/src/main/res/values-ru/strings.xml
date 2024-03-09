@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Настройки</string>
+    <string name="app_theme">Тема приложения</string>
+    <string name="app_theme_as_system">Как в системе</string>
+    <string name="app_theme_light">Светлая</string>
+    <string name="app_theme_dark">Тёмная</string>
+    <string name="color_style">Цветовое оформление</string>
+    <string name="color_style_dynamic">Как в системе</string>
+    <string name="color_style_red">Красный</string>
+    <string name="color_style_orange">Оранжевый</string>
+    <string name="color_style_yellow">Жёлтый</string>
+    <string name="color_style_green">Зелённый</string>
+    <string name="color_style_light_blue">Голубой</string>
+    <string name="color_style_blue">Синий</string>
+    <string name="color_style_purple">Фиолетовый</string>
+
+    <string name="multi_selection_style">Стиль мульти выбора</string>
+    <string name="color_fill">Закрашивание цветом</string>
+    <string name="checkbox">Чекбокс</string>
+    <string name="set_multi_selection_style">Установка стиля мульти выбора</string>
+    <string name="close">Закрыть</string>
+
+    <string name="group_expansion">По умолчанию группы раскрыты</string>
+</resources>

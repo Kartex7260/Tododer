@@ -46,8 +46,8 @@ interface PlanDao {
 	@Query("DELETE FROM plans WHERE id in (:planIds)")
 	suspend fun delete(planIds: List<Long>)
 
-	@Query("DELETE FROM plans WHERE id = :planId AND title = ''")
-	suspend fun deleteIfNameEmpty(planId: Long): Int
+	@Query("DELETE FROM plans WHERE id = :planId AND title = '' AND type = :type")
+	suspend fun deleteIfNameEmpty(planId: Long, type: String): Int
 
 	@Query("SELECT COUNT(*) FROM plans")
 	suspend fun count(): Long

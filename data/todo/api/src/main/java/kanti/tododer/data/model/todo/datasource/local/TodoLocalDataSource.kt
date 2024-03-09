@@ -16,11 +16,19 @@ interface TodoLocalDataSource {
 
 	suspend fun insert(todo: Todo): Long
 
+	suspend fun setGroup(todoIds: List<Long>, group: String?)
+
+	suspend fun ungroup(parent: FullId, group: String)
+
 	suspend fun updateTitle(todoId: Long, title: String)
 
 	suspend fun updateRemark(todoId: Long, remark: String)
 
 	suspend fun changeDone(todoId: Long, isDone: Boolean)
+
+	suspend fun changeDone(todoIds: List<Long>, isDone: Boolean)
+
+	suspend fun changeGroupDone(parent: FullId, group: String?, isDone: Boolean)
 
 	suspend fun delete(todoIds: List<Long>)
 

@@ -2,7 +2,10 @@ package kanti.tododer.ui.components.todo
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,7 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 fun TodoEditorControllers(
 	modifier: Modifier = Modifier,
 	state: TodoData,
+	enabledDeleting: Boolean = true,
 	onDoneChanged: (isDone: Boolean) -> Unit = {},
+	preAction: @Composable RowScope.() -> Unit = {},
 //	onArchive: () -> Unit = {},
 	onDelete: () -> Unit = {}
 ) {
@@ -32,13 +37,17 @@ fun TodoEditorControllers(
 			onCheckedChange = onDoneChanged
 		)
 		Row {
+			preAction()
 //			IconButton(onClick = { onArchive() }) {
 //				Icon(
 //					painter = painterResource(id = R.drawable.outline_archive_24),
 //					contentDescription = null
 //				)
 //			}
-			IconButton(onClick = { onDelete() }) {
+			IconButton(
+				onClick = { onDelete() },
+				enabled = enabledDeleting
+			) {
 				Icon(
 					painter = painterResource(id = R.drawable.baseline_delete_forever_24),
 					contentDescription = null
@@ -61,6 +70,11 @@ fun PreviewTodoEditorControllers() {
 			id = 0,
 			isDone = isDone
 		),
+		preAction = {
+			IconButton(onClick = { }) {
+				Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+			}
+		},
 		onDoneChanged = { isDone = it }
 	)
 }

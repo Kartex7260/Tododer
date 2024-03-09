@@ -12,10 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
+import kanti.tododer.data.colorstyle.ColorStyle
 import kanti.tododer.data.model.settings.AppTheme
+import kanti.tododer.ui.common.MultiSelectionStyle
 import kanti.tododer.ui.theme.TododerTheme
 
 @AndroidEntryPoint
@@ -25,7 +26,6 @@ class MainActivity : ComponentActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		viewModel.init()
 		setContent {
 			val appTheme by viewModel.appTheme.collectAsState()
 			val darkTheme = when (appTheme) {
@@ -33,8 +33,12 @@ class MainActivity : ComponentActivity() {
 				AppTheme.LIGHT -> false
 				AppTheme.DARK -> true
 			}
+			val colorStyle by viewModel.colorStyle.collectAsState()
+			val selectionStyle by viewModel.selectionStyle.collectAsState()
 			MainActivityContent(
-				darkTheme = darkTheme
+				darkTheme = darkTheme,
+				selectionStyle = selectionStyle,
+				colorStyle = colorStyle
 			)
 		}
 	}
@@ -42,16 +46,21 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainActivityContent(
-	darkTheme: Boolean = isSystemInDarkTheme()
+	darkTheme: Boolean = isSystemInDarkTheme(),
+	selectionStyle: Set<MultiSelectionStyle> = setOf(MultiSelectionStyle.ColorFill),
+	colorStyle: ColorStyle? = null
 ) {
 	TododerTheme(
-		darkTheme = darkTheme
+		darkTheme = darkTheme,
+		colorStyle = colorStyle
 	) {
 		Surface(
 			modifier = Modifier.fillMaxSize(),
 			color = MaterialTheme.colorScheme.surface
 		) {
-			TododerNavHost(context = LocalContext.current)
+			TododerNavHost(
+				selectionStyle = selectionStyle
+			)
 		}
 	}
 }

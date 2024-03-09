@@ -15,11 +15,14 @@ import kanti.tododer.feat.todo.R
 @Composable
 fun NormalTodoDropdownMenu(
 	expanded: Boolean,
+	allowGrouping: Boolean = true,
 	onDismissRequest: () -> Unit = {},
 	@SuppressLint("ModifierParameter")
 	modifier: Modifier = Modifier,
 	offset: DpOffset = DpOffset(0.dp, 0.dp),
+	onAddToGroup: () -> Unit = {},
 	onRename: () -> Unit = {},
+	onSelect: () -> Unit = {},
 	onDelete: () -> Unit = {}
 ) {
 	DropdownMenu(
@@ -28,10 +31,26 @@ fun NormalTodoDropdownMenu(
 		modifier = modifier,
 		offset = offset
 	) {
+		if (allowGrouping) {
+			DropdownMenuItem(
+				text = { Text(text = stringResource(id = R.string.add_to_group)) },
+				onClick = {
+					onAddToGroup()
+					onDismissRequest()
+				}
+			)
+		}
 		DropdownMenuItem(
 			text = { Text(text = stringResource(id = R.string.rename)) },
 			onClick = {
 				onRename()
+				onDismissRequest()
+			}
+		)
+		DropdownMenuItem(
+			text = { Text(text = stringResource(id = R.string.select)) },
+			onClick = {
+				onSelect()
 				onDismissRequest()
 			}
 		)

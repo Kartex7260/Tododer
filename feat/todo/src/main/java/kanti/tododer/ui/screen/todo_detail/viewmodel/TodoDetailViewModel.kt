@@ -1,165 +1,131 @@
 package kanti.tododer.ui.screen.todo_detail.viewmodel
 
-import android.util.Log
+import kanti.tododer.ui.common.GroupUiState
+import kanti.tododer.ui.common.TodoDataWithGroup
+import kanti.tododer.ui.common.TodoUiState
+import kanti.tododer.ui.common.TodosUiState
 import kanti.tododer.ui.components.todo.TodoData
-import kanti.tododer.ui.components.todo.TodosData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kanti.tododer.ui.screen.todo_list.viewmodel.TodoDeletion
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 interface TodoDetailViewModel {
 
-	val emptyStack: SharedFlow<Long?>
+    val todoDetail: StateFlow<TodoData>
+    val todoChildren: StateFlow<TodosUiState>
 
-	val todoDetail: StateFlow<TodoData>
-	val todoChildren: StateFlow<TodosData>
+    val childrenTodosDeleted: SharedFlow<List<TodoDeletion>>
+    val blankTodoDeleted: SharedFlow<Unit>
 
-	val childrenTodosDeleted: SharedFlow<List<TodoData>>
-	val currentTodoDeleted: SharedFlow<TodoData>
-	val blankTodoDeleted: SharedFlow<Unit>
+    val toNext: SharedFlow<Long>
+    val onExit: SharedFlow<TodoData?>
 
-	fun createNewTodo()
+    val groupSelected: SharedFlow<List<TodoDataWithGroup>>
 
-	fun renameTodo(todoId: Long, newTitle: String)
+    fun show(todoId: Long) {}
 
-	fun changeTitle(title: String)
+    fun reshow(todoId: Long?) {}
 
-	fun changeRemark(remark: String)
+    fun createNewTodo(title: String, goTo: Boolean) {}
 
-	fun changeDoneCurrent(isDone: Boolean)
+    fun setGroup(todoIds: List<Long>, group: String?) {}
 
-	fun changeDoneChild(todoId: Long, isDone: Boolean)
+    fun renameGroup(group: String?) {}
 
-	fun deleteCurrent()
+    fun ungroup(group: String) {}
 
-	fun cancelDeleteCurrent()
+    fun setGroupExpand(group: String?, expand: Boolean) {}
 
-	fun deleteChildren(todos: List<TodoData>)
+    fun deleteGroup(group: String?) {}
 
-	fun cancelDeleteChildren()
+    fun renameTodo(todoId: Long, newTitle: String) {}
 
-	fun rejectCancelDelete()
+    fun changeTitle(title: String) {}
 
-	fun push(todoId: Long)
+    fun changeRemark(remark: String) {}
 
-	fun pop()
+    fun changeDoneCurrent(isDone: Boolean) {}
 
-	fun onStop()
+    fun changeDoneChild(todoId: Long, isDone: Boolean) {}
 
-	companion object : TodoDetailViewModel {
+    fun changeGroupDone(group: String?, isDone: Boolean) {}
 
-		private const val logTag = "TodoDetailViewModel"
+    fun deleteCurrent() {}
 
-		private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    fun deleteChildren(todos: List<TodoData>) {}
 
-		private const val maxPop = 3
-		private var currentPop = 0
+    fun cancelDeleteChildren() {}
 
-		private val _emptyStack = MutableSharedFlow<Long?>()
-		override val emptyStack: SharedFlow<Long?> = _emptyStack.asSharedFlow()
+    fun rejectCancelDelete() {}
 
-		private val _todoDetail = MutableStateFlow(TodoData())
-		override val todoDetail: StateFlow<TodoData> = _todoDetail.asStateFlow()
+    fun switchSelection() {}
 
-		private val _childrenTodoDeleted = MutableSharedFlow<List<TodoData>>()
-		override val childrenTodosDeleted: SharedFlow<List<TodoData>> = _childrenTodoDeleted.asSharedFlow()
+    fun selection(todoId: Long) {}
 
-		private val _currentTodoDeleted = MutableSharedFlow<TodoData>()
-		override val currentTodoDeleted: SharedFlow<TodoData> = _currentTodoDeleted.asSharedFlow()
+    fun selection(group: String?) {}
 
-		override val blankTodoDeleted: SharedFlow<Unit> = MutableSharedFlow()
+    fun selectionOff(): Boolean { return false }
 
-		private val _todoChildren = MutableStateFlow(TodosData(listOf(
-			TodoData(id = 2, title = "Test 1"),
-			TodoData(id = 3, title = "Test 2"),
-			TodoData(id = 4, title = "Test 3"),
-			TodoData(id = 5, title = "Test 4"),
-			TodoData(id = 6, title = "Test 5"),
-			TodoData(id = 7, title = "Test 6"),
-			TodoData(id = 8, title = "Test 7"),
-			TodoData(id = 9, title = "Test 8"),
-			TodoData(id = 10, title = "Test 9"),
-			TodoData(id = 11, title = "Test 10"),
-			TodoData(id = 12, title = "Test 11"),
-			TodoData(id = 13, title = "Test 12"),
-		)))
-		override val todoChildren: StateFlow<TodosData> = _todoChildren.asStateFlow()
+    fun setSelect(todoId: Long, selected: Boolean) {}
 
-		override fun createNewTodo() {
-			Log.d(logTag, "createNewTodo()")
-		}
+    fun setSelect(group: String?, selected: Boolean) {}
 
-		override fun renameTodo(todoId: Long, newTitle: String) {
-			Log.d(logTag, "renameTodo(todoId: Long, newTitle: String)")
-		}
+    fun groupSelected() {}
 
-		override fun changeTitle(title: String) {
-			Log.d(logTag, "changeTitle(title: String = $title)")
-			_todoDetail.value = _todoDetail.value.copy()
-		}
+    fun changeDoneSelected() {}
 
-		override fun changeRemark(remark: String) {
-			Log.d(logTag, "changeRemark(remark: String = $remark)")
-			_todoDetail.value = _todoDetail.value.copy()
-		}
+    fun deleteSelected() {}
 
-		override fun changeDoneCurrent(isDone: Boolean) {
-			Log.d(logTag, "changeDoneCurrent(isDone: Boolean = $isDone)")
-			_todoDetail.value = _todoDetail.value.copy()
-		}
+    fun onStop() {}
 
-		override fun changeDoneChild(todoId: Long, isDone: Boolean) {
-			Log.d(logTag, "changeDoneChild(todoId: Int = $todoId, isDone: Boolean = $isDone)")
-		}
+    companion object : TodoDetailViewModel {
 
-		override fun push(todoId: Long) {
-			Log.d(logTag, "push(todoId: Int = $todoId)")
-		}
+        private val _todoDetail = MutableStateFlow(TodoData())
+        override val todoDetail: StateFlow<TodoData> = _todoDetail.asStateFlow()
 
-		override fun pop() {
-			Log.d(logTag, "pop()")
-			currentPop++
-			if (currentPop >= maxPop) {
-				coroutineScope.launch {
-					_emptyStack.emit(value = null)
-				}
-			}
-		}
+        private val _childrenTodoDeleted = MutableSharedFlow<List<TodoDeletion>>()
+        override val childrenTodosDeleted: SharedFlow<List<TodoDeletion>> =
+            _childrenTodoDeleted.asSharedFlow()
 
-		override fun deleteCurrent() {
-			Log.d(logTag, "deleteCurrent()")
-			coroutineScope.launch {
-				_childrenTodoDeleted.emit(listOf(TodoData(title = "Current todo")))
-			}
-		}
+        override val blankTodoDeleted: SharedFlow<Unit> = MutableSharedFlow()
 
-		override fun cancelDeleteCurrent() {
-			Log.d(logTag, "cancelDeleteCurrent()")
-		}
+        private val _todoChildren = MutableStateFlow(
+            TodosUiState(
+                groups = listOf(
+                    GroupUiState(
+                        name = "Group 1",
+                        todos = listOf(
+                            TodoUiState(data = TodoData(id = 2, title = "Test 1")),
+                            TodoUiState(data = TodoData(id = 3, title = "Test 2")),
+                            TodoUiState(data = TodoData(id = 4, title = "Test 3")),
+                            TodoUiState(data = TodoData(id = 5, title = "Test 4"))
+                        )
+                    ),
+                    GroupUiState(
+                        name = null,
+                        todos = listOf(
+                            TodoUiState(data = TodoData(id = 6, title = "Test 5")),
+                            TodoUiState(data = TodoData(id = 7, title = "Test 6")),
+                            TodoUiState(data = TodoData(id = 8, title = "Test 7")),
+                            TodoUiState(data = TodoData(id = 9, title = "Test 8")),
+                            TodoUiState(data = TodoData(id = 10, title = "Test 9")),
+                            TodoUiState(data = TodoData(id = 11, title = "Test 10")),
+                            TodoUiState(data = TodoData(id = 12, title = "Test 11")),
+                            TodoUiState(data = TodoData(id = 13, title = "Test 12")),
+                        )
+                    )
+                )
+            )
+        )
+        override val todoChildren: StateFlow<TodosUiState> = _todoChildren.asStateFlow()
 
-		override fun deleteChildren(todos: List<TodoData>) {
-			Log.d(logTag, "deleteChild(todoId: Int = $todos)")
-			coroutineScope.launch {
-				_childrenTodoDeleted.emit(listOf(TodoData(title = "Child todo")))
-			}
-		}
+        override val toNext: SharedFlow<Long> = MutableSharedFlow()
+        override val onExit: SharedFlow<TodoData?> = MutableSharedFlow()
 
-		override fun cancelDeleteChildren() {
-			Log.d(logTag, "undoDelete()")
-		}
-
-		override fun rejectCancelDelete() {
-			Log.d(logTag, "rejectCancelDelete()")
-		}
-
-		override fun onStop() {
-			Log.d(logTag, "onStop()")
-		}
-	}
+        override val groupSelected: SharedFlow<List<TodoDataWithGroup>> = MutableSharedFlow()
+    }
 }

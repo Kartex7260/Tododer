@@ -17,6 +17,10 @@
             <option value="$PROJECT_DIR$/data/appData/api" />
             <option value="$PROJECT_DIR$/data/appData/impl" />
             <option value="$PROJECT_DIR$/data/appData/impl/dataStore" />
+            <option value="$PROJECT_DIR$/data/colorStyle" />
+            <option value="$PROJECT_DIR$/data/colorStyle/api" />
+            <option value="$PROJECT_DIR$/data/colorStyle/impl" />
+            <option value="$PROJECT_DIR$/data/colorStyle/impl/room" />
             <option value="$PROJECT_DIR$/data/plan" />
             <option value="$PROJECT_DIR$/data/plan/api" />
             <option value="$PROJECT_DIR$/data/plan/impl" />
@@ -34,7 +38,6 @@
             <option value="$PROJECT_DIR$/data/todo/impl" />
             <option value="$PROJECT_DIR$/data/todo/impl/room" />
             <option value="$PROJECT_DIR$/domain" />
-            <option value="$PROJECT_DIR$/domain/dataInitializer" />
             <option value="$PROJECT_DIR$/domain/deleteTodo" />
             <option value="$PROJECT_DIR$/domain/getPlanChildren" />
             <option value="$PROJECT_DIR$/domain/planDeleteBehaviour" />
@@ -44,6 +47,7 @@
             <option value="$PROJECT_DIR$/feat/todo" />
             <option value="$PROJECT_DIR$/room" />
             <option value="$PROJECT_DIR$/ui" />
+            <option value="$PROJECT_DIR$/ui/common" />
             <option value="$PROJECT_DIR$/ui/deleter" />
             <option value="$PROJECT_DIR$/ui/fillingProgressBar" />
             <option value="$PROJECT_DIR$/ui/plan" />

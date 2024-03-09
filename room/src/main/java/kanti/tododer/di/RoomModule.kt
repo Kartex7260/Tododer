@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kanti.tododer.common.Const
 import kanti.tododer.data.room.TododerDatabase
+import kanti.tododer.data.room.colorstyle.ColorStyleDao
 import kanti.tododer.data.room.plan.PlanDao
 import kanti.tododer.data.room.progress.PlanProgressDao
 import kanti.tododer.data.room.todo.TodoDao
@@ -23,6 +24,12 @@ object RoomModule {
 	fun provideTododerDatabase(@ApplicationContext context: Context): TododerDatabase {
 		return Room.databaseBuilder(context, TododerDatabase::class.java, Const.DATABASE_NAME)
 			.build()
+	}
+
+	@Provides
+	@Singleton
+	fun provideColorStyleDao(database: TododerDatabase): ColorStyleDao {
+		return database.colorStyleDao()
 	}
 
 	@Provides

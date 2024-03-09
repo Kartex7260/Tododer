@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="plans">Планы</string>
+    <string name="plan_all">Все задачи</string>
+    <string name="plan_default">Задачи</string>
+    <string name="create_new_plan">Создать план</string>
+    <string name="create_new_todo">Создать новую задачу</string>
+    <string name="create">Создать</string>
+    <string name="add">Добавить</string>
+    <string name="cancel">Отмена</string>
+    <string name="plan_name">Имя плана</string>
+    <string name="todo_name">Имя задачи</string>
+    <string name="rename">Переименовать</string>
+    <string name="delete">Удалить</string>
+    <string name="new_title">Новый заголовок</string>
+    <string name="title">Загаловок</string>
+    <string name="remark">Примечание</string>
+    <string name="plan_deleted">План \"%d\" был удалён</string>
+    <string name="deleted_blank_plan">Пустой план был удалён</string>
+    <string name="todo_deleted">Задача \"%d\" была удалёна</string>
+    <string name="deleted_blank_todo">Пустая задача была удалена</string>
+    <string name="delete_current_todo_ask">Удалить текущую задачу?</string>
+    <string name="rename_plan">Переименновать план</string>
+    <string name="rename_todo">Переименновать задачу</string>
+    <string name="delete_plan">Удалить план</string>
+    <string name="delete_plan_ask">Удалить план?</string>
+    <string name="caption_todo_list">Tododer Апп\nПлан: \"{1}\"\nЗадач: {2}, Выполненных задач: {3}</string>
+    <string name="caption_todo_detail">Tododer Апп\nЗадача: \"{1}\"\nЗадач: {2}, Выполненных задач: {3}</string>
+    <string name="caption_plan_list">Tododer Апп\nПланов: \"{1}\", Полностью выполненных: {2}\nВсего задач: {3}</string>
+    <string name="multi_selection">Мульти выбор</string>
+    <string name="select">Выбрать</string>
+    <string name="without_group">Без группы</string>
+    <string name="set_group">Добавить в группу</string>
+    <string name="group_name">Имя группы</string>
+    <string name="remove">Убрать</string>
+    <string name="set">Установить</string>
+    <string name="add_to_group">Добавить в группу</string>
+    <string name="mark_as_completed">Пометить выполненным</string>
+    <string name="mark_as_not_completed">Пометить невыполненным</string>
+    <string name="ungroup">Разгруппировать</string>
+    <string name="delete_group">Удалить группу</string>
+    <string name="ungroup_group_ask">Разгруппировать группу \"{1}\"?</string>
+</resources>

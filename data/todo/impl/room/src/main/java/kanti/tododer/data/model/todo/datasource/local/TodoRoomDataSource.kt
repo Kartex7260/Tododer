@@ -5,59 +5,118 @@ import kanti.tododer.data.model.FullId
 import kanti.tododer.data.model.todo.Todo
 import kanti.tododer.data.model.todo.TodoState
 import kanti.tododer.data.room.todo.TodoDao
+import kanti.tododer.util.log.Logger
+import kanti.tododer.util.log.StandardLog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TodoRoomDataSource @Inject constructor(
 	private val todoDao: TodoDao,
-	private val sl: StateLanguage
+	private val sl: StateLanguage,
+	@StandardLog private val logger: Logger
 ) : TodoLocalDataSource {
 
 	override suspend fun getTodo(todoId: Long): Todo? {
-		return todoDao.getTodo(todoId)?.toTodo(sl)
+		val result = withContext(Dispatchers.IO) { todoDao.getTodo(todoId)?.toTodo(sl) }
+		logger.d(LOG_TAG, "getTodo(Long = $todoId): return $result")
+		return result
 	}
 
 	override suspend fun getAllChildren(fullId: FullId): List<Todo> {
-		return todoDao.getAllChildren(fullId.toString()).map { it.toTodo(sl) }
+		val result = withContext(Dispatchers.IO) {
+			todoDao.getAllChildren(fullId.toString()).map { it.toTodo(sl) }
+		}
+		logger.d(LOG_TAG, "getAllChildren(FullId = $fullId): return count(${result.size})")
+		return result
 	}
 
 	override suspend fun getChildren(fullId: FullId, state: TodoState?): List<Todo> {
-		if (state == null) {
-			return getAllChildren(fullId)
+		val result = withContext(Dispatchers.IO) {
+			if (state == null) {
+				return@withContext getAllChildren(fullId)
+			}
+			todoDao.getChildren(fullId.toString(), state.name).map { it.toTodo(sl) }
 		}
-		return todoDao.getChildren(fullId.toString(), state.name).map { it.toTodo(sl) }
+		logger.d(
+			LOG_TAG,
+			"getChildren(FullId = $fullId, TodoState? = $state): return count(${result.size})"
+		)
+		return result
 	}
 
 	override suspend fun getChildrenCount(fullId: FullId, state: TodoState?): Long {
-		if (state == null) {
-			return todoDao.getAllChildrenCount(fullId.toString())
+		val result = withContext(Dispatchers.IO) {
+			if (state == null) {
+				return@withContext todoDao.getAllChildrenCount(fullId.toString())
+			}
+			todoDao.getChildrenCount(fullId.toString(), state.name)
 		}
-		return todoDao.getChildrenCount(fullId.toString(), state.name)
+		logger.d(
+			LOG_TAG,
+			"getChildrenCount(FullId = $fullId, TodoState? = $state): return $result"
+		)
+		return result
 	}
 
 	override suspend fun insert(todo: Todo): Long {
-		val rowId = todoDao.insert(todo.toTodoEntity(sl))
-		if (rowId == -1L)
-			throw IllegalArgumentException("Todo already exist (id = ${todo.id})")
-		return rowId
+		val result =  withContext(Dispatchers.IO) { todoDao.insert(todo.toTodoEntity(sl)) }
+		logger.d(LOG_TAG, "insert(Todo = $todo): return $result")
+		return result
+	}
+
+	override suspend fun setGroup(todoIds: List<Long>, group: String?) {
+		todoDao.updateGroup(todoIds, group)
+		logger.d(LOG_TAG, "setGroup(List<Long> = $todoIds, String? = $group)")
+	}
+
+	override suspend fun ungroup(parent: FullId, group: String) {
+		todoDao.ungroup(parent.toString(), group)
+		logger.d(LOG_TAG, "ungroup(FullId = $parent, String = $group)")
 	}
 
 	override suspend fun updateTitle(todoId: Long, title: String) {
 		todoDao.updateTitle(todoId, title)
+		logger.d(LOG_TAG, "updateTitle(Long = $todoId, String = $title)")
 	}
 
 	override suspend fun updateRemark(todoId: Long, remark: String) {
 		todoDao.updateRemark(todoId, remark)
+		logger.d(LOG_TAG, "updateRemark(Long = $todoId, String = $remark)")
 	}
 
 	override suspend fun changeDone(todoId: Long, isDone: Boolean) {
 		todoDao.changeDone(todoId, isDone)
+		logger.d(LOG_TAG, "changeDone(Long = $todoId, Boolean = $isDone)")
+	}
+
+	override suspend fun changeDone(todoIds: List<Long>, isDone: Boolean) {
+		todoDao.changeDone(todoIds, isDone)
+		logger.d(LOG_TAG, "changeDone(List<Long> = count(${todoIds.size}), Boolean = $isDone)")
+	}
+
+	override suspend fun changeGroupDone(parent: FullId, group: String?, isDone: Boolean) {
+		if (group == null) {
+			todoDao.changeGroupNullDone(parent.toString(), isDone)
+		} else {
+			todoDao.changeGroupDone(parent.toString(), group, isDone)
+		}
+		logger.d(LOG_TAG, "changeGroupDone(FullId = $parent, String? = $group, Boolean = $isDone)")
 	}
 
 	override suspend fun delete(todoIds: List<Long>) {
 		todoDao.delete(todoIds)
+		logger.d(LOG_TAG, "delete(List<Long> = count(${todoIds.size}))")
 	}
 
 	override suspend fun deleteIfNameIsEmpty(todoId: Long): Boolean {
-		return todoDao.deleteIfNameIsEmpty(todoId) == 1
+		val result = todoDao.deleteIfNameIsEmpty(todoId) == 1
+		logger.d(LOG_TAG, "deleteIfNameIsEmpty(Long = $todoId): return $result")
+		return result
+	}
+
+	companion object {
+
+		private const val LOG_TAG = "TodoRoomDataSource"
 	}
 }

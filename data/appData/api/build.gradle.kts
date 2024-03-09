@@ -36,8 +36,13 @@ dependencies {
 	implementation(project(":core"))
 
 	implementation("com.google.dagger:hilt-android:2.48.1")
-	kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
 
 	testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+}
+
+tasks.withType<Test> {
+	useJUnitPlatform()
 }

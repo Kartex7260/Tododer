@@ -6,35 +6,56 @@
     <string name="plan_all">All tasks</string>
     <string name="plan_default">Tasks</string>
 
-    <string name="nav_destination_todo">todo</string>
+    <string name="nav_destination_todo" translatable="false">todo</string>
 
-    <string name="nav_destination_todos">todos</string>
+    <string name="nav_destination_todos" translatable="false">todos</string>
 
-    <string name="nav_destination_todo_detail">todoChildren</string>
-    <string name="nav_destination_todo_detail_todo_id_param">todoId</string>
+    <string name="nav_destination_todo_detail" translatable="false">todoChildren</string>
+    <string name="nav_destination_todo_detail_todo_id_param" translatable="false">todoId</string>
 
-    <string name="nav_destination_plans">plans</string>
+    <string name="nav_destination_plans" translatable="false">plans</string>
+    <string name="nav_destination_plans_id_param" translatable="false">planId</string>
 
     <string name="create_new_plan">Create a new plan</string>
+    <string name="create_new_todo">Create a new task</string>
     <string name="create">Create</string>
+    <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <string name="plan_name">Plan name</string>
+    <string name="todo_name">Todo name</string>
 
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="new_title">New title</string>
 
-    <string name="delete_ask_1">Delete the</string>
-    <string name="delete_ask_2_todo">task</string>
-
-    <string name="deleted_solo_1">The</string>
-    <string name="deleted_solo_2_todo">task has been deleted</string>
-    <string name="deleted_solo_2_plan">plan has been deleted</string>
-    
-    <string name="deleted_multi_1">Deleted</string>
-    <string name="deleted_multi_2_todo">tasks</string>
-    <string name="deleted_multi_2_plan">plans</string>
-
+    <string name="title">Title</string>
+    <string name="remark">Remark</string>
+    <string name="plan_deleted">The \"%d\" plan has been deleted</string>
     <string name="deleted_blank_plan">An blank plan has been deleted</string>
+    <string name="todo_deleted">The \"%d\" task has been deleted</string>
     <string name="deleted_blank_todo">An blank todo has been deleted</string>
+    <string name="regex_name" translatable="false">%d</string>
+    <string name="delete_current_todo_ask">Delete the current task?</string>
+    <string name="rename_plan">Rename the plan</string>
+    <string name="rename_todo">Rename the todo</string>
+    <string name="delete_plan">Delete a plan</string>
+    <string name="delete_plan_ask">Delete the plan?</string>
+    <string name="caption_todo_list">Tododer App\nPlan: \"{1}\"\nTodos: {2}, Completed todos: {3}</string>
+    <string name="caption_todo_detail">Tododer App\nTodo: \"{1}\"\nTodos: {2}, Completed todos: {3}</string>
+    <string name="caption_plan_list">Tododer App\nPlans: \"{1}\", Full complected: {2}\nTotal todos: {3}</string>
+    <string name="multi_selection">Multi selection</string>
+    <string name="select">Select</string>
+
+    <string name="without_group">Without a group</string>
+    <string name="set_group">Set group</string>
+    <string name="group_name">Group name</string>
+    <string name="remove">Remove</string>
+    <string name="set">Set</string>
+    <string name="add_to_group">Add to a group</string>
+
+    <string name="mark_as_completed">Mark as completed</string>
+    <string name="mark_as_not_completed">Mark as not completed</string>
+    <string name="ungroup">Ungroup</string>
+    <string name="delete_group">Delete a group</string>
+    <string name="ungroup_group_ask">Ungroup the \"{1}\" group?</string>
 </resources>

@@ -42,7 +42,7 @@ android {
 		applicationId = "kanti.tododer"
 		minSdk = 24
 		targetSdk = 34
-		versionCode = 1
+		versionCode = 2
 
 		val calendar = Calendar.getInstance()
 		versionName = "${calendar.get(Calendar.YEAR)}" +
@@ -106,7 +106,9 @@ android {
 
 dependencies {
 
-	implementation("androidx.navigation:navigation-compose:2.7.6")
+	implementation("com.google.android.material:material:1.11.0")
+
+	implementation("androidx.navigation:navigation-compose:2.7.7")
 	implementation("androidx.core:core-ktx:1.12.0")
 	implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 	implementation("androidx.activity:activity-compose:1.8.2")
@@ -129,16 +131,20 @@ dependencies {
 	implementation(project(":data:plan:api"))
 	implementation(project(":data:todo:api"))
 
+	implementation(project(":core"))
 	implementation(project(":data"))
 	implementation(project(":feat:todo"))
 	implementation(project(":feat:settings"))
-	implementation(project(":domain:dataInitializer"))
+	implementation(project(":data:colorStyle:api"))
+	implementation(project(":data:colorStyle:impl:room"))
 	implementation(project(":data:todo:impl:room"))
 	implementation(project(":data:plan:impl:room"))
 	implementation(project(":data:progress:impl:room"))
 	implementation(project(":data:appData:impl:dataStore"))
 	implementation(project(":data:settings:api"))
 	implementation(project(":data:settings:impl:dataStore"))
+
+	implementation(project(":ui:common"))
 
 //	implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
 }

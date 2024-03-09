@@ -6,13 +6,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlanLocalDataSource {
 
-	val planAll: Flow<Plan>
-	val defaultPlan: Flow<Plan>
+	val planAll: Flow<Plan?>
+	val planDefault: Flow<Plan?>
 	val standardPlans: Flow<List<Plan>>
 
 	suspend fun getPlan(planId: Long): Plan?
 
-	suspend fun getPlanFromType(type: PlanType): Plan
+	suspend fun getPlanFromType(type: PlanType): Plan?
 
 	suspend fun getPlans(plansId: List<Long>): List<Plan>
 

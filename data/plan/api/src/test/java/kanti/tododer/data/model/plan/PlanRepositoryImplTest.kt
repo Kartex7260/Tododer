@@ -1,6 +1,13 @@
 package kanti.tododer.data.model.plan
 
 import kanti.tododer.data.model.plan.datasource.local.FakePlanLocalDataSource
+import kanti.tododer.util.log.PrintLogger
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
@@ -9,93 +16,250 @@ import org.junit.jupiter.api.Test
 
 class PlanRepositoryImplTest {
 
-	private val plans: MutableMap<Int, Plan> = LinkedHashMap()
-	private val repository: PlanRepository = PlanRepositoryImpl(FakePlanLocalDataSource(
-		planInitializer = DefaultPlanInitializer(),
-		plans = plans
-	))
+    private val logTag = "PlanRepositoryImplTest"
+    private val logger = PrintLogger()
 
-	@AfterEach
-	fun afterEach() = runTest {
-		plans.clear()
-	}
+    private val plansMap: MutableMap<Long, Plan> = LinkedHashMap()
+    private val planDataSource = FakePlanLocalDataSource(
+        plans = plansMap,
+        logger = logger
+    )
+    private val repository: PlanRepository = PlanRepositoryImpl(
+        localDataSource = planDataSource,
+        logger = logger
+    )
 
-	@Test
-	@DisplayName("create(String)")
-	fun create() = runTest {
-		val expectedPlan = Plan(id = 1, title = "Test")
-	    val plan = repository.create("Test")
+    @AfterEach
+    fun afterEach() = runTest {
+        logger.d(logTag, "----------- after each -----------")
+        plansMap.clear()
+    }
 
-		val expectedArray = arrayOf(
-			Plan(id = 1, title = "Test")
-		)
+    @Test
+    @DisplayName("planAll: Flow<Plan>")
+    fun planAll() = runTest {
+        val plan = repository.planAll.first()
+        assertEquals(PlanAll, plan)
+    }
 
-		assertEquals(expectedPlan, plan)
-		assertArrayEquals(expectedArray, plans.values.toTypedArray())
-	}
+    @Test
+    @DisplayName("planDefault: Flow<Plan>")
+    fun planDefault() = runTest {
+        val plan = repository.planDefault.first()
+        assertEquals(PlanDefault, plan)
+    }
 
-	@Test
-	@DisplayName("updateTitle(Plan, String)")
-	fun updateTitle() = runTest {
-		val expectedPlan = Plan(id = 1, title = "Updated")
-		val expectedArray = arrayOf(Plan(id = 1, title = "Updated"))
-	    plans.putAll(mapOf(
-			1 to Plan(id = 1, title = "Test 1")
-		))
+    @Test
+    @DisplayName("standardPlans: Flow<List<Plan>>")
+    fun standardPlans() = runTest(StandardTestDispatcher()) {
+        launch {
+            repository.standardPlans.collectIndexed { index, value ->
+                when (index) {
+                    0 -> { assertArrayEquals(arrayOf(), value.toTypedArray()) }
+                    1 -> { assertArrayEquals(arrayOf(Plan(id = 1L)), value.toTypedArray()) }
+                    2 -> {
+                        assertArrayEquals(
+                            arrayOf(
+                                Plan(id = 1L),
+                                Plan(id = 2L)
+                            ),
+                            value.toTypedArray()
+                        )
+                        cancel("Success")
+                    }
+                }
+            }
+        }
 
-		val plan = repository.updateTitle(1, title = "Updated")
+        launch {
+            plansMap[1L] = Plan(id = 1L)
+            planDataSource.updateStateFlow()
 
-		assertEquals(expectedPlan, plan)
-		assertArrayEquals(expectedArray, plans.values.toTypedArray())
-	}
+            delay(500L)
 
-	@Test
-	@DisplayName("delete(List<Plan>)")
-	fun delete() = runTest {
-	    plans.putAll(mapOf(
-			1 to Plan(id = 1),
-			2 to Plan(id = 2),
-			3 to Plan(id = 3)
-		))
-		val expectedArray = arrayOf(Plan(id = 2))
+            plansMap[2L] = Plan(id = 2L)
+            planDataSource.updateStateFlow()
+        }
+    }
 
-		repository.delete(listOf(1, 3, 4))
-		assertArrayEquals(expectedArray, plans.values.toTypedArray())
-	}
+    @Test
+    @DisplayName("getDefaultPlan()")
+    fun getDefaultPlan() = runTest {
+        val plan = repository.getDefaultPlan()
+        assertEquals(PlanDefault, plan)
+    }
 
-	@Test
-	@DisplayName("init()")
-	fun init() = runTest {
-	    repository.init()
-		assertNotEquals(0, plans.size)
-	}
+    @Test
+    @DisplayName("getStandardPlans()")
+    fun getStandardPlans() = runTest {
+        var expected = arrayOf<Plan>()
+        var plans = repository.getStandardPlans()
+        assertArrayEquals(expected, plans.toTypedArray())
 
-	@Test
-	@DisplayName("isEmpty() true")
-	fun isEmptyTrue() = runTest {
-	    val actual = repository.isEmpty()
-		assertTrue(actual)
-	}
+        plansMap.putAll(
+            listOf(
+                1L to Plan(id = 1L),
+                2L to Plan(id = 2L),
+                3L to Plan(id = 3L)
+            )
+        )
+        expected = arrayOf(Plan(id = 1L), Plan(id = 2L), Plan(id = 3L))
 
-	@Test
-	@DisplayName("isEmpty() false")
-	fun isEmptyFalse() = runTest {
-	    plans[1] = Plan(id = 1)
-		val actual = repository.isEmpty()
-		assertFalse(actual)
-	}
+        plans = repository.getStandardPlans()
+        assertArrayEquals(expected, plans.toTypedArray())
+    }
 
-	@Test
-	@DisplayName("clear()")
-	fun clear() = runTest {
-	    plans.putAll(mapOf(
-			1 to Plan(id = 1),
-			2 to Plan(id = 2),
-			3 to Plan(id = 3)
-		))
+    @Test
+    @DisplayName("getPlanOrDefault(Long)")
+    fun getPlanOrDefault() = runTest {
+        val planId = 5L
+        var expected = PlanDefault
 
-		repository.clear()
-		val actual = repository.isEmpty()
-		assertFalse(actual)
-	}
+        var actual = repository.getPlanOrDefault(planId)
+        assertEquals(expected, actual)
+
+        expected = Plan(id = planId)
+        plansMap[planId] = expected
+
+        actual = repository.getPlanOrDefault(planId)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    @DisplayName("getPlan(Long)")
+    fun getPlan() = runTest {
+        val planId = 5L
+
+        var actual = repository.getPlan(planId)
+        assertNull(actual)
+
+        val expected = Plan(id = planId)
+        plansMap[planId] = expected
+
+        actual = repository.getPlan(planId)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    @DisplayName("insert(List<Plan>)")
+    fun insert() = runTest {
+        var expected = arrayOf(
+            Plan(id = 1L),
+            Plan(id = 2L),
+            Plan(id = 3L)
+        )
+        repository.insert(
+            listOf(
+                Plan(id = 1L),
+                Plan(id = 2L),
+                Plan(id = 3L)
+            )
+        )
+
+        assertArrayEquals(expected, plansMap.values.toTypedArray())
+
+        expected = arrayOf(
+            Plan(id = 1L),
+            Plan(id = 2L),
+            Plan(id = 3L),
+            Plan(id = 5L)
+        )
+        repository.insert(
+            listOf(
+                Plan(id = 2L),
+                Plan(id = 3L),
+                Plan(id = 5L)
+            )
+        )
+        assertArrayEquals(expected, plansMap.values.toTypedArray())
+    }
+
+    @Test
+    @DisplayName("create(String)")
+    fun create() = runTest {
+        val expectedPlan = Plan(id = 1, title = "Test")
+        val planId = repository.create("Test")
+
+        val expectedArray = arrayOf(
+            Plan(id = 1, title = "Test")
+        )
+
+        assertEquals(expectedPlan.id, planId)
+        assertArrayEquals(expectedArray, plansMap.values.toTypedArray())
+    }
+
+    @Test
+    @DisplayName("updateTitle(Plan, String)")
+    fun updateTitle() = runTest {
+        val expectedArray = arrayOf(Plan(id = 1, title = "Updated"))
+        plansMap.putAll(
+            mapOf(
+                1L to Plan(id = 1, title = "Test 1")
+            )
+        )
+
+        repository.updateTitle(1, title = "Updated")
+
+        assertArrayEquals(expectedArray, plansMap.values.toTypedArray())
+    }
+
+    @Test
+    @DisplayName("delete(List<Plan>)")
+    fun delete() = runTest {
+        plansMap.putAll(
+            mapOf(
+                1L to Plan(id = 1),
+                2L to Plan(id = 2),
+                3L to Plan(id = 3)
+            )
+        )
+        val expectedArray = arrayOf(Plan(id = 2))
+
+        repository.delete(listOf(1, 3, 4))
+        assertArrayEquals(expectedArray, plansMap.values.toTypedArray())
+    }
+
+    @Test
+    @DisplayName("deletePlanIfNameIsEmpty(Long)")
+    fun deletePlanIfNameIsEmpty() = runTest {
+        plansMap.putAll(
+            listOf(
+                1L to Plan(id = 1L, title = "Test"),
+                2L to Plan(id = 2L, title = "")
+            )
+        )
+
+        var actual = repository.deletePlanIfNameIsEmpty(1L)
+        assertFalse(actual)
+
+        actual = repository.deletePlanIfNameIsEmpty(2L)
+        assertTrue(actual)
+    }
+
+    @Test
+    @DisplayName("isEmpty() true")
+    fun isEmpty() = runTest {
+        plansMap[1] = Plan(id = 1)
+        val actual1 = repository.isEmpty()
+        assertFalse(actual1)
+        plansMap.clear()
+        val actual2 = repository.isEmpty()
+        assertTrue(actual2)
+    }
+
+    @Test
+    @DisplayName("clear()")
+    fun clear() = runTest {
+        plansMap.putAll(
+            mapOf(
+                1L to Plan(id = 1),
+                2L to Plan(id = 2),
+                3L to Plan(id = 3)
+            )
+        )
+
+        repository.clear()
+        val actual = plansMap.isEmpty()
+        assertTrue(actual)
+    }
 }
