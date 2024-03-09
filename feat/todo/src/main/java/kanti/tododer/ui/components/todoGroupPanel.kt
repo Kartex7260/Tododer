@@ -53,13 +53,14 @@ fun LazyListScope.todoGroupPanel(
 ) {
 	item {
 		DeleteAnimationVisible(
+			modifier = Modifier
+				.animateItemPlacement(),
 			visible = (!isSingleGroup || group.name != null) && group.todos.map { it.visible }
 				.fold(false) { acc, todoData -> acc or todoData }
 		) {
 			var expandMenu by rememberSaveable { mutableStateOf(false) }
 			Column(
 				modifier = Modifier
-					.animateItemPlacement()
 					.padding(
 						start = 16.dp, end = 16.dp
 					)

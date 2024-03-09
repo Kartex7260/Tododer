@@ -1,6 +1,7 @@
 package kanti.tododer.ui.screen.todo_list
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -183,7 +184,7 @@ private fun TodoListTopBar(
 	)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TodoListScreen(
 	navController: NavController,
@@ -429,7 +430,9 @@ fun TodoListScreen(
 			}
 
 			item {
-				Column {
+				Column(
+					modifier = Modifier.animateItemPlacement()
+				) {
 					Spacer(modifier = Modifier.height(height = 8.dp))
 					val captionStg = stringResource(id = R.string.caption_todo_list)
 					val allTodos = children.groups.asSequence()

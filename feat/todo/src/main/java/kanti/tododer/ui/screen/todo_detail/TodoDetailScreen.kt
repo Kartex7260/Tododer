@@ -5,6 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -178,7 +179,7 @@ private fun PreAction(
 	}
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TodoDetailScreen(
 	navController: NavController = rememberNavController(),
@@ -452,7 +453,9 @@ fun TodoDetailScreen(
 			}
 
 			item {
-				Column {
+				Column(
+					modifier = Modifier.animateItemPlacement()
+				) {
 					Spacer(modifier = Modifier.height(height = 8.dp))
 					val captionStg = stringResource(id = R.string.caption_todo_detail)
 					val allTodos = todoChildren.groups.asSequence().flatMap { it.todos }
