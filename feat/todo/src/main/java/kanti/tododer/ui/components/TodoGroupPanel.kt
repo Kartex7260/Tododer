@@ -101,7 +101,8 @@ fun TodoGroupPanel(
 						exit = fadeOut()
 					) {
 						Checkbox(
-							modifier = Modifier.size(40.dp),
+							modifier = Modifier.size(40.dp)
+								.padding(end = 8.dp),
 							checked = group.selected,
 							onCheckedChange = { selected ->
 								groupOnChangeSelect(group.name, selected)
