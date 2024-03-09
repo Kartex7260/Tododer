@@ -1,8 +1,9 @@
 package kanti.tododer.ui.screen.todo_list
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,7 +44,6 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.autoSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -66,13 +66,13 @@ import kanti.tododer.ui.common.TodoDataWithGroup
 import kanti.tododer.ui.components.ContentSwitcher
 import kanti.tododer.ui.components.ScreenBottomCaption
 import kanti.tododer.ui.components.TodoFloatingActionButton
-import kanti.tododer.ui.components.TodoGroupPanel
 import kanti.tododer.ui.components.dialogs.CreateDialog
 import kanti.tododer.ui.components.dialogs.DeleteDialog
 import kanti.tododer.ui.components.dialogs.RenameDialog
 import kanti.tododer.ui.components.dialogs.SetGroupDialog
 import kanti.tododer.ui.components.dialogs.UngroupDialog
 import kanti.tododer.ui.components.todo.TodoData
+import kanti.tododer.ui.components.todoGroupPanel
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModel
 import kanti.tododer.ui.screen.todo_list.viewmodel.TodoListViewModelImpl
 import kotlinx.coroutines.flow.collectLatest
@@ -385,21 +385,12 @@ fun TodoListScreen(
 				bottom = 16.dp
 			)
 		) {
-			items(
-				count = children.groups.size,
-				key = { index -> children.groups[index].name ?: "" }
-			) { index ->
-				TodoGroupPanel(
-					modifier = Modifier
-						.padding(
-							top = 0.dp,
-							bottom = if (children.groups.size - 1 == index) 0.dp else 16.dp,
-							start = 16.dp,
-							end = 16.dp,
-						),
+			for (index in 0..<children.groups.size) {
+				todoGroupPanel(
 					selection = children.selection,
 					isSingleGroup = children.groups.size == 1,
 					group = children.groups[index],
+					isFirstGroup = index == 0,
 					allowGrouping = !isALlPlan,
 					selectionStyle = selectionStyle,
 					groupOnChangeExpand = { group, expand -> vm.setGroupExpand(group, expand) },
@@ -438,17 +429,15 @@ fun TodoListScreen(
 			}
 
 			item {
-				Box(
-					modifier = Modifier
-						.height(56.dp)
-						.fillMaxWidth()
-				) {
+				Column {
+					Spacer(modifier = Modifier.height(height = 8.dp))
 					val captionStg = stringResource(id = R.string.caption_todo_list)
 					val allTodos = children.groups.asSequence()
 						.flatMap { it.todos }
 					ScreenBottomCaption(
 						modifier = Modifier
-							.align(Alignment.BottomCenter),
+							.height(56.dp)
+							.fillMaxWidth(),
 						text = captionStg
 							.replace("{1}", plan.title)
 							.replace(
