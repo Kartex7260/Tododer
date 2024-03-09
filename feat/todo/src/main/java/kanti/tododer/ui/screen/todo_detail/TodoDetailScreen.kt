@@ -198,24 +198,22 @@ fun TodoDetailScreen(
 	var showUngroupDialog: String? by rememberSaveable { mutableStateOf(null) }
 
 	LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
-		Log.d(logTag, "onCreate($todoId): vm.show()")
 		vm.show(todoId)
 	}
 
 	LifecycleResumeEffect {
-		Log.d(logTag, "onResume($todoId): vm.reshow()")
+		vm.reshow(null)
 
+		onPauseOrDispose { }
+	}
+
+	LifecycleStartEffect(key1 = vm) {
 		val deletedTodo = navController.currentBackStackEntry?.savedStateHandle
 			?.get<Long>(UiConst.BackStackKeys.DELETED)
 		vm.reshow(deletedTodo)
 
 		navController.currentBackStackEntry?.savedStateHandle
 			?.set(UiConst.BackStackKeys.DELETED, null)
-
-		onPauseOrDispose { }
-	}
-
-	LifecycleStartEffect(key1 = vm) {
 		onStopOrDispose {
 			Log.d(logTag, "onStop($todoId): vm.stop()")
 			vm.onStop()

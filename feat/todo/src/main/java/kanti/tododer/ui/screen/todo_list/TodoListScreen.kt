@@ -270,12 +270,6 @@ fun TodoListScreen(
 	}
 
 	LifecycleStartEffect(key1 = vm) {
-		onStopOrDispose {
-			vm.onStop()
-		}
-	}
-
-	LifecycleResumeEffect(key1 = vm) {
 		val deletedTodoId = navController.currentBackStackEntry?.savedStateHandle
 			?.get<Long>(UiConst.BackStackKeys.DELETED)
 		vm.updateUiState(deletedTodoId)
@@ -283,6 +277,13 @@ fun TodoListScreen(
 			UiConst.BackStackKeys.DELETED,
 			null
 		)
+		onStopOrDispose {
+			vm.onStop()
+		}
+	}
+
+	LifecycleResumeEffect(key1 = vm) {
+		vm.updateUiState(null)
 		onPauseOrDispose { }
 	}
 
