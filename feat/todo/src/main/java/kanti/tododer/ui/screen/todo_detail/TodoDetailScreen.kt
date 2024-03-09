@@ -531,6 +531,7 @@ fun TodoDetailScreen(
 		val renamedTodo = showRenameDialog!!
 		RenameDialog(
 			onCloseDialog = { showRenameDialog = null },
+			title = { Text(text = stringResource(id = R.string.rename_todo)) },
 			label = { Text(text = stringResource(id = R.string.new_title)) },
 			name = renamedTodo.title,
 			onRename = { newTitle ->

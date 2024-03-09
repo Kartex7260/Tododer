@@ -350,6 +350,7 @@ fun PlanListScreen(
 		val renamedPlan = showRenameDialog!!
 		RenameDialog(
 			onCloseDialog = { showRenameDialog = null },
+			title = { Text(text = stringResource(id = R.string.rename_plan)) },
 			name = renamedPlan.title,
 			label = { Text(text = stringResource(id = R.string.new_title)) },
 			onRename = { newTitle ->
