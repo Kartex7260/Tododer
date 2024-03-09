@@ -131,6 +131,7 @@ dependencies {
 	implementation(project(":data:plan:api"))
 	implementation(project(":data:todo:api"))
 
+	implementation(project(":core"))
 	implementation(project(":data"))
 	implementation(project(":feat:todo"))
 	implementation(project(":feat:settings"))

@@ -36,3 +36,5 @@
 
 -keep class kanti.tododer.data.model.todo.TodoState { *; }
 -keep class * extends kanti.tododer.data.model.todo.TodoState { *; }
+
+-assumenosideeffects class kanti.tododer.util.log.Logger { *; }
