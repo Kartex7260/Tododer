@@ -1,6 +1,7 @@
 package kanti.tododer.ui.screen.todo_detail
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -292,6 +293,12 @@ fun TodoDetailScreen(
 
 	val todoDetail by vm.todoDetail.collectAsState()
 	val todoChildren by vm.todoChildren.collectAsState()
+
+	if (todoChildren.selection) {
+		BackHandler {
+			vm.selectionOff()
+		}
+	}
 
 	val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 	var editorSize by remember {

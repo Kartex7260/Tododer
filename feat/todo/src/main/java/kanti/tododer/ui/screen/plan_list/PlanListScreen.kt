@@ -1,5 +1,6 @@
 package kanti.tododer.ui.screen.plan_list
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -184,6 +185,12 @@ fun PlanListScreen(
 	val planAll by vm.planAll.collectAsState()
 	val planDefault by vm.planDefault.collectAsState()
 	val plans by vm.plans.collectAsState()
+
+	if (plans.selection) {
+		BackHandler {
+			vm.selectionOff()
+		}
+	}
 
 	LifecycleResumeEffect(key1 = vm) {
 		vm.updateUiState()

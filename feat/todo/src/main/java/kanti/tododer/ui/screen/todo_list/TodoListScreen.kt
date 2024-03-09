@@ -1,5 +1,6 @@
 package kanti.tododer.ui.screen.todo_list
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -216,6 +217,12 @@ fun TodoListScreen(
 	val plan = todoListUiState.plan
 	val isALlPlan = plan.type == PlanType.All
 	val children = todoListUiState.children
+
+	if (children.selection) {
+		BackHandler {
+			vm.selectionOff()
+		}
+	}
 
 	val context = LocalContext.current
 	LaunchedEffect(key1 = vm) {
