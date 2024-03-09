@@ -1,7 +1,9 @@
 package kanti.tododer.ui.screen.plan_list
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -134,7 +136,7 @@ private fun PlanListTopBar(
 	)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun PlanListScreen(
 	navController: NavController = rememberNavController(),
@@ -305,21 +307,27 @@ fun PlanListScreen(
 				items = plans.plans,
 				key = { it.data.id }
 			) { planUiState ->
-				SuperPlanCard(
-					modifier = Modifier.padding(bottom = 8.dp),
-					selectionStyle = selectionStyle,
-					selection = plans.selection,
-					planUiState = planUiState,
-					onLongClick = { planData -> vm.selection(planData.id) },
-					onClick = { planData ->
-						vm.setCurrentPlan(planData.id)
-						navController.popBackStack()
-					},
-					onChangeSelect = { planData, selected -> vm.setSelect(planData.id, selected) },
-					menuOnRename = { planData -> showRenameDialog = planData },
-					menuOnSelect = { planData -> vm.selection(planData.id) },
-					menuOnDelete = { planData -> vm.deletePlans(listOf(planData)) }
-				)
+				Column {
+					SuperPlanCard(
+						modifier = Modifier
+							.padding(bottom = 8.dp)
+							.animateItemPlacement(),
+						selectionStyle = selectionStyle,
+						selection = plans.selection,
+						planUiState = planUiState,
+						onLongClick = { planData -> vm.selection(planData.id) },
+						onClick = { planData ->
+							vm.setCurrentPlan(planData.id)
+							navController.popBackStack()
+						},
+						onChangeSelect = { planData, selected ->
+							vm.setSelect(planData.id, selected)
+						},
+						menuOnRename = { planData -> showRenameDialog = planData },
+						menuOnSelect = { planData -> vm.selection(planData.id) },
+						menuOnDelete = { planData -> vm.deletePlans(listOf(planData)) }
+					)
+				}
 			}
 
 			item {
@@ -327,6 +335,7 @@ fun PlanListScreen(
 					modifier = Modifier
 						.fillMaxWidth()
 						.height(56.dp)
+						.animateItemPlacement()
 				) {
 					val captionStg = stringResource(id = R.string.caption_plan_list)
 					val todosCount by vm.todosCount.collectAsState()

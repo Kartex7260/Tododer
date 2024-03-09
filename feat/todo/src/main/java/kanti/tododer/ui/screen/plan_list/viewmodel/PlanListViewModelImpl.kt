@@ -135,7 +135,7 @@ class PlanListViewModelImpl @Inject constructor(
 		)
 
 	init {
-	    updateUiState()
+		updateUiState()
 	}
 
 	override fun updateUiState() {
