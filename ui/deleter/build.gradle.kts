@@ -1,14 +1,14 @@
 plugins {
-	id("com.android.library")
-	id("org.jetbrains.kotlin.android")
+	alias(libs.plugins.android.library)
+	alias(libs.plugins.kotlin.android)
 }
 
 android {
 	namespace = "kanti.tododer.ui.services.deleter"
-	compileSdk = 34
+	compileSdk = libs.versions.android.api.target.get().toInt()
 
 	defaultConfig {
-		minSdk = 24
+		minSdk = libs.versions.android.api.minimal.get().toInt()
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		consumerProguardFiles("consumer-rules.pro")
@@ -20,17 +20,18 @@ android {
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 	}
+
+	val jvm = libs.versions.jvm.target.get()
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.toVersion(jvm)
+		targetCompatibility = JavaVersion.toVersion(jvm)
 	}
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = jvm
 	}
 }
 
 dependencies {
 
-	implementation(platform("androidx.compose:compose-bom:2023.10.01"))
-	implementation("androidx.compose.material3:material3")
+	implementation(libs.coroutines.core)
 }

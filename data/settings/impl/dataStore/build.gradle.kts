@@ -1,16 +1,16 @@
 plugins {
-	id("com.android.library")
-	id("org.jetbrains.kotlin.android")
-	kotlin("kapt")
-	id("com.google.dagger.hilt.android")
+	alias(libs.plugins.android.library)
+	alias(libs.plugins.kotlin.android)
+	alias(libs.plugins.kotlin.kapt)
+	alias(libs.plugins.dagger.hilt)
 }
 
 android {
 	namespace = "kanti.tododer.data.model.settings"
-	compileSdk = 34
+	compileSdk = libs.versions.android.api.target.get().toInt()
 
 	defaultConfig {
-		minSdk = 24
+		minSdk = libs.versions.android.api.minimal.get().toInt()
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		consumerProguardFiles("consumer-rules.pro")
@@ -22,12 +22,14 @@ android {
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 	}
+
+	val jvm = libs.versions.jvm.target.get()
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.toVersion(jvm)
+		targetCompatibility = JavaVersion.toVersion(jvm)
 	}
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = jvm
 	}
 }
 
@@ -35,14 +37,13 @@ dependencies {
 
 	implementation(project(":data:settings:api"))
 
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
-	implementation("androidx.datastore:datastore-preferences:1.0.0")
+	implementation(libs.androidx.data.store)
 
-	implementation("com.google.dagger:hilt-android:2.48.1")
-	kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+	implementation(libs.dagger.hilt)
+	kapt(libs.dagger.hilt.compiler)
 
-	androidTestImplementation("junit:junit:4.13.2")
-	androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
-	androidTestImplementation("androidx.test:runner:1.5.2")
-	androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+	androidTestImplementation(libs.junit)
+	androidTestImplementation(libs.androidx.test.ext.junit)
+	androidTestImplementation(libs.androidx.test.runner)
+	androidTestImplementation(libs.coroutines.test)
 }

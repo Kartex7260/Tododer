@@ -1,16 +1,16 @@
 plugins {
-	id("com.android.library")
-	id("org.jetbrains.kotlin.android")
-	id("org.jetbrains.kotlin.kapt")
-	id("com.google.dagger.hilt.android")
+	alias(libs.plugins.android.library)
+	alias(libs.plugins.kotlin.android)
+	alias(libs.plugins.kotlin.kapt)
+	alias(libs.plugins.dagger.hilt)
 }
 
 android {
-	namespace = "com.example.getplanchildren"
-	compileSdk = 34
+	namespace = "kanti.tododer.domain.getplanchildren"
+	compileSdk = libs.versions.android.api.target.get().toInt()
 
 	defaultConfig {
-		minSdk = 24
+		minSdk = libs.versions.android.api.minimal.get().toInt()
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		consumerProguardFiles("consumer-rules.pro")
@@ -22,12 +22,14 @@ android {
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 	}
+
+	val jvm = libs.versions.jvm.target.get()
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.toVersion(jvm)
+		targetCompatibility = JavaVersion.toVersion(jvm)
 	}
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = jvm
 	}
 }
 
@@ -38,14 +40,14 @@ dependencies {
 	implementation(project(":data:plan:api"))
 	implementation(project(":data:todo:api"))
 
-	implementation("com.google.dagger:hilt-android:2.48.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+	implementation(libs.dagger.hilt)
+    kapt(libs.dagger.hilt.compiler)
 
-	testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
-	testImplementation("org.mockito:mockito-core:4.11.0")
-	testImplementation("org.mockito:mockito-junit-jupiter:4.11.0")
-	testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
-	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+	testImplementation(libs.junit.jupiter)
+	testImplementation(libs.mockito.core)
+	testImplementation(libs.mockito.jupiter)
+	testImplementation(libs.mockito.kotlin)
+	testImplementation(libs.coroutines.test)
 }
 
 tasks.withType<Test> {

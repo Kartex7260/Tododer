@@ -1,14 +1,15 @@
 plugins {
-	id("com.android.library")
-	id("org.jetbrains.kotlin.android")
+	alias(libs.plugins.android.library)
+	alias(libs.plugins.kotlin.android)
+	alias(libs.plugins.kotlin.compose)
 }
 
 android {
 	namespace = "kanti.tododer.ui.components.plan"
-	compileSdk = 34
+	compileSdk = libs.versions.android.api.target.get().toInt()
 
 	defaultConfig {
-		minSdk = 24
+		minSdk = libs.versions.android.api.minimal.get().toInt()
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		consumerProguardFiles("consumer-rules.pro")
@@ -20,34 +21,29 @@ android {
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 	}
+
+	val jvm = libs.versions.jvm.target.get()
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.toVersion(jvm)
+		targetCompatibility = JavaVersion.toVersion(jvm)
 	}
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = jvm
 	}
 	buildFeatures {
 		compose = true
-	}
-	composeOptions {
-		kotlinCompilerExtensionVersion = "1.5.7"
 	}
 }
 
 dependencies {
 
-	implementation(platform("androidx.compose:compose-bom:2023.10.01"))
-	implementation("androidx.compose.ui:ui")
-	implementation("androidx.compose.ui:ui-tooling-preview")
-	implementation("androidx.compose.material3:material3")
-	testImplementation("junit:junit:4.13.2")
-	androidTestImplementation("androidx.test.ext:junit:1.1.5")
-	androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-	androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
-	androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-	debugImplementation("androidx.compose.ui:ui-tooling")
-	debugImplementation("androidx.compose.ui:ui-test-manifest")
+	val composeBom = platform(libs.compose.bom)
+	implementation(composeBom)
+
+	implementation(libs.compose.material3)
+
+	implementation(libs.compose.ui.tooling.preview)
+	debugImplementation(libs.compose.ui.tooling)
 
 	implementation(project(":ui:common"))
 	implementation(project(":ui:fillingProgressBar"))

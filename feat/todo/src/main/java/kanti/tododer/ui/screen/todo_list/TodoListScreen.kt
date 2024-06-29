@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -29,12 +29,12 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.TopAppBarState
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -114,7 +114,7 @@ private fun TodoListTopBar(
 					},
 					falseContent = {
 						Icon(
-							imageVector = Icons.Default.List,
+							imageVector = Icons.AutoMirrored.Filled.List,
 							contentDescription = null
 						)
 					}
@@ -349,16 +349,16 @@ fun TodoListScreen(
 
 		snackbarHost = {
 			SnackbarHost(hostState = snackbarHostState) { snackbarData ->
-				val dismissState = rememberDismissState(
+				val dismissState = rememberSwipeToDismissBoxState(
 					confirmValueChange = {
 						snackbarData.dismiss()
 						true
 					}
 				)
-				SwipeToDismiss(
+				SwipeToDismissBox(
 					state = dismissState,
-					background = {},
-					dismissContent = { Snackbar(snackbarData = snackbarData) }
+					backgroundContent = {},
+					content = { Snackbar(snackbarData = snackbarData) }
 				)
 			}
 		},

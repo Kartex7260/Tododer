@@ -3,7 +3,7 @@ package kanti.tododer.ui.screen.main
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,7 +43,7 @@ private fun SettingsMainScreenTopBar(
 		title = { Text(text = stringResource(id = R.string.settings)) },
 		navigationIcon = {
 			IconButton(onClick = { back() }) {
-				Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+				Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
 			}
 		},
 		scrollBehavior = scrollBehaviour

@@ -14,10 +14,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -26,12 +26,12 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -129,7 +129,7 @@ fun TodoDetailTopBar(
 						)
 					}, falseContent = {
 						Icon(
-							imageVector = Icons.Default.ArrowBack,
+							imageVector = Icons.AutoMirrored.Filled.ArrowBack,
 							contentDescription = null
 						)
 					}
@@ -201,7 +201,7 @@ fun TodoDetailScreen(
 		vm.show(todoId)
 	}
 
-	LifecycleResumeEffect {
+	LifecycleResumeEffect(key1 = vm) {
 		vm.reshow(null)
 
 		onPauseOrDispose { }
@@ -335,16 +335,16 @@ fun TodoDetailScreen(
 
 		snackbarHost = {
 			SnackbarHost(hostState = snackBarHost) { snackbarData ->
-				val dismissState = rememberDismissState(
+				val dismissState = rememberSwipeToDismissBoxState(
 					confirmValueChange = {
 						snackbarData.dismiss()
 						true
 					}
 				)
-				SwipeToDismiss(
+				SwipeToDismissBox(
 					state = dismissState,
-					background = {},
-					dismissContent = { Snackbar(snackbarData = snackbarData) }
+					backgroundContent = {},
+					content = { Snackbar(snackbarData = snackbarData) }
 				)
 			}
 		},
@@ -390,7 +390,7 @@ fun TodoDetailScreen(
 					onDelete = onDelete
 				)
 
-				Divider(
+				HorizontalDivider(
 					modifier = Modifier
 						.padding(
 							top = 8.dp,

@@ -1,16 +1,15 @@
 plugins {
-	id("com.android.library")
-	id("org.jetbrains.kotlin.android")
-
-	id("org.jetbrains.kotlin.kapt")
+	alias(libs.plugins.android.library)
+	alias(libs.plugins.kotlin.android)
+	alias(libs.plugins.kotlin.kapt)
 }
 
 android {
 	namespace = "kanti.tododer.data"
-	compileSdk = 34
+	compileSdk = libs.versions.android.api.target.get().toInt()
 
 	defaultConfig {
-		minSdk = 24
+		minSdk = libs.versions.android.api.minimal.get().toInt()
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		consumerProguardFiles("consumer-rules.pro")
@@ -25,17 +24,19 @@ android {
 			)
 		}
 	}
+
+	val jvm = libs.versions.jvm.target.get()
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.toVersion(jvm)
+		targetCompatibility = JavaVersion.toVersion(jvm)
 	}
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = jvm
 	}
 }
 
 dependencies {
 
-	implementation("com.google.dagger:hilt-android:2.48.1")
-	kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+	implementation(libs.dagger.hilt)
+	kapt(libs.dagger.hilt.compiler)
 }

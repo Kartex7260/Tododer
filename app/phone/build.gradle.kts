@@ -3,11 +3,13 @@ import java.util.Calendar
 import java.util.Properties
 
 plugins {
-	id("com.android.application")
-	id("org.jetbrains.kotlin.android")
+	alias(libs.plugins.android.application)
+	alias(libs.plugins.kotlin.android)
 
-	kotlin("kapt")
-	id("com.google.dagger.hilt.android")
+	alias(libs.plugins.kotlin.kapt)
+	alias(libs.plugins.dagger.hilt)
+
+	alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -36,12 +38,12 @@ android {
     }
 
 	namespace = "kanti.tododer"
-	compileSdk = 34
+	compileSdk = libs.versions.android.api.target.get().toInt()
 
 	defaultConfig {
 		applicationId = "kanti.tododer"
-		minSdk = 24
-		targetSdk = 34
+		minSdk = libs.versions.android.api.minimal.get().toInt()
+		targetSdk = libs.versions.android.api.target.get().toInt()
 		versionCode = 2
 
 		val calendar = Calendar.getInstance()
@@ -84,18 +86,17 @@ android {
             matchingFallbacks += listOf("release")
         }
 	}
+
+	val jvm = libs.versions.jvm.target.get()
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.toVersion(jvm)
+		targetCompatibility = JavaVersion.toVersion(jvm)
 	}
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = jvm
 	}
 	buildFeatures {
 		compose = true
-	}
-	composeOptions {
-		kotlinCompilerExtensionVersion = "1.5.7"
 	}
 	packaging {
 		resources {
@@ -106,27 +107,19 @@ android {
 
 dependencies {
 
-	implementation("com.google.android.material:material:1.11.0")
+	val platform = platform(libs.compose.bom)
+	implementation(platform)
 
-	implementation("androidx.navigation:navigation-compose:2.7.7")
-	implementation("androidx.core:core-ktx:1.12.0")
-	implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-	implementation("androidx.activity:activity-compose:1.8.2")
-	implementation(platform("androidx.compose:compose-bom:2023.10.01"))
-	implementation("androidx.compose.ui:ui")
-	implementation("androidx.compose.ui:ui-graphics")
-	implementation("androidx.compose.ui:ui-tooling-preview")
-	implementation("androidx.compose.material3:material3")
-	testImplementation("junit:junit:4.13.2")
-	androidTestImplementation("androidx.test.ext:junit:1.1.5")
-	androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-	androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
-	androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-	debugImplementation("androidx.compose.ui:ui-tooling")
-	debugImplementation("androidx.compose.ui:ui-test-manifest")
+	implementation(libs.compose.material3)
+	implementation(libs.compose.navigation)
 
-	implementation("com.google.dagger:hilt-android:2.48.1")
-	kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+	implementation(libs.compose.ui.tooling.preview)
+	debugImplementation(libs.compose.ui.tooling)
+
+	implementation(libs.android.material)
+
+	implementation(libs.dagger.hilt)
+	kapt(libs.dagger.hilt.compiler)
 
 	implementation(project(":data:plan:api"))
 	implementation(project(":data:todo:api"))

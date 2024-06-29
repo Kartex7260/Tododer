@@ -1,19 +1,18 @@
 plugins {
-	id("com.android.library")
-	id("org.jetbrains.kotlin.android")
-	id("com.google.devtools.ksp")
-	kotlin("kapt")
-	id("com.google.dagger.hilt.android")
-
-	id("androidx.room") version "2.6.1" apply false
+	alias(libs.plugins.android.library)
+	alias(libs.plugins.kotlin.android)
+	alias(libs.plugins.kotlin.kapt)
+	alias(libs.plugins.google.ksp)
+	alias(libs.plugins.dagger.hilt)
+	alias(libs.plugins.room)
 }
 
 android {
 	namespace = "kanti.tododer.data.room"
-	compileSdk = 34
+	compileSdk = libs.versions.android.api.target.get().toInt()
 
 	defaultConfig {
-		minSdk = 24
+		minSdk = libs.versions.android.api.minimal.get().toInt()
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		consumerProguardFiles("consumer-rules.pro")
@@ -25,30 +24,32 @@ android {
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 	}
+
+	val jvm = libs.versions.jvm.target.get()
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.toVersion(jvm)
+		targetCompatibility = JavaVersion.toVersion(jvm)
 	}
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = jvm
 	}
 }
 
-ksp {
-	arg("room.schemaLocation", "$projectDir/schemas")
+room {
+	schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {
 
 	implementation(project(":core"))
 
-	implementation("androidx.room:room-ktx:2.6.1")
-	ksp("androidx.room:room-compiler:2.6.1")
+	implementation(libs.androidx.room)
+	ksp(libs.androidx.room.compiler)
 
-	implementation("com.google.dagger:hilt-android:2.48.1")
-	kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+	implementation(libs.dagger.hilt)
+	kapt(libs.dagger.hilt.compiler)
 
-	androidTestImplementation("androidx.test:runner:1.5.2")
-	androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
-	androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+	androidTestImplementation(libs.androidx.test.runner)
+	androidTestImplementation(libs.androidx.test.ext.junit)
+	androidTestImplementation(libs.coroutines.test)
 }
